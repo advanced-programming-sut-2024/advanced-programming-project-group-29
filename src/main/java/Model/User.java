@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class User {
+    private static ArrayList<User> allUsers = new ArrayList<>();
+    private static User currentUser;
     private String username;
     private String password;
     private String nickname;
@@ -13,8 +15,7 @@ public class User {
     private final ArrayList<Card> discardPile = new ArrayList<>();
     private Faction faction;
     private Commander commander;
-    private static ArrayList<User> allUsers = new ArrayList<>();
-    private static User currentUser;
+    ArrayList<GameHistory> gameHistory = new ArrayList<>();
 
     public User(String username, String password, String nickname, String email) {
         this.username = username;
@@ -144,5 +145,13 @@ public class User {
 
     public ArrayList<Card> getDiscardPile() {
         return discardPile;
+    }
+
+    public void addGameHistory(GameHistory gameHistory) {
+        this.gameHistory.add(gameHistory);
+    }
+
+    public ArrayList<GameHistory> getGameHistory() {
+        return gameHistory;
     }
 }
