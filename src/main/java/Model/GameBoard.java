@@ -4,16 +4,16 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class GameBoard { // Radin
-    private User[] players = new User[2];
+    private final User[] players = new User[2];
     private int currentPlayer;
-    private ArrayList<Soldier>[][] rows = new ArrayList[2][3];
-    private Spell[][] specialCards = new Spell[2][3];
-    private int[] playersScore = new int[2];
-    private int[] playerCardsNumber = new int[2];
-    private int[] playersCrystals = new int[2];
-    private ArrayList<Spell> weather = new ArrayList<>();
-    private Commander[] playersLeaders = new Commander[2];
-    private GameHistory gameHistory;
+    private final ArrayList<Soldier>[][] rows = new ArrayList[2][3];
+    private final Spell[][] specialCards = new Spell[2][3];
+    private final int[] playersScore = new int[2];
+    private final int[] playerCardsNumber = new int[2];
+    private final int[] playersCrystals = new int[2];
+    private final ArrayList<Spell> weather = new ArrayList<>();
+    private final Commander[] playersLeaders = new Commander[2];
+    private final GameHistory gameHistory;
 
     public GameBoard(User player1, User player2) {
         players[0] = player1;
@@ -103,6 +103,26 @@ public class GameBoard { // Radin
 
     public int getPlayerNumber(User user) {
         return players[0].equals(user) ? 0 : 1;
+    }
+
+    public int getCardOwner (Card card) {
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 3; j++) {
+                if (rows[i][j].contains(card)) {
+                    return i;
+                }
+            }
+        }
+        return -1;
+    }
+
+    public boolean getCommanderOwner (Commander commander) {
+        for (int i = 0; i < 2; i++) {
+            if (playersLeaders[i].equals(commander)) {
+                return i == currentPlayer;
+            }
+        }
+        return false;
     }
 
     public void changeTurn() {
