@@ -1,5 +1,7 @@
 package Model;
 
+import Enum.Type;
+
 public class Commander extends Card {
     private boolean hasAction = true;
 
@@ -54,15 +56,11 @@ public class Commander extends Card {
     }
 
     private void kingOfTemeria() {
-        int playerNumber = this.gameBoard.getCardOwner((Card) this);
-        for (int i = 0; i < 3; i++) {
-            Card card = this.gameBoard.getSpecialCard(playerNumber,i);
-            if (card== null || !card.getName().equals("Draig Bon-Dhu")){
-                for (int j = 0; j < 3; j++) {
-                    for (Card c : this.gameBoard.getRows()[playerNumber][j]){
-                        if (((Soldier)c).getType().equals(Type.))
-                    }
-                }
+        int playerNumber = this.gameBoard.getPlayerNumber(this.user);
+        Card card = this.gameBoard.getSpecialCard(playerNumber, 2);
+        if (card == null || !card.getName().equals("Draig Bon-Dhu")) {
+            for (Soldier soldier : this.gameBoard.getRows()[playerNumber][2]) {
+                soldier.setHp(soldier.getHp() * 2);
             }
         }
     }

@@ -16,11 +16,13 @@ public abstract class Card {
     protected Faction faction;
     protected Runnable deployRunnable;
     protected GameBoard gameBoard;
+    protected User user;
 
 
-    public Card(String name,GameBoard gameBoard) {
+    public Card(String name,GameBoard gameBoard,User user) {
         this.name = name;
         this.gameBoard = gameBoard;
+        this.user = user;
         allCards.add(this);
     }
 

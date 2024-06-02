@@ -105,17 +105,6 @@ public class GameBoard { // Radin
         return players[0].equals(user) ? 0 : 1;
     }
 
-    public int getCardOwner (Card card) {
-        for (int i = 0; i < 2; i++) {
-            for (int j = 0; j < 3; j++) {
-                if (rows[i][j].contains(card)) {
-                    return i;
-                }
-            }
-        }
-        return -1;
-    }
-
     public boolean getCommanderOwner (Commander commander) {
         for (int i = 0; i < 2; i++) {
             if (playersLeaders[i].equals(commander)) {
