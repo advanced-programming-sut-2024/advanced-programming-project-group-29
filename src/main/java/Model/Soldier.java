@@ -71,6 +71,10 @@ public class Soldier extends Card {
         return hp;
     }
 
+    public Type getType() {
+        return type;
+    }
+
     public int getDefaultHp() throws Exception {
         return getDefaultHpBySoldierName(this.getName());
     }

@@ -15,10 +15,12 @@ public abstract class Card {
     private String name;
     protected Faction faction;
     protected Runnable deployRunnable;
+    protected GameBoard gameBoard;
 
 
-    public Card(String name) {
+    public Card(String name,GameBoard gameBoard) {
         this.name = name;
+        this.gameBoard = gameBoard;
         allCards.add(this);
     }
 
