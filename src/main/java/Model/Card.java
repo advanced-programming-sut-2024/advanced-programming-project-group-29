@@ -10,18 +10,17 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 public abstract class Card {
-    private static ArrayList<Card> allCards = new ArrayList<>();
+    private static final ArrayList<Card> allCards = new ArrayList<>();
     protected String description;
-    private String name;
+    private final String name;
     protected Faction faction;
     protected Runnable deployRunnable;
     protected GameBoard gameBoard;
     protected User user;
 
 
-    public Card(String name,GameBoard gameBoard,User user) {
+    public Card(String name,User user) {
         this.name = name;
-        this.gameBoard = gameBoard;
         this.user = user;
         allCards.add(this);
     }
@@ -83,6 +82,10 @@ public abstract class Card {
 
     public Faction getFaction() {
         return faction;
+    }
+
+    public void setGameBoard(GameBoard gameBoard) {
+        this.gameBoard = gameBoard;
     }
 
     public abstract void executeAction();

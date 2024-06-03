@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class User {
-    private static ArrayList<User> allUsers = new ArrayList<>();
-    private static User currentUser;
     private String username;
     private String password;
     private String nickname;
@@ -22,28 +20,8 @@ public class User {
         this.password = password;
         this.nickname = nickname;
         this.email = email;
-        allUsers.add(this);
-    }
-
-    public static ArrayList<User> getAllUsers() {
-        return allUsers;
-    }
-
-    public static void setAllUsers(ArrayList<User> allUsers) {
-        User.allUsers = allUsers;
-    }
-
-    public static User getCurrentUser() {
-        return currentUser;
-    }
-
-    public static void setCurrentUser(User currentUser) {
-        User.currentUser = currentUser;
-    }
-
-    public static User getUserByUsername(String name) {
-        for (User u : allUsers) if (u.getUsername().equals(name)) return u;
-        return null;
+        //TODO
+        //allUsers.add(this);
     }
 
     public String getUsername() {

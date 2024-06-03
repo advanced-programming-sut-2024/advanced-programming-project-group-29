@@ -5,8 +5,8 @@ import Enum.Type;
 public class Commander extends Card {
     private boolean hasAction = true;
 
-    public Commander(String name, GameBoard gameBoard) {
-        super(name, gameBoard);
+    public Commander(String name,User user) {
+        super(name,user);
     }
 
     private Runnable getExecuteActionByCommanderName(String commanderName) {
