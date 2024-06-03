@@ -1,5 +1,6 @@
 package Controller;
 
+import Model.Card;
 import Model.GameBoard;
 import Model.User;
 
@@ -17,6 +18,11 @@ public class InGameMenuController extends Thread {
         this.users[0] = user1;
         this.users[1] = user2;
         controllers.add(this);
+    }
+
+    public static Card getCardFromDiscardPile(GameBoard gameBoard, int playerIndex) {
+        // TODO: show a menu of cards in the discard pile and let the player choose one
+        return null;
     }
 
     private void changeCurrentUser() {

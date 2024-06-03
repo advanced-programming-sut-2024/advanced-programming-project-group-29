@@ -7,8 +7,8 @@ public class Spell extends Card {
     private boolean remains;
     private boolean isWeather;
 
-    public Spell(String name) {
-        super(name);
+    public Spell(String name, User user, Faction faction) {
+        super(name, user, faction);
         remains = true;
         isWeather = getIfThisSpellIsWeather(name);
         deployRunnable = getExecuteActionBySpellName(name);

@@ -19,9 +19,10 @@ public abstract class Card {
     protected User user;
 
 
-    public Card(String name,User user) {
+    public Card(String name, User user, Faction faction) {
         this.name = name;
         this.user = user;
+        this.faction = faction;
         allCards.add(this);
     }
 
@@ -90,4 +91,11 @@ public abstract class Card {
 
     public abstract void executeAction();
 
+    public GameBoard getGameBoard() {
+        return gameBoard;
+    }
+
+    public User getUser() {
+        return user;
+    }
 }
