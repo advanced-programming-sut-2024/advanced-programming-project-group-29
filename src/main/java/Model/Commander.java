@@ -1,12 +1,10 @@
 package Model;
 
-import Enum.Type;
-
 public class Commander extends Card {
     private boolean hasAction = true;
 
-    public Commander(String name,User user) {
-        super(name,user);
+    public Commander(String name, User user) {
+        super(name, user);
     }
 
     private Runnable getExecuteActionByCommanderName(String commanderName) {
@@ -47,6 +45,10 @@ public class Commander extends Card {
         return hasAction;
     }
 
+    public void setHasAction(boolean hasAction) {
+        this.hasAction = hasAction;
+    }
+
     private void theSiegemaster() {
 
     }
@@ -66,10 +68,19 @@ public class Commander extends Card {
     }
 
     private void lordCommanderOfTheNorth() {
-
+        int playerNumber = this.gameBoard.getPlayerNumber(this.user);
+        if (playerNumber == 0) playerNumber = 1;
+        else playerNumber = 0;
+        Soldier card = null;
+        for (Soldier c : this.gameBoard.getRows()[playerNumber][2]) {
+            if (card == null) if (c.getHp() > 10) card = c;
+            else if (c.getHp() > card.getHp()) card = c;
+        }
+        if (card != null) this.gameBoard.removeSoldierFromRow(playerNumber,2,card);
     }
 
     private void kingBran() {
+
     }
 
     private void crachAnCraite() {
@@ -112,6 +123,10 @@ public class Commander extends Card {
     }
 
     private void emperorOfNilfgaard() {
+        int playerNumber = this.gameBoard.getPlayerNumber(this.user);
+        if (playerNumber == 0) playerNumber = 1;
+        else playerNumber = 0;
+        //TODO
     }
 
     private void hisImperialMajesty() {
@@ -121,5 +136,14 @@ public class Commander extends Card {
     }
 
     private void sonOfMedell() {
+        int playerNumber = this.gameBoard.getPlayerNumber(this.user);
+        if (playerNumber == 0) playerNumber = 1;
+        else playerNumber = 0;
+        Soldier card = null;
+        for (Soldier c : this.gameBoard.getRows()[playerNumber][1]) {
+            if (card == null) if (c.getHp() > 10) card = c;
+            else if (c.getHp() > card.getHp()) card = c;
+        }
+        if (card != null) this.gameBoard.removeSoldierFromRow(playerNumber,1,card);
     }
 }
