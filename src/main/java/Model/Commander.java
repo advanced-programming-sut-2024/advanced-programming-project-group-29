@@ -1,10 +1,11 @@
 package Model;
+import Enum.Faction;
 
 public class Commander extends Card {
     private boolean hasAction = true;
 
     public Commander(String name, User user) {
-        super(name, user);
+        super(name, user, Faction.getFactionByCommanderName(name));
     }
 
     private Runnable getExecuteActionByCommanderName(String commanderName) {

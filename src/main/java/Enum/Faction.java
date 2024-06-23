@@ -33,6 +33,14 @@ public enum Faction { // Radin
         return null;
     }
 
+    public static Faction getFactionByCommanderName(String commanderName) {
+        for (Faction faction : Faction.values()) {
+            if (faction.getCommanders().contains(commanderName))
+                return faction;
+        }
+        return null;
+    }
+
     public String getName() {
         return name;
     }
