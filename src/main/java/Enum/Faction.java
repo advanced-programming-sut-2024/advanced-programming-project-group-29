@@ -8,7 +8,8 @@ public enum Faction { // Radin
     NILFGAARDIAN_EMPIRE("Nilfgaardian Empire", new ArrayList<>(Arrays.asList("The White Flame", "His Imperial Majesty", "Emperor of Nilfgaard", "The Relentless", "Invader of the North"))),
     MONSTERS("Monsters", new ArrayList<>(Arrays.asList("Bringer of Death", "King of the wild Hunt", "Destroyer of Worlds", "Commander of the Red Riders", "The Treacherous"))),
     SCOIATAELL("Scoiataell", new ArrayList<>(Arrays.asList("Queen of Dol Blathanna", "The Beautiful", "Daisy of the Valley", "Pureblood Elf", "Hope of the Aen Seidhe"))),
-    SKELLIGE("Skellige", new ArrayList<>(Arrays.asList("Crach an Craite", "King Bran")));
+    SKELLIGE("Skellige", new ArrayList<>(Arrays.asList("Crach an Craite", "King Bran"))),
+    NEUTRAL("Neutral", new ArrayList<>());
 
     private final String name;
     private final ArrayList<String> commanders;
