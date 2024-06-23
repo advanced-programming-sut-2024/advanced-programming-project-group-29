@@ -1,14 +1,50 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.Shadow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="View.LoginMenu"
-            prefHeight="400.0" prefWidth="600.0">
-
+<AnchorPane prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.LoginMenu">
+   <children>
+      <ImageView fitHeight="800.0" fitWidth="1200.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../../../../../../Downloads/Default_A_mystical_forest_backdrop_painted_in_oils_on_canvas_f_3-fotor-20240623175336.png" />
+         </image></ImageView>
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#eed092" height="376.0" layoutX="392.0" layoutY="212.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="0.0" width="418.0">
+         <effect>
+            <Shadow height="60.0" radius="29.5" width="60.0">
+               <color>
+                  <Color red="0.18000000715255737" green="0.131400004029274" blue="0.0828000009059906" opacity="0.776628315448761" />
+               </color>
+            </Shadow>
+         </effect>
+      </Rectangle>
+      <TextField fx:id="username" alignment="CENTER" layoutX="437.0" layoutY="304.0" prefHeight="43.0" prefWidth="327.0" promptText="Account">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </TextField>
+      <TextField fx:id="password" alignment="CENTER" layoutX="437.0" layoutY="365.0" prefHeight="43.0" prefWidth="327.0" promptText="Password">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </TextField>
+      <Button layoutX="437.0" layoutY="426.0" mnemonicParsing="false" onMouseClicked="#signIn" prefHeight="43.0" prefWidth="327.0" text="Sign in" textAlignment="CENTER">
+         <font>
+            <Font name="System Bold" size="16.0" />
+         </font>
+      </Button>
+      <Label layoutX="510.0" layoutY="485.0" onMouseClicked="#createNewAccount" text="CREATE NEW ACCOUNT?" textFill="#dea543">
+         <font>
+            <Font name="System Bold Italic" size="16.0" />
+         </font>
+      </Label>
+   </children>
 </AnchorPane>
