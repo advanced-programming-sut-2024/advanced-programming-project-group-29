@@ -3,11 +3,16 @@ package Model;
 import java.util.ArrayList;
 import java.util.Random;
 
+import Enum.Faction;
+
 public class User {
+    private static ArrayList<User> allUsers = new ArrayList<>();
     private String username;
     private String password;
     private String nickname;
     private String email;
+    private int questionNumber;
+    private String answer;
     private final ArrayList<Card> hand = new ArrayList<>();
     private final ArrayList<Card> deck = new ArrayList<>();
     private final ArrayList<Card> discardPile = new ArrayList<>();
@@ -20,8 +25,20 @@ public class User {
         this.password = password;
         this.nickname = nickname;
         this.email = email;
-        //TODO
-        //allUsers.add(this);
+        allUsers.add(this);
+    }
+
+    public static User getUserByUsername(String username) {
+        for (User user : allUsers) {
+            if (user.getUsername().equals(username))
+                return user;
+        }
+        return null;
+    }
+
+    public void setQuestion(int questionNumber, String answer) {
+        this.questionNumber = questionNumber;
+        this.answer = answer;
     }
 
     public String getUsername() {
