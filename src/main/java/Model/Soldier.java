@@ -101,7 +101,7 @@ public class Soldier extends Card {
         }
     }
 
-    private static int getPlacedRowNumber(Soldier soldier, GameBoard gameBoard) {
+    public static int getPlacedRowNumber(Soldier soldier, GameBoard gameBoard) {
         for(int i = 0; i < 3; i++){
             for(int j = 0; j < 2; j++) {
                 for (Soldier otherSoldier : gameBoard.getRows()[j][i]) {
@@ -118,11 +118,32 @@ public class Soldier extends Card {
     }
 
     private void executeActionForMardroeme(Soldier soldier) {
-        // TODO: implement this
+        GameBoard gameBoard = soldier.getGameBoard();
+        int rowNumber = getPlacedRowNumber(soldier, gameBoard);
+        int playerIndex = gameBoard.getPlayerNumber(soldier.getUser());
+        for(Soldier otherSoldier : gameBoard.getRows()[playerIndex][rowNumber]){
+            if(otherSoldier.getAttribute() == Attribute.BERSERKER)
+                otherSoldier.makeItBear();
+        }
     }
 
+    private void makeItBear() {
+        Soldier bear = new Soldier("Bear", this.getUser(), Faction.NEUTRAL);
+        GameBoard gameBoard = this.getGameBoard();
+        int rowNumber = getPlacedRowNumber(this, gameBoard);
+        int playerIndex = gameBoard.getPlayerNumber(this.getUser());
+        bear.setGameBoard(gameBoard);
+        gameBoard.getRows()[playerIndex][rowNumber].remove(this);
+        gameBoard.getRows()[playerIndex][rowNumber].add(bear);
+        InGameMenuController.changeThisCardInGraphic(this, bear);
+    }
+
+
     private void executeActionForSpy(Soldier soldier) {
-        // TODO: implement this
+        GameBoard gameBoard = soldier.getGameBoard();
+        int playerIndex = gameBoard.getPlayerNumber(soldier.getUser());
+        gameBoard.getRandomCardFromDeckAndAddItToHand(playerIndex);
+        gameBoard.getRandomCardFromDeckAndAddItToHand(playerIndex);
     }
 
     private void executeActionForScorch(Soldier soldier) {
@@ -132,8 +153,8 @@ public class Soldier extends Card {
     private static void executeActionForMedic(Soldier soldier) {
         GameBoard gameBoard = soldier.getGameBoard();
         int playerIndex = soldier.getGameBoard().getPlayerNumber(soldier.getUser());
-        Card card = InGameMenuController.getCardFromDiscardPile(gameBoard, playerIndex);
-        // TODO: place this new card and play it
+        Card card = InGameMenuController.getCardFromDiscardPileAndRemoveIt(gameBoard, playerIndex);
+        InGameMenuController.addCardToHand(gameBoard, card, playerIndex);
     }
 
 
@@ -143,8 +164,7 @@ public class Soldier extends Card {
         int playerIndex = gameBoard.getPlayerNumber(soldier.getUser());
         for(Soldier otherSoldier : gameBoard.getRows()[playerIndex][rowNumber]){
             int hp = otherSoldier.getHp();
-            gameBoard.setPlayerScore(playerIndex, gameBoard.getPlayerScore(playerIndex) + hp);
-            otherSoldier.setHp(hp * 2);
+            InGameMenuController.changeHpForSoldier(gameBoard, otherSoldier, hp * 2);
         }
     }
 
@@ -154,8 +174,7 @@ public class Soldier extends Card {
         int playerIndex = gameBoard.getPlayerNumber(soldier.getUser());
         for(Soldier otherSoldier : gameBoard.getRows()[playerIndex][rowNumber])
             if(otherSoldier != soldier) {
-                gameBoard.setPlayerScore(playerIndex, gameBoard.getPlayerScore(playerIndex) + 1);
-                otherSoldier.setHp(otherSoldier.getHp() + 1);
+                InGameMenuController.changeHpForSoldier(gameBoard, otherSoldier, otherSoldier.getHp() + 1);
             }
     }
 
@@ -170,9 +189,8 @@ public class Soldier extends Card {
             }
         }
         final int count = sameSoldiers.size();
-        gameBoard.setPlayerScore(playerIndex, gameBoard.getPlayerScore(playerIndex) + count * count * soldier.getHp());
         for(Soldier sameSoldier : sameSoldiers){
-            sameSoldier.setHp(sameSoldier.getHp() * count);
+            InGameMenuController.changeHpForSoldier(gameBoard, sameSoldier, sameSoldier.getHp() * count);
         }
     }
 
