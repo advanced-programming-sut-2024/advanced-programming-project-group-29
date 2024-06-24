@@ -7,12 +7,11 @@ import java.util.ArrayList;
 
 public class ApplicationController extends Thread {
     private final static ArrayList<User> allUsers = new ArrayList<>();
-    private final User currentUser;
+    private static User currentUser;
     private InGameMenuController inGameMenuController;
     private Application menu;
 
-    public ApplicationController(User currentUser) {
-        this.currentUser = currentUser;
+    public ApplicationController() {
     }
 
     public static void addUser(User user) {
@@ -43,7 +42,11 @@ public class ApplicationController extends Thread {
         return inGameMenuController;
     }
 
-    public User getCurrentUser() {
+    public static void setCurrentUser(User givenCurrentUser) {
+        currentUser = givenCurrentUser;
+    }
+
+    public static User getCurrentUser() {
         return currentUser;
     }
 }

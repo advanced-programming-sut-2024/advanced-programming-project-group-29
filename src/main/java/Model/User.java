@@ -6,6 +6,17 @@ import java.util.Random;
 import Enum.Faction;
 
 public class User {
+    private static final String[] securityQuestions = {
+            "What is your favorite color?",
+            "What is your favorite movie?",
+            "What is your favorite book?",
+            "What is your favorite food?",
+            "What is your favorite animal?",
+            "What is your favorite game?",
+            "What is your favorite sport?",
+            "What is your favorite hobby?"
+    };
+
     private static ArrayList<User> allUsers = new ArrayList<>();
     private String username;
     private String password;
@@ -34,6 +45,10 @@ public class User {
                 return user;
         }
         return null;
+    }
+
+    public static String[] getSecurityQuestions() {
+        return securityQuestions;
     }
 
     public void setQuestion(int questionNumber, String answer) {
@@ -148,5 +163,13 @@ public class User {
 
     public ArrayList<GameHistory> getGameHistory() {
         return gameHistory;
+    }
+
+    public String getQuestion() {
+        return securityQuestions[questionNumber];
+    }
+
+    public String getAnswer() {
+        return answer;
     }
 }

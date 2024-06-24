@@ -7,16 +7,6 @@ import java.util.Random;
 import java.util.regex.Matcher;
 
 public class RegisterMenuController {
-    private static final String[] securityQuestions = {
-            "What is your favorite color?",
-            "What is your favorite movie?",
-            "What is your favorite book?",
-            "What is your favorite food?",
-            "What is your favorite animal?",
-            "What is your favorite game?",
-            "What is your favorite sport?",
-            "What is your favorite hobby?"
-    };
 
     public static Result register(Matcher matcher) {
         String username = matcher.group("username");
@@ -77,15 +67,11 @@ public class RegisterMenuController {
         return password;
     }
 
-    public static String[] getSecurityQuestion() {
-        return securityQuestions;
-    }
-
     public static Result answerSecurityQuestion(Matcher matcher, String username) {
         int question = Integer.parseInt(matcher.group("question"));
         String answer = matcher.group("answer");
         String confirm = matcher.group("confirm");
-        if (question > securityQuestions.length) {
+        if (question > User.getSecurityQuestions().length) {
             return new Result(false, "Invalid question number.");
         }
         if (!answer.equals(confirm)) {
@@ -96,7 +82,7 @@ public class RegisterMenuController {
         return new Result(true, "Question set successfully.");
     }
 
-    private static boolean checkPassword(String password) {
+    public static boolean checkPassword(String password) {
         if (password.length() < 8)
             return false;
         if (!password.matches(".*[a-z].*") || !password.matches(".*[A-Z].*")
