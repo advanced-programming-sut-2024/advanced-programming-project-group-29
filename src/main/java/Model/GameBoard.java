@@ -1,5 +1,7 @@
 package Model;
 
+import Controller.InGameMenuController;
+
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -137,5 +139,16 @@ public class GameBoard { // Radin
         for (int i = 0; i < 2; i++) {
             playersLeaders[i] = null;
         }
+    }
+
+    public void getRandomCardFromDeckAndAddItToHand(int playerIndex) {
+        Card card = players[playerIndex].getCardFromDeckRandomly();
+        players[playerIndex].removeCardFromDeck(card);
+        players[playerIndex].addCardToHand(card);
+        InGameMenuController.addCardToHandInGraphic(card, playerIndex);
+    }
+
+    public User[] getPlayers() {
+        return players;
     }
 }
