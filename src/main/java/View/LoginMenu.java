@@ -1,6 +1,8 @@
 package View;
 
+import Controller.ApplicationController;
 import Controller.LoginMenuController;
+import Controller.SaveApplicationAsObject;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -16,8 +18,6 @@ public class LoginMenu extends Application {
     public TextField password;
     private LoginMenuController loginMenuController;
 
-    private Pane pane;
-    private Stage stage;
 
     public void run(String[] args) {
         launch(args);
@@ -26,14 +26,13 @@ public class LoginMenu extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-
         stage.setResizable(false);
         stage.centerOnScreen();
-        pane = FXMLLoader.load(Objects.requireNonNull(RegisterMenu.class.getResource("/FXML/LoginMenu.fxml")));
+        Pane pane = FXMLLoader.load(Objects.requireNonNull(RegisterMenu.class.getResource("/FXML/LoginMenu.fxml")));
         Scene scene = new Scene(pane);
         stage.setScene(scene);
         stage.show();
-        this.stage = stage;
+        SaveApplicationAsObject.getApplicationController().setStage(stage);
     }
 
     public LoginMenuController getLoginMenuController() {
@@ -45,7 +44,7 @@ public class LoginMenu extends Application {
     }
 
     public void createNewAccount(MouseEvent mouseEvent) throws Exception{
-        new RegisterMenu().start(stage);
+        new RegisterMenu().start(SaveApplicationAsObject.getApplicationController().getStage());
     }
 
     public void signIn(MouseEvent mouseEvent) {
