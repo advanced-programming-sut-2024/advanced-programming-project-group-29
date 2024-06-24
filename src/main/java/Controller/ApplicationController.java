@@ -2,6 +2,7 @@ package Controller;
 
 import Model.User;
 import javafx.application.Application;
+import javafx.stage.Stage;
 
 import java.util.ArrayList;
 
@@ -9,6 +10,7 @@ public class ApplicationController extends Thread {
     private final static ArrayList<User> allUsers = new ArrayList<>();
     private final User currentUser;
     private InGameMenuController inGameMenuController;
+    private Stage stage;
     private Application menu;
 
     public ApplicationController(User currentUser) {
@@ -45,5 +47,13 @@ public class ApplicationController extends Thread {
 
     public User getCurrentUser() {
         return currentUser;
+    }
+
+    public Stage getStage() {
+        return stage;
+    }
+
+    public void setStage(Stage stage) {
+        this.stage = stage;
     }
 }
