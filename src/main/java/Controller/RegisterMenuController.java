@@ -38,7 +38,7 @@ public class RegisterMenuController {
             return new Result(false, "Passwords do not match.");
         }
         new User(username, password, nickname, email);
-        return new Result(true, "User created successfully.");
+        return new Result(true, "User created successfully. Please answer the security question!");
     }
 
     public static String generateRandomPassword() {
@@ -86,7 +86,7 @@ public class RegisterMenuController {
         if (password.length() < 8)
             return false;
         if (!password.matches(".*[a-z].*") || !password.matches(".*[A-Z].*")
-                || !password.matches(".*[0-9].*") || !password.matches(".[!@#$%^&*].*"))
+                || !password.matches(".*[0-9].*") || !password.matches(".*[!@#$%^&*].*"))
             return false;
         return true;
     }
