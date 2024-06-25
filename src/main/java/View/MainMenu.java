@@ -37,13 +37,16 @@ public class MainMenu extends Application {
     }
 
 
-    public void newGame(MouseEvent mouseEvent) {
+    public void newGame(MouseEvent mouseEvent) throws Exception {
+        new GameMenu().start(SaveApplicationAsObject.getApplicationController().getStage());
     }
 
-    public void profile(MouseEvent mouseEvent) {
+    public void profile(MouseEvent mouseEvent) throws Exception{
+        new ProfileMenu().start(SaveApplicationAsObject.getApplicationController().getStage());
     }
 
     public void logout(MouseEvent mouseEvent) {
+
     }
 
     public void buttonEntered(MouseEvent mouseEvent) {

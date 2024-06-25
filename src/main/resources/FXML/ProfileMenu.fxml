@@ -1,14 +1,183 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.Shadow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="View.ProfileMenu"
-            prefHeight="400.0" prefWidth="600.0">
-
+<AnchorPane prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.ProfileMenu">
+   <children>
+      <ImageView fitHeight="800.0" fitWidth="1200.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../Images/ProfileMenuBackground.jpg" />
+         </image>
+      </ImageView>
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#eed092" height="233.0" layoutX="134.0" layoutY="284.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="0.0" width="324.0">
+         <effect>
+            <Shadow height="60.0" radius="29.5" width="60.0">
+               <color>
+                  <Color red="0.19736842811107635" green="0.13080225884914398" blue="0.06853070110082626" opacity="0.6499999761581421" />
+               </color>
+            </Shadow>
+         </effect>
+      </Rectangle>
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#bfbfbf" height="43.0" layoutX="188.0" layoutY="317.0" onMouseClicked="#showInfo" onMouseEntered="#buttonEntered" onMouseExited="#buttonExited" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="215.0">
+         <effect>
+            <Shadow height="6.17" radius="1.1025" width="0.24">
+               <color>
+                  <Color red="0.8799999952316284" green="0.8447999954223633" blue="0.8447999954223633" opacity="0.7241379022598267" />
+               </color>
+            </Shadow>
+         </effect>
+      </Rectangle>
+      <Label layoutX="255.0" layoutY="327.0" onMouseClicked="#showInfo" onMouseEntered="#buttonEntered" onMouseExited="#buttonExited" text="Show Info">
+         <font>
+            <Font name="System Bold" size="16.0" />
+         </font>
+      </Label>
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#bfbfbf" height="43.0" layoutX="188.0" layoutY="379.0" onMouseClicked="#changeInfo" onMouseEntered="#buttonEntered" onMouseExited="#buttonExited" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="215.0">
+         <effect>
+            <Shadow height="6.17" radius="1.1025" width="0.24">
+               <color>
+                  <Color red="0.8799999952316284" green="0.8447999954223633" blue="0.8447999954223633" opacity="0.7241379022598267" />
+               </color>
+            </Shadow>
+         </effect>
+      </Rectangle>
+      <Label layoutX="246.0" layoutY="389.0" onMouseClicked="#changeInfo" onMouseEntered="#buttonEntered" onMouseExited="#buttonExited" text="Change Info">
+         <font>
+            <Font name="System Bold" size="16.0" />
+         </font>
+      </Label>
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#bfbfbf" height="43.0" layoutX="188.0" layoutY="439.0" onMouseClicked="#showHistory" onMouseEntered="#buttonEntered" onMouseExited="#buttonExited" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="147.0">
+         <effect>
+            <Shadow height="6.17" radius="1.1025" width="0.24">
+               <color>
+                  <Color red="0.8799999952316284" green="0.8447999954223633" blue="0.8447999954223633" opacity="0.7241379022598267" />
+               </color>
+            </Shadow>
+         </effect>
+      </Rectangle>
+      <Label layoutX="209.0" layoutY="450.0" onMouseClicked="#showHistory" onMouseEntered="#buttonEntered" onMouseExited="#buttonExited" text="Game History">
+         <font>
+            <Font name="System Bold" size="16.0" />
+         </font>
+      </Label>
+      <TextField fx:id="countHistory" alignment="CENTER" layoutX="353.0" layoutY="439.0" prefHeight="43.0" prefWidth="50.0" promptText="count" />
+      <Pane fx:id="changePain" disable="true" layoutX="553.0" layoutY="118.0" prefHeight="523.0" prefWidth="515.0" visible="false">
+         <children>
+            <Rectangle fx:id="darkBack" arcHeight="5.0" arcWidth="5.0" fill="#eed092" height="302.0" layoutX="89.0" layoutY="75.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="0.0" width="337.0">
+               <effect>
+                  <Shadow height="60.0" radius="29.5" width="60.0">
+                     <color>
+                        <Color red="0.0784313753247261" green="0.054901961237192154" blue="0.0313725508749485" opacity="0.7799999713897705" />
+                     </color>
+                  </Shadow>
+               </effect>
+            </Rectangle>
+            <Label layoutX="134.0" layoutY="124.0" prefHeight="22.0" prefWidth="248.0" text="What do you want to change?" textFill="#dea543">
+               <font>
+                  <Font name="System Bold" size="16.0" />
+               </font>
+            </Label>
+            <ChoiceBox fx:id="Fields" layoutX="149.0" layoutY="163.0" prefHeight="43.0" prefWidth="215.0" />
+            <TextField fx:id="textField1" layoutX="149.0" layoutY="225.0" prefHeight="43.0" prefWidth="215.0" />
+            <TextField fx:id="textField2" disable="true" layoutX="149.0" layoutY="285.0" prefHeight="43.0" prefWidth="215.0" visible="false" />
+            <Rectangle fx:id="apply" arcHeight="5.0" arcWidth="5.0" fill="#bfbfbf" height="43.0" layoutX="183.0" layoutY="285.0" onMouseClicked="#applyChanges" onMouseEntered="#buttonEntered" onMouseExited="#buttonExited" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="147.0">
+               <effect>
+                  <Shadow height="6.17" radius="1.1025" width="0.24">
+                     <color>
+                        <Color red="0.8799999952316284" green="0.8447999954223633" blue="0.8447999954223633" opacity="0.7241379022598267" />
+                     </color>
+                  </Shadow>
+               </effect>
+            </Rectangle>
+            <Label fx:id="applyLabel" layoutX="204.0" layoutY="296.0" onMouseClicked="#applyChanges" onMouseEntered="#buttonEntered" onMouseExited="#buttonExited" text="Apply Chages">
+               <font>
+                  <Font name="System Bold" size="16.0" />
+               </font>
+            </Label>
+         </children>
+      </Pane>
+      <Pane fx:id="historyPain" disable="true" layoutX="481.0" layoutY="138.0" prefHeight="546.0" prefWidth="658.0" visible="false">
+         <children>
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#eed092" height="460.0" layoutX="40.0" layoutY="43.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="0.0" width="580.0">
+               <effect>
+                  <Shadow height="60.0" radius="29.5" width="60.0">
+                     <color>
+                        <Color red="0.0784313753247261" green="0.054901961237192154" blue="0.0313725508749485" opacity="0.7799999713897705" />
+                     </color>
+                  </Shadow>
+               </effect>
+            </Rectangle>
+            <ScrollPane fx:id="scrollPane" hbarPolicy="NEVER" layoutX="78.0" layoutY="73.0" prefHeight="400.0" prefWidth="504.0">
+               <content>
+                  <VBox fx:id="vBox" prefHeight="347.0" prefWidth="487.0" />
+               </content>
+            </ScrollPane>
+         </children>
+      </Pane>
+      <Pane fx:id="InfoPain" layoutX="585.0" layoutY="122.0" prefHeight="566.0" prefWidth="450.0">
+         <children>
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#eed092" height="392.0" layoutX="39.0" layoutY="87.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="0.0" width="372.0">
+               <effect>
+                  <Shadow height="60.0" radius="29.5" width="60.0">
+                     <color>
+                        <Color red="0.0784313753247261" green="0.054901961237192154" blue="0.0313725508749485" opacity="0.7799999713897705" />
+                     </color>
+                  </Shadow>
+               </effect>
+            </Rectangle>
+            <Label fx:id="username" layoutX="86.0" layoutY="127.0" prefHeight="33.0" prefWidth="248.0" text="Username:" textFill="#dea543">
+               <font>
+                  <Font name="System Bold" size="16.0" />
+               </font>
+            </Label>
+            <Label fx:id="nickname" layoutX="86.0" layoutY="167.0" prefHeight="33.0" prefWidth="248.0" text="Nickname:" textFill="#dea543">
+               <font>
+                  <Font name="System Bold" size="16.0" />
+               </font>
+            </Label>
+            <Label fx:id="highestScore" layoutX="86.0" layoutY="207.0" prefHeight="33.0" prefWidth="248.0" text="Highest Score:" textFill="#dea543">
+               <font>
+                  <Font name="System Bold" size="16.0" />
+               </font>
+            </Label>
+            <Label fx:id="rank" layoutX="86.0" layoutY="247.0" prefHeight="33.0" prefWidth="248.0" text="Rank:" textFill="#dea543">
+               <font>
+                  <Font name="System Bold" size="16.0" />
+               </font>
+            </Label>
+            <Label fx:id="gamePlayed" layoutX="86.0" layoutY="287.0" prefHeight="33.0" prefWidth="248.0" text="Number of games played:" textFill="#dea543">
+               <font>
+                  <Font name="System Bold" size="16.0" />
+               </font>
+            </Label>
+            <Label fx:id="wins" layoutX="86.0" layoutY="327.0" prefHeight="33.0" prefWidth="248.0" text="Wins:" textFill="#dea543">
+               <font>
+                  <Font name="System Bold" size="16.0" />
+               </font>
+            </Label>
+            <Label fx:id="draws" layoutX="86.0" layoutY="367.0" prefHeight="33.0" prefWidth="248.0" text="Draws:" textFill="#dea543">
+               <font>
+                  <Font name="System Bold" size="16.0" />
+               </font>
+            </Label>
+            <Label fx:id="losses" layoutX="86.0" layoutY="407.0" prefHeight="33.0" prefWidth="248.0" text="Losses:" textFill="#dea543">
+               <font>
+                  <Font name="System Bold" size="16.0" />
+               </font>
+            </Label>
+         </children>
+      </Pane>
+   </children>
 </AnchorPane>
