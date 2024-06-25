@@ -12,20 +12,15 @@ public class Soldier extends Card {
     private boolean isHero;
     private boolean weatherAffected;
     private int hp;
-    private Type type;
 
     public Soldier(String name, User user, Faction faction) {
         super(name, user, faction);
         this.hp = getDefaultHpBySoldierName(name);
         this.attribute = getAttributeBySoldierName(name);
         this.isHero = isThisSoldierHero(name);
-        this.type = getTypeBySoldierName(name);
+        this.type = getTypeByCardName(name);
+        this.description = getDescriptionByCardName(name);
         weatherAffected = false;
-    }
-
-    private static Type getTypeBySoldierName(String soldierName) {
-        JSONObject soldier = getCardByName(soldierName);
-        return Type.getTypeFromString(soldier.getString("type"));
     }
 
     private static int getDefaultHpBySoldierName(String soldierName) {
@@ -121,13 +116,10 @@ public class Soldier extends Card {
         GameBoard gameBoard = soldier.getGameBoard();
         int rowNumber = getPlacedRowNumber(soldier, gameBoard);
         int playerIndex = gameBoard.getPlayerNumber(soldier.getUser());
-        for(Soldier otherSoldier : gameBoard.getRows()[playerIndex][rowNumber]){
-            if(otherSoldier.getAttribute() == Attribute.BERSERKER)
-                otherSoldier.makeItBear();
-        }
+        Card.executeMardoemeForRowNumber(gameBoard, playerIndex, rowNumber);
     }
 
-    private void makeItBear() {
+    protected void makeItBear() {
         Soldier bear = new Soldier("Bear", this.getUser(), Faction.NEUTRAL);
         GameBoard gameBoard = this.getGameBoard();
         int rowNumber = getPlacedRowNumber(this, gameBoard);
@@ -176,10 +168,7 @@ public class Soldier extends Card {
         GameBoard gameBoard = soldier.getGameBoard();
         int rowNumber = getPlacedRowNumber(soldier, gameBoard);
         int playerIndex = gameBoard.getPlayerNumber(soldier.getUser());
-        for(Soldier otherSoldier : gameBoard.getRows()[playerIndex][rowNumber]){
-            int hp = otherSoldier.getHp();
-            InGameMenuController.changeHpForSoldier(gameBoard, otherSoldier, hp * 2);
-        }
+        Card.executeCommanderHornForRowNumber(gameBoard, playerIndex, rowNumber);
     }
 
     private static void executeActionForMoralBoost(Soldier soldier) {
@@ -206,6 +195,14 @@ public class Soldier extends Card {
         for(Soldier sameSoldier : sameSoldiers){
             InGameMenuController.changeHpForSoldier(gameBoard, sameSoldier, sameSoldier.getHp() * count);
         }
+    }
+
+    public int getShownHp() {
+        GameBoard gameBoard = this.getGameBoard();
+        int rowNumber = getPlacedRowNumber(this, gameBoard);
+        if(gameBoard.rowHasWeather(rowNumber))
+            return 1;
+        return hp;
     }
 
 }

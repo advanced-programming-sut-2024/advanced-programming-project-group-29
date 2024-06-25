@@ -13,6 +13,7 @@ public class GameBoard { // Radin
     private final int[] playersScore = new int[2];
     private final int[] playerCardsNumber = new int[2];
     private final int[] playersCrystals = new int[2];
+    private final boolean[] rowHasWeather = new boolean[3];
     private final ArrayList<Spell> weather = new ArrayList<>();
     private final Commander[] playersLeaders = new Commander[2];
     private final GameHistory gameHistory;
@@ -150,5 +151,54 @@ public class GameBoard { // Radin
 
     public User[] getPlayers() {
         return players;
+    }
+
+    public void clearAllWeather() {
+        rowHasWeather[0] = false;
+        rowHasWeather[1] = false;
+        rowHasWeather[2] = false;
+        recalculatePlayersScore();
+        InGameMenuController.showChangedPlayerScoreAndCardsHp();
+    }
+
+    private void recalculatePlayersScore() {
+        for (int i = 0; i < 2; i++) {
+            playersScore[i] = 0;
+            for (int j = 0; j < 3; j++) {
+                if (rowHasWeather[j]) {
+                    playersScore[i] += rows[i][j].size();
+                    continue;
+                }
+                for (Soldier soldier : rows[i][j]) {
+                    playersScore[i] += soldier.getHp();
+                }
+            }
+        }
+    }
+
+    public void addWeather(Spell spell) {
+        weather.add(spell);
+        String name = spell.getName().toLowerCase();
+        if(name.matches(".*Biting.+Frost.*"))
+            addWeatherForRow(0);
+        else if(name.matches(".*Impenetrable.+Fog.*"))
+            addWeatherForRow(1);
+        else if(name.matches(".*Torrential.+Rain.*"))
+            addWeatherForRow(2);
+        else if(name.matches(".*Skellige.+Storm.*")){
+            addWeatherForRow(1);
+            addWeatherForRow(2);
+        }
+    }
+
+    private void addWeatherForRow(int i) {
+        rowHasWeather[i] = true;
+        recalculatePlayersScore();
+        InGameMenuController.showChangedPlayerScoreAndCardsHp();
+    }
+
+
+    public boolean rowHasWeather(int rowNumber) {
+        return rowHasWeather[rowNumber];
     }
 }

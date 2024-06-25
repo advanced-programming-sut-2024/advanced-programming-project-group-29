@@ -1,9 +1,10 @@
 package Model;
 
+import Controller.InGameMenuController;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import Enum.Faction;
+import Enum.*;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -19,6 +20,7 @@ public abstract class Card {
     protected Runnable deployRunnable;
     protected GameBoard gameBoard;
     protected User user;
+    protected Type type;
 
 
     public Card(String name, User user, Faction faction) {
@@ -66,6 +68,11 @@ public abstract class Card {
         return card.getString("description");
     }
 
+    protected static Type getTypeByCardName(String cardName) {
+        JSONObject soldier = getCardByName(cardName);
+        return Type.getTypeFromString(soldier.getString("type"));
+    }
+
     public static Faction getFactionByCardName(String cardName) {
         JSONObject card = getCardByName(cardName);
         if (card == null) {
@@ -73,6 +80,20 @@ public abstract class Card {
         }
         // TODO faction needs to be enum
         return null;
+    }
+
+    protected static void executeMardoemeForRowNumber(GameBoard gameBoard, int playerIndex, int rowNumber) {
+        for(Soldier otherSoldier : gameBoard.getRows()[playerIndex][rowNumber]){
+            if(otherSoldier.getAttribute() == Attribute.BERSERKER)
+                otherSoldier.makeItBear();
+        }
+    }
+
+    protected static void executeCommanderHornForRowNumber(GameBoard gameBoard, int playerIndex, int rowNumber) {
+        for(Soldier otherSoldier : gameBoard.getRows()[playerIndex][rowNumber]){
+            int hp = otherSoldier.getHp();
+            InGameMenuController.changeHpForSoldier(gameBoard, otherSoldier, hp * 2);
+        }
     }
 
     public String getDescription() {

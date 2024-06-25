@@ -46,6 +46,10 @@ public class InGameMenuController extends Thread {
         // TODO: destroy this card in graphic
     }
 
+    public static void showChangedPlayerScoreAndCardsHp() {
+        // TODO: refresh things, use soldier.getShownHp() instead of soldier.getHp()
+    }
+
     private void changeCurrentUser() {
         if (currentUser == 0) currentUser = 1;
         else currentUser = 0;
