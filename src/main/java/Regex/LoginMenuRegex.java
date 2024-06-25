@@ -7,9 +7,11 @@ public enum LoginMenuRegex {
     CHANGEPASSWORD("change password -p (?<password>\\S+) -c (?<passwordConfirm>\\S+)");
 
     private final String regex;
+
     LoginMenuRegex(String regex) {
         this.regex = regex;
     }
+
     public String getRegex() {
         return regex;
     }
