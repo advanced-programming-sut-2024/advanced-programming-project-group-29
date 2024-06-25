@@ -39,6 +39,13 @@ public class InGameMenuController extends Thread {
         // TODO: implement this
     }
 
+    public static void destroySoldier(GameBoard gameBoard, Soldier soldier) {
+        int playerIndex = gameBoard.getPlayerNumber(soldier.getUser());
+        int rowNumber = Soldier.getPlacedRowNumber(soldier, gameBoard);
+        gameBoard.getRows()[playerIndex][rowNumber].remove(soldier);
+        // TODO: destroy this card in graphic
+    }
+
     private void changeCurrentUser() {
         if (currentUser == 0) currentUser = 1;
         else currentUser = 0;

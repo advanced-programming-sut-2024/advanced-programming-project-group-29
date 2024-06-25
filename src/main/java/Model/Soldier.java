@@ -114,7 +114,7 @@ public class Soldier extends Card {
     }
 
     private void executeActionForTransformers(Soldier soldier) {
-        // TODO: implement this
+        InGameMenuController.changeHpForSoldier(soldier.getGameBoard(), soldier, 8);
     }
 
     private void executeActionForMardroeme(Soldier soldier) {
@@ -147,7 +147,21 @@ public class Soldier extends Card {
     }
 
     private void executeActionForScorch(Soldier soldier) {
-        // TODO: implement this
+        GameBoard gameBoard = soldier.getGameBoard();
+        int playerIndex = gameBoard.getPlayerNumber(soldier.getUser());
+        for(int i = 0; i < 3; i++){ // TODO: do I have to check all rows?
+            int powerSum = 0;
+            ArrayList<Soldier> notHeroSoldiers = new ArrayList<>();
+            for(Soldier otherSoldier : gameBoard.getRows()[1 - playerIndex][i])
+                if(!otherSoldier.isHero()){
+                    powerSum += otherSoldier.getHp();
+                    notHeroSoldiers.add(otherSoldier);
+                }
+            if(powerSum < 10)
+                continue;
+            for(Soldier otherSoldier : notHeroSoldiers)
+                InGameMenuController.destroySoldier(gameBoard, otherSoldier);
+        }
     }
 
     private static void executeActionForMedic(Soldier soldier) {

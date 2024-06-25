@@ -70,7 +70,7 @@
     },
     {
       "name": "Kambi",
-      "power": 11,
+      "power": 0,
       "numberOfCards": 1,
       "type": "Close Combat Unit",
       "ability": "Hero - transformers",
@@ -1042,7 +1042,7 @@
       "power": 0,
       "numberOfCards": 1,
       "type": "Ranged Unit",
-      "ability": "Transformer",
+      "ability": "Transformers",
       "description": "Turns into a card with a power of 8 after one round"
     },
     {
@@ -1113,7 +1113,7 @@
       "name": "Villentretenmerth",
       "power": 7,
       "numberOfCards": 1,
-      "type": "Close Combat\nUnit",
+      "type": "Close Combat Unit",
       "ability": "Scorch",
       "description": "Works only on opponent’s close combat"
     },
