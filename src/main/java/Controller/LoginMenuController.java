@@ -10,7 +10,7 @@ public class LoginMenuController {
         String username = matcher.group("username");
         String password = matcher.group("password");
         User user = User.getUserByUsername(username);
-        if (user.equals(null)) {
+        if (user == null) {
             return new Result(false, "Username does not exist.");
         }
         if (!user.getPassword().equals(password)) {

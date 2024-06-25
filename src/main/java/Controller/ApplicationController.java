@@ -18,9 +18,9 @@ public class ApplicationController extends Thread {
     public ApplicationController() {
     }
 
-    public ApplicationController(){
-        currentUser = null;
-    }
+//    public ApplicationController(){
+//        currentUser = null;
+//    }
 
     public static void addUser(User user) {
         allUsers.add(user);

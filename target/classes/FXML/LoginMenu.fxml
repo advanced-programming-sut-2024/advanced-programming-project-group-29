@@ -6,53 +6,221 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
 <AnchorPane prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.LoginMenu">
    <children>
-      <ImageView fitHeight="800.0" fitWidth="1200.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="800.0" fitWidth="1210.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../Images/LoginMenuBackground.png" />
          </image></ImageView>
-      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#eed092" height="376.0" layoutX="392.0" layoutY="212.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="0.0" width="418.0">
-         <effect>
-            <Shadow height="60.0" radius="29.5" width="60.0">
-               <color>
-                  <Color red="0.18000000715255737" green="0.131400004029274" blue="0.0828000009059906" opacity="0.776628315448761" />
-               </color>
-            </Shadow>
-         </effect>
-      </Rectangle>
-      <TextField fx:id="username" alignment="CENTER" layoutX="437.0" layoutY="304.0" prefHeight="43.0" prefWidth="327.0" promptText="Account">
-         <font>
-            <Font size="16.0" />
-         </font>
-      </TextField>
-      <TextField fx:id="password" alignment="CENTER" layoutX="437.0" layoutY="365.0" prefHeight="43.0" prefWidth="327.0" promptText="Password">
-         <font>
-            <Font size="16.0" />
-         </font>
-      </TextField>
-      <Label layoutX="510.0" layoutY="485.0" onMouseClicked="#createNewAccount" text="CREATE NEW ACCOUNT?" textFill="#dea543">
-         <font>
-            <Font name="System Bold Italic" size="16.0" />
-         </font>
-      </Label>
-      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#bfbfbf" height="43.0" layoutX="437.0" layoutY="424.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="327.0">
-         <effect>
-            <Shadow height="6.17" radius="1.1025" width="0.24">
-               <color>
-                  <Color red="0.8799999952316284" green="0.8447999954223633" blue="0.8447999954223633" opacity="0.7241379022598267" />
-               </color>
-            </Shadow>
-         </effect>
-      </Rectangle>
-      <Label layoutX="574.0" layoutY="435.0" text="Sign in">
-         <font>
-            <Font name="System Bold" size="16.0" />
-         </font>
-      </Label>
+      <Pane fx:id="mainPain" layoutX="354.0" layoutY="210.0" prefHeight="391.0" prefWidth="517.0">
+         <children>
+            <Rectangle fx:id="dark1" arcHeight="5.0" arcWidth="5.0" fill="#eed092" height="297.0" layoutX="50.0" layoutY="47.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="0.0" width="418.0">
+               <effect>
+                  <Shadow height="60.0" radius="29.5" width="60.0">
+                     <color>
+                        <Color red="0.0784313753247261" green="0.054901961237192154" blue="0.0313725508749485" opacity="0.7799999713897705" />
+                     </color>
+                  </Shadow>
+               </effect>
+            </Rectangle>
+            <TextField fx:id="username" alignment="CENTER" layoutX="95.0" layoutY="94.0" prefHeight="43.0" prefWidth="327.0" promptText="Account">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </TextField>
+            <TextField fx:id="password" alignment="CENTER" layoutX="96.0" layoutY="153.0" prefHeight="43.0" prefWidth="327.0" promptText="Password">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </TextField>
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#bfbfbf" height="43.0" layoutX="96.0" layoutY="213.0" onMouseClicked="#signIn" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="327.0">
+               <effect>
+                  <Shadow height="6.17" radius="1.1025" width="0.24">
+                     <color>
+                        <Color red="0.8799999952316284" green="0.8447999954223633" blue="0.8447999954223633" opacity="0.7241379022598267" />
+                     </color>
+                  </Shadow>
+               </effect>
+            </Rectangle>
+            <Label layoutX="233.0" layoutY="224.0" onMouseClicked="#signIn" text="Sign in">
+               <font>
+                  <Font name="System Bold" size="16.0" />
+               </font>
+            </Label>
+            <Label fx:id="createNewAccount" layoutX="96.0" layoutY="272.0" onMouseClicked="#createNewAccount" onMouseEntered="#labelEntered" onMouseExited="#labelExited" text="CREATE NEW ACCOUNT?" textFill="#dea543">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font>
+            </Label>
+            <Label fx:id="forget" layoutX="287.0" layoutY="272.0" onMouseClicked="#forgetPassword" onMouseEntered="#labelEntered" onMouseExited="#labelExited" text="FORGET PASSWORD" textFill="#dea543">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font>
+            </Label>
+         </children>
+      </Pane>
+      <Pane fx:id="usernamePain" disable="true" layoutX="369.0" layoutY="235.0" prefHeight="361.0" prefWidth="486.0" visible="false">
+         <children>
+            <Rectangle fx:id="dark2" arcHeight="5.0" arcWidth="5.0" fill="#eed092" height="212.0" layoutX="34.0" layoutY="45.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="0.0" width="418.0">
+               <effect>
+                  <Shadow height="60.0" radius="29.5" width="60.0">
+                     <color>
+                        <Color red="0.0784313753247261" green="0.054901961237192154" blue="0.0313725508749485" opacity="0.7799999713897705" />
+                     </color>
+                  </Shadow>
+               </effect>
+            </Rectangle>
+            <Label alignment="TOP_CENTER" contentDisplay="CENTER" layoutX="80.0" layoutY="72.0" onMouseClicked="#createNewAccount" onMouseEntered="#labelEntered" onMouseExited="#labelExited" prefHeight="50.0" prefWidth="327.0" text="Enter your username" textFill="#dea543" wrapText="true">
+               <font>
+                  <Font name="System Bold" size="15.0" />
+               </font>
+            </Label>
+            <TextField fx:id="usernameChange" alignment="CENTER" layoutX="80.0" layoutY="111.0" prefHeight="43.0" prefWidth="327.0" promptText="Username">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </TextField>
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#bfbfbf" height="43.0" layoutX="80.0" layoutY="166.0" onMouseClicked="#cancel" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="158.0">
+               <effect>
+                  <Shadow height="6.17" radius="1.1025" width="0.24">
+                     <color>
+                        <Color red="0.8799999952316284" green="0.8447999954223633" blue="0.8447999954223633" opacity="0.7241379022598267" />
+                     </color>
+                  </Shadow>
+               </effect>
+            </Rectangle>
+            <Label layoutX="133.0" layoutY="177.0" onMouseClicked="#cancel" text="Cancel">
+               <font>
+                  <Font name="System Bold" size="16.0" />
+               </font>
+            </Label>
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#bfbfbf" height="43.0" layoutX="249.0" layoutY="167.0" onMouseClicked="#enterName" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="158.0">
+               <effect>
+                  <Shadow height="6.17" radius="1.1025" width="0.24">
+                     <color>
+                        <Color red="0.8799999952316284" green="0.8447999954223633" blue="0.8447999954223633" opacity="0.7241379022598267" />
+                     </color>
+                  </Shadow>
+               </effect>
+            </Rectangle>
+            <Label layoutX="309.0" layoutY="177.0" onMouseClicked="#enterName" text="Next">
+               <font>
+                  <Font name="System Bold" size="16.0" />
+               </font>
+            </Label>
+         </children>
+      </Pane>
+      <Pane fx:id="questionPain" disable="true" layoutX="369.0" layoutY="235.0" prefHeight="361.0" prefWidth="486.0" visible="false">
+         <children>
+            <Rectangle fx:id="dark3" arcHeight="5.0" arcWidth="5.0" fill="#eed092" height="212.0" layoutX="34.0" layoutY="45.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="0.0" width="418.0">
+               <effect>
+                  <Shadow height="60.0" radius="29.5" width="60.0">
+                     <color>
+                        <Color red="0.0784313753247261" green="0.054901961237192154" blue="0.0313725508749485" opacity="0.7799999713897705" />
+                     </color>
+                  </Shadow>
+               </effect>
+            </Rectangle>
+            <Label fx:id="question" alignment="TOP_CENTER" contentDisplay="CENTER" layoutX="80.0" layoutY="72.0" onMouseClicked="#createNewAccount" onMouseEntered="#labelEntered" onMouseExited="#labelExited" prefHeight="50.0" prefWidth="327.0" text="question" textFill="#dea543" wrapText="true">
+               <font>
+                  <Font name="System Bold" size="15.0" />
+               </font>
+            </Label>
+            <TextField fx:id="answer" alignment="CENTER" layoutX="80.0" layoutY="111.0" prefHeight="43.0" prefWidth="327.0" promptText="Answer">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </TextField>
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#bfbfbf" height="43.0" layoutX="249.0" layoutY="166.0" onMouseClicked="#answerQuestion" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="158.0">
+               <effect>
+                  <Shadow height="6.17" radius="1.1025" width="0.24">
+                     <color>
+                        <Color red="0.8799999952316284" green="0.8447999954223633" blue="0.8447999954223633" opacity="0.7241379022598267" />
+                     </color>
+                  </Shadow>
+               </effect>
+            </Rectangle>
+            <Label layoutX="309.0" layoutY="177.0" onMouseClicked="#answerQuestion" text="Next">
+               <font>
+                  <Font name="System Bold" size="16.0" />
+               </font>
+            </Label>
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#bfbfbf" height="43.0" layoutX="80.0" layoutY="166.0" onMouseClicked="#cancel" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="158.0">
+               <effect>
+                  <Shadow height="6.17" radius="1.1025" width="0.24">
+                     <color>
+                        <Color red="0.8799999952316284" green="0.8447999954223633" blue="0.8447999954223633" opacity="0.7241379022598267" />
+                     </color>
+                  </Shadow>
+               </effect>
+            </Rectangle>
+            <Label layoutX="133.0" layoutY="177.0" onMouseClicked="#cancel" text="Cancel">
+               <font>
+                  <Font name="System Bold" size="16.0" />
+               </font>
+            </Label>
+         </children>
+      </Pane>
+      <Pane fx:id="PasswordPain" disable="true" layoutX="368.0" layoutY="228.0" prefHeight="361.0" prefWidth="486.0" visible="false">
+         <children>
+            <Rectangle fx:id="dark4" arcHeight="5.0" arcWidth="5.0" fill="#eed092" height="265.0" layoutX="34.0" layoutY="48.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="0.0" width="418.0">
+               <effect>
+                  <Shadow height="60.0" radius="29.5" width="60.0">
+                     <color>
+                        <Color red="0.0784313753247261" green="0.054901961237192154" blue="0.0313725508749485" opacity="0.7799999713897705" />
+                     </color>
+                  </Shadow>
+               </effect>
+            </Rectangle>
+            <Label alignment="TOP_CENTER" contentDisplay="CENTER" layoutX="80.0" layoutY="75.0" onMouseClicked="#createNewAccount" onMouseEntered="#labelEntered" onMouseExited="#labelExited" prefHeight="29.0" prefWidth="327.0" text="Set your password" textFill="#dea543" wrapText="true">
+               <font>
+                  <Font name="System Bold" size="15.0" />
+               </font>
+            </Label>
+            <TextField fx:id="newPassword" alignment="CENTER" layoutX="80.0" layoutY="114.0" prefHeight="43.0" prefWidth="327.0" promptText="New Password">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </TextField>
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#bfbfbf" height="43.0" layoutX="249.0" layoutY="223.0" onMouseClicked="#finish" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="158.0">
+               <effect>
+                  <Shadow height="6.17" radius="1.1025" width="0.24">
+                     <color>
+                        <Color red="0.8799999952316284" green="0.8447999954223633" blue="0.8447999954223633" opacity="0.7241379022598267" />
+                     </color>
+                  </Shadow>
+               </effect>
+            </Rectangle>
+            <Label layoutX="304.0" layoutY="234.0" onMouseClicked="#finish" text="Finish">
+               <font>
+                  <Font name="System Bold" size="16.0" />
+               </font>
+            </Label>
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#bfbfbf" height="43.0" layoutX="80.0" layoutY="224.0" onMouseClicked="#cancel" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="158.0">
+               <effect>
+                  <Shadow height="6.17" radius="1.1025" width="0.24">
+                     <color>
+                        <Color red="0.8799999952316284" green="0.8447999954223633" blue="0.8447999954223633" opacity="0.7241379022598267" />
+                     </color>
+                  </Shadow>
+               </effect>
+            </Rectangle>
+            <Label layoutX="133.0" layoutY="235.0" onMouseClicked="#cancel" text="Cancel">
+               <font>
+                  <Font name="System Bold" size="16.0" />
+               </font>
+            </Label>
+            <TextField fx:id="confirmPassword" alignment="CENTER" layoutX="80.0" layoutY="169.0" prefHeight="43.0" prefWidth="327.0" promptText="Confirm Password">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </TextField>
+         </children>
+      </Pane>
    </children>
 </AnchorPane>
