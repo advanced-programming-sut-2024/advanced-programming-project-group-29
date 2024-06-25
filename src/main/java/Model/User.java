@@ -172,4 +172,8 @@ public class User {
     public String getAnswer() {
         return answer;
     }
+
+    public boolean hasUserAnswerTheQuestion(){
+        return answer != null;
+    }
 }

@@ -6,9 +6,11 @@ import Controller.RegisterMenuController;
 import Controller.SaveApplicationAsObject;
 import Model.Result;
 import Model.User;
+import Regex.LoginMenuRegex;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
@@ -45,6 +47,7 @@ public class LoginMenu extends Application {
     public Rectangle dark2;
     public Rectangle dark3;
     public Rectangle dark4;
+    public CheckBox stayIn;
 
     private Label warning;
     private LoginMenuController loginMenuController;
@@ -80,9 +83,8 @@ public class LoginMenu extends Application {
     }
 
     public void signIn(MouseEvent mouseEvent) throws Exception {
-        String toRegex = this.username.getText() + "___" + this.password.getText();
-        String regex = "(?<username>.*)___(?<password>.*)";
-        Matcher matcher = Pattern.compile(regex).matcher(toRegex);
+        String toRegex = "login -u " + this.username.getText() + " -p " + this.password.getText() + (stayIn.isSelected() ? " -stay-logged-in" : " ");
+        Matcher matcher = Pattern.compile(LoginMenuRegex.LOGIN.getRegex()).matcher(toRegex);
         matcher.matches();
         Result result = LoginMenuController.login(matcher);
         if (!result.isSuccessful()) {
@@ -105,9 +107,8 @@ public class LoginMenu extends Application {
 
 
     public void enterName(MouseEvent mouseEvent) {
-        String toRegex = this.usernameChange.getText();
-        String regex = "(?<username>.*)";
-        Matcher matcher = Pattern.compile(regex).matcher(toRegex);
+        String toRegex = "forget password -u " + this.usernameChange.getText();
+        Matcher matcher = Pattern.compile(LoginMenuRegex.FORGETPASSWORD.getRegex()).matcher(toRegex);
         matcher.matches();
         Result result = LoginMenuController.forgetPassword(matcher);
         if (!result.isSuccessful()) {
@@ -115,7 +116,7 @@ public class LoginMenu extends Application {
         } else {
             deleteWarning();
             question.setText(result.getMessage().get(0));
-            this.user = User.getUserByUsername(toRegex);
+            this.user = User.getUserByUsername(this.usernameChange.getText());
             usernamePain.setDisable(true);
             usernamePain.setVisible(false);
             questionPain.setDisable(false);
@@ -125,9 +126,8 @@ public class LoginMenu extends Application {
 
 
     public void answerQuestion(MouseEvent mouseEvent) {
-        String toRegex = this.answer.getText();
-        String regex = "(?<answer>.*)";
-        Matcher matcher = Pattern.compile(regex).matcher(toRegex);
+        String toRegex = "answer -a " + this.answer.getText();
+        Matcher matcher = Pattern.compile(LoginMenuRegex.ANSWER.getRegex()).matcher(toRegex);
         matcher.matches();
         Result result = LoginMenuController.answerQuestion(matcher, this.user.getUsername());
         if (!result.isSuccessful()) {
@@ -142,9 +142,8 @@ public class LoginMenu extends Application {
     }
 
     public void finish(MouseEvent mouseEvent) {
-        String toRegex = this.newPassword.getText() + "___" + this.confirmPassword.getText();
-        String regex = "(?<password>.*)___(?<passwordConfirm>.*)";
-        Matcher matcher = Pattern.compile(regex).matcher(toRegex);
+        String toRegex = "change password -p " + this.newPassword.getText() + " -c " + this.confirmPassword.getText();
+        Matcher matcher = Pattern.compile(LoginMenuRegex.CHANGEPASSWORD.getRegex()).matcher(toRegex);
         matcher.matches();
         Result result = LoginMenuController.changePassword(matcher, this.user.getUsername());
         if (!result.isSuccessful()) {
@@ -209,5 +208,25 @@ public class LoginMenu extends Application {
 
     public void labelExited(MouseEvent mouseEvent) {
         ((Label) mouseEvent.getSource()).setFont(Font.font("System", FontWeight.BOLD, 14));
+    }
+
+    public void buttonEntered(MouseEvent mouseEvent) {
+        if (mouseEvent.getSource() instanceof Rectangle){
+            Pane paneS = (Pane) ((Rectangle) mouseEvent.getSource()).getParent();
+            int n = paneS.getChildren().indexOf((Rectangle) mouseEvent.getSource()) + 1;
+            ((Label) paneS.getChildren().get(n)).setTextFill(Paint.valueOf("e47429"));
+        } else {
+            ((Label) mouseEvent.getSource()).setTextFill(Paint.valueOf("e47429"));
+        }
+    }
+
+    public void buttonExited(MouseEvent mouseEvent) {
+        if (mouseEvent.getSource() instanceof Rectangle){
+            Pane paneS = (Pane) ((Rectangle) mouseEvent.getSource()).getParent();
+            int n = paneS.getChildren().indexOf((Rectangle) mouseEvent.getSource()) + 1;
+            ((Label) paneS.getChildren().get(n)).setTextFill(Paint.valueOf("black"));
+        } else {
+            ((Label) mouseEvent.getSource()).setTextFill(Paint.valueOf("black"));
+        }
     }
 }
