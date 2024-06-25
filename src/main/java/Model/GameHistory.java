@@ -37,6 +37,15 @@ public class GameHistory {
         }
     }
 
+    public int getPlayerNumber(User player) {
+        if (players[0].equals(player)) {
+            return 0;
+        } else if (players[1].equals(player)) {
+            return 1;
+        }
+        return -1;
+    }
+
     public ArrayList<Integer> getScorePerRound(int playerNumber) {
         return scorePerRound[playerNumber];
     }

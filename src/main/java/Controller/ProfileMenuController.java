@@ -1,10 +1,13 @@
 package Controller;
 
+import Model.GameHistory;
 import Model.Result;
 import Model.User;
 
 import java.awt.print.Printable;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.regex.Matcher;
 
 public class ProfileMenuController {
@@ -64,12 +67,57 @@ public class ProfileMenuController {
     }
 
     public static ArrayList<String> showInfo() {
-        //TODO
-        return null;
+        ArrayList<String> info = new ArrayList<>();
+        User currentUser = ApplicationController.getCurrentUser();
+        info.add("Username: " + currentUser.getUsername());
+        info.add("Nickname: " + currentUser.getNickname());
+        info.add("Highest Score: " + currentUser.getHighestScore());
+        info.add("Rank: " + currentUser.getRank());
+        info.add("Number of Games Played: " + currentUser.getGameHistory().size());
+        info.add("Number of Games Drawn: " + currentUser.getNumberOfDraws());
+        info.add("Number of Games Won: " + currentUser.getNumberOfWins());
+        info.add("Number of Games Lost: " + currentUser.getNumberOfLosses());
+        return info;
     }
 
-    public static Result gameHistory() {
-        //TODO
-        return null;
+    public static Result gameHistory(Matcher matcher) {
+        int numberOfGames = matcher.group("numberOfGames") == null ? 5 : Integer.parseInt(matcher.group("numberOfGames"));
+        if (numberOfGames < 1) {
+            return new Result(false, "Number of games should be at least 1.");
+        }
+        ArrayList<GameHistory> gameHistory = ApplicationController.getCurrentUser().getGameHistory();
+        numberOfGames = Math.min(numberOfGames, gameHistory.size());
+        if (numberOfGames == 0) {
+            return new Result(false, "You have not played any games yet.");
+        }
+        ArrayList<String> games = new ArrayList<>();
+        for (int i = gameHistory.size() - 1; i >= gameHistory.size() - numberOfGames; i--) {
+            GameHistory game = gameHistory.get(i);
+            int playerNumber = game.getPlayerNumber(ApplicationController.getCurrentUser());
+            int opponentNumber = 1 - playerNumber;
+
+            ArrayList<String> gameInfo = new ArrayList<>();
+            gameInfo.add("Opponent: " + game.getPlayer(opponentNumber).getUsername());
+
+            Date gameDate = game.getGameDate();
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            gameInfo.add("Date: " + simpleDateFormat.format(gameDate));
+
+            int numberOfRounds = game.getScorePerRound(playerNumber).size();
+            int playerScore = 0, opponentScore = 0;
+            for (int j = 0; j < numberOfRounds; j++) {
+                playerScore += game.getScorePerRound(playerNumber).get(j);
+                opponentScore += game.getScorePerRound(opponentNumber).get(j);
+                gameInfo.add("Round " + (j + 1) + " my score: " + game.getScorePerRound(playerNumber).get(j)
+                        + " opponent score: " + game.getScorePerRound(opponentNumber).get(j));
+            }
+
+            gameInfo.add("My total score: " + playerScore);
+            gameInfo.add("Opponent total score: " + opponentScore);
+
+            gameInfo.add("Winner: " + game.getPlayer(0).getUsername());
+            games.add(String.join("\n", gameInfo));
+        }
+        return new Result(true, games);
     }
 }

@@ -5,7 +5,8 @@ public enum ProfileMenuRegex {
     CHANGENICKNAME("change nickname -u (?<nickname>\\S+)"),
     CHANGEEMAIL("change email -e (?<email>\\S+)"),
     CHANGEPASSWORD("change password -p (?<password>\\S+) -o (?<oldPassword>\\S+)"),
-    SHOWINFO("menu enter user info");
+    SHOWINFO("menu enter user info"),
+    GAMEHISTORY("game history( -n (?<numberOfGames>-?\\d+))?");
 
     private final String regex;
 
