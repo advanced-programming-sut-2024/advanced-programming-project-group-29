@@ -70,7 +70,7 @@
     },
     {
       "name": "Kambi",
-      "power": 11,
+      "power": 0,
       "numberOfCards": 1,
       "type": "Close Combat Unit",
       "ability": "Hero - transformers",
@@ -116,7 +116,7 @@
       "power": 8,
       "numberOfCards": 1,
       "type": "Ranged Unit",
-      "ability": " \tHero and Mardroeme"
+      "ability": "Hero and Mardroeme"
     },
     {
       "name": "Hjalmar",
@@ -369,7 +369,7 @@
       "type": "Siege Unit"
     },
     {
-      "name": "\tBlue Stripes Commando",
+      "name": "Blue Stripes Commando",
       "power": 4,
       "numberOfCards": 3,
       "type": "Close Combat Unit",
@@ -475,7 +475,7 @@
       "type": "Siege Unit"
     },
     {
-      "name": "\tSiegfried of Denesle",
+      "name": "Siegfried of Denesle",
       "power": 5,
       "numberOfCards": 1,
       "type": "Close Combat Unit"
@@ -488,7 +488,7 @@
       "ability": "Spy"
     },
     {
-      "name": "\tSíle de Tansarville",
+      "name": "Síle de Tansarville",
       "power": 5,
       "numberOfCards": 1,
       "type": "Ranged Unit"
@@ -650,7 +650,7 @@
       "type": "Ranged Unit"
     },
     {
-      "name": "\tCynthia",
+      "name": "Cynthia",
       "power": 4,
       "numberOfCards": 1,
       "type": "Ranged Unit"
@@ -974,6 +974,14 @@
       "description": "Sets the power of all close combat units of both sides to 1"
     },
     {
+      "name": "Bear",
+      "power": 8,
+      "numberOfCards": 0,
+      "type": "Bear",
+      "ability": "-",
+      "description": "Sets the power of all close combat units of both sides to 1"
+    },
+    {
       "name": "Impenetrable fog",
       "power": "-",
       "numberOfCards": 3,
@@ -1042,7 +1050,7 @@
       "power": 0,
       "numberOfCards": 1,
       "type": "Ranged Unit",
-      "ability": "Transformer",
+      "ability": "Transformers",
       "description": "Turns into a card with a power of 8 after one round"
     },
     {
@@ -1113,7 +1121,7 @@
       "name": "Villentretenmerth",
       "power": 7,
       "numberOfCards": 1,
-      "type": "Close Combat\nUnit",
+      "type": "Close Combat Unit",
       "ability": "Scorch",
       "description": "Works only on opponent’s close combat"
     },

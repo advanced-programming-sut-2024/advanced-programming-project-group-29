@@ -1,14 +1,85 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.effect.Blend?>
+<?import javafx.scene.effect.Glow?>
+<?import javafx.scene.effect.Shadow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="View.MainMenu"
-            prefHeight="400.0" prefWidth="600.0">
-
+<AnchorPane prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.MainMenu">
+   <children>
+      <ImageView fitHeight="800.0" fitWidth="1200.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../Images/MainMenuBackground.jpg" />
+         </image>
+      </ImageView>
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#eed092" height="316.0" layoutX="391.0" layoutY="248.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="0.0" width="418.0">
+         <effect>
+            <Shadow height="60.0" radius="29.5" width="60.0">
+               <color>
+                  <Color red="0.06300000101327896" green="0.17080000042915344" blue="0.20999999344348907" opacity="0.7761685848236084" />
+               </color>
+            </Shadow>
+         </effect>
+      </Rectangle>
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#bfbfbf" height="43.0" layoutX="477.0" layoutY="340.0" onMouseClicked="#newGame" onMouseEntered="#buttonEntered" onMouseExited="#buttonExited" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="246.0">
+         <effect>
+            <Shadow height="6.17" radius="1.1025" width="0.24">
+               <color>
+                  <Color red="0.8799999952316284" green="0.8447999954223633" blue="0.8447999954223633" opacity="0.7241379022598267" />
+               </color>
+            </Shadow>
+         </effect>
+      </Rectangle>
+      <Label layoutX="529.0" layoutY="351.0" onMouseClicked="#newGame" onMouseEntered="#buttonEntered" onMouseExited="#buttonExited" text="Start a new Game">
+         <font>
+            <Font name="System Bold" size="16.0" />
+         </font>
+      </Label>
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#bfbfbf" height="43.0" layoutX="477.0" layoutY="400.0" onMouseClicked="#profile" onMouseEntered="#buttonEntered" onMouseExited="#buttonExited" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="246.0">
+         <effect>
+            <Shadow height="6.17" radius="1.1025" width="0.24">
+               <color>
+                  <Color red="0.8799999952316284" green="0.8447999954223633" blue="0.8447999954223633" opacity="0.7241379022598267" />
+               </color>
+            </Shadow>
+         </effect>
+      </Rectangle>
+      <Label layoutX="574.0" layoutY="411.0" onMouseClicked="#profile" onMouseEntered="#buttonEntered" onMouseExited="#buttonExited" text="Profile">
+         <font>
+            <Font name="System Bold" size="16.0" />
+         </font>
+      </Label>
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#bfbfbf" height="43.0" layoutX="477.0" layoutY="461.0" onMouseClicked="#logout" onMouseEntered="#buttonEntered" onMouseExited="#buttonExited" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="246.0">
+         <effect>
+            <Shadow height="6.17" radius="1.1025" width="0.24">
+               <color>
+                  <Color red="0.8799999952316284" green="0.8447999954223633" blue="0.8447999954223633" opacity="0.7241379022598267" />
+               </color>
+            </Shadow>
+         </effect>
+      </Rectangle>
+      <Label layoutX="570.0" layoutY="472.0" onMouseClicked="#logout" onMouseEntered="#buttonEntered" onMouseExited="#buttonExited" text="Log out">
+         <font>
+            <Font name="System Bold" size="16.0" />
+         </font>
+      </Label>
+      <Label fx:id="nickname" alignment="CENTER" layoutX="415.0" layoutY="278.0" prefHeight="43.0" prefWidth="371.0" text="wellcome master" textFill="#e47429">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font>
+         <effect>
+            <Blend>
+               <topInput>
+                  <Glow />
+               </topInput>
+            </Blend>
+         </effect>
+      </Label>
+   </children>
 </AnchorPane>

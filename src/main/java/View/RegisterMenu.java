@@ -6,6 +6,7 @@ import Controller.RegisterMenuController;
 import Controller.SaveApplicationAsObject;
 import Model.Result;
 import Model.User;
+import Regex.RegisterMenuRegex;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
@@ -54,7 +55,7 @@ public class RegisterMenu extends Application {
 
 
     @FXML
-    public void initialize(){
+    public void initialize() {
         this.questions.getItems().addAll(User.getSecurityQuestions());
         this.questions.setValue(User.getSecurityQuestions()[0]);
     }
@@ -80,9 +81,8 @@ public class RegisterMenu extends Application {
     }
 
     public void signup(MouseEvent mouseEvent) {
-        String toRegex = this.username.getText() + "___" + this.nickname.getText() + "___" + this.password.getText() + "___" + this.confirmPassword.getText() + "___" + this.email.getText();
-        String regex = "(?<username>.*)___(?<nickname>.*)___(?<password>.*)___(?<passwordConfirm>.*)___(?<email>.*)";
-        Matcher matcher = Pattern.compile(regex).matcher(toRegex);
+        String toRegex = "register -u " + this.username.getText() + " -p " + this.password.getText() + " " + this.confirmPassword.getText() + " -n " + this.nickname.getText() + " -e " + this.email.getText();
+        Matcher matcher = Pattern.compile(RegisterMenuRegex.REGISTER.getRegex()).matcher(toRegex);
         matcher.matches();
         Result result = RegisterMenuController.register(matcher);
         if (!result.isSuccessful()) {
@@ -114,9 +114,8 @@ public class RegisterMenu extends Application {
     }
 
     public void setQuestion(MouseEvent mouseEvent) {
-        String toRegex = questions.getSelectionModel().getSelectedIndex() + "___" + this.answer.getText() + "___" + this.confirmAnswer.getText();
-        String regex = "(?<question>.*)___(?<answer>.*)___(?<confirm>.*)";
-        Matcher matcher = Pattern.compile(regex).matcher(toRegex);
+        String toRegex = "pick question -q " + questions.getSelectionModel().getSelectedIndex() + " -a " + this.answer.getText() + " -c " + this.confirmAnswer.getText();
+        Matcher matcher = Pattern.compile(RegisterMenuRegex.PICKQUESTION.getRegex()).matcher(toRegex);
         matcher.matches();
         Result result = RegisterMenuController.answerSecurityQuestion(matcher, this.username.getText());
         if (!result.isSuccessful()) {
@@ -126,8 +125,13 @@ public class RegisterMenu extends Application {
         }
     }
 
-    public void finish(MouseEvent mouseEvent) throws Exception{
-        new LoginMenu().start(SaveApplicationAsObject.getApplicationController().getStage());
+    public void finish(MouseEvent mouseEvent) throws Exception {
+        User user = User.getUserByUsername(this.username.getText());
+        if (user.hasUserAnswerTheQuestion()){
+            new LoginMenu().start(SaveApplicationAsObject.getApplicationController().getStage());
+        } else {
+            sayAlert("Please answer the security question! and set question", false, true);
+        }
     }
 
     private void sayAlert(String warning, boolean isMain, boolean isRed) {
@@ -137,11 +141,11 @@ public class RegisterMenu extends Application {
         back.setHeight(back.getHeight() + (n + 1) * HEIGHT_OF_TEXT_WARNING);
         Pane pane = SaveApplicationAsObject.getApplicationController().getPane();
         pane.getChildren().remove(this.warning);
-        this.warning = createWarningLabel(warning, n + 1, isRed,isMain);
+        this.warning = createWarningLabel(warning, n + 1, isRed, isMain);
         pane.getChildren().add(this.warning);
     }
 
-    private Label createWarningLabel(String warning, int n, boolean isRed,boolean isMain){
+    private Label createWarningLabel(String warning, int n, boolean isRed, boolean isMain) {
         Label label = new Label(warning);
         label.setTextFill(Paint.valueOf(isRed ? "#dd2e2e" : "green"));
         label.setWrapText(true);
@@ -151,6 +155,26 @@ public class RegisterMenu extends Application {
         label.setPrefHeight(n * HEIGHT_OF_TEXT_WARNING);
         label.setFont(Font.font("System", FontWeight.BOLD, 16));
         return label;
+    }
+
+    public void buttonEntered(MouseEvent mouseEvent) {
+        if (mouseEvent.getSource() instanceof Rectangle){
+            Pane paneS = (Pane) ((Rectangle) mouseEvent.getSource()).getParent();
+            int n = paneS.getChildren().indexOf((Rectangle) mouseEvent.getSource()) + 1;
+            ((Label) paneS.getChildren().get(n)).setTextFill(Paint.valueOf("e47429"));
+        } else {
+            ((Label) mouseEvent.getSource()).setTextFill(Paint.valueOf("e47429"));
+        }
+    }
+
+    public void buttonExited(MouseEvent mouseEvent) {
+        if (mouseEvent.getSource() instanceof Rectangle){
+            Pane paneS = (Pane) ((Rectangle) mouseEvent.getSource()).getParent();
+            int n = paneS.getChildren().indexOf((Rectangle) mouseEvent.getSource()) + 1;
+            ((Label) paneS.getChildren().get(n)).setTextFill(Paint.valueOf("black"));
+        } else {
+            ((Label) mouseEvent.getSource()).setTextFill(Paint.valueOf("black"));
+        }
     }
 }
 

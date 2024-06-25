@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.effect.Shadow?>
@@ -38,7 +39,7 @@
                   <Font size="16.0" />
                </font>
             </TextField>
-            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#bfbfbf" height="43.0" layoutX="96.0" layoutY="213.0" onMouseClicked="#signIn" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="327.0">
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#bfbfbf" height="43.0" layoutX="203.0" layoutY="213.0" onMouseClicked="#signIn" onMouseEntered="#buttonEntered" onMouseExited="#buttonExited" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="220.0">
                <effect>
                   <Shadow height="6.17" radius="1.1025" width="0.24">
                      <color>
@@ -47,7 +48,7 @@
                   </Shadow>
                </effect>
             </Rectangle>
-            <Label layoutX="233.0" layoutY="224.0" onMouseClicked="#signIn" text="Sign in">
+            <Label layoutX="286.0" layoutY="224.0" onMouseClicked="#signIn" onMouseEntered="#buttonEntered" onMouseExited="#buttonExited" text="Sign in">
                <font>
                   <Font name="System Bold" size="16.0" />
                </font>
@@ -62,6 +63,11 @@
                   <Font name="System Bold" size="14.0" />
                </font>
             </Label>
+            <CheckBox fx:id="stayIn" layoutX="95.0" layoutY="224.0" mnemonicParsing="false" text="Stay In" textFill="#dea543">
+               <font>
+                  <Font name="System Bold" size="15.0" />
+               </font>
+            </CheckBox>
          </children>
       </Pane>
       <Pane fx:id="usernamePain" disable="true" layoutX="369.0" layoutY="235.0" prefHeight="361.0" prefWidth="486.0" visible="false">
@@ -85,7 +91,7 @@
                   <Font size="16.0" />
                </font>
             </TextField>
-            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#bfbfbf" height="43.0" layoutX="80.0" layoutY="166.0" onMouseClicked="#cancel" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="158.0">
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#bfbfbf" height="43.0" layoutX="80.0" layoutY="166.0" onMouseClicked="#cancel" onMouseEntered="#buttonEntered" onMouseExited="#buttonExited" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="158.0">
                <effect>
                   <Shadow height="6.17" radius="1.1025" width="0.24">
                      <color>
@@ -94,12 +100,12 @@
                   </Shadow>
                </effect>
             </Rectangle>
-            <Label layoutX="133.0" layoutY="177.0" onMouseClicked="#cancel" text="Cancel">
+            <Label layoutX="133.0" layoutY="177.0" onMouseClicked="#cancel" onMouseEntered="#buttonEntered" onMouseExited="#buttonExited" text="Cancel">
                <font>
                   <Font name="System Bold" size="16.0" />
                </font>
             </Label>
-            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#bfbfbf" height="43.0" layoutX="249.0" layoutY="167.0" onMouseClicked="#enterName" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="158.0">
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#bfbfbf" height="43.0" layoutX="249.0" layoutY="167.0" onMouseClicked="#enterName" onMouseEntered="#buttonEntered" onMouseExited="#buttonExited" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="158.0">
                <effect>
                   <Shadow height="6.17" radius="1.1025" width="0.24">
                      <color>
@@ -108,7 +114,7 @@
                   </Shadow>
                </effect>
             </Rectangle>
-            <Label layoutX="309.0" layoutY="177.0" onMouseClicked="#enterName" text="Next">
+            <Label layoutX="309.0" layoutY="177.0" onMouseClicked="#enterName" onMouseEntered="#buttonEntered" onMouseExited="#buttonExited" text="Next">
                <font>
                   <Font name="System Bold" size="16.0" />
                </font>
@@ -136,7 +142,7 @@
                   <Font size="16.0" />
                </font>
             </TextField>
-            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#bfbfbf" height="43.0" layoutX="249.0" layoutY="166.0" onMouseClicked="#answerQuestion" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="158.0">
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#bfbfbf" height="43.0" layoutX="249.0" layoutY="166.0" onMouseClicked="#answerQuestion" onMouseEntered="#buttonEntered" onMouseExited="#buttonExited" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="158.0">
                <effect>
                   <Shadow height="6.17" radius="1.1025" width="0.24">
                      <color>
@@ -145,12 +151,12 @@
                   </Shadow>
                </effect>
             </Rectangle>
-            <Label layoutX="309.0" layoutY="177.0" onMouseClicked="#answerQuestion" text="Next">
+            <Label layoutX="309.0" layoutY="177.0" onMouseClicked="#answerQuestion" onMouseEntered="#buttonEntered" onMouseExited="#buttonExited" text="Next">
                <font>
                   <Font name="System Bold" size="16.0" />
                </font>
             </Label>
-            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#bfbfbf" height="43.0" layoutX="80.0" layoutY="166.0" onMouseClicked="#cancel" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="158.0">
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#bfbfbf" height="43.0" layoutX="80.0" layoutY="166.0" onMouseClicked="#cancel" onMouseEntered="#buttonEntered" onMouseExited="#buttonExited" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="158.0">
                <effect>
                   <Shadow height="6.17" radius="1.1025" width="0.24">
                      <color>
@@ -159,7 +165,7 @@
                   </Shadow>
                </effect>
             </Rectangle>
-            <Label layoutX="133.0" layoutY="177.0" onMouseClicked="#cancel" text="Cancel">
+            <Label layoutX="133.0" layoutY="177.0" onMouseClicked="#cancel" onMouseEntered="#buttonEntered" onMouseExited="#buttonExited" text="Cancel">
                <font>
                   <Font name="System Bold" size="16.0" />
                </font>
@@ -187,7 +193,7 @@
                   <Font size="16.0" />
                </font>
             </TextField>
-            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#bfbfbf" height="43.0" layoutX="249.0" layoutY="223.0" onMouseClicked="#finish" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="158.0">
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#bfbfbf" height="43.0" layoutX="249.0" layoutY="223.0" onMouseClicked="#finish" onMouseEntered="#buttonEntered" onMouseExited="#buttonExited" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="158.0">
                <effect>
                   <Shadow height="6.17" radius="1.1025" width="0.24">
                      <color>
@@ -196,12 +202,12 @@
                   </Shadow>
                </effect>
             </Rectangle>
-            <Label layoutX="304.0" layoutY="234.0" onMouseClicked="#finish" text="Finish">
+            <Label layoutX="304.0" layoutY="234.0" onMouseClicked="#finish" onMouseEntered="#buttonEntered" onMouseExited="#buttonExited" text="Finish">
                <font>
                   <Font name="System Bold" size="16.0" />
                </font>
             </Label>
-            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#bfbfbf" height="43.0" layoutX="80.0" layoutY="224.0" onMouseClicked="#cancel" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="158.0">
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#bfbfbf" height="43.0" layoutX="80.0" layoutY="224.0" onMouseClicked="#cancel" onMouseEntered="#buttonEntered" onMouseExited="#buttonExited" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="158.0">
                <effect>
                   <Shadow height="6.17" radius="1.1025" width="0.24">
                      <color>
@@ -210,7 +216,7 @@
                   </Shadow>
                </effect>
             </Rectangle>
-            <Label layoutX="133.0" layoutY="235.0" onMouseClicked="#cancel" text="Cancel">
+            <Label layoutX="133.0" layoutY="235.0" onMouseClicked="#cancel" onMouseEntered="#buttonEntered" onMouseExited="#buttonExited" text="Cancel">
                <font>
                   <Font name="System Bold" size="16.0" />
                </font>
