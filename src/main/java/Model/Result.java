@@ -11,9 +11,16 @@ public class Result {
         this.isSuccessful = isSuccessful;
         this.messages = new ArrayList<>(Arrays.asList(messages));
     }
+
+    public Result(boolean isSuccessful, ArrayList<String> messages) {
+        this.isSuccessful = isSuccessful;
+        this.messages = messages;
+    }
+
     public ArrayList<String> getMessage() {
         return messages;
     }
+
     public boolean isSuccessful() {
         return isSuccessful;
     }

@@ -173,7 +173,68 @@ public class User {
         return answer;
     }
 
-    public boolean hasUserAnswerTheQuestion(){
+    public boolean hasUserAnswerTheQuestion() {
         return answer != null;
+    }
+
+    public int getHighestScore() {
+        int highestScore = 0;
+        for (GameHistory gameHistory : this.gameHistory) {
+            int playerNumber = gameHistory.getPlayerNumber(this);
+            for (int score : gameHistory.getScorePerRound(playerNumber)) {
+                if (score > highestScore)
+                    highestScore = score;
+            }
+        }
+        return highestScore;
+    }
+
+    public int getNumberOfWins() {
+        int numberOfWins = 0;
+        for (GameHistory gameHistory : this.gameHistory) {
+            int playerNumber = gameHistory.getPlayerNumber(this);
+            int rounds = gameHistory.getScorePerRound(playerNumber).size();
+            int wonRounds = 0, lostRounds = 0;
+            for (int i = 0; i < rounds; i++) {
+                if (gameHistory.getScorePerRound(playerNumber).get(i) > gameHistory.getScorePerRound(1 - playerNumber).get(i))
+                    wonRounds++;
+                else if (gameHistory.getScorePerRound(playerNumber).get(i) < gameHistory.getScorePerRound(1 - playerNumber).get(i))
+                    lostRounds++;
+            }
+            if (wonRounds > lostRounds)
+                numberOfWins++;
+        }
+        return numberOfWins;
+    }
+
+    public int getNumberOfDraws() {
+        int numberOfDraws = 0;
+        for (GameHistory gameHistory : this.gameHistory) {
+            int playerNumber = gameHistory.getPlayerNumber(this);
+            int rounds = gameHistory.getScorePerRound(playerNumber).size();
+            int wonRounds = 0, lostRounds = 0;
+            for (int i = 0; i < rounds; i++) {
+                if (gameHistory.getScorePerRound(playerNumber).get(i) > gameHistory.getScorePerRound(1 - playerNumber).get(i))
+                    wonRounds++;
+                else if (gameHistory.getScorePerRound(playerNumber).get(i) < gameHistory.getScorePerRound(1 - playerNumber).get(i))
+                    lostRounds++;
+            }
+            if (wonRounds == lostRounds)
+                numberOfDraws++;
+        }
+        return numberOfDraws;
+    }
+
+    public int getNumberOfLosses() {
+        int numberOfLosses = this.gameHistory.size() - this.getNumberOfWins() - this.getNumberOfDraws();
+        return numberOfLosses;
+    }
+
+    public int getRank() {
+        int rank = 1;
+        for (User user : allUsers)
+            if (user.getNumberOfWins() > this.getNumberOfWins())
+                rank++;
+        return rank;
     }
 }
