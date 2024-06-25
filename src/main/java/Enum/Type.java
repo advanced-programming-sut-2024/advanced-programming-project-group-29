@@ -5,20 +5,23 @@ public enum Type {
     RANGED,
     SIEGE,
     AGILE,
-    WEATHER;
+    WEATHER,
+    BEAR;
 
     public static Type getTypeFromString(String type) {
         type = type.toLowerCase();
-        if (type.matches("close combat( unit)?"))
+        if (type.matches(".*close.+combat(.+unit)?.*"))
             return CLOSE_COMBAT;
-        if (type.matches("ranged( unit)?"))
+        if (type.matches(".*ranged(.+unit)?.*"))
             return RANGED;
-        if (type.matches("siege( unit)?"))
+        if (type.matches(".*siege(.+unit)?.*"))
             return SIEGE;
-        if (type.matches("agile( unit)?"))
+        if (type.matches(".*agile(.+unit)?.*"))
             return AGILE;
-        if (type.matches("weather"))
+        if (type.matches(".*weather.*"))
             return WEATHER;
+        if (type.matches(".*bear.*"))
+            return BEAR;
         return null;
     }
 
@@ -34,7 +37,6 @@ public enum Type {
         } else if (this == AGILE) {
             return row < 3;
         }
-        // TODO: WEATHER?
         return false;
     }
 }

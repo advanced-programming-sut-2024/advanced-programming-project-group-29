@@ -14,25 +14,25 @@ public enum Attribute {
 
     public static Attribute getAttributeFromString(String ability) {
         ability = ability.toLowerCase();
-        if (ability.contains("medic"))
+        if (ability.matches(".*medic.*"))
             return MEDIC;
-        if (ability.contains("moral boost"))
+        if (ability.matches(".*moral.+boost.*"))
             return MORAL_BOOST;
-        if (ability.contains("muster"))
+        if (ability.matches(".*muster.*"))
             return MUSTER;
-        if (ability.contains("spy"))
+        if (ability.matches(".*spy.*"))
             return SPY;
-        if (ability.contains("tight bond"))
+        if (ability.matches(".*tight.+bond.*"))
             return TIGHT_BOND;
-        if (ability.contains("scorch"))
+        if (ability.matches(".*scorch.*"))
             return SCORCH;
-        if (ability.contains("berserker"))
+        if (ability.matches(".*berserker.*"))
             return BERSERKER;
-        if (ability.contains("mardroeme"))
+        if (ability.matches(".*mardroeme.*"))
             return MARDROEME;
-        if (ability.contains("transformers"))
+        if (ability.matches(".*transformers?.*"))
             return TRANSFORMERS;
-        if (ability.contains("commander's horn"))
+        if (ability.matches(".*commander.+horn.*"))
             return COMMANDERS_HORN;
         return null;
     }
