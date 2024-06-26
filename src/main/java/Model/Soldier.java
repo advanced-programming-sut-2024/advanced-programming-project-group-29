@@ -46,6 +46,14 @@ public class Soldier extends Card {
         return ability.matches(".*Hero.*");
     }
 
+    public static boolean isSoldier(String cardName) {
+        JSONObject card = getCardByName(cardName);
+        if (card == null)
+            return false;
+        String type = card.getString("type");
+        return !type.equals("Spell") && !type.equals("Weather");
+    }
+
 
     public Attribute getAttribute() {
         return attribute;

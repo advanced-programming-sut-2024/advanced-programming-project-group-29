@@ -27,6 +27,14 @@ public class Spell extends Card {
         return -1;
     }
 
+    public static boolean isSpell(String cardName) {
+        JSONObject card = getCardByName(cardName);
+        if(card == null)
+            return false;
+        String type = card.getString("type");
+        return type.equals("Spell") || type.equals("Weather");
+    }
+
     @Override
     public void executeAction() {
         String name = this.getName().toLowerCase();
