@@ -68,7 +68,12 @@ public abstract class Card {
         return card.getString("description");
     }
 
-    protected static Type getTypeByCardName(String cardName) {
+    public static int getAllowedNumberByCardName(String cardName) {
+        // TODO: implement this
+        return 0;
+    }
+
+    public static Type getTypeByCardName(String cardName) {
         JSONObject soldier = getCardByName(cardName);
         return Type.getTypeFromString(soldier.getString("type"));
     }

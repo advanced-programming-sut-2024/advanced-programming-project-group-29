@@ -3,7 +3,7 @@ package Enum;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public enum Faction { // Radin
+public enum Faction {
     NORTH_REALMS("North Realms", new ArrayList<>(Arrays.asList("The Siegemaster", "The Steel-Forged", "King of Temeria", "Lord Commander of the North", "Son of Medell"))),
     NILFGAARDIAN_EMPIRE("Nilfgaardian Empire", new ArrayList<>(Arrays.asList("The White Flame", "His Imperial Majesty", "Emperor of Nilfgaard", "The Relentless", "Invader of the North"))),
     MONSTERS("Monsters", new ArrayList<>(Arrays.asList("Bringer of Death", "King of the wild Hunt", "Destroyer of Worlds", "Commander of the Red Riders", "The Treacherous"))),
@@ -48,5 +48,10 @@ public enum Faction { // Radin
 
     public ArrayList<String> getCommanders() {
         return commanders;
+    }
+
+    public ArrayList<String> getSoldiers() {
+        // TODO: Implement this method
+        return null;
     }
 }
