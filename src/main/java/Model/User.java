@@ -29,7 +29,8 @@ public class User {
     private final ArrayList<Card> discardPile = new ArrayList<>();
     private Faction faction;
     private Commander commander;
-    ArrayList<GameHistory> gameHistory = new ArrayList<>();
+    private GameBoard currentGameBoard;
+    private ArrayList<GameHistory> gameHistory = new ArrayList<>();
 
     public User(String username, String password, String nickname, String email) {
         this.username = username;
@@ -236,5 +237,45 @@ public class User {
             if (user.getNumberOfWins() > this.getNumberOfWins())
                 rank++;
         return rank;
+    }
+
+    public GameBoard getCurrentGameBoard() {
+        return currentGameBoard;
+    }
+
+    public void setCurrentGameBoard(GameBoard currentGameBoard) {
+        this.currentGameBoard = currentGameBoard;
+    }
+
+    public int getNumberOfOccurrenceInDeck(String cardName) {
+        int count = 0;
+        for (Card cardInDeck : deck) {
+            if (cardInDeck.getName().equals(cardName))
+                count++;
+        }
+        return count;
+    }
+
+    public void addCardToDeck(String cardName) {
+        boolean isSoldier = Soldier.isSoldier(cardName);
+        boolean isSpell = Spell.isSpell(cardName);
+        if (!isSoldier && !isSpell)
+            return;
+        if (isSoldier) {
+            Soldier soldier = new Soldier(cardName, this, faction);
+            this.deck.add(soldier);
+        } else {
+            Spell spell = new Spell(cardName, this, faction);
+            this.deck.add(spell);
+        }
+    }
+
+    public void removeCardFromDeck(String cardName) {
+        for (Card card : deck) {
+            if (card.getName().equals(cardName)) {
+                deck.remove(card);
+                return;
+            }
+        }
     }
 }
