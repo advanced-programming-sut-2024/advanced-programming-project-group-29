@@ -974,14 +974,6 @@
       "description": "Sets the power of all close combat units of both sides to 1"
     },
     {
-      "name": "Bear",
-      "power": 8,
-      "numberOfCards": 0,
-      "type": "Bear",
-      "ability": "-",
-      "description": "Sets the power of all close combat units of both sides to 1"
-    },
-    {
       "name": "Impenetrable fog",
       "power": "-",
       "numberOfCards": 3,
