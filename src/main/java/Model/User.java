@@ -37,6 +37,8 @@ public class User {
         this.password = password;
         this.nickname = nickname;
         this.email = email;
+        this.faction = Faction.MONSTERS;
+        this.commander = new Commander("king of the wild hunt", this);
         allUsers.add(this);
     }
 
