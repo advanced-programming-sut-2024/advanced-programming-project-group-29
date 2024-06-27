@@ -361,7 +361,7 @@
       "description": "-"
     }
   ],
-  "Northern Realms": [
+  "Realms": [
     {
       "name": "Ballista",
       "power": 6,
@@ -970,14 +970,6 @@
       "power": "-",
       "numberOfCards": 3,
       "type": "Weather",
-      "ability": "-",
-      "description": "Sets the power of all close combat units of both sides to 1"
-    },
-    {
-      "name": "Bear",
-      "power": 8,
-      "numberOfCards": 0,
-      "type": "Bear",
       "ability": "-",
       "description": "Sets the power of all close combat units of both sides to 1"
     },
