@@ -181,13 +181,13 @@ public class GameBoard {
     public void addWeather(Spell spell) {
         weather.add(spell);
         String name = spell.getName().toLowerCase();
-        if (name.matches(".*Biting.+Frost.*"))
+        if (name.matches(".*biting.+frost.*"))
             addWeatherForRow(0);
-        else if (name.matches(".*Impenetrable.+Fog.*"))
+        else if (name.matches(".*impenetrable.+fog.*"))
             addWeatherForRow(1);
-        else if (name.matches(".*Torrential.+Rain.*"))
+        else if (name.matches(".*torrential.+rain.*"))
             addWeatherForRow(2);
-        else if (name.matches(".*Skellige.+Storm.*")) {
+        else if (name.matches(".*skellige.+storm.*")) {
             addWeatherForRow(1);
             addWeatherForRow(2);
         }

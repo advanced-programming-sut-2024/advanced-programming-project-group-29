@@ -43,7 +43,7 @@ public class Spell extends Card {
             executeActionForMardoeme(this);
         else if (name.matches(".*scorch.*"))
             executeActionForScorch(this);
-        else if (name.matches(".*Commander.+horn.*"))
+        else if (name.matches(".*commander.+horn.*"))
             executeActionForCommanderHorn(this);
         else if (name.matches(".*decoy.*"))
             executeActionForDecoy(this);
