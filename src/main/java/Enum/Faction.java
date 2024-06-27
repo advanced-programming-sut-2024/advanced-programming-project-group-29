@@ -5,6 +5,8 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -65,8 +67,8 @@ public enum Faction {
     public ArrayList<String> getSoldiers() {
         ArrayList<String> soldiersName = new ArrayList<>();
         try {
-            String content = new String(Files.readAllBytes(Paths.get(Card.class.
-                    getResource("/JSON/allCards.json").toString())));
+            URI uri = Card.class.getResource("/JSON/allCards.json").toURI();
+            String content = new String(Files.readAllBytes(Paths.get(uri)));
             JSONObject allCards = new JSONObject(content);
             Iterator<String> keys = allCards.keys();
             while (keys.hasNext()) {
@@ -82,6 +84,8 @@ public enum Faction {
             }
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
         }
         return null;
     }

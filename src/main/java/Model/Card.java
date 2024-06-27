@@ -7,6 +7,8 @@ import org.json.JSONObject;
 import Enum.*;
 
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -41,8 +43,8 @@ public abstract class Card {
 
     protected static JSONObject getCardByName(String cardName) {
         try {
-            String content = new String(Files.readAllBytes(Paths.get(Card.class.
-                    getResource("/JSON/allCards.json").toString())));
+            URI uri = Card.class.getResource("/JSON/allCards.json").toURI();
+            String content = new String(Files.readAllBytes(Paths.get(uri)));
             JSONObject allCards = new JSONObject(content);
             Iterator<String> keys = allCards.keys();
             while (keys.hasNext()) {
@@ -55,6 +57,9 @@ public abstract class Card {
             }
         } catch (IOException e) {
             e.printStackTrace();
+            System.out.println(e.getMessage());
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
         }
         return null;
     }
