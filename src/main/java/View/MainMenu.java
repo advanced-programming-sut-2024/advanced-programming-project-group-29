@@ -38,7 +38,7 @@ public class MainMenu extends Application {
 
 
     public void newGame(MouseEvent mouseEvent) throws Exception {
-        new GameMenu().start(SaveApplicationAsObject.getApplicationController().getStage());
+        new ChooseGameModelMenu().start(SaveApplicationAsObject.getApplicationController().getStage());
     }
 
     public void profile(MouseEvent mouseEvent) throws Exception{

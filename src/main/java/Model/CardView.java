@@ -16,30 +16,34 @@ public class CardView extends Pane {
     private final double HEIGHT = 100;
     private final String path;
     private final ImageView background;
-    private final ArrayList<Node> items = new ArrayList<>();
+    private final ImageView type;
+    private final ImageView ability;
     private final ImageView hpBackground;
     private Label hp;
     private boolean isSelected = false;
     private final boolean isSelectable;
 
 
-    public CardView(String path, boolean isSelectable) {
+    public CardView(Card card,String path, boolean isSelectable) {
+        this.card = card;
         this.path = path;
         this.isSelectable = isSelectable;
-        this.background = new ImageView(path); //TODO: change this to the path of the card
+        this.background = new ImageView(path);
+        this.ability = new ImageView(Objects.requireNonNull(CardView.class.getResource("").toExternalForm()));
+        this.type = new ImageView(Objects.requireNonNull(CardView.class.getResource("").toExternalForm()));
         hpBackground = new ImageView(Objects.requireNonNull(CardView.class.getResource("/Images/icons/power_normal.png")).toExternalForm());
-        //TODO: set the size of the background
-        //TODO: set the position of the background
+        hp = new Label();
+
+        //TODO set the images of the card
 
         /////////////////////////////////////////////////////
         super.setHeight(HEIGHT);
         super.setWidth(WIDTH);
         super.getChildren().add(background);
         super.getChildren().add(hpBackground);
+        super.getChildren().add(ability);
+        super.getChildren().add(type);
         super.getChildren().add(hp);
-        for (Node item : items) {
-            super.getChildren().add(item);
-        }
         super.setOnMouseEntered(e -> {
             if (isSelectable) {
                 goUp();
@@ -75,10 +79,6 @@ public class CardView extends Pane {
 
     public ImageView getBackGround() {
         return background;
-    }
-
-    public ArrayList<Node> getItems() {
-        return items;
     }
 
     public boolean isSelected() {

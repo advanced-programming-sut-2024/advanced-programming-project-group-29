@@ -17,7 +17,7 @@ public enum GameMenuRegex {
         this.regex = regex;
     }
 
-    String getRegex() {
+    public String getRegex() {
         return regex;
     }
 }

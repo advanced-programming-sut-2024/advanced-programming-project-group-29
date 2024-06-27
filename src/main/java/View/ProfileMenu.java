@@ -50,7 +50,6 @@ public class ProfileMenu extends Application {
     public Rectangle apply;
     public Label applyLabel;
     public Rectangle darkBack;
-    public VBox vBox;
     public ScrollPane scrollPane;
 
     private Label warning;
@@ -123,23 +122,9 @@ public class ProfileMenu extends Application {
                 if (newValue.matches("0\\d*")) {
                     countHistory.setText(countHistory.getText().substring(1));
                 }
+                showHistory();
             }
         });
-    }
-
-    private void removeTextFields() {
-        textField1.clear();
-        textField2.clear();
-    }
-
-    private void moveButton(boolean isUp) {
-        if (!isUp) {
-            apply.setLayoutY(apply.getLayoutY() + 60);
-            applyLabel.setLayoutY(applyLabel.getLayoutY() + 60);
-        } else {
-            apply.setLayoutY(apply.getLayoutY() - 60);
-            applyLabel.setLayoutY(applyLabel.getLayoutY() - 60);
-        }
     }
 
 
@@ -165,7 +150,6 @@ public class ProfileMenu extends Application {
 
     public void showInfo(MouseEvent mouseEvent) {
         deleteWarning();
-        removeTextFields();
         showInfo();
         InfoPain.setDisable(false);
         InfoPain.setVisible(true);
@@ -201,8 +185,8 @@ public class ProfileMenu extends Application {
 
     public void showHistory(MouseEvent mouseEvent) {
         deleteWarning();
-        removeTextFields();
         showHistory();
+        scrollPane.setContent(null);
         historyPain.setDisable(false);
         historyPain.setVisible(true);
         InfoPain.setDisable(true);
@@ -211,35 +195,52 @@ public class ProfileMenu extends Application {
         changePain.setVisible(false);
     }
 
+    private void removeTextFields() {
+        textField1.clear();
+        textField2.clear();
+    }
+
+    private void moveButton(boolean isUp) {
+        if (!isUp) {
+            apply.setLayoutY(apply.getLayoutY() + 60);
+            applyLabel.setLayoutY(applyLabel.getLayoutY() + 60);
+        } else {
+            apply.setLayoutY(apply.getLayoutY() - 60);
+            applyLabel.setLayoutY(applyLabel.getLayoutY() - 60);
+        }
+    }
+
     private void showHistory() {
-        vBox.getChildren().clear();
         int n = (countHistory.getText().isEmpty() ? 0 : Integer.parseInt(countHistory.getText()));
         String toRegex = "game history" + (n == 0 ? "" : " -n " + n);
         Matcher matcher = Pattern.compile(ProfileMenuRegex.GAMEHISTORY.getRegex()).matcher(toRegex);
         matcher.matches();
         Result result = ProfileMenuController.gameHistory(matcher);
         if (!result.isSuccessful()) {
-            for (String s : new String[]{"sdas","asda","asd","asd","asd","asd","asd"}) {
-                Label label = new Label("sadjknasjndjknasjkdnjkansd");
+            Label label = new Label(result.getMessage().getFirst());
+            label.setTextFill(Paint.valueOf("red"));
+            label.setWrapText(true);
+            label.setLayoutX(10);
+            label.setLayoutY(10);
+            label.setPrefWidth(450);
+            label.setPrefHeight(10*25);
+            label.setFont(Font.font("System", FontWeight.BOLD, 16));
+            scrollPane.setContent(label);
+        } else {
+            VBox vBox = new VBox();
+            for (String s : result.getMessage()) {
+                Label label = new Label(s);
                 label.setTextFill(Paint.valueOf("green"));
                 label.setWrapText(true);
-                label.setLayoutX(0);
-                label.setLayoutY(0);
-                label.setPrefWidth(487);
-                label.setPrefHeight(15*25);
+                label.setLayoutX(10);
+                label.setLayoutY(10);
+                label.setPrefWidth(450);
+                label.setPrefHeight(10*25);
                 label.setFont(Font.font("System", FontWeight.BOLD, 16));
                 vBox.getChildren().add(label);
             }
-        } else {
-            Label label = new Label(result.getMessage().get(0));
-            label.setTextFill(Paint.valueOf("red"));
-            label.setWrapText(true);
-            label.setLayoutX(0);
-            label.setLayoutY(0);
-            label.setPrefWidth(487);
-            label.setPrefHeight(30);
-            label.setFont(Font.font("System", FontWeight.BOLD, 16));
-            vBox.getChildren().add(label);
+            vBox.setSpacing(30);
+            scrollPane.setContent(vBox);
         }
     }
 
@@ -314,5 +315,9 @@ public class ProfileMenu extends Application {
         } else {
             ((Label) mouseEvent.getSource()).setTextFill(Paint.valueOf("black"));
         }
+    }
+
+    public void back(MouseEvent mouseEvent) throws Exception {
+        new MainMenu().start(SaveApplicationAsObject.getApplicationController().getStage());
     }
 }

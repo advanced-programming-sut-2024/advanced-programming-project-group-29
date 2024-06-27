@@ -66,6 +66,19 @@ public class GameMenu extends Application {
 
     @FXML
     public void initialize() {
+        image3.setOnKeyPressed(event -> {
+            switch (event.getCode()) {
+                case RIGHT:
+                    forward(null);
+                    break;
+                case LEFT:
+                    backward(null);
+                    break;
+                case ENTER:
+                    done(null);
+                    break;
+            }
+        });
         createCards();
         changeLabel();
     }
@@ -114,6 +127,8 @@ public class GameMenu extends Application {
                 notSelectedCards.add(image);
             }
         }
+        javafx.scene.image.Image image = new javafx.scene.image.Image("/Images/Commander/" + ApplicationController.getCurrentUser().getFaction().getName() + "/" + ApplicationController.getCurrentUser().getCommander().getName() + ".jpg");
+        leader.setImage(image);
         scrollSelected.setContent(gridPaneSelected);
         scrollNotSelected.setContent(gridPaneNotSelected);
     }
@@ -253,12 +268,11 @@ public class GameMenu extends Application {
         }
     }
 
-
     public void buttonEntered(MouseEvent mouseEvent) {
         if (mouseEvent.getSource() instanceof Rectangle) {
-            Pane pane = SaveApplicationAsObject.getApplicationController().getPane();
-            int n = pane.getChildren().indexOf((Rectangle) mouseEvent.getSource()) + 1;
-            ((Label) pane.getChildren().get(n)).setTextFill(Paint.valueOf("e47429"));
+            Pane paneS = (Pane) ((Rectangle) mouseEvent.getSource()).getParent();
+            int n = paneS.getChildren().indexOf((Rectangle) mouseEvent.getSource()) + 1;
+            ((Label) paneS.getChildren().get(n)).setTextFill(Paint.valueOf("e47429"));
         } else {
             ((Label) mouseEvent.getSource()).setTextFill(Paint.valueOf("e47429"));
         }
@@ -266,9 +280,9 @@ public class GameMenu extends Application {
 
     public void buttonExited(MouseEvent mouseEvent) {
         if (mouseEvent.getSource() instanceof Rectangle) {
-            Pane pane = SaveApplicationAsObject.getApplicationController().getPane();
-            int n = pane.getChildren().indexOf((Rectangle) mouseEvent.getSource()) + 1;
-            ((Label) pane.getChildren().get(n)).setTextFill(Paint.valueOf("black"));
+            Pane paneS = (Pane) ((Rectangle) mouseEvent.getSource()).getParent();
+            int n = paneS.getChildren().indexOf((Rectangle) mouseEvent.getSource()) + 1;
+            ((Label) paneS.getChildren().get(n)).setTextFill(Paint.valueOf("black"));
         } else {
             ((Label) mouseEvent.getSource()).setTextFill(Paint.valueOf("black"));
         }
@@ -283,7 +297,7 @@ public class GameMenu extends Application {
     }
 
     public void forward(MouseEvent mouseEvent) {
-        if (selectedImage != 4) selectedImage++;
+        if (selectedImage != changeArray.size() - 1) selectedImage++;
         setImageChange(selectedImage);
     }
 
@@ -296,11 +310,13 @@ public class GameMenu extends Application {
         changePain.setVisible(false);
         changePain.setDisable(true);
         mainPain.setDisable(false);
+        image3.getParent().requestFocus();
         if (isCommander) {
             ApplicationController.getCurrentUser().setCommander(new Commander(name.getText(), ApplicationController.getCurrentUser()));
-            leader.setImage(changeArray.get(selectedImage).getImage());
         } else {
-            ApplicationController.getCurrentUser().setFaction(Faction.getFactionFromString(name.getText()));
+            Faction f = Faction.getFactionFromString(name.getText());
+            ApplicationController.getCurrentUser().setFaction(f);
+            ApplicationController.getCurrentUser().setCommander(new Commander(f.getCommanders().getFirst(), ApplicationController.getCurrentUser()));
         }
         createCards();
     }

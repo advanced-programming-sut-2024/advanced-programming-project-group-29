@@ -57,10 +57,10 @@
             </TextField>
             <Label fx:id="randomPassword" layoutX="84.0" layoutY="350.0" onMouseClicked="#randomPassword" onMouseEntered="#randomMouseEntered" onMouseExited="#randomMouseExited" text="Random Password?" textFill="#dea543">
                <font>
-                  <Font name="System Bold" size="16.0" />
+                  <Font name="System Bold" size="14.0" />
                </font>
             </Label>
-            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#bfbfbf" height="43.0" layoutX="264.0" layoutY="340.0" onMouseClicked="#signup" onMouseEntered="#buttonEntered" onMouseExited="#buttonExited" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="147.0">
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#bfbfbf" height="43.0" layoutX="325.0" layoutY="340.0" onMouseClicked="#signup" onMouseEntered="#buttonEntered" onMouseExited="#buttonExited" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="86.0">
                <effect>
                   <Shadow height="6.17" radius="1.1025" width="0.24">
                      <color>
@@ -69,7 +69,21 @@
                   </Shadow>
                </effect>
             </Rectangle>
-            <Label layoutX="308.0" layoutY="351.0" onMouseClicked="#signup" onMouseEntered="#buttonEntered" onMouseExited="#buttonExited" text="Sign up">
+            <Label layoutX="338.0" layoutY="351.0" onMouseClicked="#signup" onMouseEntered="#buttonEntered" onMouseExited="#buttonExited" text="Sign up">
+               <font>
+                  <Font name="System Bold" size="16.0" />
+               </font>
+            </Label>
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#bfbfbf" height="43.0" layoutX="231.0" layoutY="340.0" onMouseClicked="#cancel" onMouseEntered="#buttonEntered" onMouseExited="#buttonExited" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="86.0">
+               <effect>
+                  <Shadow height="6.17" radius="1.1025" width="0.24">
+                     <color>
+                        <Color red="0.8799999952316284" green="0.8447999954223633" blue="0.8447999954223633" opacity="0.7241379022598267" />
+                     </color>
+                  </Shadow>
+               </effect>
+            </Rectangle>
+            <Label layoutX="249.0" layoutY="351.0" onMouseClicked="#cancel" onMouseEntered="#buttonEntered" onMouseExited="#buttonExited" text="cancel">
                <font>
                   <Font name="System Bold" size="16.0" />
                </font>

@@ -4,25 +4,23 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.effect.Blend?>
 <?import javafx.scene.effect.Shadow?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
-<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/22" stylesheets="@CSS/GameMenu.css" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.ProfileMenu">
+<AnchorPane prefHeight="800.0" prefWidth="1200.0" stylesheets="@CSS/GameMenu.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.ProfileMenu">
    <children>
       <ImageView fitHeight="800.0" fitWidth="1200.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../Images/Background/ProfileMenuBackground.jpg" />
          </image>
       </ImageView>
-      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#eed092" height="233.0" layoutX="134.0" layoutY="284.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="0.0" width="324.0">
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#eed092" height="293.0" layoutX="131.0" layoutY="233.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="0.0" width="324.0">
          <effect>
             <Shadow height="60.0" radius="29.5" width="60.0">
                <color>
@@ -31,7 +29,7 @@
             </Shadow>
          </effect>
       </Rectangle>
-      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#bfbfbf" height="43.0" layoutX="188.0" layoutY="317.0" onMouseClicked="#showInfo" onMouseEntered="#buttonEntered" onMouseExited="#buttonExited" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="215.0">
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#bfbfbf" height="43.0" layoutX="185.0" layoutY="266.0" onMouseClicked="#showInfo" onMouseEntered="#buttonEntered" onMouseExited="#buttonExited" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="215.0">
          <effect>
             <Shadow height="6.17" radius="1.1025" width="0.24">
                <color>
@@ -40,12 +38,12 @@
             </Shadow>
          </effect>
       </Rectangle>
-      <Label layoutX="255.0" layoutY="327.0" onMouseClicked="#showInfo" onMouseEntered="#buttonEntered" onMouseExited="#buttonExited" text="Show Info">
+      <Label layoutX="252.0" layoutY="276.0" onMouseClicked="#showInfo" onMouseEntered="#buttonEntered" onMouseExited="#buttonExited" text="Show Info">
          <font>
             <Font name="System Bold" size="16.0" />
          </font>
       </Label>
-      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#bfbfbf" height="43.0" layoutX="188.0" layoutY="379.0" onMouseClicked="#changeInfo" onMouseEntered="#buttonEntered" onMouseExited="#buttonExited" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="215.0">
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#bfbfbf" height="43.0" layoutX="185.0" layoutY="328.0" onMouseClicked="#changeInfo" onMouseEntered="#buttonEntered" onMouseExited="#buttonExited" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="215.0">
          <effect>
             <Shadow height="6.17" radius="1.1025" width="0.24">
                <color>
@@ -54,12 +52,12 @@
             </Shadow>
          </effect>
       </Rectangle>
-      <Label layoutX="246.0" layoutY="389.0" onMouseClicked="#changeInfo" onMouseEntered="#buttonEntered" onMouseExited="#buttonExited" text="Change Info">
+      <Label layoutX="243.0" layoutY="338.0" onMouseClicked="#changeInfo" onMouseEntered="#buttonEntered" onMouseExited="#buttonExited" text="Change Info">
          <font>
             <Font name="System Bold" size="16.0" />
          </font>
       </Label>
-      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#bfbfbf" height="43.0" layoutX="188.0" layoutY="439.0" onMouseClicked="#showHistory" onMouseEntered="#buttonEntered" onMouseExited="#buttonExited" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="147.0">
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#bfbfbf" height="43.0" layoutX="186.0" layoutY="448.0" onMouseClicked="#back" onMouseEntered="#buttonEntered" onMouseExited="#buttonExited" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="215.0">
          <effect>
             <Shadow height="6.17" radius="1.1025" width="0.24">
                <color>
@@ -68,12 +66,25 @@
             </Shadow>
          </effect>
       </Rectangle>
-      <Label layoutX="209.0" layoutY="450.0" onMouseClicked="#showHistory" onMouseEntered="#buttonEntered" onMouseExited="#buttonExited" text="Game History">
+      <Label layoutX="217.0" layoutY="459.0" onMouseClicked="#back" onMouseEntered="#buttonEntered" onMouseExited="#buttonExited" text="Back to Main Menu">
          <font>
             <Font name="System Bold" size="16.0" />
          </font>
       </Label>
-      <TextField fx:id="countHistory" alignment="CENTER" layoutX="353.0" layoutY="439.0" prefHeight="43.0" prefWidth="50.0" promptText="count" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#bfbfbf" height="43.0" layoutX="185.0" layoutY="388.0" onMouseClicked="#showHistory" onMouseEntered="#buttonEntered" onMouseExited="#buttonExited" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="215.0">
+         <effect>
+            <Shadow height="6.17" radius="1.1025" width="0.24">
+               <color>
+                  <Color red="0.8799999952316284" green="0.8447999954223633" blue="0.8447999954223633" opacity="0.7241379022598267" />
+               </color>
+            </Shadow>
+         </effect>
+      </Rectangle>
+      <Label layoutX="238.0" layoutY="399.0" onMouseClicked="#showHistory" onMouseEntered="#buttonEntered" onMouseExited="#buttonExited" text="Game History">
+         <font>
+            <Font name="System Bold" size="16.0" />
+         </font>
+      </Label>
       <Pane fx:id="changePain" disable="true" layoutX="553.0" layoutY="118.0" prefHeight="523.0" prefWidth="515.0" visible="false">
          <children>
             <Rectangle fx:id="darkBack" arcHeight="5.0" arcWidth="5.0" fill="#eed092" height="302.0" layoutX="89.0" layoutY="75.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="0.0" width="337.0">
@@ -120,11 +131,13 @@
                   </Shadow>
                </effect>
             </Rectangle>
-            <ScrollPane fx:id="scrollPane" hbarPolicy="NEVER" layoutX="78.0" layoutY="73.0" prefHeight="400.0" prefWidth="504.0" vbarPolicy="ALWAYS" vmax="100.0">
-               <content>
-                  <VBox fx:id="vBox" prefHeight="347.0" prefWidth="487.0" />
-               </content>
-            </ScrollPane>
+            <ScrollPane fx:id="scrollPane" hbarPolicy="NEVER" layoutX="77.0" layoutY="110.0" prefHeight="360.0" prefWidth="504.0" vbarPolicy="NEVER" vmax="100.0" />
+            <TextField fx:id="countHistory" alignment="CENTER" layoutX="441.0" layoutY="68.0" prefHeight="33.0" prefWidth="80.0" promptText="count" />
+            <Label layoutX="139.0" layoutY="68.0" prefHeight="33.0" prefWidth="286.0" text="Choose count of the Game History" textFill="#dea543">
+               <font>
+                  <Font name="System Bold" size="16.0" />
+               </font>
+            </Label>
          </children>
       </Pane>
       <Pane fx:id="InfoPain" layoutX="585.0" layoutY="122.0" prefHeight="566.0" prefWidth="450.0">

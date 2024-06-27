@@ -176,5 +176,9 @@ public class RegisterMenu extends Application {
             ((Label) mouseEvent.getSource()).setTextFill(Paint.valueOf("black"));
         }
     }
+
+    public void cancel(MouseEvent mouseEvent) throws Exception {
+        new LoginMenu().start(SaveApplicationAsObject.getApplicationController().getStage());
+    }
 }
 
