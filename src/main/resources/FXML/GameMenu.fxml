@@ -19,97 +19,97 @@
             <Image url="@../Images/Background/GameMenuBackground.png" />
          </image>
       </ImageView>
-      <ScrollPane fx:id="scrollNotSelected" hbarPolicy="NEVER" layoutX="92.0" layoutY="250.0" prefHeight="670.0" prefWidth="538.0" style="-fx-background-color: rgba(0,0,0,0);" vbarPolicy="NEVER" vmax="100.0" vvalue="6.0" />
-      <ScrollPane fx:id="scrollSelected" hbarPolicy="NEVER" layoutX="871.0" layoutY="251.0" prefHeight="670.0" prefWidth="538.0" style="-fx-background-color: rgba(0,0,0,0);" vbarPolicy="NEVER" vmax="100.0" vvalue="6.0" />
-      <Label alignment="CENTER" layoutX="514.0" layoutY="103.0" onMouseClicked="#loadDeck" onMouseEntered="#labelEntered" onMouseExited="#labelExited" prefHeight="42.0" prefWidth="123.0" text="Load Deck" textFill="#dea543">
-         <font>
-            <Font name="System Bold" size="16.0" />
-         </font>
-      </Label>
-      <Label alignment="CENTER" layoutX="864.0" layoutY="103.0" onMouseClicked="#saveDeck" onMouseEntered="#labelEntered" onMouseExited="#labelExited" prefHeight="42.0" prefWidth="123.0" text="Save Deck" textFill="#dea543">
-         <font>
-            <Font name="System Bold" size="16.0" />
-         </font>
-      </Label>
-      <Label alignment="CENTER" layoutX="642.0" layoutY="103.0" onMouseClicked="#saveDeckToPath" onMouseEntered="#labelEntered" onMouseExited="#labelExited" prefHeight="42.0" prefWidth="217.0" text="Save Deck To Your Path" textFill="#dea543">
-         <font>
-            <Font name="System Bold" size="16.0" />
-         </font>
-      </Label>
-      <Label alignment="CENTER" layoutX="272.0" layoutY="177.0" prefHeight="42.0" prefWidth="178.0" text="Card Collection" textFill="#dea543">
-         <font>
-            <Font name="System Bold" size="22.0" />
-         </font>
-      </Label>
-      <Label alignment="CENTER" layoutX="1051.0" layoutY="177.0" prefHeight="42.0" prefWidth="178.0" text="Card In Deck" textFill="#dea543">
-         <font>
-            <Font name="System Bold" size="22.0" />
-         </font>
-      </Label>
-      <Label fx:id="faction" alignment="CENTER" layoutX="385.0" layoutY="20.0" prefHeight="87.0" prefWidth="732.0" text="Faction" textFill="#dea543">
-         <font>
-            <Font name="System Bold" size="52.0" />
-         </font>
-      </Label>
-      <Label alignment="CENTER" layoutX="667.0" layoutY="143.0" onMouseClicked="#changeFaction" onMouseEntered="#labelEntered" onMouseExited="#labelExited" prefHeight="42.0" prefWidth="167.0" text="Change Faction" textFill="#dea543">
-         <font>
-            <Font name="System Bold" size="16.0" />
-         </font>
-      </Label>
-      <Label alignment="CENTER" layoutX="667.0" layoutY="196.0" onMouseClicked="#changeLeader" onMouseEntered="#labelEntered" onMouseExited="#labelExited" prefHeight="42.0" prefWidth="167.0" text="Leader" textFill="#dea543">
-         <font>
-            <Font name="System Bold" size="16.0" />
-         </font>
-      </Label>
-      <ImageView fx:id="leader" fitHeight="250.0" fitWidth="123.0" layoutX="689.0" layoutY="250.0" onMouseClicked="#changeLeader" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../Images/Commander/Monsters/monsters_eredin_bronze.jpg" />
-         </image>
-      </ImageView>
-      <Label fx:id="deckSize" alignment="CENTER" layoutX="667.0" layoutY="532.0" prefHeight="42.0" prefWidth="167.0" text="Deck Size" textFill="#dea543">
-         <font>
-            <Font name="System Bold" size="16.0" />
-         </font>
-      </Label>
-      <Label fx:id="soldiers" alignment="CENTER" layoutX="667.0" layoutY="598.0" prefHeight="42.0" prefWidth="167.0" text="Soldiers" textFill="#dea543">
-         <font>
-            <Font name="System Bold" size="16.0" />
-         </font>
-      </Label>
-      <Label fx:id="spells" alignment="CENTER" layoutX="667.0" layoutY="664.0" prefHeight="42.0" prefWidth="167.0" text="Spells" textFill="#dea543">
-         <font>
-            <Font name="System Bold" size="16.0" />
-         </font>
-      </Label>
-      <Label fx:id="heroes" alignment="CENTER" layoutX="667.0" layoutY="730.0" prefHeight="42.0" prefWidth="167.0" text="Heroes" textFill="#dea543">
-         <font>
-            <Font name="System Bold" size="16.0" />
-         </font>
-      </Label>
-      <Label fx:id="power" alignment="CENTER" layoutX="667.0" layoutY="796.0" prefHeight="42.0" prefWidth="167.0" text="Power" textFill="#dea543">
-         <font>
-            <Font name="System Bold" size="16.0" />
-         </font>
-      </Label>
-      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#bfbfbf" height="43.0" layoutX="676.0" layoutY="903.0" onMouseClicked="#changeTurn" onMouseEntered="#buttonEntered" onMouseExited="#buttonExited" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="149.0">
-         <effect>
-            <Shadow height="6.17" radius="1.1025" width="0.24">
-               <color>
-                  <Color red="0.8799999952316284" green="0.8447999954223633" blue="0.8447999954223633" opacity="0.7241379022598267" />
-               </color>
-            </Shadow>
-         </effect>
-      </Rectangle>
-      <Label layoutX="699.0" layoutY="914.0" onMouseClicked="#changeTurn" onMouseEntered="#buttonEntered" onMouseExited="#buttonExited" text="Change Turn">
-         <font>
-            <Font name="System Bold" size="16.0" />
-         </font>
-      </Label>
-      <Label fx:id="username" layoutX="92.0" layoutY="48.0" prefHeight="30.0" prefWidth="157.0" text="Username:" textFill="#dea543">
-         <font>
-            <Font name="System Bold" size="16.0" />
-         </font>
-      </Label>
+      <Pane fx:id="mainPain" prefHeight="1001.0" prefWidth="1500.0">
+         <children>
+            <Label fx:id="faction" alignment="CENTER" layoutX="384.0" layoutY="21.0" prefHeight="87.0" prefWidth="732.0" text="Faction" textFill="#dea543">
+               <font>
+                  <Font name="System Bold" size="52.0" />
+               </font>
+            </Label>
+            <Label alignment="CENTER" layoutX="642.0" layoutY="101.0" onMouseClicked="#saveDeckToPath" onMouseEntered="#labelEntered" onMouseExited="#labelExited" prefHeight="42.0" prefWidth="217.0" text="Save Deck To Your Path" textFill="#dea543">
+               <font>
+                  <Font name="System Bold" size="16.0" />
+               </font>
+            </Label>
+            <Label alignment="CENTER" layoutX="867.0" layoutY="101.0" onMouseClicked="#saveDeck" onMouseEntered="#labelEntered" onMouseExited="#labelExited" prefHeight="42.0" prefWidth="123.0" text="Save Deck" textFill="#dea543">
+               <font>
+                  <Font name="System Bold" size="16.0" />
+               </font>
+            </Label>
+            <Label alignment="CENTER" layoutX="511.0" layoutY="101.0" onMouseClicked="#loadDeck" onMouseEntered="#labelEntered" onMouseExited="#labelExited" prefHeight="42.0" prefWidth="123.0" text="Load Deck" textFill="#dea543">
+               <font>
+                  <Font name="System Bold" size="16.0" />
+               </font>
+            </Label>
+            <Label alignment="CENTER" layoutX="667.0" layoutY="143.0" onMouseClicked="#changeFaction" onMouseEntered="#labelEntered" onMouseExited="#labelExited" prefHeight="42.0" prefWidth="167.0" text="Change Faction" textFill="#dea543">
+               <font>
+                  <Font name="System Bold" size="16.0" />
+               </font>
+            </Label>
+            <Label alignment="CENTER" layoutX="667.0" layoutY="191.0" onMouseClicked="#changeLeader" onMouseEntered="#labelEntered" onMouseExited="#labelExited" prefHeight="42.0" prefWidth="167.0" text="Leader" textFill="#dea543">
+               <font>
+                  <Font name="System Bold" size="16.0" />
+               </font>
+            </Label>
+            <ImageView fx:id="leader" fitHeight="250.0" fitWidth="123.0" layoutX="689.0" layoutY="240.0" onMouseClicked="#changeLeader" pickOnBounds="true" preserveRatio="true" />
+            <Label fx:id="deckSize" alignment="CENTER" layoutX="667.0" layoutY="532.0" prefHeight="42.0" prefWidth="167.0" text="Deck Size" textFill="#dea543">
+               <font>
+                  <Font name="System Bold" size="16.0" />
+               </font>
+            </Label>
+            <Label fx:id="soldiers" alignment="CENTER" layoutX="667.0" layoutY="597.0" prefHeight="42.0" prefWidth="167.0" text="Soldiers" textFill="#dea543">
+               <font>
+                  <Font name="System Bold" size="16.0" />
+               </font>
+            </Label>
+            <Label fx:id="spells" alignment="CENTER" layoutX="667.0" layoutY="663.0" prefHeight="42.0" prefWidth="167.0" text="Spells" textFill="#dea543">
+               <font>
+                  <Font name="System Bold" size="16.0" />
+               </font>
+            </Label>
+            <Label fx:id="heroes" alignment="CENTER" layoutX="667.0" layoutY="726.0" prefHeight="42.0" prefWidth="167.0" text="Heroes" textFill="#dea543">
+               <font>
+                  <Font name="System Bold" size="16.0" />
+               </font>
+            </Label>
+            <Label fx:id="power" alignment="CENTER" layoutX="667.0" layoutY="787.0" prefHeight="42.0" prefWidth="167.0" text="Power" textFill="#dea543">
+               <font>
+                  <Font name="System Bold" size="16.0" />
+               </font>
+            </Label>
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#bfbfbf" height="43.0" layoutX="676.0" layoutY="890.0" onMouseClicked="#changeTurn" onMouseEntered="#buttonEntered" onMouseExited="#buttonExited" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="149.0">
+               <effect>
+                  <Shadow height="6.17" radius="1.1025" width="0.24">
+                     <color>
+                        <Color red="0.8799999952316284" green="0.8447999954223633" blue="0.8447999954223633" opacity="0.7241379022598267" />
+                     </color>
+                  </Shadow>
+               </effect>
+            </Rectangle>
+            <Label layoutX="699.0" layoutY="901.0" onMouseClicked="#changeTurn" onMouseEntered="#buttonEntered" onMouseExited="#buttonExited" text="Change Turn">
+               <font>
+                  <Font name="System Bold" size="16.0" />
+               </font>
+            </Label>
+            <Label fx:id="username" layoutX="83.0" layoutY="50.0" prefHeight="30.0" prefWidth="157.0" text="Username:" textFill="#dea543">
+               <font>
+                  <Font name="System Bold" size="16.0" />
+               </font>
+            </Label>
+            <Label alignment="CENTER" layoutX="1027.0" layoutY="170.0" prefHeight="42.0" prefWidth="178.0" text="Card In Deck" textFill="#dea543">
+               <font>
+                  <Font name="System Bold" size="22.0" />
+               </font>
+            </Label>
+            <Label alignment="CENTER" layoutX="272.0" layoutY="170.0" prefHeight="42.0" prefWidth="178.0" text="Card Collection" textFill="#dea543">
+               <font>
+                  <Font name="System Bold" size="22.0" />
+               </font>
+            </Label>
+            <ScrollPane fx:id="scrollNotSelected" hbarPolicy="NEVER" layoutX="92.0" layoutY="251.0" prefHeight="670.0" prefWidth="538.0" style="-fx-background-color: rgba(0,0,0,0);" vbarPolicy="NEVER" vmax="100.0" vvalue="6.0" />
+            <ScrollPane fx:id="scrollSelected" hbarPolicy="NEVER" layoutX="874.0" layoutY="251.0" prefHeight="670.0" prefWidth="538.0" style="-fx-background-color: rgba(0,0,0,0);" vbarPolicy="NEVER" vmax="100.0" vvalue="6.0" />
+         </children>
+      </Pane>
       <Pane fx:id="changePain" disable="true" layoutX="180.0" layoutY="80.0" prefHeight="699.0" prefWidth="1141.0" visible="false">
          <children>
             <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#eed092" height="662.0" layoutX="22.0" layoutY="19.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="0.0" width="1097.0">
@@ -152,11 +152,16 @@
                   <Image url="@../Images/icons/cursur.png" />
                </image>
             </ImageView>
-            <Label fx:id="name" alignment="CENTER" layoutX="193.0" layoutY="601.0" prefHeight="53.0" prefWidth="755.0" text="name" textFill="#dea543">
+            <Label fx:id="name" alignment="CENTER" layoutX="193.0" layoutY="601.0" prefHeight="66.0" prefWidth="755.0" text="name" textFill="#dea543">
                <font>
-                  <Font name="System Bold" size="24.0" />
+                  <Font name="System Bold" size="30.0" />
                </font>
             </Label>
+            <ImageView fitHeight="43.0" fitWidth="54.0" layoutX="95.0" layoutY="54.0" onMouseClicked="#done" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../Images/icons/checkMark.png" />
+               </image>
+            </ImageView>
          </children>
       </Pane>
    </children>
