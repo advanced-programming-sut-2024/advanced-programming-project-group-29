@@ -4,6 +4,7 @@ import Model.Card;
 import Model.GameBoard;
 import Model.Soldier;
 import Model.User;
+import View.InGameMenu;
 
 import java.util.ArrayList;
 
@@ -22,32 +23,36 @@ public class InGameMenuController extends Thread {
     }
 
     public static Card getCardFromDiscardPileAndRemoveIt(GameBoard gameBoard, int playerIndex) {
-        // TODO: show a menu of cards in the discard pile and let the player choose one
-        return null;
-    }
-
-    public static void addCardToHandInGraphic(Card card, int playerIndex) {
-        // TODO: implement this
+        Card card = InGameMenu.showDiscardPileAndLetUserChoose(gameBoard, playerIndex);
+        gameBoard.getPlayer(playerIndex).getDiscardPile().remove(card);
+        return card;
     }
 
     public static void addCardToHand(GameBoard gameBoard, Card card, int playerIndex) {
         gameBoard.getPlayers()[playerIndex].getHand().add(card);
-        addCardToHandInGraphic(card, playerIndex);
+        InGameMenu.addCardToHand(gameBoard, card, playerIndex);
     }
 
-    public static void changeThisCardInGraphic(Soldier thisCard, Soldier anotherCard) {
-        // TODO: implement this
+    public static void changeThisCardInGraphic(GameBoard gameBoard, Soldier thisCard, Soldier anotherCard) {
+        InGameMenu.changeThisCardInGraphic(gameBoard, thisCard, anotherCard);
     }
 
     public static void destroySoldier(GameBoard gameBoard, Soldier soldier) {
         int playerIndex = gameBoard.getPlayerNumber(soldier.getUser());
         int rowNumber = Soldier.getPlacedRowNumber(soldier, gameBoard);
         gameBoard.getRows()[playerIndex][rowNumber].remove(soldier);
-        // TODO: destroy this card in graphic
+        InGameMenu.destroySoldier(gameBoard, soldier);
     }
 
-    public static void showChangedPlayerScoreAndCardsHp() {
-        // TODO: refresh things, use soldier.getShownHp() instead of soldier.getHp()
+    public static void showChangedPlayerScoreAndCardsHp(GameBoard gameBoard) {
+        for(int i = 0; i < 2; i++) {
+            InGameMenu.showPlayersScore(gameBoard, i, gameBoard.getPlayerScore(i));
+            for(int j = 0; j < 3; j++) {
+                for (Soldier soldier : gameBoard.getRows()[i][j]) {
+                    InGameMenu.showSoldiersHp(gameBoard, soldier, soldier.getShownHp());
+                }
+            }
+        }
     }
 
     private void changeCurrentUser() {
@@ -73,8 +78,16 @@ public class InGameMenuController extends Thread {
         int previousHp = soldier.getHp();
         soldier.setHp(hp);
         gameBoard.setPlayerScore(playerIndex, gameBoard.getPlayerScore(playerIndex) - previousHp + hp);
-        // TODO: change hp in graphic and player score
+        InGameMenu.showPlayersScore(gameBoard, playerIndex, gameBoard.getPlayerScore(playerIndex));
+        InGameMenu.showSoldiersHp(gameBoard, soldier, soldier.getShownHp());
     }
 
-    //TODO all methods
+    public static void vetoCard(GameBoard gameBoard, int playerIndex, Card card){ // TODO: implement regex for the input
+        User user = gameBoard.getPlayer(playerIndex);
+        user.getHand().remove(card);
+        Card anotherCard = user.getCardFromDeckRandomly();
+        user.getHand().add(anotherCard);
+        user.getDeck().add(card);
+    }
+
 }

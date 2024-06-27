@@ -147,8 +147,7 @@ public class GameBoard {
     public void getRandomCardFromDeckAndAddItToHand(int playerIndex) {
         Card card = players[playerIndex].getCardFromDeckRandomly();
         players[playerIndex].removeCardFromDeck(card);
-        players[playerIndex].addCardToHand(card);
-        InGameMenuController.addCardToHandInGraphic(card, playerIndex);
+        InGameMenuController.addCardToHand(this, card, playerIndex);
     }
 
     public User[] getPlayers() {
@@ -160,7 +159,7 @@ public class GameBoard {
         rowHasWeather[1] = false;
         rowHasWeather[2] = false;
         recalculatePlayersScore();
-        InGameMenuController.showChangedPlayerScoreAndCardsHp();
+        InGameMenuController.showChangedPlayerScoreAndCardsHp(this);
     }
 
     private void recalculatePlayersScore() {
@@ -196,7 +195,7 @@ public class GameBoard {
     private void addWeatherForRow(int i) {
         rowHasWeather[i] = true;
         recalculatePlayersScore();
-        InGameMenuController.showChangedPlayerScoreAndCardsHp();
+        InGameMenuController.showChangedPlayerScoreAndCardsHp(this);
     }
 
 
@@ -214,5 +213,9 @@ public class GameBoard {
                 return true;
         }
         return false;
+    }
+
+    public int getCurrentPlayer(){
+        return currentPlayer;
     }
 }
