@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public enum Faction {
-    NORTH_REALMS("North Realms", new ArrayList<>(Arrays.asList("The Siegemaster", "The Steel-Forged", "King of Temeria", "Lord Commander of the North", "Son of Medell"))),
-    NILFGAARDIAN_EMPIRE("Nilfgaardian Empire", new ArrayList<>(Arrays.asList("The White Flame", "His Imperial Majesty", "Emperor of Nilfgaard", "The Relentless", "Invader of the North"))),
-    MONSTERS("Monsters", new ArrayList<>(Arrays.asList("Bringer of Death", "King of the wild Hunt", "Destroyer of Worlds", "Commander of the Red Riders", "The Treacherous"))),
-    SCOIATAELL("Scoiataell", new ArrayList<>(Arrays.asList("Queen of Dol Blathanna", "The Beautiful", "Daisy of the Valley", "Pureblood Elf", "Hope of the Aen Seidhe"))),
-    SKELLIGE("Skellige", new ArrayList<>(Arrays.asList("Crach an Craite", "King Bran"))),
+    NORTH_REALMS("Realms", new ArrayList<>(Arrays.asList("the siegemaster", "the steel-forged", "king of temeria", "lord commander of the north", "son of medell"))),
+    NILFGAARDIAN_EMPIRE("Nilfgaard", new ArrayList<>(Arrays.asList("the white flame", "his imperial majesty", "emperor of nilfgaard", "the relentless", "invader of the north"))),
+    MONSTERS("Monsters", new ArrayList<>(Arrays.asList("bringer of death", "king of the wild hunt", "destroyer of worlds", "commander of the red riders", "the treacherous"))),
+    SCOIATAELL("Scoiataell", new ArrayList<>(Arrays.asList("queen of dol blathanna", "the beautiful", "daisy of the valley", "pureblood elf", "hope of the aen seidhe"))),
+    SKELLIGE("Skellige", new ArrayList<>(Arrays.asList("crach an craite", "king bran"))),
     NEUTRAL("Neutral", new ArrayList<>());
 
     private final String name;
@@ -21,9 +21,9 @@ public enum Faction {
 
     public static Faction getFactionFromString(String faction) {
         faction = faction.toLowerCase();
-        if (faction.matches("north realms"))
+        if (faction.matches("realms"))
             return NORTH_REALMS;
-        if (faction.matches("nilfgaardian empire"))
+        if (faction.matches("nilfgaard"))
             return NILFGAARDIAN_EMPIRE;
         if (faction.matches("monsters"))
             return MONSTERS;
