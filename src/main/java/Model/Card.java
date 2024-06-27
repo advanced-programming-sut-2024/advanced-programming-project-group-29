@@ -23,24 +23,23 @@ public abstract class Card {
     protected Type type;
 
 
-    public Card(String name, User user, Faction faction) {
+    public Card(String name, User user) {
         this.name = name;
         this.user = user;
-        this.faction = faction;
         allCards.add(this);
     }
 
-    private static JSONObject getCardByName(JSONArray jsonArray, String soldierName) {
+    private static JSONObject getCardByName(JSONArray jsonArray, String cardName) {
         for (int i = 0; i < jsonArray.length(); i++) {
             JSONObject card = jsonArray.getJSONObject(i);
-            if (card.getString("name").equals(soldierName)) {
+            if (card.getString("name").equals(cardName)) {
                 return card;
             }
         }
         return null;
     }
 
-    protected static JSONObject getCardByName(String soldierName) {
+    protected static JSONObject getCardByName(String cardName) {
         try {
             String content = new String(Files.readAllBytes(Paths.get(Card.class.
                     getResource("/JSON/allCards.json").toString())));
@@ -49,7 +48,7 @@ public abstract class Card {
             while (keys.hasNext()) {
                 String key = keys.next();
                 JSONArray jsonArray = allCards.getJSONArray(key);
-                JSONObject card = getCardByName(jsonArray, soldierName);
+                JSONObject card = getCardByName(jsonArray, cardName);
                 if (card != null) {
                     return card;
                 }
@@ -69,33 +68,49 @@ public abstract class Card {
     }
 
     public static int getAllowedNumberByCardName(String cardName) {
-        // TODO: implement this
-        return 0;
+        JSONObject card = getCardByName(cardName);
+        if (card == null || card.has("numberOfCards") == false) {
+            return 0;
+        }
+        return card.getInt("numberOfCards");
     }
 
     public static Type getTypeByCardName(String cardName) {
         JSONObject soldier = getCardByName(cardName);
+        if (soldier == null || !soldier.has("type"))
+            return null;
         return Type.getTypeFromString(soldier.getString("type"));
     }
 
     public static Faction getFactionByCardName(String cardName) {
-        JSONObject card = getCardByName(cardName);
-        if (card == null) {
-            return null;
+        try {
+            String content = new String(Files.readAllBytes(Paths.get(Card.class.
+                    getResource("/JSON/allCards.json").toString())));
+            JSONObject allCards = new JSONObject(content);
+            Iterator<String> keys = allCards.keys();
+            while (keys.hasNext()) {
+                String key = keys.next();
+                JSONArray jsonArray = allCards.getJSONArray(key);
+                JSONObject card = getCardByName(jsonArray, cardName);
+                if (card != null) {
+                    return Faction.getFactionFromString(key);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        // TODO faction needs to be enum
         return null;
     }
 
     protected static void executeMardoemeForRowNumber(GameBoard gameBoard, int playerIndex, int rowNumber) {
-        for(Soldier otherSoldier : gameBoard.getRows()[playerIndex][rowNumber]){
-            if(otherSoldier.getAttribute() == Attribute.BERSERKER)
-                otherSoldier.makeItBear();
+        for (Soldier otherSoldier : gameBoard.getRows()[playerIndex][rowNumber]) {
+            if (otherSoldier.getAttribute() == Attribute.BERSERKER)
+                otherSoldier.transformItToVidkaarl(!otherSoldier.getName().matches("berserker"));
         }
     }
 
     protected static void executeCommanderHornForRowNumber(GameBoard gameBoard, int playerIndex, int rowNumber) {
-        for(Soldier otherSoldier : gameBoard.getRows()[playerIndex][rowNumber]){
+        for (Soldier otherSoldier : gameBoard.getRows()[playerIndex][rowNumber]) {
             int hp = otherSoldier.getHp();
             InGameMenuController.changeHpForSoldier(gameBoard, otherSoldier, hp * 2);
         }

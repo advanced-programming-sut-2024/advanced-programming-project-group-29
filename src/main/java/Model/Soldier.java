@@ -13,13 +13,14 @@ public class Soldier extends Card {
     private boolean weatherAffected;
     private int hp;
 
-    public Soldier(String name, User user, Faction faction) {
-        super(name, user, faction);
+    public Soldier(String name, User user) {
+        super(name, user);
         this.hp = getDefaultHpBySoldierName(name);
         this.attribute = getAttributeBySoldierName(name);
         this.isHero = isThisSoldierHero(name);
         this.type = getTypeByCardName(name);
         this.description = getDescriptionByCardName(name);
+        this.faction = getFactionByCardName(name);
         weatherAffected = false;
     }
 
@@ -92,7 +93,7 @@ public class Soldier extends Card {
     }
 
     public void executeAction() {
-        switch (attribute){
+        switch (attribute) {
             case COMMANDERS_HORN -> executeActionForCommandersHorn(this);
             case MORAL_BOOST -> executeActionForMoralBoost(this);
             case TIGHT_BOND -> executeActionForTightBond(this);
@@ -105,8 +106,8 @@ public class Soldier extends Card {
     }
 
     public static int getPlacedRowNumber(Soldier soldier, GameBoard gameBoard) {
-        for(int i = 0; i < 3; i++){
-            for(int j = 0; j < 2; j++) {
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 2; j++) {
                 for (Soldier otherSoldier : gameBoard.getRows()[j][i]) {
                     if (otherSoldier == soldier)
                         return i;
@@ -127,17 +128,6 @@ public class Soldier extends Card {
         Card.executeMardoemeForRowNumber(gameBoard, playerIndex, rowNumber);
     }
 
-    protected void makeItBear() {
-        Soldier bear = new Soldier("Bear", this.getUser(), Faction.NEUTRAL);
-        GameBoard gameBoard = this.getGameBoard();
-        int rowNumber = getPlacedRowNumber(this, gameBoard);
-        int playerIndex = gameBoard.getPlayerNumber(this.getUser());
-        bear.setGameBoard(gameBoard);
-        gameBoard.getRows()[playerIndex][rowNumber].remove(this);
-        gameBoard.getRows()[playerIndex][rowNumber].add(bear);
-        InGameMenuController.changeThisCardInGraphic(this, bear);
-    }
-
 
     private void executeActionForSpy(Soldier soldier) {
         GameBoard gameBoard = soldier.getGameBoard();
@@ -149,17 +139,17 @@ public class Soldier extends Card {
     private void executeActionForScorch(Soldier soldier) {
         GameBoard gameBoard = soldier.getGameBoard();
         int playerIndex = gameBoard.getPlayerNumber(soldier.getUser());
-        for(int i = 0; i < 3; i++){ // TODO: do I have to check all rows?
+        for (int i = 0; i < 3; i++) { // TODO: do I have to check all rows?
             int powerSum = 0;
             ArrayList<Soldier> notHeroSoldiers = new ArrayList<>();
-            for(Soldier otherSoldier : gameBoard.getRows()[1 - playerIndex][i])
-                if(!otherSoldier.isHero()){
+            for (Soldier otherSoldier : gameBoard.getRows()[1 - playerIndex][i])
+                if (!otherSoldier.isHero()) {
                     powerSum += otherSoldier.getHp();
                     notHeroSoldiers.add(otherSoldier);
                 }
-            if(powerSum < 10)
+            if (powerSum < 10)
                 continue;
-            for(Soldier otherSoldier : notHeroSoldiers)
+            for (Soldier otherSoldier : notHeroSoldiers)
                 InGameMenuController.destroySoldier(gameBoard, otherSoldier);
         }
     }
@@ -183,8 +173,8 @@ public class Soldier extends Card {
         GameBoard gameBoard = soldier.getGameBoard();
         int rowNumber = getPlacedRowNumber(soldier, gameBoard);
         int playerIndex = gameBoard.getPlayerNumber(soldier.getUser());
-        for(Soldier otherSoldier : gameBoard.getRows()[playerIndex][rowNumber])
-            if(otherSoldier != soldier) {
+        for (Soldier otherSoldier : gameBoard.getRows()[playerIndex][rowNumber])
+            if (otherSoldier != soldier) {
                 InGameMenuController.changeHpForSoldier(gameBoard, otherSoldier, otherSoldier.getHp() + 1);
             }
     }
@@ -194,13 +184,13 @@ public class Soldier extends Card {
         int rowNumber = getPlacedRowNumber(soldier, gameBoard);
         int playerIndex = gameBoard.getPlayerNumber(soldier.getUser());
         ArrayList<Soldier> sameSoldiers = new ArrayList<>();
-        for(Soldier otherSoldier : gameBoard.getRows()[playerIndex][rowNumber]){
-            if(otherSoldier.getAttribute() == Attribute.TIGHT_BOND && otherSoldier.getHp() == soldier.getHp()) {
+        for (Soldier otherSoldier : gameBoard.getRows()[playerIndex][rowNumber]) {
+            if (otherSoldier.getAttribute() == Attribute.TIGHT_BOND && otherSoldier.getHp() == soldier.getHp()) {
                 sameSoldiers.add(otherSoldier);
             }
         }
         final int count = sameSoldiers.size();
-        for(Soldier sameSoldier : sameSoldiers){
+        for (Soldier sameSoldier : sameSoldiers) {
             InGameMenuController.changeHpForSoldier(gameBoard, sameSoldier, sameSoldier.getHp() * count);
         }
     }
@@ -208,9 +198,19 @@ public class Soldier extends Card {
     public int getShownHp() {
         GameBoard gameBoard = this.getGameBoard();
         int rowNumber = getPlacedRowNumber(this, gameBoard);
-        if(gameBoard.rowHasWeather(rowNumber))
+        if (gameBoard.rowHasWeather(rowNumber))
             return 1;
         return hp;
     }
 
+    public void transformItToVidkaarl(boolean young) {
+        Soldier bear = new Soldier(young ? "young vidkaarl" : "vidkaarl", this.getUser());
+        bear.setGameBoard(this.getGameBoard());
+        GameBoard gameBoard = this.getGameBoard();
+        int rowNumber = getPlacedRowNumber(this, gameBoard);
+        int playerIndex = gameBoard.getPlayerNumber(this.getUser());
+        gameBoard.getRows()[playerIndex][rowNumber].remove(this);
+        gameBoard.getRows()[playerIndex][rowNumber].add(bear);
+        InGameMenuController.changeThisCardInGraphic(this, bear);
+    }
 }

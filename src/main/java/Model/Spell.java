@@ -10,18 +10,19 @@ public class Spell extends Card {
     private boolean remains;
     private boolean isWeather;
 
-    public Spell(String name, User user, Faction faction) {
-        super(name, user, faction);
+    public Spell(String name, User user) {
+        super(name, user);
         remains = true;
         isWeather = getIfThisSpellIsWeather(name);
         this.type = getTypeByCardName(name);
+        this.faction = getFactionByCardName(name);
         this.description = getDescriptionByCardName(name);
     }
 
     private static int getPlacedRowNumber(GameBoard gameBoard, Spell spell) {
-        for(int i = 1; i <= 3; i++) {
-            if(gameBoard.getSpecialCard(0, i) == spell ||
-                    gameBoard.getSpecialCard(1, i) == spell)
+        for (int i = 1; i <= 3; i++) {
+            if (gameBoard.getSpecialCard(0, i).contains(spell) ||
+                    gameBoard.getSpecialCard(1, i).contains(spell))
                 return i;
         }
         return -1;
@@ -29,7 +30,7 @@ public class Spell extends Card {
 
     public static boolean isSpell(String cardName) {
         JSONObject card = getCardByName(cardName);
-        if(card == null)
+        if (card == null)
             return false;
         String type = card.getString("type");
         return type.equals("Spell") || type.equals("Weather");
@@ -38,17 +39,17 @@ public class Spell extends Card {
     @Override
     public void executeAction() {
         String name = this.getName().toLowerCase();
-        if(name.matches(".*mardoeme.*"))
+        if (name.matches(".*mardoeme.*"))
             executeActionForMardoeme(this);
-        else if(name.matches(".*scorch.*"))
+        else if (name.matches(".*scorch.*"))
             executeActionForScorch(this);
-        else if(name.matches(".*Commander.+horn.*"))
+        else if (name.matches(".*Commander.+horn.*"))
             executeActionForCommanderHorn(this);
-        else if(name.matches(".*decoy.*"))
+        else if (name.matches(".*decoy.*"))
             executeActionForDecoy(this);
-        else if(name.matches(".*clear.+weather.*"))
+        else if (name.matches(".*clear.+weather.*"))
             executeActionForClearWeather(this);
-        else if(this.type == Type.WEATHER)
+        else if (this.type == Type.WEATHER)
             executeActionForWeather(this);
     }
 
@@ -77,20 +78,20 @@ public class Spell extends Card {
         int maxPower = 0;
         ArrayList<Soldier> maxPowerSoldiers = new ArrayList<>();
         GameBoard gameBoard = spell.getGameBoard();
-        for(int i = 0; i < 2; i++) {
-            for(int j = 1; j <= 3; j++) {
-                for(Soldier soldier : gameBoard.getRows()[i][j]) {
-                    if(soldier.getHp() > maxPower) {
+        for (int i = 0; i < 2; i++) {
+            for (int j = 1; j <= 3; j++) {
+                for (Soldier soldier : gameBoard.getRows()[i][j]) {
+                    if (soldier.getHp() > maxPower) {
                         maxPower = soldier.getHp();
                         maxPowerSoldiers.clear();
                         maxPowerSoldiers.add(soldier);
-                    } else if(soldier.getHp() == maxPower) {
+                    } else if (soldier.getHp() == maxPower) {
                         maxPowerSoldiers.add(soldier);
                     }
                 }
             }
         }
-        for(Soldier soldier : maxPowerSoldiers) {
+        for (Soldier soldier : maxPowerSoldiers) {
             InGameMenuController.destroySoldier(gameBoard, soldier);
         }
     }

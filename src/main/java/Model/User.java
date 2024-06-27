@@ -199,9 +199,11 @@ public class User {
             int rounds = gameHistory.getScorePerRound(playerNumber).size();
             int wonRounds = 0, lostRounds = 0;
             for (int i = 0; i < rounds; i++) {
-                if (gameHistory.getScorePerRound(playerNumber).get(i) > gameHistory.getScorePerRound(1 - playerNumber).get(i))
+                if (gameHistory.getScorePerRound(playerNumber).get(i) >
+                        gameHistory.getScorePerRound(1 - playerNumber).get(i))
                     wonRounds++;
-                else if (gameHistory.getScorePerRound(playerNumber).get(i) < gameHistory.getScorePerRound(1 - playerNumber).get(i))
+                else if (gameHistory.getScorePerRound(playerNumber).get(i) <
+                        gameHistory.getScorePerRound(1 - playerNumber).get(i))
                     lostRounds++;
             }
             if (wonRounds > lostRounds)
@@ -217,9 +219,11 @@ public class User {
             int rounds = gameHistory.getScorePerRound(playerNumber).size();
             int wonRounds = 0, lostRounds = 0;
             for (int i = 0; i < rounds; i++) {
-                if (gameHistory.getScorePerRound(playerNumber).get(i) > gameHistory.getScorePerRound(1 - playerNumber).get(i))
+                if (gameHistory.getScorePerRound(playerNumber).get(i) >
+                        gameHistory.getScorePerRound(1 - playerNumber).get(i))
                     wonRounds++;
-                else if (gameHistory.getScorePerRound(playerNumber).get(i) < gameHistory.getScorePerRound(1 - playerNumber).get(i))
+                else if (gameHistory.getScorePerRound(playerNumber).get(i) <
+                        gameHistory.getScorePerRound(1 - playerNumber).get(i))
                     lostRounds++;
             }
             if (wonRounds == lostRounds)
@@ -264,10 +268,10 @@ public class User {
         if (!isSoldier && !isSpell)
             return;
         if (isSoldier) {
-            Soldier soldier = new Soldier(cardName, this, faction);
+            Soldier soldier = new Soldier(cardName, this);
             this.deck.add(soldier);
         } else {
-            Spell spell = new Spell(cardName, this, faction);
+            Spell spell = new Spell(cardName, this);
             this.deck.add(spell);
         }
     }

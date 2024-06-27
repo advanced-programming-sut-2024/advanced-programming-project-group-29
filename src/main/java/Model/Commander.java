@@ -1,11 +1,12 @@
 package Model;
+
 import Enum.Faction;
 
 public class Commander extends Card {
     private boolean hasAction = true;
 
     public Commander(String name, User user) {
-        super(name, user, Faction.getFactionByCommanderName(name));
+        super(name, user);
     }
 
     private Runnable getExecuteActionByCommanderName(String commanderName) {
@@ -60,8 +61,7 @@ public class Commander extends Card {
 
     private void kingOfTemeria() {
         int playerNumber = this.gameBoard.getPlayerNumber(this.user);
-        Card card = this.gameBoard.getSpecialCard(playerNumber, 2);
-        if (card == null || !card.getName().equals("Draig Bon-Dhu")) {
+        if (gameBoard.isThereAnyCommendersHornInRow(playerNumber, 2)) {
             for (Soldier soldier : this.gameBoard.getRows()[playerNumber][2]) {
                 soldier.setHp(soldier.getHp() * 2);
             }
@@ -77,7 +77,7 @@ public class Commander extends Card {
             if (card == null) if (c.getHp() > 10) card = c;
             else if (c.getHp() > card.getHp()) card = c;
         }
-        if (card != null) this.gameBoard.removeSoldierFromRow(playerNumber,2,card);
+        if (card != null) this.gameBoard.removeSoldierFromRow(playerNumber, 2, card);
     }
 
     private void kingBran() {
@@ -145,6 +145,6 @@ public class Commander extends Card {
             if (card == null) if (c.getHp() > 10) card = c;
             else if (c.getHp() > card.getHp()) card = c;
         }
-        if (card != null) this.gameBoard.removeSoldierFromRow(playerNumber,1,card);
+        if (card != null) this.gameBoard.removeSoldierFromRow(playerNumber, 1, card);
     }
 }
