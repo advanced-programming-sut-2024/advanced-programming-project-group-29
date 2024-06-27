@@ -22,6 +22,7 @@ import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -54,7 +55,17 @@ public class LoginMenu extends Application {
 
     private User user;
 
-    public void run(String[] args) {
+    public void run(String[] args) throws IOException {
+        Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+            public void run() {
+                try {
+                    User.saveUser();
+                } catch (Exception e) {
+                    System.out.println(e.toString());
+                }
+            }
+        }, "Program existing..."));
+        User.loadUser();
         launch(args);
     }
 

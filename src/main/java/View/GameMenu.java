@@ -4,6 +4,7 @@ import Controller.ApplicationController;
 import Controller.GameMenuController;
 import Controller.SaveApplicationAsObject;
 import Model.*;
+import Enum.Faction;
 import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -26,13 +27,15 @@ import java.io.File;
 import java.io.FilenameFilter;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Objects;
+import java.util.stream.Stream;
 
 public class GameMenu extends Application {
     public ScrollPane scrollSelected;
     public ScrollPane scrollNotSelected;
-    private final GridPane gridPaneSelected = new GridPane();
-    private final GridPane gridPaneNotSelected = new GridPane();
+    private GridPane gridPaneSelected;
+    private GridPane gridPaneNotSelected;
     public ImageView leader;
     public Label deckSize;
     public Label soldiers;
@@ -47,10 +50,13 @@ public class GameMenu extends Application {
     public ImageView image4;
     public ImageView image5;
     public Pane changePain;
+    public Pane mainPain;
     public Label name;
+
 
     private ArrayList<Image> changeArray;
     private int selectedImage;
+    private boolean isCommander;
 
     private GameMenuController gameMenuController;
 
@@ -85,18 +91,16 @@ public class GameMenu extends Application {
     }
 
     private void createCards() {
+        gridPaneSelected = new GridPane();
+        gridPaneNotSelected = new GridPane();
         gridPaneNotSelected.setHgap(12);
         gridPaneNotSelected.setVgap(12);
         gridPaneSelected.setHgap(12);
         gridPaneSelected.setVgap(12);
-        File directory = new File((GameMenu.class.getResource("/Images/Soldiers/Neutral")).getPath());
-        String regex = "monsters" + ".*"; //TODO
-        File[] files = directory.listFiles(new FilenameFilter() {
-            @Override
-            public boolean accept(File dir, String name) {
-                return name.matches(regex);
-            }
-        });
+        File directory = new File((GameMenu.class.getResource("/Images/Soldiers/" + ApplicationController.getCurrentUser().getFaction().getName())).getPath());
+        File directory1 = new File((GameMenu.class.getResource("/Images/Soldiers/Neutral")).getPath());
+        File directory2 = new File((GameMenu.class.getResource("/Images/Soldiers/Spells")).getPath());
+        File[] files = Stream.of(directory.listFiles(), directory1.listFiles(), directory2.listFiles()).filter(Objects::nonNull).flatMap(Arrays::stream).toArray(File[]::new);
         main:
         for (int j = 0; j <= (int) (Objects.requireNonNull(files).length / 3); j++) {
             for (int i = 0; i < 3; i++) {
@@ -181,6 +185,9 @@ public class GameMenu extends Application {
         return count;
     }
 
+    public void changeTurn(MouseEvent mouseEvent) {
+    }
+
     public void loadDeck(MouseEvent mouseEvent) {
     }
 
@@ -191,19 +198,19 @@ public class GameMenu extends Application {
     }
 
     public void changeFaction(MouseEvent mouseEvent) {
-        change(false);
+        isCommander = false;
+        change(isCommander);
     }
 
     public void changeLeader(MouseEvent mouseEvent) {
-        change(true);
-    }
-
-    public void changeTurn(MouseEvent mouseEvent) {
+        isCommander = true;
+        change(isCommander);
     }
 
     private void change(boolean isCommander) {
         changePain.setVisible(true);
         changePain.setDisable(false);
+        mainPain.setDisable(true);
         image3.requestFocus();
         changeArray = new ArrayList<>();
         String selected;
@@ -283,5 +290,18 @@ public class GameMenu extends Application {
     public void backward(MouseEvent mouseEvent) {
         if (selectedImage != 0) selectedImage--;
         setImageChange(selectedImage);
+    }
+
+    public void done(MouseEvent mouseEvent) {
+        changePain.setVisible(false);
+        changePain.setDisable(true);
+        mainPain.setDisable(false);
+        if (isCommander) {
+            ApplicationController.getCurrentUser().setCommander(new Commander(name.getText(), ApplicationController.getCurrentUser()));
+            leader.setImage(changeArray.get(selectedImage).getImage());
+        } else {
+            ApplicationController.getCurrentUser().setFaction(Faction.getFactionFromString(name.getText()));
+        }
+        createCards();
     }
 }

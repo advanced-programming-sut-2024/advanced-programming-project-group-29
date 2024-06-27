@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.example</groupId>
-    <artifactId>AtomicBomber</artifactId>
+    <artifactId>Gwent</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <properties>
@@ -36,9 +36,14 @@
             <version>1.3</version>
         </dependency>
         <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.8.9</version>
+        </dependency>
+        <dependency>
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
-            <version>20210307</version>
+            <version>20231013</version>
         </dependency>
     </dependencies>
     <build>

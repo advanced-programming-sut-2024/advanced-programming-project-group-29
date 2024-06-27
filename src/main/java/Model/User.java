@@ -1,9 +1,19 @@
 package Model;
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 import java.util.Random;
+import java.util.zip.ZipInputStream;
 
 import Enum.Faction;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
 public class User {
     private static final String[] securityQuestions = {
@@ -24,13 +34,13 @@ public class User {
     private String email;
     private int questionNumber;
     private String answer;
-    private final ArrayList<Card> hand = new ArrayList<>();
-    private final ArrayList<Card> deck = new ArrayList<>();
-    private final ArrayList<Card> discardPile = new ArrayList<>();
-    private Faction faction;
-    private Commander commander;
-    private GameBoard currentGameBoard;
-    private ArrayList<GameHistory> gameHistory = new ArrayList<>();
+    private transient ArrayList<Card> hand = new ArrayList<>();
+    private transient ArrayList<Card> deck = new ArrayList<>();
+    private transient ArrayList<Card> discardPile = new ArrayList<>();
+    private transient Faction faction;
+    private transient Commander commander;
+    private transient GameBoard currentGameBoard;
+    private transient ArrayList<GameHistory> gameHistory = new ArrayList<>();
 
     public User(String username, String password, String nickname, String email) {
         this.username = username;
@@ -283,5 +293,37 @@ public class User {
                 return;
             }
         }
+    }
+
+    public static <Gson> void saveUser() throws IOException {
+        FileWriter fileWriter = new FileWriter("src/main/resources/JSON/allUsers.json");
+        com.google.gson.Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        String json = gson.toJson(allUsers);
+        fileWriter.write(json);
+        fileWriter.close();
+    }
+
+
+    public static void loadUser() throws IOException {
+        Gson gson = new Gson();
+        String text = new String(Files.readAllBytes(Paths.get("src/main/resources/JSON/allUsers.json")));
+        ArrayList<User> users = gson.fromJson(text, new TypeToken<List<User>>() {
+        }.getType());
+        if (users == null)
+            users = new ArrayList<User>();
+        for (User user : users) {
+            user.setCommander(new Commander("king of the wild hunt", user));
+            user.setFaction(Faction.MONSTERS);
+            user.hand = new ArrayList<>();
+            user.deck = new ArrayList<>();
+            user.discardPile = new ArrayList<>();
+            user.gameHistory = new ArrayList<>();
+            //TODO load game history
+        }
+        User.setAllUsers(users);
+    }
+
+    public static void setAllUsers(ArrayList<User> allUsers) {
+        User.allUsers = allUsers;
     }
 }

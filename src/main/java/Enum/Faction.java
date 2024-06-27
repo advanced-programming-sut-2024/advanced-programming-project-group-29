@@ -20,7 +20,7 @@ public enum Faction {
             "his imperial majesty", "emperor of nilfgaard", "the relentless", "invader of the north"))),
     MONSTERS("Monsters", new ArrayList<>(Arrays.asList("bringer of death",
             "king of the wild hunt", "destroyer of worlds", "commander of the red riders", "the treacherous"))),
-    SCOIATAELL("Scoiataell", new ArrayList<>(Arrays.asList("queen of dol blathanna",
+    SCOIATAELL("Scoiatael", new ArrayList<>(Arrays.asList("queen of dol blathanna",
             "the beautiful", "daisy of the valley", "pureblood elf", "hope of the aen seidhe"))),
     SKELLIGE("Skellige", new ArrayList<>(Arrays.asList("crach an craite", "king bran"))),
     NEUTRAL("Neutral", new ArrayList<>());
@@ -34,16 +34,15 @@ public enum Faction {
     }
 
     public static Faction getFactionFromString(String faction) {
-        faction = faction.toLowerCase();
-        if (faction.matches("realms"))
+        if (faction.matches("Realms"))
             return NORTH_REALMS;
-        if (faction.matches("nilfgaard"))
+        if (faction.matches("Nilfgaard"))
             return NILFGAARDIAN_EMPIRE;
-        if (faction.matches("monsters"))
+        if (faction.matches("Monsters"))
             return MONSTERS;
-        if (faction.matches("scoiataell"))
+        if (faction.matches("Scoiatael"))
             return SCOIATAELL;
-        if (faction.matches("skellige"))
+        if (faction.matches("Skellige"))
             return SKELLIGE;
         return null;
     }
