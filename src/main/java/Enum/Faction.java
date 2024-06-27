@@ -15,8 +15,8 @@ public enum Faction {
     private final ArrayList<String> commanders;
 
     Faction(String name, ArrayList<String> commanders) {
-        this.name = this.toString();
-        this.commanders = new ArrayList<>();
+        this.name = name;
+        this.commanders = commanders;
     }
 
     public static Faction getFactionFromString(String faction) {
