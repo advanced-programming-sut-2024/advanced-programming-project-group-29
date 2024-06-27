@@ -5,11 +5,13 @@ import Controller.InGameMenuController;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class GameBoard { // Radin
+import Enum.*;
+
+public class GameBoard {
     private final User[] players = new User[2];
     private int currentPlayer;
     private final ArrayList<Soldier>[][] rows = new ArrayList[2][3];
-    private final Spell[][] specialCards = new Spell[2][3];
+    private final ArrayList<Spell>[][] specialCards = new ArrayList[2][3];
     private final int[] playersScore = new int[2];
     private final int[] playerCardsNumber = new int[2];
     private final int[] playersCrystals = new int[2];
@@ -88,12 +90,12 @@ public class GameBoard { // Radin
     }
 
 
-    public Spell getSpecialCard(int playerNumber, int rowNumber) {
+    public ArrayList<Spell> getSpecialCard(int playerNumber, int rowNumber) {
         return specialCards[playerNumber][rowNumber];
     }
 
-    public void setSpecialCard(int playerNumber, int rowNumber, Spell spell) {
-        specialCards[playerNumber][rowNumber] = spell;
+    public void addSpecialCard(int playerNumber, int rowNumber, Spell spell) {
+        specialCards[playerNumber][rowNumber].add(spell);
     }
 
     public Commander getPlayerLeader(int playerNumber) {
@@ -108,7 +110,7 @@ public class GameBoard { // Radin
         return players[0].equals(user) ? 0 : 1;
     }
 
-    public boolean getCommanderOwner (Commander commander) {
+    public boolean getCommanderOwner(Commander commander) {
         for (int i = 0; i < 2; i++) {
             if (playersLeaders[i].equals(commander)) {
                 return i == currentPlayer;
@@ -129,7 +131,7 @@ public class GameBoard { // Radin
         }
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 3; j++) {
-                specialCards[i][j] = null;
+                specialCards[i][j].clear();
             }
         }
         for (int i = 0; i < 2; i++) {
@@ -179,13 +181,13 @@ public class GameBoard { // Radin
     public void addWeather(Spell spell) {
         weather.add(spell);
         String name = spell.getName().toLowerCase();
-        if(name.matches(".*Biting.+Frost.*"))
+        if (name.matches(".*Biting.+Frost.*"))
             addWeatherForRow(0);
-        else if(name.matches(".*Impenetrable.+Fog.*"))
+        else if (name.matches(".*Impenetrable.+Fog.*"))
             addWeatherForRow(1);
-        else if(name.matches(".*Torrential.+Rain.*"))
+        else if (name.matches(".*Torrential.+Rain.*"))
             addWeatherForRow(2);
-        else if(name.matches(".*Skellige.+Storm.*")){
+        else if (name.matches(".*Skellige.+Storm.*")) {
             addWeatherForRow(1);
             addWeatherForRow(2);
         }
@@ -200,5 +202,17 @@ public class GameBoard { // Radin
 
     public boolean rowHasWeather(int rowNumber) {
         return rowHasWeather[rowNumber];
+    }
+
+    public boolean isThereAnyCommendersHornInRow(int playerNumber, int rowNumber) {
+        for (Spell spell : specialCards[playerNumber][rowNumber]) {
+            if (spell.getName().matches("commanders horn"))
+                return true;
+        }
+        for (Soldier soldier : rows[playerNumber][rowNumber]) {
+            if (soldier.getAttribute() == Attribute.getAttributeFromString("commanders horn"))
+                return true;
+        }
+        return false;
     }
 }
