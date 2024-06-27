@@ -83,7 +83,7 @@ public class GameMenuController {
         return new Result(true, messages);
     }
 
-    public Result showInfoCurrentUser() {
+    public static Result showInfoCurrentUser() {
         User user = ApplicationController.getCurrentUser();
         ArrayList<String> messages = new ArrayList<>();
         messages.add("Username: " + user.getUsername());

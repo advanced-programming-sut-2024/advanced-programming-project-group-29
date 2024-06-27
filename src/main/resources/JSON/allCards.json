@@ -1,12 +1,12 @@
 {
   "Skellige": [
     {
-      "name": "Mardoeme",
+      "name": "Mardroeme",
       "power": "-",
       "numberOfCards": 3,
       "type": "Spell",
-      "ability": "Mardoeme",
-      "description": "This Spell card has Mardoeme Ability and can be placed in the commmander's Horn spot . it effects the row that it was placed in"
+      "ability": "Mardroeme",
+      "description": "This Spell card has Mardroeme Ability and can be placed in the commmander's Horn spot . it effects the row that it was placed in"
     },
     {
       "name": "Berserker",
@@ -656,7 +656,7 @@
       "type": "Ranged Unit"
     },
     {
-      "name": "Etolian Auxiliary Archers ",
+      "name": "Etolian Auxiliary Archers",
       "power": 1,
       "numberOfCards": 2,
       "type": "Ranged Unit",
@@ -697,7 +697,7 @@
       "ability": "Tight Bond"
     },
     {
-      "name": "Rainfarn ",
+      "name": "Rainfarn",
       "power": 4,
       "numberOfCards": 1,
       "type": "Close Combat Unit"
@@ -1014,7 +1014,7 @@
       "description": "Remove card(s) with the maximum power points in the field (ignores heroes)"
     },
     {
-      "name": "Commander’s horn",
+      "name": "Commanders horn",
       "power": "-",
       "numberOfCards": 3,
       "type": "Spell",
@@ -1054,7 +1054,7 @@
       "description": "-"
     },
     {
-      "name": "Gaunter O’Dimm",
+      "name": "Gaunter ODimm",
       "power": 2,
       "numberOfCards": 1,
       "type": "Siege Unit",
@@ -1062,7 +1062,7 @@
       "description": "-"
     },
     {
-      "name": "Gaunter O’DImm Darkness",
+      "name": "Gaunter ODImm Darkness",
       "power": 4,
       "numberOfCards": 3,
       "type": "Ranged Unit",

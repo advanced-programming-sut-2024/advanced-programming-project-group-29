@@ -120,6 +120,9 @@ public class ProfileMenu extends Application {
                 if (!newValue.matches("\\d*")) {
                     countHistory.setText(newValue.replaceAll("\\D", ""));
                 }
+                if (newValue.matches("0\\d*")) {
+                    countHistory.setText(countHistory.getText().substring(1));
+                }
             }
         });
     }
@@ -215,15 +218,15 @@ public class ProfileMenu extends Application {
         Matcher matcher = Pattern.compile(ProfileMenuRegex.GAMEHISTORY.getRegex()).matcher(toRegex);
         matcher.matches();
         Result result = ProfileMenuController.gameHistory(matcher);
-        if (result.isSuccessful()) {
-            for (String s : result.getMessage()) {
-                Label label = new Label(s);
+        if (!result.isSuccessful()) {
+            for (String s : new String[]{"sdas","asda","asd","asd","asd","asd","asd"}) {
+                Label label = new Label("sadjknasjndjknasjkdnjkansd");
                 label.setTextFill(Paint.valueOf("green"));
                 label.setWrapText(true);
                 label.setLayoutX(0);
                 label.setLayoutY(0);
                 label.setPrefWidth(487);
-                label.setPrefHeight(10*25);
+                label.setPrefHeight(15*25);
                 label.setFont(Font.font("System", FontWeight.BOLD, 16));
                 vBox.getChildren().add(label);
             }

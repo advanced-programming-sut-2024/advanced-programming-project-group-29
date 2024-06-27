@@ -4,6 +4,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.Blend?>
 <?import javafx.scene.effect.Shadow?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -14,11 +15,11 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.ProfileMenu">
+<AnchorPane prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/22" stylesheets="@CSS/GameMenu.css" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.ProfileMenu">
    <children>
       <ImageView fitHeight="800.0" fitWidth="1200.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../Images/ProfileMenuBackground.jpg" />
+            <Image url="@../Images/Background/ProfileMenuBackground.jpg" />
          </image>
       </ImageView>
       <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#eed092" height="233.0" layoutX="134.0" layoutY="284.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="0.0" width="324.0">
@@ -119,7 +120,7 @@
                   </Shadow>
                </effect>
             </Rectangle>
-            <ScrollPane fx:id="scrollPane" hbarPolicy="NEVER" layoutX="78.0" layoutY="73.0" prefHeight="400.0" prefWidth="504.0">
+            <ScrollPane fx:id="scrollPane" hbarPolicy="NEVER" layoutX="78.0" layoutY="73.0" prefHeight="400.0" prefWidth="504.0" vbarPolicy="ALWAYS" vmax="100.0">
                <content>
                   <VBox fx:id="vBox" prefHeight="347.0" prefWidth="487.0" />
                </content>
