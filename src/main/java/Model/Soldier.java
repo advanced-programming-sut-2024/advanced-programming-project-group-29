@@ -26,19 +26,23 @@ public class Soldier extends Card {
 
     private static int getDefaultHpBySoldierName(String soldierName) {
         JSONObject soldier = getCardByName(soldierName);
+        if(soldier == null)
+            return -1;
+        if(soldier.has("power") == false)
+            return 0;
         return soldier.getInt("power");
     }
 
     private static Attribute getAttributeBySoldierName(String soldierName) {
         JSONObject soldier = getCardByName(soldierName);
-        if (!soldier.has("ability"))
+        if (soldier == null || !soldier.has("ability"))
             return null;
         return Attribute.getAttributeFromString(soldier.getString("ability"));
     }
 
     private static boolean isThisSoldierHero(String soldierName) {
         JSONObject soldier = getCardByName(soldierName);
-        if (!soldier.has("ability"))
+        if (soldier == null || !soldier.has("ability"))
             return false;
         return isThereAnyHero(soldier.getString("ability"));
     }

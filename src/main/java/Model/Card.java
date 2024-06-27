@@ -66,9 +66,10 @@ public abstract class Card {
 
     public static String getDescriptionByCardName(String cardName) {
         JSONObject card = getCardByName(cardName);
-        if (card == null) {
+        if (card == null)
             return null;
-        }
+        if(card.has("description") == false)
+            return "";
         return card.getString("description");
     }
 
@@ -89,8 +90,8 @@ public abstract class Card {
 
     public static Faction getFactionByCardName(String cardName) {
         try {
-            String content = new String(Files.readAllBytes(Paths.get(Card.class.
-                    getResource("/JSON/allCards.json").toString())));
+            URI uri = Card.class.getResource("/JSON/allCards.json").toURI();
+            String content = new String(Files.readAllBytes(Paths.get(uri)));
             JSONObject allCards = new JSONObject(content);
             Iterator<String> keys = allCards.keys();
             while (keys.hasNext()) {
@@ -103,6 +104,8 @@ public abstract class Card {
             }
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
         }
         return null;
     }
