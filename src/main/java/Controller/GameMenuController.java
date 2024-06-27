@@ -4,6 +4,9 @@ import Model.*;
 import Enum.Faction;
 import Enum.Type;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 
@@ -104,5 +107,131 @@ public class GameMenuController {
         messages.add("Heroes: " + heroes);
         messages.add("Power: " + power);
         return new Result(true, messages);
+    }
+
+    public Result saveDeck(Matcher matcher) {
+        String type = matcher.group("type");
+        User user = ApplicationController.getCurrentUser();
+        boolean overwrite = matcher.group("overwrite") != null;
+        ArrayList<Card> deck = user.getDeck();
+        if (type.equals("-f")) {
+            Path path = Paths.get(matcher.group("name"));
+            if (Files.exists(path) && !overwrite) {
+                return new Result(false, "File already exists. Use -o to overwrite.");
+            }
+            try {
+                Files.write(path, deck.toString().getBytes());
+                return new Result(true, "Deck saved successfully.");
+            } catch (Exception e) {
+                return new Result(false, "Error saving deck.");
+            }
+        }
+        String name = matcher.group("name");
+        if (user.getDeckByName(name) != null && !overwrite) {
+            return new Result(false, "Deck with this name already exists. Use -o to overwrite.");
+        }
+        user.saveDeck(name, deck);
+        return new Result(true, "Deck saved successfully.");
+    }
+
+    public Result loadDeck(Matcher matcher) {
+        String type = matcher.group("type");
+        User user = ApplicationController.getCurrentUser();
+        if (type.equals("-f")) {
+            Path path = Paths.get(matcher.group("name"));
+            if (!Files.exists(path)) {
+                return new Result(false, "File doesn't exist.");
+            }
+            try {
+                String deck = Files.readString(path);
+                if (user.extractDeckFromString(deck)) {
+                    return new Result(true, "Deck loaded successfully.");
+                }
+                return new Result(false, "Error loading deck.");
+            } catch (Exception e) {
+                return new Result(false, "Error loading deck.");
+            }
+        }
+        String name = matcher.group("name");
+        if (user.getDeckByName(name) == null) {
+            return new Result(false, "Deck with this name doesn't exist.");
+        }
+        user.loadDeck(name);
+        return new Result(true, "Deck loaded successfully.");
+    }
+
+    public Result showLeaders() {
+        ArrayList<String> messages = new ArrayList<>();
+        Faction faction = ApplicationController.getCurrentUser().getFaction();
+        String currentCommander = ApplicationController.getCurrentUser().getCommander().getName();
+        messages.add(currentCommander);
+        for (String commander : faction.getCommanders()) {
+            if (commander.equals(currentCommander))
+                continue;
+            messages.add(commander);
+        }
+        return new Result(true, messages);
+    }
+
+    public Result selectLeader(Matcher matcher) {
+        String name = matcher.group("name");
+        User user = ApplicationController.getCurrentUser();
+        Faction faction = user.getFaction();
+        if (!faction.getCommanders().contains(name)) {
+            return new Result(false, "Invalid commander name.");
+        }
+        user.setCommander(new Commander(name, user));
+        return new Result(true, "Commander selected successfully.");
+    }
+
+    public Result addCardToDeck(Matcher matcher) {
+        String name = matcher.group("name");
+        int number = matcher.group("number") == null ? 1 : Integer.parseInt(matcher.group("number"));\
+        if (number < 1) {
+            return new Result(false, "Number should be positive.");
+        }
+        User user = ApplicationController.getCurrentUser();
+        int currentNumber = user.getNumberOfOccurrenceInDeck(name);
+        if (currentNumber + number > Card.getAllowedNumberByCardName(name)) {
+            return new Result(false, "You can't add more than " + Card.getAllowedNumberByCardName(name) + " of this card.");
+        }
+        if (Spell.isSpell(name) && user.getNumberOfSpellsInDeck() + number > 10) {
+            return new Result(false, "You can't add more than 10 spells to your deck.");
+        }
+        for (int i = 0; i < number; i++) {
+            if (Soldier.isSoldier(name)) {
+                user.addCardToDeck(new Soldier(name, user));
+            } else {
+                user.addCardToDeck(new Spell(name, user));
+            }
+        }
+    }
+
+    public Result removeCardFromDeck(Matcher matcher) {
+        String name = matcher.group("name");
+        int number = matcher.group("number") == null ? 1 : Integer.parseInt(matcher.group("number"));
+        if (number < 1) {
+            return new Result(false, "Number should be positive.");
+        }
+        User user = ApplicationController.getCurrentUser();
+        int currentNumber = user.getNumberOfOccurrenceInDeck(name);
+        if (currentNumber < number) {
+            return new Result(false, "You don't have this number of this card in your deck.");
+        }
+        for (int i = 0; i < number; i++) {
+            user.removeCardFromDeck(name);
+        }
+        return new Result(true, "Card removed successfully.");
+    }
+
+    public Result changeTurn() {
+        User user = ApplicationController.getCurrentUser();
+        if (user.getNumberOfSoldiersInDeck() < 22) {
+            return new Result(false, "You should have at least 22 soldiers in your deck.");
+        }
+        GameBoard gameBoard = user.getCurrentGameBoard();
+        gameBoard.changeTurn();
+        ApplicationController.setCurrentUser(gameBoard.getPlayer(0));
+        return new Result(true, "Turn changed successfully.");
     }
 }
