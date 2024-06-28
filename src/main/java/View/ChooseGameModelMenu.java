@@ -23,7 +23,7 @@ import java.util.regex.Pattern;
 
 public class ChooseGameModelMenu extends Application {
     private final double HEIGHT_OF_TEXT_WARNING = 25;
-    private final double LENGTH_OF_FULL_LINE = 30;
+    private final double LENGTH_OF_FULL_LINE = 25;
     private final double HEIGHT_OF_DARK_BACK = 230;
     private Label warning;
     public Rectangle darkBack;
@@ -35,7 +35,7 @@ public class ChooseGameModelMenu extends Application {
     public void start(Stage stage) throws Exception {
         stage.setResizable(false);
         stage.centerOnScreen();
-        Pane pane = FXMLLoader.load(Objects.requireNonNull(RegisterMenu.class.getResource("/FXML/GameMenu.fxml")));
+        Pane pane = FXMLLoader.load(Objects.requireNonNull(RegisterMenu.class.getResource("/FXML/ChooseGameModelMenu.fxml")));
         Scene scene = new Scene(pane);
         stage.setScene(scene);
         stage.show();
@@ -64,6 +64,7 @@ public class ChooseGameModelMenu extends Application {
         choosePain.setVisible(true);
         choosePain.setDisable(false);
         opponentUsername.setText("");
+        deleteWarning();
     }
 
     public void startGame(MouseEvent mouseEvent) throws Exception {
@@ -107,7 +108,7 @@ public class ChooseGameModelMenu extends Application {
         int n = (int) (warning.length() / LENGTH_OF_FULL_LINE);
         deleteWarning();
         darkBack.setHeight(darkBack.getHeight() + (n + 1) * HEIGHT_OF_TEXT_WARNING);
-        this.warning = createWarningLabel(warning, n + 1, isRed, 465);
+        this.warning = createWarningLabel(warning, n + 1, isRed, 449);
         SaveApplicationAsObject.getApplicationController().getPane().getChildren().add(this.warning);
     }
 
@@ -115,9 +116,9 @@ public class ChooseGameModelMenu extends Application {
         Label label = new Label(warning);
         label.setTextFill(Paint.valueOf(isRed ? "#dd2e2e" : "green"));
         label.setWrapText(true);
-        label.setLayoutX(468);
+        label.setLayoutX(484);
         label.setLayoutY(Y);
-        label.setPrefWidth(304);
+        label.setPrefWidth(253);
         label.setPrefHeight(n * HEIGHT_OF_TEXT_WARNING);
         label.setFont(Font.font("System", FontWeight.BOLD, 16));
         return label;

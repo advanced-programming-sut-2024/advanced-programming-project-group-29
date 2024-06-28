@@ -4,7 +4,7 @@ import Controller.ApplicationController;
 import Controller.GameMenuController;
 import Controller.SaveApplicationAsObject;
 import Model.*;
-import Enum.Faction;
+import Regex.GameMenuRegex;
 import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -21,14 +21,14 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
-import org.apache.commons.text.WordUtils;
 
 import java.io.File;
-import java.io.FilenameFilter;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 public class GameMenu extends Application {
@@ -121,7 +121,7 @@ public class GameMenu extends Application {
                 File file = files[(3 * j) + i];
                 Model.Image image = new Model.Image(file.toURI().toString(), 325, 172, getNameFromFile(file));
                 image.setOnMouseClicked(event -> {
-                    moveCard((ImageView) event.getSource());
+                    moveCard((Image) event.getSource());
                 });
                 gridPaneNotSelected.add(image, i, j);
                 notSelectedCards.add(image);
@@ -134,23 +134,32 @@ public class GameMenu extends Application {
     }
 
 
-    private void moveCard(ImageView imageView) {
-        int canMove = getAllowedNumberByCardImage((Image) imageView);
-        if (imageView.getParent().equals(gridPaneNotSelected) && canMove != 0) {
-            Image image = new Image(((Image) imageView).getPath(), 325, 172, ((Image) imageView).getName());
-            image.setOnMouseClicked(event -> {
-                moveCard((ImageView) event.getSource());
-            });
-            selectedCards.addFirst(image);
-            ApplicationController.getCurrentUser().addCardToDeck(((Image) imageView).getName());
-            if (canMove == 2) {
-                notSelectedCards.remove((Image) imageView);
+    private void moveCard(Image image) {
+        if (image.getParent().equals(gridPaneNotSelected)) {
+            String toRegex = "add to deck -n " + image.getName();
+            Matcher matcher = Pattern.compile(GameMenuRegex.ADDTODECK.getRegex()).matcher(toRegex);
+            matcher.matches();
+            Result result = GameMenuController.addCardToDeck(matcher);
+            if (result.isSuccessful()) {
+                Image img = new Image(image.getPath(), 325, 172, image.getName());
+                img.setOnMouseClicked(event -> {
+                    moveCard((Image) event.getSource());
+                });
+                selectedCards.addFirst(img);
+                if (Card.getAllowedNumberByCardName(image.getName()) == howManyCardInList(image, selectedCards)) {
+                    notSelectedCards.remove(image);
+                }
             }
         } else {
-            selectedCards.remove((Image) imageView);
-            ApplicationController.getCurrentUser().removeCardFromDeck(((Image) imageView).getName());
-            if (howManyCardInList((Image) imageView, notSelectedCards) == 0) {
-                notSelectedCards.addFirst((Image) imageView);
+            String toRegex = "delete from deck -n " + image.getName();
+            Matcher matcher = Pattern.compile(GameMenuRegex.DELETEFROMDECK.getRegex()).matcher(toRegex);
+            matcher.matches();
+            Result result = GameMenuController.removeCardFromDeck(matcher);
+            if (result.isSuccessful()){
+                selectedCards.remove(image);
+                if (howManyCardInList(image, notSelectedCards) == 0) {
+                    notSelectedCards.addFirst(image);
+                }
             }
         }
         refresh();
@@ -168,30 +177,8 @@ public class GameMenu extends Application {
         changeLabel();
     }
 
-    private void changeLabel() {
-        Result result = GameMenuController.showInfoCurrentUser();
-        deckSize.setText(result.getMessage().get(2));
-        soldiers.setText(result.getMessage().get(3));
-        spells.setText(result.getMessage().get(4));
-        heroes.setText(result.getMessage().get(5));
-        power.setText(result.getMessage().get(6));
-        username.setText(result.getMessage().get(0));
-        faction.setText(result.getMessage().get(1));
-    }
-
     private String getNameFromFile(File file) {
         return file.getName().replaceAll(".jpg", "");
-    }
-
-    private int getAllowedNumberByCardImage(Image image) {
-        if (image.getParent().equals(gridPaneNotSelected)) {
-            String path = image.getPath();
-            int n = Card.getAllowedNumberByCardName(image.getName());
-            if ((n - howManyCardInList(image, selectedCards)) == 1) return 2;
-            else if ((n - howManyCardInList(image, selectedCards)) == 0) return 0;
-            else return 1;
-        }
-        return 0;
     }
 
     private int howManyCardInList(Image image, ArrayList<Image> arrayList) {
@@ -214,12 +201,23 @@ public class GameMenu extends Application {
 
     public void changeFaction(MouseEvent mouseEvent) {
         isCommander = false;
-        change(isCommander);
+        change(false);
     }
 
     public void changeLeader(MouseEvent mouseEvent) {
         isCommander = true;
-        change(isCommander);
+        change(true);
+    }
+
+    private void changeLabel() {
+        Result result = GameMenuController.showInfoCurrentUser();
+        deckSize.setText(result.getMessage().get(2));
+        soldiers.setText(result.getMessage().get(3));
+        spells.setText(result.getMessage().get(4));
+        heroes.setText(result.getMessage().get(5));
+        power.setText(result.getMessage().get(6));
+        username.setText(result.getMessage().get(0));
+        faction.setText(result.getMessage().get(1));
     }
 
     private void change(boolean isCommander) {
@@ -256,17 +254,48 @@ public class GameMenu extends Application {
         image3.setImage(null);
         image4.setImage(null);
         image5.setImage(null);
-        for (int i = 0; i < changeArray.size(); i++) {
+        for (Image image : changeArray) {
             try {
                 Field field = this.getClass().getDeclaredField("image" + (n++));
-                if (n == 4) name.setText(changeArray.get(i).getName());
+                if (n == 4) name.setText(image.getName());
                 field.setAccessible(true);
-                ((ImageView) field.get(this)).setImage(changeArray.get(i).getImage());
+                ((ImageView) field.get(this)).setImage(image.getImage());
                 field.setAccessible(false);
-            } catch (NoSuchFieldException | IllegalAccessException e) {
+            } catch (NoSuchFieldException | IllegalAccessException ignored) {
             }
         }
     }
+
+    public void done(MouseEvent mouseEvent) {
+        changePain.setVisible(false);
+        changePain.setDisable(true);
+        mainPain.setDisable(false);
+        image3.getParent().requestFocus();
+        if (isCommander) {
+            String toRegex = "select leader " + name.getText();
+            Matcher matcher = Pattern.compile(GameMenuRegex.SELECTLEADER.getRegex()).matcher(toRegex);
+            matcher.matches();
+            GameMenuController.selectLeader(matcher);
+        } else {
+            String toRegex = "select faction -f " + name.getText();
+            Matcher matcher = Pattern.compile(GameMenuRegex.SELECTFACTION.getRegex()).matcher(toRegex);
+            matcher.matches();
+            GameMenuController.selectFaction(matcher);
+        }
+        createCards();
+        changeLabel();
+    }
+
+    public void forward(MouseEvent mouseEvent) {
+        if (selectedImage != changeArray.size() - 1) selectedImage++;
+        setImageChange(selectedImage);
+    }
+
+    public void backward(MouseEvent mouseEvent) {
+        if (selectedImage != 0) selectedImage--;
+        setImageChange(selectedImage);
+    }
+
 
     public void buttonEntered(MouseEvent mouseEvent) {
         if (mouseEvent.getSource() instanceof Rectangle) {
@@ -294,30 +323,5 @@ public class GameMenu extends Application {
 
     public void labelExited(MouseEvent mouseEvent) {
         ((Label) mouseEvent.getSource()).setFont(Font.font("System", FontWeight.BOLD, 16));
-    }
-
-    public void forward(MouseEvent mouseEvent) {
-        if (selectedImage != changeArray.size() - 1) selectedImage++;
-        setImageChange(selectedImage);
-    }
-
-    public void backward(MouseEvent mouseEvent) {
-        if (selectedImage != 0) selectedImage--;
-        setImageChange(selectedImage);
-    }
-
-    public void done(MouseEvent mouseEvent) {
-        changePain.setVisible(false);
-        changePain.setDisable(true);
-        mainPain.setDisable(false);
-        image3.getParent().requestFocus();
-        if (isCommander) {
-            ApplicationController.getCurrentUser().setCommander(new Commander(name.getText(), ApplicationController.getCurrentUser()));
-        } else {
-            Faction f = Faction.getFactionFromString(name.getText());
-            ApplicationController.getCurrentUser().setFaction(f);
-            ApplicationController.getCurrentUser().setCommander(new Commander(f.getCommanders().getFirst(), ApplicationController.getCurrentUser()));
-        }
-        createCards();
     }
 }

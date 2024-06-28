@@ -36,7 +36,7 @@ public class GameMenuController {
         return new Result(true, "Game created successfully.");
     }
 
-    public Result showFactions() {
+    public static Result showFactions() {
         Faction[] factions = Faction.values();
         ArrayList<String> messages = new ArrayList<>();
         for (Faction faction : factions)
@@ -44,7 +44,7 @@ public class GameMenuController {
         return new Result(true, messages);
     }
 
-    public Result selectFaction(Matcher matcher) {
+    public static Result selectFaction(Matcher matcher) {
         String factionName = matcher.group("faction");
         Faction faction = Faction.getFactionFromString(factionName);
         if (faction == null) {
@@ -52,11 +52,12 @@ public class GameMenuController {
         }
         User user = ApplicationController.getCurrentUser();
         user.setFaction(faction);
+        user.setCommander(new Commander(faction.getCommanders().getFirst(),user));
         user.resetDeck();
         return new Result(true, "Faction selected successfully.");
     }
 
-    public String showCard(String cardName) {
+    public static String showCard(String cardName) {
         String cardDescription = cardName + " ";
         if (Soldier.isSoldier(cardName)) {
             cardDescription += "Soldier Card";
@@ -73,7 +74,7 @@ public class GameMenuController {
         return cardDescription;
     }
 
-    public Result showCards() {
+    public static Result showCards() {
         User user = ApplicationController.getCurrentUser();
         Faction faction = user.getFaction();
         ArrayList<String> messages = new ArrayList<>();
@@ -85,7 +86,7 @@ public class GameMenuController {
         return new Result(true, messages);
     }
 
-    public Result showDeck() {
+    public static Result showDeck() {
         User user = ApplicationController.getCurrentUser();
         ArrayList<String> messages = new ArrayList<>();
         for (int i = 0; i < user.getDeck().size(); i++) {
@@ -118,7 +119,7 @@ public class GameMenuController {
         return new Result(true, messages);
     }
 
-    public Result saveDeck(Matcher matcher) {
+    public static Result saveDeck(Matcher matcher) {
         String type = matcher.group("type");
         User user = ApplicationController.getCurrentUser();
         boolean overwrite = matcher.group("overwrite") != null;
@@ -143,7 +144,7 @@ public class GameMenuController {
         return new Result(true, "Deck saved successfully.");
     }
 
-    public Result loadDeck(Matcher matcher) {
+    public static Result loadDeck(Matcher matcher) {
         String type = matcher.group("type");
         User user = ApplicationController.getCurrentUser();
         if (type.equals("-f")) {
@@ -169,7 +170,7 @@ public class GameMenuController {
         return new Result(true, "Deck loaded successfully.");
     }
 
-    public Result showLeaders() {
+    public static Result showLeaders() {
         ArrayList<String> messages = new ArrayList<>();
         Faction faction = ApplicationController.getCurrentUser().getFaction();
         String currentCommander = ApplicationController.getCurrentUser().getCommander().getName();
@@ -181,7 +182,7 @@ public class GameMenuController {
         return new Result(true, messages);
     }
 
-    public Result selectLeader(Matcher matcher) {
+    public static Result selectLeader(Matcher matcher) {
         String name = matcher.group("name");
         User user = ApplicationController.getCurrentUser();
         Faction faction = user.getFaction();
@@ -192,7 +193,7 @@ public class GameMenuController {
         return new Result(true, "Commander selected successfully.");
     }
 
-    public Result addCardToDeck(Matcher matcher) {
+    public static Result addCardToDeck(Matcher matcher) {
         String name = matcher.group("name");
         int number = matcher.group("number") == null ? 1 : Integer.parseInt(matcher.group("number"));
         if (number < 1) {
@@ -216,7 +217,7 @@ public class GameMenuController {
         return new Result(true, "Card added successfully.");
     }
 
-    public Result removeCardFromDeck(Matcher matcher) {
+    public static Result removeCardFromDeck(Matcher matcher) {
         String name = matcher.group("name");
         int number = matcher.group("number") == null ? 1 : Integer.parseInt(matcher.group("number"));
         if (number < 1) {
@@ -233,7 +234,7 @@ public class GameMenuController {
         return new Result(true, "Card removed successfully.");
     }
 
-    public Result changeTurn() {
+    public static Result changeTurn() {
         User user = ApplicationController.getCurrentUser();
         if (user.getNumberOfSoldiersInDeck() < 22) {
             return new Result(false, "You should have at least 22 soldiers in your deck.");

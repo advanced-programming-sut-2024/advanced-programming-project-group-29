@@ -2,9 +2,18 @@
   {
     "username": "a",
     "password": "a",
-    "nickname": "a",
+    "nickname": "aaaa",
     "email": "ali@gmail.com",
     "questionNumber": 0,
     "answer": "red"
+  },
+  {
+    "username": "b",
+    "password": "b",
+    "nickname": "b",
+    "email": "b@gmail.com",
+    "questionNumber": 0,
+    "answer": "a",
+    "savedDecks": {}
   }
 ]

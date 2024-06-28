@@ -6,9 +6,9 @@ public enum GameMenuRegex {
     SAVEDECK("save deck (?<type>-(f|n)) (?<name>\\S+)( (?<overwrite>-o))?"),
     LOADDECK("load deck (?<type>-(f|n)) (?<name>\\S+)"),
     SHOWLEADERS("show leaders"),
-    SELECTLEADER("select leader (?<name>\\S+)"),
-    ADDTODECK("add to deck -n (?<name>\\S+)( (?<number>-?\\d+))?"),
-    DELETEFROMDECK("delete from deck -n (?<name>\\S+)( (?<number>-?\\d+))?"),
+    SELECTLEADER("select leader (?<name>.+)"),
+    ADDTODECK("add to deck -n (?<name>.+)( (?<number>-?\\d+))?"),
+    DELETEFROMDECK("delete from deck -n (?<name>.+)( (?<number>-?\\d+))?"),
     CHANGETURN("change turn");
 
     String regex;

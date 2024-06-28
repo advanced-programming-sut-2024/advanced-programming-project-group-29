@@ -100,11 +100,11 @@ public class RegisterMenu extends Application {
     }
 
     public void randomMouseEntered(MouseEvent mouseEvent) {
-        this.randomPassword.setFont(Font.font("System", FontWeight.BOLD, FontPosture.ITALIC, 16));
+        this.randomPassword.setFont(Font.font("System", FontWeight.BOLD, FontPosture.ITALIC, 14));
     }
 
     public void randomMouseExited(MouseEvent mouseEvent) {
-        this.randomPassword.setFont(Font.font("System", FontWeight.BOLD, 16));
+        this.randomPassword.setFont(Font.font("System", FontWeight.BOLD, 14));
     }
 
     public void randomPassword(MouseEvent mouseEvent) {
