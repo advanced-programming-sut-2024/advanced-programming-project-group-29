@@ -11,7 +11,8 @@ import java.util.HashMap;
 import java.util.Objects;
 
 public class CardView extends Pane {
-    private Card card;
+    private ArrayList<CardView> allCardView = new ArrayList<>();
+    private final Card card;
     private final double WIDTH = 70;
     private final double HEIGHT = 100;
     private final String path;
@@ -20,19 +21,30 @@ public class CardView extends Pane {
     private final ImageView ability;
     private final ImageView hpBackground;
     private Label hp;
+    private boolean isUp = false;
     private boolean isSelected = false;
-    private final boolean isSelectable;
 
 
     public CardView(Card card,String path, boolean isSelectable) {
+        this.allCardView.add(this);
         this.card = card;
         this.path = path;
-        this.isSelectable = isSelectable;
         this.background = new ImageView(path);
-        this.ability = new ImageView(Objects.requireNonNull(CardView.class.getResource("").toExternalForm()));
+        this.background.setFitHeight(100);
+        this.background.setFitWidth(70);
+        this.background.setLayoutX(0);
+        this.background.setLayoutY(0);
+        ////////////////////////////////////////////
         this.type = new ImageView(Objects.requireNonNull(CardView.class.getResource("").toExternalForm()));
+
+
+
+        this.ability = new ImageView(Objects.requireNonNull(CardView.class.getResource("").toExternalForm()));
+
         hpBackground = new ImageView(Objects.requireNonNull(CardView.class.getResource("/Images/icons/power_normal.png")).toExternalForm());
         hp = new Label();
+
+
 
         //TODO set the images of the card
 
@@ -55,9 +67,7 @@ public class CardView extends Pane {
             }
         });
         super.setOnMouseClicked(e -> {
-            if (isSelectable) {
-                //TODO
-            }
+
         });
     }
 
@@ -85,18 +95,24 @@ public class CardView extends Pane {
         return isSelected;
     }
 
-    public boolean isSelectable() {
-        return isSelectable;
-    }
-
     public void setSelected(boolean selected) {
         isSelected = selected;
     }
 
+    public Label getHp() {
+        return hp;
+    }
+
+    public void setHp(Label hp) {
+        this.hp = hp;
+    }
+
     private void goUp() {
+        this.setLayoutY(this.getLayoutY() - 30);
     }
 
     private void goDown() {
+        this.setLayoutY(this.getLayoutY() + 30);
     }
 
     private void glow(boolean isGlowing) {

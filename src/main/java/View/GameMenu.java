@@ -9,8 +9,10 @@ import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
@@ -20,6 +22,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
@@ -32,8 +35,19 @@ import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 public class GameMenu extends Application {
+    private final double HEIGHT_OF_TEXT_WARNING = 25;
+    private final double LENGTH_OF_FULL_LINE = 33;
+    private final double HEIGHT_OF_DARK_BACK = 301;
+
     public ScrollPane scrollSelected;
     public ScrollPane scrollNotSelected;
+    public Pane savePain;
+    public Rectangle darkbackSave;
+    public CheckBox overwrite;
+    public TextField saveName;
+    public Pane loadPain;
+    public Rectangle darkbackLoad;
+    public TextField loadName;
     private GridPane gridPaneSelected;
     private GridPane gridPaneNotSelected;
     public ImageView leader;
@@ -53,6 +67,7 @@ public class GameMenu extends Application {
     public Pane mainPain;
     public Label name;
 
+    private Label warning;
 
     private ArrayList<Image> changeArray;
     private int selectedImage;
@@ -110,6 +125,8 @@ public class GameMenu extends Application {
         gridPaneNotSelected.setVgap(12);
         gridPaneSelected.setHgap(12);
         gridPaneSelected.setVgap(12);
+        selectedCards.clear();
+        notSelectedCards.clear();
         File directory = new File((GameMenu.class.getResource("/Images/Soldiers/" + ApplicationController.getCurrentUser().getFaction().getName())).getPath());
         File directory1 = new File((GameMenu.class.getResource("/Images/Soldiers/Neutral")).getPath());
         File directory2 = new File((GameMenu.class.getResource("/Images/Soldiers/Spells")).getPath());
@@ -131,6 +148,7 @@ public class GameMenu extends Application {
         leader.setImage(image);
         scrollSelected.setContent(gridPaneSelected);
         scrollNotSelected.setContent(gridPaneNotSelected);
+
     }
 
 
@@ -155,7 +173,7 @@ public class GameMenu extends Application {
             Matcher matcher = Pattern.compile(GameMenuRegex.DELETEFROMDECK.getRegex()).matcher(toRegex);
             matcher.matches();
             Result result = GameMenuController.removeCardFromDeck(matcher);
-            if (result.isSuccessful()){
+            if (result.isSuccessful()) {
                 selectedCards.remove(image);
                 if (howManyCardInList(image, notSelectedCards) == 0) {
                     notSelectedCards.addFirst(image);
@@ -188,15 +206,115 @@ public class GameMenu extends Application {
     }
 
     public void changeTurn(MouseEvent mouseEvent) {
+
     }
 
     public void loadDeck(MouseEvent mouseEvent) {
+        loadName.setText("");
+        loadPain.setVisible(true);
+        loadPain.setDisable(false);
+        mainPain.setDisable(true);
+        deleteWarning();
     }
 
     public void saveDeck(MouseEvent mouseEvent) {
+        saveName.setText("");
+        overwrite.setSelected(false);
+        savePain.setDisable(false);
+        savePain.setVisible(true);
+        mainPain.setDisable(true);
+        deleteWarning();
     }
 
-    public void saveDeckToPath(MouseEvent mouseEvent) {
+    public void save(MouseEvent mouseEvent) {
+        String toRegex = "save deck -n " + saveName.getText() + (overwrite.isSelected() ? " -o" : "");
+        Matcher matcher = Pattern.compile(GameMenuRegex.SAVEDECK.getRegex()).matcher(toRegex);
+        matcher.matches();
+        Result result = GameMenuController.saveDeck(matcher);
+        if (result.isSuccessful()){
+            cancel(null);
+        } else {
+            sayAlert(result.getMessage().getFirst(),true,darkbackSave);
+        }
+    }
+
+    public void saveToPath(MouseEvent mouseEvent) {
+        String toRegex = "save deck -f ";
+        FileChooser filechooser = new FileChooser();
+        filechooser.setTitle("Select path");
+        File file = filechooser.showSaveDialog(SaveApplicationAsObject.getApplicationController().getStage());
+        if (file != null) {
+            try {
+                toRegex += file.getPath() + (overwrite.isSelected() ? " -o" : "") ;
+            } catch (Exception ignored) {
+            }
+        }
+        Matcher matcher = Pattern.compile(GameMenuRegex.LOADDECK.getRegex()).matcher(toRegex);
+        matcher.matches();
+        Result result = GameMenuController.saveDeck(matcher);
+        if (result.isSuccessful()){
+            cancel(null);
+        } else {
+            sayAlert(result.getMessage().getFirst(),true,darkbackSave);
+        }
+    }
+
+    public void cancel(MouseEvent mouseEvent) {
+        savePain.setDisable(true);
+        savePain.setVisible(false);
+        loadPain.setVisible(false);
+        loadPain.setDisable(true);
+        mainPain.setDisable(false);
+        deleteWarning();
+    }
+
+    public void load(MouseEvent mouseEvent) {
+        String toRegex = "load deck -n " + loadName.getText();
+        Matcher matcher = Pattern.compile(GameMenuRegex.LOADDECK.getRegex()).matcher(toRegex);
+        matcher.matches();
+        Result result = GameMenuController.loadDeck(matcher);
+        if (result.isSuccessful()){
+            moveCard();
+            cancel(null);
+        } else {
+            sayAlert(result.getMessage().getFirst(),true,darkbackLoad);
+        }
+    }
+
+    public void loadFromPath(MouseEvent mouseEvent) {
+        String toRegex = "load deck -f ";
+        FileChooser filechooser = new FileChooser();
+        filechooser.setTitle("Select File");
+        File file = filechooser.showOpenDialog(SaveApplicationAsObject.getApplicationController().getStage());
+        if (file != null) {
+            try {
+                toRegex += file.getPath();
+            } catch (Exception ignored) {
+            }
+        }
+        Matcher matcher = Pattern.compile(GameMenuRegex.LOADDECK.getRegex()).matcher(toRegex);
+        matcher.matches();
+        Result result = GameMenuController.loadDeck(matcher);
+        if (result.isSuccessful()){
+            moveCard();
+            cancel(null);
+        } else {
+            sayAlert(result.getMessage().getFirst(),true,darkbackLoad);
+        }
+    }
+
+    private void moveCard() {
+        createCards();
+        for (Card card : ApplicationController.getCurrentUser().getDeck()){
+            for (Image i : new ArrayList<>(notSelectedCards)){
+                if (card.getName().equals(i.getName())){
+                    notSelectedCards.remove(i);
+                    selectedCards.add(i);
+                }
+                break;
+            }
+        }
+        refresh();
     }
 
     public void changeFaction(MouseEvent mouseEvent) {
@@ -281,8 +399,9 @@ public class GameMenu extends Application {
             Matcher matcher = Pattern.compile(GameMenuRegex.SELECTFACTION.getRegex()).matcher(toRegex);
             matcher.matches();
             GameMenuController.selectFaction(matcher);
+            createCards();
+
         }
-        createCards();
         changeLabel();
     }
 
@@ -324,4 +443,32 @@ public class GameMenu extends Application {
     public void labelExited(MouseEvent mouseEvent) {
         ((Label) mouseEvent.getSource()).setFont(Font.font("System", FontWeight.BOLD, 16));
     }
+
+    private void deleteWarning() {
+        SaveApplicationAsObject.getApplicationController().getPane().getChildren().remove(this.warning);
+        darkbackLoad.setHeight(HEIGHT_OF_DARK_BACK);
+        darkbackSave.setHeight(HEIGHT_OF_DARK_BACK);
+    }
+
+    private void sayAlert(String warning, boolean isRed,Rectangle darkBack) {
+        int n = (int) (warning.length() / LENGTH_OF_FULL_LINE);
+        deleteWarning();
+        darkBack.setHeight(darkBack.getHeight() + (n + 1) * HEIGHT_OF_TEXT_WARNING);
+        this.warning = createWarningLabel(warning, n + 1, isRed, 602);
+        SaveApplicationAsObject.getApplicationController().getPane().getChildren().add(this.warning);
+    }
+
+    private Label createWarningLabel(String warning, int n, boolean isRed, int Y) {
+        Label label = new Label(warning);
+        label.setTextFill(Paint.valueOf(isRed ? "#dd2e2e" : "green"));
+        label.setWrapText(true);
+        label.setLayoutX(596);
+        label.setLayoutY(Y);
+        label.setPrefWidth(311);
+        label.setPrefHeight(n * HEIGHT_OF_TEXT_WARNING);
+        label.setFont(Font.font("System", FontWeight.BOLD, 16));
+        return label;
+    }
+
+
 }
