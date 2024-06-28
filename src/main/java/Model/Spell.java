@@ -56,8 +56,6 @@ public class Spell extends Card {
             executeActionForScorch(this);
         else if (name.matches(".*commander.+horn.*"))
             executeActionForCommanderHorn(this);
-        else if (name.matches(".*decoy.*"))
-            executeActionForDecoy(this);
         else if (name.matches(".*clear.+weather.*"))
             executeActionForClearWeather(this);
         else if (this.type == Type.WEATHER)
@@ -72,10 +70,6 @@ public class Spell extends Card {
     private static void executeActionForClearWeather(Spell spell) {
         GameBoard gameBoard = spell.getGameBoard();
         gameBoard.clearAllWeather();
-    }
-
-    private static void executeActionForDecoy(Spell spell) {
-        // TODO: no need for this function...
     }
 
     private static void executeActionForCommanderHorn(Spell spell) {
@@ -127,5 +121,10 @@ public class Spell extends Card {
 
     public boolean isWeather() {
         return isWeather;
+    }
+
+    @Override
+    public String getInformation() {
+        return "Name: " + this.getName() + ", Ability: " + type.getStringFromType() + ", IsHero: false";
     }
 }

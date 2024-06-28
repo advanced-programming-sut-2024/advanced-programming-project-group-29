@@ -205,7 +205,7 @@ public class GameBoard {
 
     public boolean isThereAnyCommendersHornInRow(int playerNumber, int rowNumber) {
         for (Spell spell : specialCards[playerNumber][rowNumber]) {
-            if (spell.getName().matches("commanders horn"))
+            if (spell.getName().matches("Commander.+Horn"))
                 return true;
         }
         for (Soldier soldier : rows[playerNumber][rowNumber]) {

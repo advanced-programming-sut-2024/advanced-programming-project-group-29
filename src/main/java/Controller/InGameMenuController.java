@@ -1,12 +1,10 @@
 package Controller;
 
-import Model.Card;
-import Model.GameBoard;
-import Model.Soldier;
-import Model.User;
+import Model.*;
 import View.InGameMenu;
 
 import java.util.ArrayList;
+import java.util.regex.Matcher;
 
 public class InGameMenuController extends Thread {
     private static final ArrayList<InGameMenuController> controllers = new ArrayList<>();
@@ -82,12 +80,32 @@ public class InGameMenuController extends Thread {
         InGameMenu.showSoldiersHp(gameBoard, soldier, soldier.getShownHp());
     }
 
-    public static void vetoCard(GameBoard gameBoard, int playerIndex, Card card){ // TODO: implement regex for the input
-        User user = gameBoard.getPlayer(playerIndex);
+    public static Result vetoCard(Matcher matcher){
+        if(!matcher.matches())
+            return new Result(false, "Invalid command");
+        User user = ApplicationController.getCurrentUser();
+        Card card = user.getHand().get(Integer.parseInt(matcher.group("cardNumber")));
         user.getHand().remove(card);
         Card anotherCard = user.getCardFromDeckRandomly();
         user.getHand().add(anotherCard);
         user.getDeck().add(card);
+        return new Result(true, "Card vetoed successfully");
     }
 
+    public static Result showInHandDeck(Matcher matcher){
+        if(!matcher.matches())
+            return new Result(false, "Invalid command");
+        User user = ApplicationController.getCurrentUser();
+        ArrayList<String> cardsInformation = new ArrayList<>();
+        String cardNumber = matcher.group("cardNumber");
+        if (cardNumber != null) {
+            cardsInformation.add(user.getHand().get(Integer.parseInt(cardNumber)).getInformation());
+        } else {
+            for(Card card : user.getHand())
+                cardsInformation.add(card.getInformation());
+        }
+        return new Result(true, cardsInformation);
+    }
+
+    // TODO: implement other methods
 }

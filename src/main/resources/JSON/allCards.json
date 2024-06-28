@@ -1030,6 +1030,14 @@
       "description": "The description has been given before"
     },
     {
+      "name": "Decoy Soldier",
+      "power": 0,
+      "numberOfCards": 0,
+      "type": "Soldier",
+      "ability": "-",
+      "description": ""
+    },
+    {
       "name": "Dandelion",
       "power": 2,
       "numberOfCards": 1,
