@@ -63,7 +63,7 @@ public enum Faction {
         return commanders;
     }
 
-    public ArrayList<String> getSoldiers() {
+    public ArrayList<String> getCards() {
         ArrayList<String> soldiersName = new ArrayList<>();
         try {
             URI uri = Card.class.getResource("/JSON/allCards.json").toURI();

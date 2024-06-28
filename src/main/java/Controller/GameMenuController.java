@@ -60,8 +60,7 @@ public class GameMenuController {
         String cardDescription = cardName + " ";
         if (Soldier.isSoldier(cardName)) {
             cardDescription += "Soldier Card";
-            if (Soldier.isThisSoldierHero(cardName))
-                cardDescription += " (Hero)";
+            if (Soldier.isThisSoldierHero(cardName)) cardDescription += " (Hero)";
             Type type = Soldier.getTypeByCardName(cardName);
             cardDescription += " " + Soldier.getDefaultHpBySoldierName(cardName);
         } else if (Spell.isSpell(cardName)) {
@@ -78,10 +77,9 @@ public class GameMenuController {
         User user = ApplicationController.getCurrentUser();
         Faction faction = user.getFaction();
         ArrayList<String> messages = new ArrayList<>();
-        for (String cardName : faction.getSoldiers()) {
+        for (String cardName : faction.getCards()) {
             String cardDescription = showCard(cardName);
-            if (cardDescription == null)
-                return new Result(false, "Error showing cards.");
+            if (cardDescription == null) return new Result(false, "Error showing cards.");
             messages.add(cardDescription);
         }
         return new Result(true, messages);
@@ -93,8 +91,7 @@ public class GameMenuController {
         for (int i = 0; i < user.getDeck().size(); i++) {
             Card card = user.getDeck().get(i);
             String cardDescription = showCard(card.getName());
-            if (cardDescription == null)
-                return new Result(false, "Error showing deck.");
+            if (cardDescription == null) return new Result(false, "Error showing deck.");
             messages.add(cardDescription);
         }
         return new Result(true, messages);
@@ -110,11 +107,9 @@ public class GameMenuController {
         for (Card card : user.getDeck()) {
             if (card instanceof Soldier) {
                 soldiers++;
-                if (((Soldier) card).isHero())
-                    heroes++;
+                if (((Soldier) card).isHero()) heroes++;
                 power += ((Soldier) card).getHp();
-            } else
-                spells++;
+            } else spells++;
         }
         messages.add("Soldiers: " + soldiers);
         messages.add("Spells: " + spells);
@@ -180,8 +175,7 @@ public class GameMenuController {
         String currentCommander = ApplicationController.getCurrentUser().getCommander().getName();
         messages.add(currentCommander);
         for (String commander : faction.getCommanders()) {
-            if (commander.equals(currentCommander))
-                continue;
+            if (commander.equals(currentCommander)) continue;
             messages.add(commander);
         }
         return new Result(true, messages);
