@@ -60,6 +60,17 @@ public class User {
         return null;
     }
 
+    public static ArrayList<String> getAllUsersByRank() {
+        ArrayList<User> users = new ArrayList<>();
+        for (User user : allUsers)
+            users.add(user);
+        users.sort((user1, user2) -> user2.getNumberOfWins() - user1.getNumberOfWins());
+        ArrayList<String> usernames = new ArrayList<>();
+        for (User user : users)
+            usernames.add(user.getUsername());
+        return usernames;
+    }
+
     public static String[] getSecurityQuestions() {
         return securityQuestions;
     }
