@@ -36,6 +36,17 @@ public class Spell extends Card {
         return type.equals("Spell") || type.equals("Weather");
     }
 
+    public static boolean checkIfValidCard(Spell spell) {
+        if (!Card.checkIfValidCard(spell))
+            return false;
+        String name = spell.getName();
+        if (!isSpell(name))
+            return false;
+        if (spell.isWeather() != getIfThisSpellIsWeather(name))
+            return false;
+        return spell.remains;
+    }
+
     @Override
     public void executeAction() {
         String name = this.getName().toLowerCase();

@@ -1,10 +1,11 @@
 package Model;
 
 import Controller.InGameMenuController;
+import Enum.Attribute;
+import Enum.Faction;
+import Enum.Type;
 import org.json.JSONArray;
 import org.json.JSONObject;
-
-import Enum.*;
 
 import java.io.IOException;
 import java.net.URI;
@@ -13,6 +14,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Objects;
 
 public abstract class Card {
     private static final ArrayList<Card> allCards = new ArrayList<>();
@@ -68,7 +70,7 @@ public abstract class Card {
         JSONObject card = getCardByName(cardName);
         if (card == null)
             return null;
-        if(card.has("description") == false)
+        if (card.has("description") == false)
             return "";
         return card.getString("description");
     }
@@ -124,6 +126,17 @@ public abstract class Card {
         }
     }
 
+    public static boolean checkIfValidCard(Card card) {
+        String cardName = card.getName();
+        if (card.getFaction() != getFactionByCardName(cardName))
+            return false;
+        if (card.getType() != getTypeByCardName(cardName))
+            return false;
+        if (!Objects.equals(card.getDescription(), getDescriptionByCardName(cardName)))
+            return false;
+        return true;
+    }
+
     public String getDescription() {
         return description;
     }
@@ -134,6 +147,10 @@ public abstract class Card {
 
     public Faction getFaction() {
         return faction;
+    }
+
+    private Type getType() {
+        return type;
     }
 
     public void setGameBoard(GameBoard gameBoard) {

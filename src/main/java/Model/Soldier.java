@@ -24,7 +24,7 @@ public class Soldier extends Card {
         weatherAffected = false;
     }
 
-    private static int getDefaultHpBySoldierName(String soldierName) {
+    public static int getDefaultHpBySoldierName(String soldierName) {
         JSONObject soldier = getCardByName(soldierName);
         if(soldier == null)
             return -1;
@@ -40,7 +40,7 @@ public class Soldier extends Card {
         return Attribute.getAttributeFromString(soldier.getString("ability"));
     }
 
-    private static boolean isThisSoldierHero(String soldierName) {
+    public static boolean isThisSoldierHero(String soldierName) {
         JSONObject soldier = getCardByName(soldierName);
         if (soldier == null || !soldier.has("ability"))
             return false;
@@ -57,6 +57,21 @@ public class Soldier extends Card {
             return false;
         String type = card.getString("type");
         return !type.equals("Spell") && !type.equals("Weather");
+    }
+
+    public static boolean checkIfValidCard(Soldier soldier) {
+        if (!Card.checkIfValidCard(soldier))
+            return false;
+        String soldierName = soldier.getName();
+        if (!isSoldier(soldierName))
+            return false;
+        if (soldier.getAttribute() != getAttributeBySoldierName(soldierName))
+            return false;
+        if (soldier.isHero() != isThisSoldierHero(soldierName))
+            return false;
+        if (soldier.getDefaultHp() != getDefaultHpBySoldierName(soldierName))
+            return false;
+        return true;
     }
 
 
@@ -80,7 +95,7 @@ public class Soldier extends Card {
         return type;
     }
 
-    public int getDefaultHp() throws Exception {
+    public int getDefaultHp() {
         return getDefaultHpBySoldierName(this.getName());
     }
 
@@ -215,6 +230,6 @@ public class Soldier extends Card {
         int playerIndex = gameBoard.getPlayerNumber(this.getUser());
         gameBoard.getRows()[playerIndex][rowNumber].remove(this);
         gameBoard.getRows()[playerIndex][rowNumber].add(bear);
-        InGameMenuController.changeThisCardInGraphic(this, bear);
+      //  InGameMenuController.changeThisCardInGraphic(this, bear);
     }
 }

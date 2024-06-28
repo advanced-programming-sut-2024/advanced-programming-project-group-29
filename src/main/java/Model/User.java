@@ -1,19 +1,18 @@
 package Model;
 
+import Enum.Faction;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
 import java.util.Random;
-import java.util.zip.ZipInputStream;
-
-import Enum.Faction;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 
 public class User {
     private static final String[] securityQuestions = {
@@ -41,6 +40,7 @@ public class User {
     private transient Commander commander;
     private transient GameBoard currentGameBoard;
     private transient ArrayList<GameHistory> gameHistory = new ArrayList<>();
+    private HashMap<String, SavedDeck> savedDecks = new HashMap<>();
 
     public User(String username, String password, String nickname, String email) {
         this.username = username;
@@ -107,6 +107,7 @@ public class User {
 
     public void setFaction(Faction faction) {
         this.faction = faction;
+        this.commander = new Commander(faction.getCommanders().get(0), this);
     }
 
     public Commander getCommander() {
@@ -272,6 +273,15 @@ public class User {
         return count;
     }
 
+    private static int getNumberOfOccurrenceInDeck(ArrayList<Card> deck, String cardName) {
+        int count = 0;
+        for (Card cardInDeck : deck) {
+            if (cardInDeck.getName().equals(cardName))
+                count++;
+        }
+        return count;
+    }
+
     public void addCardToDeck(String cardName) {
         boolean isSoldier = Soldier.isSoldier(cardName);
         boolean isSpell = Spell.isSpell(cardName);
@@ -310,7 +320,7 @@ public class User {
         ArrayList<User> users = gson.fromJson(text, new TypeToken<List<User>>() {
         }.getType());
         if (users == null)
-            users = new ArrayList<User>();
+            users = new ArrayList<>();
         for (User user : users) {
             user.setCommander(new Commander("king of the wild hunt", user));
             user.setFaction(Faction.MONSTERS);
@@ -325,5 +335,73 @@ public class User {
 
     public static void setAllUsers(ArrayList<User> allUsers) {
         User.allUsers = allUsers;
+    }
+
+    public int getNumberOfSpellsInDeck() {
+        int count = 0;
+        for (Card card : deck) {
+            if (card instanceof Spell)
+                count++;
+        }
+        return count;
+    }
+
+    public int getNumberOfSoldiersInDeck() {
+        int count = 0;
+        for (Card card : deck) {
+            if (card instanceof Soldier)
+                count++;
+        }
+        return count;
+    }
+
+    public SavedDeck getDeckByName(String name) {
+        return savedDecks.get(name);
+    }
+
+    public void saveDeck(String name) {
+        SavedDeck savedDeck = new SavedDeck(deck, commander, faction);
+        savedDecks.put(name, savedDeck);
+    }
+
+    public void loadDeck(String name) {
+        SavedDeck savedDeck = savedDecks.get(name);
+        deck = savedDeck.getDeck();
+        commander = savedDeck.getCommander();
+        faction = savedDeck.getFaction();
+    }
+
+    public boolean extractDeckFromString(String deck) {
+        Gson gson = new Gson();
+        SavedDeck savedDeck = gson.fromJson(deck, SavedDeck.class);
+        if (savedDeck == null)
+            return false;
+        if (!isDeckValid(savedDeck.getDeck()))
+            return false;
+        if (!Commander.checkIfValidCard(savedDeck.getCommander()))
+            return false;
+        if (savedDeck.getFaction() != savedDeck.getCommander().getFaction())
+            return false;
+        this.deck = savedDeck.getDeck();
+        this.commander = savedDeck.getCommander();
+        this.faction = savedDeck.getFaction();
+        return true;
+    }
+
+    private static boolean isDeckValid(ArrayList<Card> deck) {
+        int numberOfSpells = 0;
+        for (Card card : deck) {
+            if (card instanceof Spell)
+                numberOfSpells++;
+            if (!Card.checkIfValidCard(card))
+                return false;
+            if (getNumberOfOccurrenceInDeck(deck, card.getName()) > Card.getAllowedNumberByCardName(card.getName()))
+                return false;
+        }
+        return numberOfSpells <= 10;
+    }
+
+    public void resetDeck() {
+        deck.clear();
     }
 }

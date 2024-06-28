@@ -1,8 +1,8 @@
 package Controller;
 
-import Model.*;
 import Enum.Faction;
 import Enum.Type;
+import Model.*;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -52,14 +52,39 @@ public class GameMenuController {
         }
         User user = ApplicationController.getCurrentUser();
         user.setFaction(faction);
+        user.resetDeck();
         return new Result(true, "Faction selected successfully.");
+    }
+
+    public String showCard(String cardName) {
+        String cardDescription = cardName + " ";
+        if (Soldier.isSoldier(cardName)) {
+            cardDescription += "Soldier Card";
+            if (Soldier.isThisSoldierHero(cardName))
+                cardDescription += " (Hero)";
+            Type type = Soldier.getTypeByCardName(cardName);
+            cardDescription += " " + Soldier.getDefaultHpBySoldierName(cardName);
+        } else if (Spell.isSpell(cardName)) {
+            cardDescription += "Spell Card";
+        } else {
+            return null;
+        }
+        cardDescription += " " + Card.getAllowedNumberByCardName(cardName);
+        cardDescription += " " + ApplicationController.getCurrentUser().getNumberOfOccurrenceInDeck(cardName);
+        return cardDescription;
     }
 
     public Result showCards() {
         User user = ApplicationController.getCurrentUser();
         Faction faction = user.getFaction();
-        //TODO
-        return null;
+        ArrayList<String> messages = new ArrayList<>();
+        for (String cardName : faction.getSoldiers()) {
+            String cardDescription = showCard(cardName);
+            if (cardDescription == null)
+                return new Result(false, "Error showing cards.");
+            messages.add(cardDescription);
+        }
+        return new Result(true, messages);
     }
 
     public Result showDeck() {
@@ -67,20 +92,9 @@ public class GameMenuController {
         ArrayList<String> messages = new ArrayList<>();
         for (int i = 0; i < user.getDeck().size(); i++) {
             Card card = user.getDeck().get(i);
-            String cardDescription = card.getName() + " ";
-            if (card instanceof Model.Soldier) {
-                cardDescription += "Soldier Card";
-                if (((Soldier) card).isHero()) {
-                    cardDescription += " (Hero)";
-                }
-                Type type = ((Soldier) card).getType();
-                cardDescription += " " + type.name();
-                cardDescription += " " + ((Soldier) card).getHp();
-            } else {
-                cardDescription += "Spell Card";
-            }
-            cardDescription += " " + card.getAllowedNumberByCardName(card.getName());
-            cardDescription += " " + user.getNumberOfOccurrenceInDeck(card.getName());
+            String cardDescription = showCard(card.getName());
+            if (cardDescription == null)
+                return new Result(false, "Error showing deck.");
             messages.add(cardDescription);
         }
         return new Result(true, messages);
@@ -113,14 +127,14 @@ public class GameMenuController {
         String type = matcher.group("type");
         User user = ApplicationController.getCurrentUser();
         boolean overwrite = matcher.group("overwrite") != null;
-        ArrayList<Card> deck = user.getDeck();
         if (type.equals("-f")) {
+            SavedDeck savedDeck = new SavedDeck(user.getDeck(), user.getCommander(), user.getFaction());
             Path path = Paths.get(matcher.group("name"));
             if (Files.exists(path) && !overwrite) {
                 return new Result(false, "File already exists. Use -o to overwrite.");
             }
             try {
-                Files.write(path, deck.toString().getBytes());
+                Files.write(path, savedDeck.toString().getBytes());
                 return new Result(true, "Deck saved successfully.");
             } catch (Exception e) {
                 return new Result(false, "Error saving deck.");
@@ -130,7 +144,7 @@ public class GameMenuController {
         if (user.getDeckByName(name) != null && !overwrite) {
             return new Result(false, "Deck with this name already exists. Use -o to overwrite.");
         }
-        user.saveDeck(name, deck);
+        user.saveDeck(name);
         return new Result(true, "Deck saved successfully.");
     }
 
@@ -186,7 +200,7 @@ public class GameMenuController {
 
     public Result addCardToDeck(Matcher matcher) {
         String name = matcher.group("name");
-        int number = matcher.group("number") == null ? 1 : Integer.parseInt(matcher.group("number"));\
+        int number = matcher.group("number") == null ? 1 : Integer.parseInt(matcher.group("number"));
         if (number < 1) {
             return new Result(false, "Number should be positive.");
         }
@@ -205,6 +219,7 @@ public class GameMenuController {
                 user.addCardToDeck(new Spell(name, user));
             }
         }
+        return new Result(true, "Card added successfully.");
     }
 
     public Result removeCardFromDeck(Matcher matcher) {
@@ -231,7 +246,7 @@ public class GameMenuController {
         }
         GameBoard gameBoard = user.getCurrentGameBoard();
         gameBoard.changeTurn();
-        ApplicationController.setCurrentUser(gameBoard.getPlayer(0));
+        ApplicationController.setCurrentUser(gameBoard.getPlayer(gameBoard.getCurrentPlayer()));
         return new Result(true, "Turn changed successfully.");
     }
 }
