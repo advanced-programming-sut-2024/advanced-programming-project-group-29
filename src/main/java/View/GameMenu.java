@@ -205,8 +205,8 @@ public class GameMenu extends Application {
         return count;
     }
 
-    public void changeTurn(MouseEvent mouseEvent) {
-
+    public void changeTurn(MouseEvent mouseEvent) throws Exception {
+        new InGameMenu().start(SaveApplicationAsObject.getApplicationController().getStage());
     }
 
     public void loadDeck(MouseEvent mouseEvent) {

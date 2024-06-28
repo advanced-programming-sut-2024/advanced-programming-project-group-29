@@ -1,10 +1,17 @@
 package Model;
 
+import javafx.geometry.Pos;
+import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.effect.Glow;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Paint;
+import javafx.scene.text.Font;
+import Enum.Type;
+import Enum.Attribute;
+import javafx.scene.text.FontWeight;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,58 +24,121 @@ public class CardView extends Pane {
     private final double HEIGHT = 100;
     private final String path;
     private final ImageView background;
-    private final ImageView type;
-    private final ImageView ability;
-    private final ImageView hpBackground;
-    private Label hp;
+    private final Group items = new Group();
+    private final boolean isSoldier;
     private boolean isUp = false;
     private boolean isSelected = false;
 
 
-    public CardView(Card card,String path, boolean isSelectable) {
+    public CardView(Card card) {
         this.allCardView.add(this);
         this.card = card;
-        this.path = path;
+        this.path = "/Images/Raw/" + card.getFaction().getName() + "/" + card.getName();
         this.background = new ImageView(path);
         this.background.setFitHeight(100);
         this.background.setFitWidth(70);
         this.background.setLayoutX(0);
         this.background.setLayoutY(0);
         ////////////////////////////////////////////
-        this.type = new ImageView(Objects.requireNonNull(CardView.class.getResource("").toExternalForm()));
+        this.isSoldier = card instanceof Soldier;
 
-
-
-        this.ability = new ImageView(Objects.requireNonNull(CardView.class.getResource("").toExternalForm()));
-
-        hpBackground = new ImageView(Objects.requireNonNull(CardView.class.getResource("/Images/icons/power_normal.png")).toExternalForm());
-        hp = new Label();
-
-
-
-        //TODO set the images of the card
-
+        if (this.isSoldier) {
+            Label hp = new Label("" + ((Soldier) card).getHp());
+            hp.setFont(Font.font("System", FontWeight.BOLD, 15));
+            hp.setAlignment(Pos.CENTER);
+            hp.setLayoutX(3);
+            hp.setLayoutY(3);
+            ImageView hpBackground = new ImageView();
+            hpBackground.setLayoutX(-3);
+            hpBackground.setLayoutY(-3);
+            hpBackground.setFitWidth(50);
+            hpBackground.setFitHeight(50);
+            ImageView type = getImageViewType((Soldier) card);
+            type.setFitHeight(25);
+            type.setFitWidth(25);
+            type.setLayoutY(73);
+            type.setLayoutX(43);
+            ImageView ability = getImageViewAbility((Soldier) card);
+            ability.setFitHeight(25);
+            ability.setFitWidth(25);
+            ability.setLayoutY(73);
+            ability.setLayoutX(16);
+            if (((Soldier) card).isHero()) {
+                hp.setTextFill(Paint.valueOf("white"));
+                hpBackground = new ImageView("/Images/icons/power_hero.png");
+            } else {
+                hp.setTextFill(Paint.valueOf("black"));
+                hpBackground = new ImageView("/Images/icons/power_normal.png");
+            }
+            this.items.getChildren().add(hpBackground);
+            this.items.getChildren().add(hp);
+            this.items.getChildren().add(type);
+            this.items.getChildren().add(ability);
+        } else {
+            ImageView ability = getImageViewAbilitySpells((Spell) card);
+            ability.setLayoutX(-3);
+            ability.setLayoutY(-3);
+            ability.setFitWidth(50);
+            ability.setFitHeight(50);
+            this.items.getChildren().add(ability);
+        }
         /////////////////////////////////////////////////////
         super.setHeight(HEIGHT);
         super.setWidth(WIDTH);
         super.getChildren().add(background);
-        super.getChildren().add(hpBackground);
-        super.getChildren().add(ability);
-        super.getChildren().add(type);
-        super.getChildren().add(hp);
+        super.getChildren().add(items);
         super.setOnMouseEntered(e -> {
-            if (isSelectable) {
-                goUp();
-            }
+            goUp();
         });
         super.setOnMouseExited(e -> {
-            if (isSelectable) {
-                goDown();
-            }
+            goDown();
         });
         super.setOnMouseClicked(e -> {
 
         });
+    }
+
+    private ImageView getImageViewAbilitySpells(Spell card) {
+        ImageView power = new ImageView();
+        if (card.getName().equals("Biting Frost")) power = new ImageView("/Images/icons/power_frost.png");
+        else if (card.getName().equals("Impenetrable fog")) power = new ImageView("/Images/icons/power_fog.png");
+        else if (card.getName().equals("Torrential Rain")) power = new ImageView("/Images/icons/power_rain.png");
+        else if (card.getName().equals("Skellige Storm")) power = new ImageView("/Images/icons/power_storm.png");
+        else if (card.getName().equals("Clear Weather")) power = new ImageView("/Images/icons/power_clear.png");
+//        else if (card.getName().equals("Scorch")) power = new ImageView("/Images/icons/card_row_ranged.png");
+//        else if (card.getName().equals("Commanders horn")) power = new ImageView("/Images/icons/card_row_ranged.png");
+//        else if (card.getName().equals("Decoy")) power = new ImageView("/Images/icons/card_row_ranged.png");
+//        else if (card.getName().equals("Mardroeme")) power = new ImageView("/Images/icons/card_row_ranged.png");
+        //TODO
+        return power;
+    }
+
+    private static ImageView getImageViewType(Soldier card) {
+        ImageView type = new ImageView();
+        if (card.getType().equals(Type.SIEGE)) type = new ImageView("/Images/icons/card_row_siege.png");
+        else if (card.getType().equals(Type.AGILE)) type = new ImageView("/Images/icons/card_row_agile.png");
+        else if (card.getType().equals(Type.CLOSE_COMBAT)) type = new ImageView("/Images/icons/card_row_close.png");
+        else if (card.getType().equals(Type.RANGED)) type = new ImageView("/Images/icons/card_row_ranged.png");
+        return type;
+    }
+
+    private static ImageView getImageViewAbility(Soldier card) {
+        ImageView ability = new ImageView();
+        if (card.getAttribute().equals(Attribute.MEDIC))
+            ability = new ImageView("/Images/icons/card_ability_medic.png");
+        else if (card.getAttribute().equals(Attribute.MORAL_BOOST))
+            ability = new ImageView("/Images/icons/card_ability_morale.png");
+        else if (card.getAttribute().equals(Attribute.MUSTER))
+            ability = new ImageView("/Images/icons/card_ability_muster.png");
+        else if (card.getAttribute().equals(Attribute.SPY))
+            ability = new ImageView("/Images/icons/card_ability_spy.png");
+        else if (card.getAttribute().equals(Attribute.TIGHT_BOND))
+            ability = new ImageView("/Images/icons/card_ability_bond.png");
+        else if (card.getAttribute().equals(Attribute.BERSERKER))
+            ability = new ImageView("/Images/icons/card_ability_berserker.png");
+        //else if (card.getAttribute().equals(Attribute.TRANSFORMERS)) ability = new ImageView("/Images/icons/card_ability_transformer.png");
+        // TODO
+        return ability;
     }
 
     public Card getCard() {
@@ -99,12 +169,8 @@ public class CardView extends Pane {
         isSelected = selected;
     }
 
-    public Label getHp() {
-        return hp;
-    }
-
-    public void setHp(Label hp) {
-        this.hp = hp;
+    private void setHP(int hp) {
+        if (this.isSoldier) ((Label) items.getChildren().get(1)).setText("" + hp);
     }
 
     private void goUp() {
