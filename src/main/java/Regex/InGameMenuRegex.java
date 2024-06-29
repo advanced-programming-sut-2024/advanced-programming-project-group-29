@@ -5,7 +5,10 @@ public enum InGameMenuRegex {
     SHOW_HAND("in hand deck( -option (?<cardNumber>\\d+))?"),
     SHOW_DECK("remaining cards to play"),
     SHOW_DISCARD("out of play cards"),
-    SHOW_CARDS_IN_ROW("cards in row (?<rowNumber>\\d+)")
+    SHOW_CARDS_IN_ROW("cards in row (?<rowNumber>\\d+)"),
+    SPELLS_IN_PLAY("spells in play"),
+    PLACE_CARD("place card (?<cardNumber>\\d+)( in row (?<rowNumber>\\d+))?"),
+    PLACE_DECOY("place decoy (?<thisCardNumber>\\d+) (?<cardNumber>\\d+) in row (?<rowNumber>\\d+)"),
     ;
 
     String regex;

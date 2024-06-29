@@ -1,6 +1,7 @@
 package Controller;
 
 import Model.*;
+import Enum.*;
 import View.InGameMenu;
 
 import java.util.ArrayList;
@@ -36,6 +37,8 @@ public class InGameMenuController extends Thread {
     }
 
     public static void destroySoldier(GameBoard gameBoard, Soldier soldier) {
+        if(soldier == null)
+            return;
         int playerIndex = gameBoard.getPlayerNumber(soldier.getUser());
         int rowNumber = Soldier.getPlacedRowNumber(soldier, gameBoard);
         gameBoard.getRows()[playerIndex][rowNumber].remove(soldier);
@@ -76,9 +79,9 @@ public class InGameMenuController extends Thread {
     public static void changeHpForSoldier(GameBoard gameBoard, Soldier soldier, int hp){
         int playerIndex = gameBoard.getPlayerNumber(soldier.getUser());
         int rowNumber = Soldier.getPlacedRowNumber(soldier, gameBoard);
-        int previousHp = soldier.getHp();
+        int previousHp = soldier.getShownHp();
         soldier.setHp(hp);
-        gameBoard.setPlayerScore(playerIndex, gameBoard.getPlayerScore(playerIndex) - previousHp + hp);
+        gameBoard.setPlayerScore(playerIndex, gameBoard.getPlayerScore(playerIndex) - previousHp + soldier.getShownHp());
         InGameMenu.showPlayersScore(gameBoard, playerIndex, gameBoard.getPlayerScore(playerIndex));
         InGameMenu.showSoldiersHp(gameBoard, soldier, soldier.getShownHp());
     }
@@ -151,21 +154,74 @@ public class InGameMenuController extends Thread {
         return new Result(true, cards);
     }
 
-
-    public static void playCardInRow(int rowNumber, Card card){
-        GameBoard gameBoard = card.getGameBoard();
-        int playerIndex = gameBoard.getPlayerNumber(card.getUser());
-        // TODO: implement this
+    public static Result showSpellsInPlay(){
+        GameBoard gameBoard = ApplicationController.getCurrentUser().getCurrentGameBoard();
+        ArrayList<String> spells = new ArrayList<>();
+        for(Spell spell : gameBoard.getWeather())
+            spells.add(spell.getInformation());
+        return new Result(true, spells);
     }
 
-    public static void playCard(Card card){
-        GameBoard gameBoard = card.getGameBoard();
-        int playerIndex = gameBoard.getPlayerNumber(card.getUser());
-        // TODO: ask user which row to place card
-        playCardInRow(-1, card);
+    public static Result placeCard(Matcher matcher){
+        if(!matcher.matches())
+            return new Result(false, "invalid command");
+        int cardNumber = Integer.parseInt(matcher.group("cardNumber"));
+        String rowNumberString = matcher.group("rowNumber");
+        int rowNumber = -1;
+        if(rowNumberString != null)
+            rowNumber = Integer.parseInt(rowNumberString);
+        if(rowNumber < 0 || rowNumber > 2)
+            return new Result(false, "invalid row number");
+        User user = ApplicationController.getCurrentUser();
+        int playerIndex = user.getCurrentGameBoard().getPlayerNumber(user);
+        GameBoard gameBoard = user.getCurrentGameBoard();
+        if(user.getHand().size() >= cardNumber)
+            return new Result(false, "invalid card number");
+        Card card = user.getHand().get(cardNumber);
+        if(card.getName().matches("(D|d)ecoy"))
+            return new Result(false, "Decoy needs to be placed on a card");
+        if(card instanceof Soldier){
+            Soldier soldier = (Soldier) card;
+            if(soldier.hasAttribute(Attribute.SPY))
+                playerIndex = 1 - playerIndex;
+            gameBoard.addSoldierToRow(playerIndex, rowNumber, soldier);
+
+        } else{
+            Spell spell = (Spell) card;
+            if(!spell.isWeather())
+                gameBoard.addSpecialCard(playerIndex, rowNumber, spell);
+        }
+        card.executeAction();
+        return new Result(true);
+    }
+
+    public static Result placeDecoy(Matcher matcher){
+        if(!matcher.matches())
+            return new Result(false, "invalid command");
+        int thisCardNumber = Integer.parseInt(matcher.group("thisCardNumber"));
+        int cardNumber = Integer.parseInt(matcher.group("cardNumber"));
+        int rowNumber = Integer.parseInt(matcher.group("rowNumber"));
+        User user = ApplicationController.getCurrentUser();
+        int playerIndex = user.getCurrentGameBoard().getPlayerNumber(user);
+        GameBoard gameBoard = user.getCurrentGameBoard();
+        if(user.getHand().size() <= thisCardNumber ||
+                !user.getHand().get(thisCardNumber).getName().matches("(d|D)ecoy"))
+            return new Result(false, "choose a decoy card");
+        if(rowNumber < 0 || rowNumber > 2)
+            return new Result(false, "invalid row number");
+        if(gameBoard.getRows()[playerIndex][rowNumber].size() <= cardNumber)
+            return new Result(false, "invalid card number");
+        Soldier soldier = gameBoard.getRows()[playerIndex][rowNumber].get(cardNumber);
+        Spell decoy = (Spell) user.getHand().get(thisCardNumber);
+        user.getHand().remove(thisCardNumber);
+        user.getHand().add(soldier);
+        user.getDiscardPile().add(decoy);
+        return new Result(true);
     }
 
     public static void addWeather(Spell spell){
+        if(spell == null)
+            return;
         GameBoard gameBoard = spell.getGameBoard();
         // TODO: add this weather to graphic
         gameBoard.addWeather(spell);

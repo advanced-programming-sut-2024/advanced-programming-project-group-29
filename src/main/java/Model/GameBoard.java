@@ -57,8 +57,8 @@ public class GameBoard {
         return rows;
     }
 
-    public void addSoldierToRow(int rowNumber, Soldier soldier) {
-        rows[currentPlayer][rowNumber].add(soldier);
+    public void addSoldierToRow(int playerNumber, int rowNumber, Soldier soldier) {
+        rows[playerNumber][rowNumber].add(soldier);
     }
 
     public void removeSoldierFromRow(int playerNumber, int rowNumber, Soldier soldier) {
