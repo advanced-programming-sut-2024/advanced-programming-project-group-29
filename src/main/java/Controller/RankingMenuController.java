@@ -5,7 +5,7 @@ import Model.User;
 import java.util.ArrayList;
 
 public class RankingMenuController {
-    public ArrayList<String> getRanking() {
+    public static ArrayList<String> getRanking() {
         ArrayList<String> users = User.getAllUsersByRank();
         ArrayList<String> result = new ArrayList<>();
         User First = User.getUserByUsername(users.get(0));

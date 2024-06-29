@@ -18,11 +18,11 @@
             <Image url="@../Images/Background/MainMenuBackground.jpg" />
          </image>
       </ImageView>
-      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#eed092" height="316.0" layoutX="391.0" layoutY="248.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="0.0" width="418.0">
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#eed092" height="365.0" layoutX="391.0" layoutY="248.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="0.0" width="418.0">
          <effect>
             <Shadow height="60.0" radius="29.5" width="60.0">
                <color>
-                  <Color red="0.06300000101327896" green="0.17080000042915344" blue="0.20999999344348907" opacity="0.7761685848236084" />
+                  <Color red="0.02631578966975212" green="0.01885964907705784" blue="0.001461988314986229" opacity="0.7799999713897705" />
                </color>
             </Shadow>
          </effect>
@@ -55,7 +55,7 @@
             <Font name="System Bold" size="16.0" />
          </font>
       </Label>
-      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#bfbfbf" height="43.0" layoutX="477.0" layoutY="461.0" onMouseClicked="#logout" onMouseEntered="#buttonEntered" onMouseExited="#buttonExited" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="246.0">
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#bfbfbf" height="43.0" layoutX="477.0" layoutY="461.0" onMouseClicked="#ranking" onMouseEntered="#buttonEntered" onMouseExited="#buttonExited" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="246.0">
          <effect>
             <Shadow height="6.17" radius="1.1025" width="0.24">
                <color>
@@ -64,7 +64,7 @@
             </Shadow>
          </effect>
       </Rectangle>
-      <Label layoutX="570.0" layoutY="472.0" onMouseClicked="#logout" onMouseEntered="#buttonEntered" onMouseExited="#buttonExited" text="Log out">
+      <Label layoutX="567.0" layoutY="472.0" onMouseClicked="#ranking" onMouseEntered="#buttonEntered" onMouseExited="#buttonExited" text="Ranking">
          <font>
             <Font name="System Bold" size="16.0" />
          </font>
@@ -80,6 +80,20 @@
                </topInput>
             </Blend>
          </effect>
+      </Label>
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#bfbfbf" height="43.0" layoutX="477.0" layoutY="520.0" onMouseClicked="#logout" onMouseEntered="#buttonEntered" onMouseExited="#buttonExited" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="246.0">
+         <effect>
+            <Shadow height="6.17" radius="1.1025" width="0.24">
+               <color>
+                  <Color red="0.8799999952316284" green="0.8447999954223633" blue="0.8447999954223633" opacity="0.7241379022598267" />
+               </color>
+            </Shadow>
+         </effect>
+      </Rectangle>
+      <Label layoutX="570.0" layoutY="531.0" onMouseClicked="#logout" onMouseEntered="#buttonEntered" onMouseExited="#buttonExited" text="Log out">
+         <font>
+            <Font name="System Bold" size="16.0" />
+         </font>
       </Label>
    </children>
 </AnchorPane>

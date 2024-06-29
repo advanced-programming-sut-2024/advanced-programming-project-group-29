@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.effect.Light.Distant?>
-<?import javafx.scene.effect.Lighting?>
+<?import javafx.scene.effect.BoxBlur?>
 <?import javafx.scene.effect.Shadow?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -19,217 +18,280 @@
             <Image url="@../Images/Background/board.jpg" />
          </image>
       </ImageView>
-      <Pane fx:id="row11" layoutX="471.0" layoutY="588.0" prefHeight="100.0" prefWidth="795.0" />
-      <Pane fx:id="row12" layoutX="471.0" layoutY="474.0" prefHeight="100.0" prefWidth="795.0" />
-      <Pane fx:id="row13" layoutX="470.0" layoutY="363.0" prefHeight="100.0" prefWidth="795.0" />
-      <Pane fx:id="row23" layoutX="471.0" layoutY="238.0" prefHeight="100.0" prefWidth="795.0" />
-      <Pane fx:id="row22" layoutX="471.0" layoutY="124.0" prefHeight="100.0" prefWidth="795.0" />
-      <Pane fx:id="row21" layoutX="470.0" layoutY="14.0" prefHeight="100.0" prefWidth="795.0" />
-      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#eed092" height="128.0" layoutX="1.0" layoutY="214.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="0.0" width="376.0">
-         <effect>
-            <Shadow height="60.0" radius="29.5" width="60.0">
-               <color>
-                  <Color red="0.07000000029802322" green="0.048661667853593826" blue="0.028699999675154686" />
-               </color>
-            </Shadow>
-         </effect>
-      </Rectangle>
-      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#eed092" height="128.0" layoutX="1.0" layoutY="548.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="0.0" width="376.0">
-         <effect>
-            <Shadow height="60.0" radius="29.5" width="60.0">
-               <color>
-                  <Color red="0.07000000029802322" green="0.048661667853593826" blue="0.028699999675154686" />
-               </color>
-            </Shadow>
-         </effect>
-      </Rectangle>
-      <ImageView fitHeight="45.0" fitWidth="45.0" layoutX="356.0" layoutY="589.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../Images/icons/score_total_me.png" />
-         </image>
-      </ImageView>
-      <ImageView fitHeight="45.0" fitWidth="45.0" layoutX="356.0" layoutY="255.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../Images/icons/score_total_op.png" />
-         </image>
-      </ImageView>
-      <ImageView fitHeight="100.0" fitWidth="157.0" layoutX="25.0" layoutY="222.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../Images/icons/notif_op_turn.png" />
-         </image>
-      </ImageView>
-      <ImageView fitHeight="100.0" fitWidth="100.0" layoutX="64.0" layoutY="226.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../Images/icons/icon_player_border.png" />
-         </image>
-      </ImageView>
-      <ImageView fx:id="factionIcon2" fitHeight="49.0" fitWidth="49.0" layoutX="50.0" layoutY="222.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../Images/icons/deck_shield_scoiatael.png" />
-         </image>
-      </ImageView>
-      <ImageView fitHeight="100.0" fitWidth="157.0" layoutX="25.0" layoutY="560.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../Images/icons/notif_op_turn.png" />
-         </image>
-      </ImageView>
-      <ImageView fitHeight="100.0" fitWidth="100.0" layoutX="64.0" layoutY="564.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../Images/icons/icon_player_border.png" />
-         </image>
-      </ImageView>
-      <ImageView fx:id="factionIcon1" fitHeight="49.0" fitWidth="49.0" layoutX="50.0" layoutY="560.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../Images/icons/deck_shield_scoiatael.png" />
-         </image>
-      </ImageView>
-      <Label fx:id="username2" layoutX="173.0" layoutY="245.0" prefHeight="21.0" prefWidth="168.0" text="Player2: " textFill="#dea543">
-         <font>
-            <Font name="System Bold" size="15.0" />
-         </font>
-      </Label>
-      <Label fx:id="username1" layoutX="173.0" layoutY="579.0" prefHeight="21.0" prefWidth="168.0" text="Player1: " textFill="#dea543">
-         <font>
-            <Font name="System Bold" size="15.0" />
-         </font>
-      </Label>
-      <ImageView fx:id="crystal21" fitHeight="39.0" fitWidth="38.0" layoutX="245.0" layoutY="276.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../Images/icons/icon_gem_on.png" />
-         </image>
-      </ImageView>
-      <ImageView fx:id="crystal22" fitHeight="39.0" fitWidth="38.0" layoutX="289.0" layoutY="276.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../Images/icons/icon_gem_on.png" />
-         </image>
-      </ImageView>
-      <ImageView fx:id="crystal11" fitHeight="39.0" fitWidth="38.0" layoutX="248.0" layoutY="615.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../Images/icons/icon_gem_on.png" />
-         </image>
-      </ImageView>
-      <ImageView fx:id="crystal12" fitHeight="39.0" fitWidth="38.0" layoutX="292.0" layoutY="615.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../Images/icons/icon_gem_on.png" />
-         </image>
-      </ImageView>
-      <ImageView fitHeight="39.0" fitWidth="38.0" layoutX="170.0" layoutY="276.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../Images/icons/icon_card_count.png" />
-         </image>
-      </ImageView>
-      <ImageView fitHeight="39.0" fitWidth="38.0" layoutX="170.0" layoutY="615.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../Images/icons/icon_card_count.png" />
-         </image>
-      </ImageView>
-      <Label layoutX="202.0" layoutY="276.0" prefHeight="39.0" prefWidth="38.0" text="15" textFill="#dea543">
-         <font>
-            <Font name="System Bold" size="25.0" />
-         </font>
-      </Label>
-      <Label layoutX="202.0" layoutY="615.0" prefHeight="39.0" prefWidth="38.0" text="15" textFill="#dea543">
-         <font>
-            <Font name="System Bold" size="25.0" />
-         </font>
-      </Label>
-      <Label fx:id="totalScore2" alignment="CENTER" layoutX="359.0" layoutY="257.0" prefHeight="39.0" prefWidth="38.0" text="0">
-         <font>
-            <Font name="System Bold" size="29.0" />
-         </font>
-      </Label>
-      <Label fx:id="totalScore1" alignment="CENTER" layoutX="359.0" layoutY="591.0" prefHeight="39.0" prefWidth="38.0" text="0">
-         <font>
-            <Font name="System Bold" size="29.0" />
-         </font>
-      </Label>
-      <ImageView fx:id="leader1" fitHeight="108.0" fitWidth="77.0" layoutX="120.0" layoutY="697.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../Images/Raw/Realms/Dethmold.jpg" />
-         </image>
-      </ImageView>
-      <ImageView fx:id="leader2" fitHeight="108.0" fitWidth="77.0" layoutX="120.0" layoutY="70.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../Images/Raw/Realms/Dethmold.jpg" />
-         </image>
-      </ImageView>
-      <ImageView fx:id="leaderActive2" fitHeight="30.0" fitWidth="30.0" layoutX="216.0" layoutY="109.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../Images/icons/icon_leader_active.png" />
-         </image>
-      </ImageView>
-      <ImageView fx:id="leaderActive1" fitHeight="30.0" fitWidth="30.0" layoutX="216.0" layoutY="738.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../Images/icons/icon_leader_active.png" />
-         </image>
-      </ImageView>
-      <Label fx:id="score21" alignment="CENTER" layoutX="427.0" layoutY="41.0" prefHeight="39.0" prefWidth="38.0" text="0">
-         <font>
-            <Font name="System Bold" size="29.0" />
-         </font>
-      </Label>
-      <Label fx:id="score22" alignment="CENTER" layoutX="427.0" layoutY="151.0" prefHeight="39.0" prefWidth="38.0" text="0">
-         <font>
-            <Font name="System Bold" size="29.0" />
-         </font>
-      </Label>
-      <Label fx:id="score23" alignment="CENTER" layoutX="427.0" layoutY="266.0" prefHeight="39.0" prefWidth="38.0" text="0">
-         <font>
-            <Font name="System Bold" size="29.0" />
-         </font>
-      </Label>
-      <Label fx:id="score13" alignment="CENTER" layoutX="427.0" layoutY="390.0" prefHeight="39.0" prefWidth="38.0" text="0">
-         <font>
-            <Font name="System Bold" size="29.0" />
-         </font>
-      </Label>
-      <Label fx:id="score12" alignment="CENTER" layoutX="427.0" layoutY="501.0" prefHeight="39.0" prefWidth="38.0" text="0">
-         <font>
-            <Font name="System Bold" size="29.0" />
-         </font>
-      </Label>
-      <Label fx:id="score11" alignment="CENTER" layoutX="427.0" layoutY="615.0" prefHeight="39.0" prefWidth="38.0" text="0">
-         <font>
-            <Font name="System Bold" size="29.0" />
-         </font>
-      </Label>
-      <ImageView fitHeight="108.0" fitWidth="77.0" layoutX="1445.0" layoutY="697.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../Images/icons/deck_back_scoiatael.jpg" />
-         </image>
-      </ImageView>
-      <ImageView fitHeight="108.0" fitWidth="77.0" layoutX="1445.0" layoutY="66.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../Images/icons/deck_back_scoiatael.jpg" />
-         </image>
-      </ImageView>
-      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#eed092" height="41.0" layoutX="1439.0" layoutY="151.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="0.0" width="82.0">
-         <effect>
-            <Shadow height="60.0" radius="29.5" width="60.0">
-               <color>
-                  <Color red="0.07000000029802322" green="0.048661667853593826" blue="0.028699999675154686" />
-               </color>
-            </Shadow>
-         </effect>
-      </Rectangle>
-      <Label fx:id="remainsDeck2" alignment="CENTER" layoutX="1440.0" layoutY="159.0" prefHeight="39.0" prefWidth="82.0" text="15" textFill="#dea543">
-         <font>
-            <Font name="System Bold" size="25.0" />
-         </font>
-      </Label>
-      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#eed092" height="41.0" layoutX="1440.0" layoutY="781.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="0.0" width="82.0">
-         <effect>
-            <Shadow height="60.0" radius="29.5" width="60.0">
-               <color>
-                  <Color red="0.07000000029802322" green="0.048661667853593826" blue="0.028699999675154686" />
-               </color>
-            </Shadow>
-         </effect>
-      </Rectangle>
-      <Label fx:id="remainsDeck1" alignment="CENTER" layoutX="1441.0" layoutY="789.0" prefHeight="39.0" prefWidth="82.0" text="15" textFill="#dea543">
-         <font>
-            <Font name="System Bold" size="25.0" />
-         </font>
-      </Label>
+      <Pane fx:id="mainPain" layoutX="1.0" prefHeight="900.0" prefWidth="1598.0">
+         <children>
+            <Pane fx:id="row11" layoutX="470.0" layoutY="588.0" prefHeight="100.0" prefWidth="795.0" />
+            <Pane fx:id="row12" layoutX="448.0" layoutY="476.0" prefHeight="100.0" prefWidth="795.0" />
+            <Pane fx:id="row13" layoutX="470.0" layoutY="362.0" prefHeight="100.0" prefWidth="795.0" />
+            <Pane fx:id="row23" layoutX="470.0" layoutY="237.0" prefHeight="100.0" prefWidth="795.0" />
+            <Pane fx:id="row22" layoutX="470.0" layoutY="124.0" prefHeight="100.0" prefWidth="795.0" />
+            <Pane fx:id="row21" layoutX="470.0" layoutY="14.0" prefHeight="100.0" prefWidth="795.0" />
+            <ImageView fitHeight="100.0" fitWidth="70.0" layoutX="1446.0" layoutY="698.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../Images/icons/deck_back_scoiatael.jpg" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="100.0" fitWidth="70.0" layoutX="1446.0" layoutY="66.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../Images/icons/deck_back_scoiatael.jpg" />
+               </image>
+            </ImageView>
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#eed092" height="41.0" layoutX="1438.0" layoutY="146.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="0.0" width="82.0">
+               <effect>
+                  <Shadow height="60.0" radius="29.5" width="60.0">
+                     <color>
+                        <Color red="0.07000000029802322" green="0.048661667853593826" blue="0.028699999675154686" />
+                     </color>
+                  </Shadow>
+               </effect>
+            </Rectangle>
+            <Label fx:id="remainsDeck2" alignment="CENTER" layoutX="1438.0" layoutY="155.0" prefHeight="39.0" prefWidth="82.0" text="15" textFill="#dea543">
+               <font>
+                  <Font name="System Bold" size="25.0" />
+               </font>
+            </Label>
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#eed092" height="41.0" layoutX="1438.0" layoutY="778.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="0.0" width="82.0">
+               <effect>
+                  <Shadow height="60.0" radius="29.5" width="60.0">
+                     <color>
+                        <Color red="0.07000000029802322" green="0.048661667853593826" blue="0.028699999675154686" />
+                     </color>
+                  </Shadow>
+               </effect>
+            </Rectangle>
+            <Label fx:id="remainsDeck1" alignment="CENTER" layoutX="1438.0" layoutY="779.0" prefHeight="39.0" prefWidth="82.0" text="15" textFill="#dea543">
+               <font>
+                  <Font name="System Bold" size="25.0" />
+               </font>
+            </Label>
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#eed092" height="128.0" layoutY="213.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="0.0" width="376.0">
+               <effect>
+                  <Shadow height="60.0" radius="29.5" width="60.0">
+                     <color>
+                        <Color red="0.07000000029802322" green="0.048661667853593826" blue="0.028699999675154686" />
+                     </color>
+                  </Shadow>
+               </effect>
+            </Rectangle>
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#eed092" height="128.0" layoutY="548.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="0.0" width="376.0">
+               <effect>
+                  <Shadow height="60.0" radius="29.5" width="60.0">
+                     <color>
+                        <Color red="0.07000000029802322" green="0.048661667853593826" blue="0.028699999675154686" />
+                     </color>
+                  </Shadow>
+               </effect>
+            </Rectangle>
+            <Label fx:id="score11" alignment="CENTER" layoutX="426.0" layoutY="616.0" prefHeight="39.0" prefWidth="38.0" text="0">
+               <font>
+                  <Font name="System Bold" size="29.0" />
+               </font>
+            </Label>
+            <Label fx:id="score12" alignment="CENTER" layoutX="427.0" layoutY="501.0" prefHeight="39.0" prefWidth="38.0" text="0">
+               <font>
+                  <Font name="System Bold" size="29.0" />
+               </font>
+            </Label>
+            <Label fx:id="score13" alignment="CENTER" layoutX="426.0" layoutY="390.0" prefHeight="39.0" prefWidth="38.0" text="0">
+               <font>
+                  <Font name="System Bold" size="29.0" />
+               </font>
+            </Label>
+            <Label fx:id="score23" alignment="CENTER" layoutX="426.0" layoutY="265.0" prefHeight="39.0" prefWidth="38.0" text="0">
+               <font>
+                  <Font name="System Bold" size="29.0" />
+               </font>
+            </Label>
+            <Label fx:id="score22" alignment="CENTER" layoutX="426.0" layoutY="152.0" prefHeight="39.0" prefWidth="38.0" text="0">
+               <font>
+                  <Font name="System Bold" size="29.0" />
+               </font>
+            </Label>
+            <Label fx:id="score21" alignment="CENTER" layoutX="426.0" layoutY="42.0" prefHeight="39.0" prefWidth="38.0" text="0">
+               <font>
+                  <Font name="System Bold" size="29.0" />
+               </font>
+            </Label>
+            <ImageView fitHeight="45.0" fitWidth="45.0" layoutX="355.0" layoutY="254.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../Images/icons/score_total_op.png" />
+               </image>
+            </ImageView>
+            <Label fx:id="totalScore2" alignment="CENTER" layoutX="358.0" layoutY="256.0" prefHeight="39.0" prefWidth="38.0" text="0">
+               <font>
+                  <Font name="System Bold" size="29.0" />
+               </font>
+            </Label>
+            <ImageView fitHeight="45.0" fitWidth="45.0" layoutX="355.0" layoutY="590.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../Images/icons/score_total_me.png" />
+               </image>
+            </ImageView>
+            <Label fx:id="totalScore1" alignment="CENTER" layoutX="357.0" layoutY="592.0" prefHeight="39.0" prefWidth="38.0" text="0">
+               <font>
+                  <Font name="System Bold" size="29.0" />
+               </font>
+            </Label>
+            <ImageView fx:id="crystal12" fitHeight="39.0" fitWidth="38.0" layoutX="292.0" layoutY="614.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../Images/icons/icon_gem_on.png" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="crystal11" fitHeight="39.0" fitWidth="38.0" layoutX="248.0" layoutY="614.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../Images/icons/icon_gem_on.png" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="crystal22" fitHeight="39.0" fitWidth="38.0" layoutX="293.0" layoutY="275.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../Images/icons/icon_gem_on.png" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="crystal21" fitHeight="39.0" fitWidth="38.0" layoutX="248.0" layoutY="275.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../Images/icons/icon_gem_on.png" />
+               </image>
+            </ImageView>
+            <Label layoutX="204.0" layoutY="278.0" prefHeight="39.0" prefWidth="38.0" text="15" textFill="#dea543">
+               <font>
+                  <Font name="System Bold" size="25.0" />
+               </font>
+            </Label>
+            <Label layoutX="204.0" layoutY="616.0" prefHeight="39.0" prefWidth="38.0" text="15" textFill="#dea543">
+               <font>
+                  <Font name="System Bold" size="25.0" />
+               </font>
+            </Label>
+            <ImageView fitHeight="39.0" fitWidth="38.0" layoutX="171.0" layoutY="616.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../Images/icons/icon_card_count.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="39.0" fitWidth="38.0" layoutX="171.0" layoutY="277.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../Images/icons/icon_card_count.png" />
+               </image>
+            </ImageView>
+            <Label fx:id="username1" layoutX="171.0" layoutY="578.0" prefHeight="21.0" prefWidth="168.0" text="Player1: " textFill="#dea543">
+               <font>
+                  <Font name="System Bold" size="15.0" />
+               </font>
+            </Label>
+            <Label fx:id="username2" layoutX="171.0" layoutY="238.0" prefHeight="21.0" prefWidth="168.0" text="Player2: " textFill="#dea543">
+               <font>
+                  <Font name="System Bold" size="15.0" />
+               </font>
+            </Label>
+            <ImageView fitHeight="100.0" fitWidth="157.0" layoutX="25.0" layoutY="220.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../Images/icons/notif_op_turn.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="100.0" fitWidth="100.0" layoutX="64.0" layoutY="224.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../Images/icons/icon_player_border.png" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="factionIcon2" fitHeight="49.0" fitWidth="49.0" layoutX="50.0" layoutY="220.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../Images/icons/deck_shield_scoiatael.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="100.0" fitWidth="157.0" layoutX="25.0" layoutY="558.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../Images/icons/notif_op_turn.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="100.0" fitWidth="100.0" layoutX="64.0" layoutY="562.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../Images/icons/icon_player_border.png" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="factionIcon1" fitHeight="49.0" fitWidth="49.0" layoutX="50.0" layoutY="558.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../Images/icons/deck_shield_scoiatael.png" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="leader1" fitHeight="108.0" fitWidth="77.0" layoutX="120.0" layoutY="695.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../Images/Raw/Realms/Dethmold.jpg" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="leader2" fitHeight="108.0" fitWidth="77.0" layoutX="120.0" layoutY="68.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../Images/Raw/Realms/Dethmold.jpg" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="leaderActive2" fitHeight="30.0" fitWidth="30.0" layoutX="216.0" layoutY="107.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../Images/icons/icon_leader_active.png" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="leaderActive1" fitHeight="30.0" fitWidth="30.0" layoutX="216.0" layoutY="736.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../Images/icons/icon_leader_active.png" />
+               </image>
+            </ImageView>
+         </children>
+      </Pane>
+      <Pane fx:id="changePain" disable="true" layoutX="298.0" layoutY="82.0" prefHeight="699.0" prefWidth="1141.0" visible="false">
+         <children>
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#eed092" height="662.0" layoutX="22.0" layoutY="19.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="0.0" width="1097.0">
+               <effect>
+                  <Shadow height="60.0" radius="29.5" width="60.0">
+                     <color>
+                        <Color red="0.0784313753247261" green="0.054901961237192154" blue="0.0313725508749485" opacity="0.7799999713897705" />
+                     </color>
+                  </Shadow>
+               </effect>
+            </Rectangle>
+            <ImageView fx:id="image3" fitHeight="538.0" fitWidth="280.0" layoutX="430.0" layoutY="57.0" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fx:id="image4" fitHeight="363.0" fitWidth="192.0" layoutX="739.0" layoutY="121.0" opacity="0.7" pickOnBounds="true" preserveRatio="true">
+               <effect>
+                  <BoxBlur />
+               </effect>
+            </ImageView>
+            <ImageView fx:id="image5" fitHeight="246.0" fitWidth="130.0" layoutX="958.0" layoutY="180.0" opacity="0.4" pickOnBounds="true" preserveRatio="true">
+               <effect>
+                  <BoxBlur height="8.0" width="8.0" />
+               </effect>
+            </ImageView>
+            <ImageView fx:id="image2" fitHeight="363.0" fitWidth="192.0" layoutX="211.0" layoutY="121.0" opacity="0.7" pickOnBounds="true" preserveRatio="true">
+               <effect>
+                  <BoxBlur />
+               </effect>
+            </ImageView>
+            <ImageView fx:id="image1" fitHeight="246.0" fitWidth="130.0" layoutX="57.0" layoutY="180.0" opacity="0.4" pickOnBounds="true" preserveRatio="true">
+               <effect>
+                  <BoxBlur height="8.0" width="8.0" />
+               </effect>
+            </ImageView>
+            <ImageView fitHeight="53.0" fitWidth="43.0" layoutX="102.0" layoutY="574.0" onMouseClicked="#backward" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../Images/icons/cursur.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="53.0" fitWidth="43.0" layoutX="1003.0" layoutY="574.0" onMouseClicked="#forward" pickOnBounds="true" preserveRatio="true" rotate="180.0">
+               <image>
+                  <Image url="@../Images/icons/cursur.png" />
+               </image>
+            </ImageView>
+            <Label fx:id="name" alignment="CENTER" layoutX="193.0" layoutY="601.0" prefHeight="66.0" prefWidth="755.0" text="name" textFill="#dea543">
+               <font>
+                  <Font name="System Bold" size="30.0" />
+               </font>
+            </Label>
+            <ImageView fitHeight="43.0" fitWidth="54.0" layoutX="95.0" layoutY="54.0" onMouseClicked="#done" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../Images/icons/checkMark.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="43.0" fitWidth="54.0" layoutX="1002.0" layoutY="54.0" onMouseClicked="#cancel" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../Images/icons/cancel.png" />
+               </image>
+            </ImageView>
+         </children>
+      </Pane>
    </children>
 </AnchorPane>

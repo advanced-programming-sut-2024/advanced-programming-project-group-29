@@ -1,5 +1,7 @@
 package Model;
 
+import View.Animations.FlipCardAnimation;
+import javafx.geometry.Point3D;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -93,6 +95,7 @@ public class CardView extends Pane {
         super.setLayoutX(x);
         super.setLayoutY(y);
         super.setVisible(true);
+        super.setRotationAxis(new Point3D(0,1,0));
         super.setOnMouseEntered(e -> {
             goUp();
         });
@@ -100,7 +103,7 @@ public class CardView extends Pane {
             goDown();
         });
         super.setOnMouseClicked(e -> {
-
+            new FlipCardAnimation(this).play();
         });
     }
 
