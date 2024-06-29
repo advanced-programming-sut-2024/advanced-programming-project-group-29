@@ -33,7 +33,7 @@ public class CardView extends Pane {
     public CardView(Card card) {
         this.allCardView.add(this);
         this.card = card;
-        this.path = "/Images/Raw/" + card.getFaction().getName() + "/" + card.getName();
+        this.path = "/Images/Raw/" + card.getFaction().getName() + "/" + card.getName() + ".jpg";
         this.background = new ImageView(path);
         this.background.setFitHeight(100);
         this.background.setFitWidth(70);
@@ -48,11 +48,9 @@ public class CardView extends Pane {
             hp.setAlignment(Pos.CENTER);
             hp.setLayoutX(3);
             hp.setLayoutY(3);
+            hp.setPrefHeight(15);
+            hp.setPrefWidth(20);
             ImageView hpBackground = new ImageView();
-            hpBackground.setLayoutX(-3);
-            hpBackground.setLayoutY(-3);
-            hpBackground.setFitWidth(50);
-            hpBackground.setFitHeight(50);
             ImageView type = getImageViewType((Soldier) card);
             type.setFitHeight(25);
             type.setFitWidth(25);
@@ -70,6 +68,10 @@ public class CardView extends Pane {
                 hp.setTextFill(Paint.valueOf("black"));
                 hpBackground = new ImageView("/Images/icons/power_normal.png");
             }
+            hpBackground.setLayoutX(-3);
+            hpBackground.setLayoutY(-3);
+            hpBackground.setFitWidth(50);
+            hpBackground.setFitHeight(50);
             this.items.getChildren().add(hpBackground);
             this.items.getChildren().add(hp);
             this.items.getChildren().add(type);
@@ -87,6 +89,9 @@ public class CardView extends Pane {
         super.setWidth(WIDTH);
         super.getChildren().add(background);
         super.getChildren().add(items);
+        super.setLayoutX(500);
+        super.setLayoutY(500);
+        super.setVisible(true);
         super.setOnMouseEntered(e -> {
             goUp();
         });
@@ -124,6 +129,7 @@ public class CardView extends Pane {
 
     private static ImageView getImageViewAbility(Soldier card) {
         ImageView ability = new ImageView();
+        if (card.getAttribute() == null) return ability;
         if (card.getAttribute().equals(Attribute.MEDIC))
             ability = new ImageView("/Images/icons/card_ability_medic.png");
         else if (card.getAttribute().equals(Attribute.MORAL_BOOST))

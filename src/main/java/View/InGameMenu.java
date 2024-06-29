@@ -1,7 +1,9 @@
 package View;
 
+import Controller.ApplicationController;
 import Controller.InGameMenuController;
 import Controller.SaveApplicationAsObject;
+import Model.CardView;
 import Model.GameBoard;
 import Model.Soldier;
 import javafx.application.Application;
