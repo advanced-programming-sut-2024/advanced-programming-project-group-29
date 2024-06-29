@@ -4,6 +4,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
+import javafx.scene.effect.Effect;
 import javafx.scene.effect.Glow;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
@@ -30,10 +31,10 @@ public class CardView extends Pane {
     private boolean isSelected = false;
 
 
-    public CardView(Card card) {
+    public CardView(Card card,double x,double y) {
         this.allCardView.add(this);
         this.card = card;
-        this.path = "/Images/Raw/" + card.getFaction().getName() + "/" + card.getName() + ".jpg";
+        this.path = "/Images/Raw/" + card.getUser().getFaction().getName() + "/" + card.getName() + ".jpg";
         this.background = new ImageView(path);
         this.background.setFitHeight(100);
         this.background.setFitWidth(70);
@@ -89,8 +90,8 @@ public class CardView extends Pane {
         super.setWidth(WIDTH);
         super.getChildren().add(background);
         super.getChildren().add(items);
-        super.setLayoutX(500);
-        super.setLayoutY(500);
+        super.setLayoutX(x);
+        super.setLayoutY(y);
         super.setVisible(true);
         super.setOnMouseEntered(e -> {
             goUp();
@@ -104,22 +105,24 @@ public class CardView extends Pane {
     }
 
     private ImageView getImageViewAbilitySpells(Spell card) {
-        ImageView power = new ImageView();
-        if (card.getName().equals("Biting Frost")) power = new ImageView("/Images/icons/power_frost.png");
-        else if (card.getName().equals("Impenetrable fog")) power = new ImageView("/Images/icons/power_fog.png");
-        else if (card.getName().equals("Torrential Rain")) power = new ImageView("/Images/icons/power_rain.png");
-        else if (card.getName().equals("Skellige Storm")) power = new ImageView("/Images/icons/power_storm.png");
-        else if (card.getName().equals("Clear Weather")) power = new ImageView("/Images/icons/power_clear.png");
-//        else if (card.getName().equals("Scorch")) power = new ImageView("/Images/icons/card_row_ranged.png");
-//        else if (card.getName().equals("Commanders horn")) power = new ImageView("/Images/icons/card_row_ranged.png");
-//        else if (card.getName().equals("Decoy")) power = new ImageView("/Images/icons/card_row_ranged.png");
-//        else if (card.getName().equals("Mardroeme")) power = new ImageView("/Images/icons/card_row_ranged.png");
-        //TODO
+        ImageView power = switch (card.getName()) {
+            case "Biting Frost" -> new ImageView("/Images/icons/power_frost.png");
+            case "Impenetrable fog" -> new ImageView("/Images/icons/power_fog.png");
+            case "Torrential Rain" -> new ImageView("/Images/icons/power_rain.png");
+            case "Skellige Storm" -> new ImageView("/Images/icons/power_storm.png");
+            case "Clear Weather" -> new ImageView("/Images/icons/power_clear.png");
+            case "Scorch" -> new ImageView("/Images/icons/power_scorch.png");
+            case "Commanders horn" -> new ImageView("/Images/icons/power_horn.png");
+            case "Decoy" -> new ImageView("/Images/icons/power_decoy.png");
+            case "Mardroeme" -> new ImageView("/Images/icons/power_mardroeme.png");
+            default -> new ImageView();
+        };
         return power;
     }
 
     private static ImageView getImageViewType(Soldier card) {
         ImageView type = new ImageView();
+        if (card.getType() == null) return type;
         if (card.getType().equals(Type.SIEGE)) type = new ImageView("/Images/icons/card_row_siege.png");
         else if (card.getType().equals(Type.AGILE)) type = new ImageView("/Images/icons/card_row_agile.png");
         else if (card.getType().equals(Type.CLOSE_COMBAT)) type = new ImageView("/Images/icons/card_row_close.png");
@@ -142,8 +145,14 @@ public class CardView extends Pane {
             ability = new ImageView("/Images/icons/card_ability_bond.png");
         else if (card.getAttribute().equals(Attribute.BERSERKER))
             ability = new ImageView("/Images/icons/card_ability_berserker.png");
-        //else if (card.getAttribute().equals(Attribute.TRANSFORMERS)) ability = new ImageView("/Images/icons/card_ability_transformer.png");
-        // TODO
+        else if (card.getAttribute().equals(Attribute.TRANSFORMERS))
+            ability = new ImageView("/Images/icons/card_ability_avenger.png");
+        else if (card.getAttribute().equals(Attribute.SCORCH))
+            ability = new ImageView("/Images/icons/card_ability_scorch.png");
+        else if (card.getAttribute().equals(Attribute.MARDROEME))
+            ability = new ImageView("/Images/icons/card_ability_mardroeme.png");
+        else if (card.getAttribute().equals(Attribute.COMMANDERS_HORN))
+            ability = new ImageView("/Images/icons/card_ability_horn.png");
         return ability;
     }
 
@@ -180,11 +189,11 @@ public class CardView extends Pane {
     }
 
     private void goUp() {
-        this.setLayoutY(this.getLayoutY() - 30);
+        this.setLayoutY(this.getLayoutY() - 12);
     }
 
     private void goDown() {
-        this.setLayoutY(this.getLayoutY() + 30);
+        this.setLayoutY(this.getLayoutY() + 12);
     }
 
     private void glow(boolean isGlowing) {

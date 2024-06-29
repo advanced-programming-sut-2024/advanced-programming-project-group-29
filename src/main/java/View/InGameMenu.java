@@ -21,7 +21,10 @@ import java.util.Objects;
 public class InGameMenu extends Application {
     private final double X_POSITION_HAND_LEFT = 482;
     private final double X_POSITION_HAND_RIGHT = 1260;
-    private final double Y_POSITION_HAND = 702;
+    private final double Y_POSITION_HAND = 704;
+    private final double CARD_WIDTH = 70;
+    private final double CARD_HEIGHT = 100;
+    private final double SPACING = 3;
 
     public Pane row11;
     public Pane row12;
@@ -56,7 +59,7 @@ public class InGameMenu extends Application {
     private GameBoard gameBoard;
 
     @FXML
-    public void initialize(){
+    public void initialize() {
 
     }
 
@@ -68,6 +71,10 @@ public class InGameMenu extends Application {
         Scene scene = new Scene(pane);
         stage.setScene(scene);
         stage.show();
+        int n = ApplicationController.getCurrentUser().getDeck().size();
+        for (int i = 0; i < n; i++) {
+            pane.getChildren().add(new CardView(ApplicationController.getCurrentUser().getDeck().get(i), getXPosition(i, n), Y_POSITION_HAND));
+        }
         SaveApplicationAsObject.getApplicationController().setPane(pane);
     }
 
@@ -78,6 +85,23 @@ public class InGameMenu extends Application {
     public void setInGameMenuController(InGameMenuController inGameMenuController) {
         this.inGameMenuController = inGameMenuController;
     }
+
+    private double getXPosition(int i, int n) {
+        if ((n * CARD_WIDTH + (n - 1) * SPACING) > (X_POSITION_HAND_RIGHT - X_POSITION_HAND_LEFT)) {
+            double xFirst = X_POSITION_HAND_LEFT;
+            for (int j = 0; j < i; j++) {
+                xFirst += (X_POSITION_HAND_RIGHT - X_POSITION_HAND_LEFT - CARD_WIDTH) / (n - 1);
+            }
+            return xFirst;
+        } else {
+            double xFirst = (((X_POSITION_HAND_RIGHT - X_POSITION_HAND_LEFT) - (n * CARD_WIDTH + (n - 1) * SPACING)) / 2) + X_POSITION_HAND_LEFT;
+            for (int j = 0; j < i; j++) {
+                xFirst += CARD_WIDTH + SPACING;
+            }
+            return xFirst;
+        }
+    }
+
 
     public static Card showDiscardPileAndLetUserChoose(GameBoard gameBoard, int playerIndex) {
         // TODO: implement this and return chosen card
