@@ -152,13 +152,30 @@ public class InGameMenuController extends Thread {
     }
 
 
-    public static void playCardInRow(GameBoard gameBoard, int playerIndex, int rowNumber, Card card){
+    public static void playCardInRow(int rowNumber, Card card){
+        GameBoard gameBoard = card.getGameBoard();
+        int playerIndex = gameBoard.getPlayerNumber(card.getUser());
         // TODO: implement this
     }
 
-    public static void playCard(GameBoard gameBoard, Card card, int playerIndex){
+    public static void playCard(Card card){
+        GameBoard gameBoard = card.getGameBoard();
+        int playerIndex = gameBoard.getPlayerNumber(card.getUser());
         // TODO: ask user which row to place card
-        playCardInRow(gameBoard, playerIndex, -1, card);
+        playCardInRow(-1, card);
+    }
+
+    public static void addWeather(Spell spell){
+        GameBoard gameBoard = spell.getGameBoard();
+        // TODO: add this weather to graphic
+        gameBoard.addWeather(spell);
+    }
+
+    public static void seeThreeRandomCardsFromOpponentsHand(){
+        User user = ApplicationController.getCurrentUser();
+        User opponent = user.getOpponent();
+        // TODO: implement this
+        //InGameMenu.showThreeRandomCardsFromOpponentsHand();
     }
 
 }

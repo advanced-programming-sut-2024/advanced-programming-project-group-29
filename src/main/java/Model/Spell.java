@@ -21,8 +21,8 @@ public class Spell extends Card {
 
     private static int getPlacedRowNumber(GameBoard gameBoard, Spell spell) {
         for (int i = 1; i <= 3; i++) {
-            if (gameBoard.getSpecialCard(0, i).contains(spell) ||
-                    gameBoard.getSpecialCard(1, i).contains(spell))
+            if (gameBoard.getSpecialCard(0, i) == spell ||
+                    gameBoard.getSpecialCard(1, i) == spell)
                 return i;
         }
         return -1;
