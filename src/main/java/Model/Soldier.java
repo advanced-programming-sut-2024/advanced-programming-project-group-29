@@ -120,7 +120,6 @@ public class Soldier extends Card {
             case MEDIC -> executeActionForMedic(this);
             case SPY -> executeActionForSpy(this);
             case MARDROEME -> executeActionForMardroeme(this);
-            case TRANSFORMERS -> executeActionForTransformers(this);
         }
     }
 
@@ -136,7 +135,7 @@ public class Soldier extends Card {
         return -1;
     }
 
-    private void executeActionForTransformers(Soldier soldier) {
+    private void executeActionForTransformers(Soldier soldier) { // TODO passive action!
         InGameMenuController.changeHpForSoldier(soldier.getGameBoard(), soldier, 8);
     }
 
@@ -217,8 +216,11 @@ public class Soldier extends Card {
     public int getShownHp() {
         GameBoard gameBoard = this.getGameBoard();
         int rowNumber = getPlacedRowNumber(this, gameBoard);
-        if (gameBoard.rowHasWeather(rowNumber))
+        if (gameBoard.rowHasWeather(rowNumber)) {
+            if (this.user.getCommander().getName().equals("King Bran"))
+                return hp/2;
             return 1;
+        }
         return hp;
     }
 
