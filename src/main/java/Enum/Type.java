@@ -6,7 +6,7 @@ public enum Type {
     SIEGE,
     AGILE,
     WEATHER,
-    BEAR,
+    SOLDIER,
     SPELL;
 
     public static Type getTypeFromString(String type) {
@@ -21,8 +21,8 @@ public enum Type {
             return AGILE;
         if (type.matches(".*weather.*"))
             return WEATHER;
-        if (type.matches(".*bear.*"))
-            return BEAR;
+        if (type.matches(".*soldier.*"))
+            return SOLDIER;
         if (type.matches(".*spell.*"))
             return SPELL;
         return null;
@@ -39,7 +39,28 @@ public enum Type {
             return row == 2;
         } else if (this == AGILE) {
             return row < 2;
+        } else if (this == SOLDIER) {
+            return true;
         }
         return false;
     }
+
+    public String getStringFromType(){
+        if(this == CLOSE_COMBAT)
+            return "Close Combat";
+        if(this == RANGED)
+            return "Ranged";
+        if(this == SIEGE)
+            return "Siege";
+        if(this == AGILE)
+            return "Agile";
+        if(this == WEATHER)
+            return "Weather";
+        if(this == SOLDIER)
+            return "Soldier";
+        if(this == SPELL)
+            return "Spell";
+        return "";
+    }
+
 }

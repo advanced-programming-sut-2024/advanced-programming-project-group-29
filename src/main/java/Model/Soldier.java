@@ -223,13 +223,18 @@ public class Soldier extends Card {
     }
 
     public void transformItToVidkaarl(boolean young) {
-        Soldier bear = new Soldier(young ? "young vidkaarl" : "vidkaarl", this.getUser());
+        Soldier bear = new Soldier(young ? "Young Vidkaarl" : "Vidkaarl", this.getUser());
         bear.setGameBoard(this.getGameBoard());
         GameBoard gameBoard = this.getGameBoard();
         int rowNumber = getPlacedRowNumber(this, gameBoard);
         int playerIndex = gameBoard.getPlayerNumber(this.getUser());
         gameBoard.getRows()[playerIndex][rowNumber].remove(this);
         gameBoard.getRows()[playerIndex][rowNumber].add(bear);
-      //  InGameMenuController.changeThisCardInGraphic(this, bear);
+        InGameMenuController.changeThisCardInGraphic(gameBoard,this, bear);
+    }
+
+    @Override
+    public String getInformation() {
+        return "Name: " + this.getName() + ", Ability: " + attribute.getStringFromAttribute() + "" + ", IsHero: " + isHero;
     }
 }

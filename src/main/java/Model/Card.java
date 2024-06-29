@@ -115,7 +115,7 @@ public abstract class Card {
     protected static void executeMardoemeForRowNumber(GameBoard gameBoard, int playerIndex, int rowNumber) {
         for (Soldier otherSoldier : gameBoard.getRows()[playerIndex][rowNumber]) {
             if (otherSoldier.getAttribute() == Attribute.BERSERKER)
-                otherSoldier.transformItToVidkaarl(!otherSoldier.getName().matches("berserker"));
+                otherSoldier.transformItToVidkaarl(!otherSoldier.getName().matches("Berserker"));
         }
     }
 
@@ -165,5 +165,9 @@ public abstract class Card {
 
     public User getUser() {
         return user;
+    }
+
+    public String getInformation(){
+        return name;
     }
 }

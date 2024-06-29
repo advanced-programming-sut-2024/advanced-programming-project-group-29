@@ -36,4 +36,28 @@ public enum Attribute {
             return COMMANDERS_HORN;
         return null;
     }
+
+    public String getStringFromAttribute() {
+        if (this == MEDIC)
+            return "Medic";
+        if (this == MORAL_BOOST)
+            return "Moral Boost";
+        if (this == MUSTER)
+            return "Muster";
+        if (this == SPY)
+            return "Spy";
+        if (this == TIGHT_BOND)
+            return "Tight Bond";
+        if (this == SCORCH)
+            return "Scorch";
+        if (this == BERSERKER)
+            return "Berserker";
+        if (this == MARDROEME)
+            return "Mardroeme";
+        if (this == TRANSFORMERS)
+            return "Transformers";
+        if (this == COMMANDERS_HORN)
+            return "Commander's Horn";
+        return "";
+    }
 }

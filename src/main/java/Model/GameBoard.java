@@ -11,7 +11,7 @@ public class GameBoard {
     private final User[] players = new User[2];
     private int currentPlayer;
     private final ArrayList<Soldier>[][] rows = new ArrayList[2][3];
-    private final ArrayList<Spell>[][] specialCards = new ArrayList[2][3];
+    private final Spell[][] specialCards = new Spell[2][3];
     private final int[] playersScore = new int[2];
     private final int[] playerCardsNumber = new int[2];
     private final int[] playersCrystals = new int[2];
@@ -90,12 +90,12 @@ public class GameBoard {
     }
 
 
-    public ArrayList<Spell> getSpecialCard(int playerNumber, int rowNumber) {
+    public Spell getSpecialCard(int playerNumber, int rowNumber) {
         return specialCards[playerNumber][rowNumber];
     }
 
     public void addSpecialCard(int playerNumber, int rowNumber, Spell spell) {
-        specialCards[playerNumber][rowNumber].add(spell);
+        specialCards[playerNumber][rowNumber] = spell;
     }
 
     public Commander getPlayerLeader(int playerNumber) {
@@ -131,7 +131,7 @@ public class GameBoard {
         }
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 3; j++) {
-                specialCards[i][j].clear();
+                specialCards[i][j] = null;
             }
         }
         for (int i = 0; i < 2; i++) {
@@ -158,8 +158,10 @@ public class GameBoard {
         rowHasWeather[0] = false;
         rowHasWeather[1] = false;
         rowHasWeather[2] = false;
+        weather.clear();
         recalculatePlayersScore();
         InGameMenuController.showChangedPlayerScoreAndCardsHp(this);
+        InGameMenuController.removeAllWeatherInGraphic(this);
     }
 
     private void recalculatePlayersScore() {
@@ -204,10 +206,8 @@ public class GameBoard {
     }
 
     public boolean isThereAnyCommendersHornInRow(int playerNumber, int rowNumber) {
-        for (Spell spell : specialCards[playerNumber][rowNumber]) {
-            if (spell.getName().matches("commanders horn"))
-                return true;
-        }
+        if (specialCards[playerNumber][rowNumber].getName().matches("Commander.+Horn"))
+            return true;
         for (Soldier soldier : rows[playerNumber][rowNumber]) {
             if (soldier.getAttribute() == Attribute.getAttributeFromString("commanders horn"))
                 return true;
@@ -217,5 +217,12 @@ public class GameBoard {
 
     public int getCurrentPlayer(){
         return currentPlayer;
+    }
+
+    public int getRowShownScore(int playerIndex, int rowNumber) {
+        int scoreSum = 0;
+        for(Soldier soldier : rows[playerIndex][rowNumber])
+            scoreSum += soldier.getShownHp();
+        return scoreSum;
     }
 }
