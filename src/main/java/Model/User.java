@@ -415,4 +415,8 @@ public class User {
     public void resetDeck() {
         deck.clear();
     }
+
+    public User getOpponent(){
+        return currentGameBoard.getPlayer(1 - currentGameBoard.getPlayerNumber(this));
+    }
 }

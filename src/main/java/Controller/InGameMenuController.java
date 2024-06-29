@@ -53,9 +53,12 @@ public class InGameMenuController extends Thread {
         }
     }
 
+    public static void removeAllWeatherInGraphic(GameBoard gameBoard) {
+        // TODO: implement this
+    }
+
     private void changeCurrentUser() {
-        if (currentUser == 0) currentUser = 1;
-        else currentUser = 0;
+        currentUser = 1 - currentUser;
     }
 
     public static ArrayList<InGameMenuController> getControllers() {
@@ -93,9 +96,9 @@ public class InGameMenuController extends Thread {
     }
 
     public static Result showInHandDeck(Matcher matcher){
+        User user = ApplicationController.getCurrentUser();
         if(!matcher.matches())
             return new Result(false, "Invalid command");
-        User user = ApplicationController.getCurrentUser();
         ArrayList<String> cardsInformation = new ArrayList<>();
         String cardNumber = matcher.group("cardNumber");
         if (cardNumber != null) {
@@ -107,5 +110,55 @@ public class InGameMenuController extends Thread {
         return new Result(true, cardsInformation);
     }
 
-    // TODO: implement other methods
+    public static Result showRemainingCardsNumber(){
+        User user = ApplicationController.getCurrentUser();
+        if(user == null)
+            return new Result(false);
+        return new Result(true, user.getDeck().size() + "");
+    }
+
+    public static Result showOutOfPlayCards(){
+        User user = ApplicationController.getCurrentUser();
+        if(user == null)
+            return new Result(false);
+        StringBuilder usersCards = new StringBuilder();
+        for(Card card : user.getDiscardPile())
+            usersCards.append(card.getName());
+        StringBuilder opponentsCards = new StringBuilder();
+        for(Card card : user.getOpponent().getDiscardPile())
+            opponentsCards.append(card.getName());
+        return new Result(true, usersCards.toString(), opponentsCards.toString());
+    }
+
+    public static Result showCardsInRow(Matcher matcher){
+        User user = ApplicationController.getCurrentUser();
+        int playerIndex = user.getCurrentGameBoard().getPlayerNumber(user);
+        if(!matcher.matches())
+            return new Result(false, "Invalid command");
+        int rowNumber = Integer.parseInt(matcher.group("rowNumber"));
+        if(rowNumber >= 6)
+            return new Result(false, "Invalid row number");
+        if(rowNumber >= 3){
+            playerIndex = 1 - playerIndex;
+            rowNumber -= 3;
+        }
+        ArrayList<String> cards = new ArrayList<>();
+        cards.add(user.getCurrentGameBoard().getRowShownScore(playerIndex, rowNumber) + "");
+        cards.add(user.getCurrentGameBoard().getSpecialCard(playerIndex, rowNumber).getInformation() + "");
+        for(Card card : user.getCurrentGameBoard().getRows()[playerIndex][rowNumber]){
+            cards.add(card.getInformation());
+        }
+        return new Result(true, cards);
+    }
+
+
+    public static void playCardInRow(GameBoard gameBoard, int playerIndex, int rowNumber, Card card){
+        // TODO: implement this
+    }
+
+    public static void playCard(GameBoard gameBoard, Card card, int playerIndex){
+        // TODO: ask user which row to place card
+        playCardInRow(gameBoard, playerIndex, -1, card);
+    }
+
 }

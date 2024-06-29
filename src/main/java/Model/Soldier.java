@@ -235,6 +235,6 @@ public class Soldier extends Card {
 
     @Override
     public String getInformation() {
-        return "Name: " + this.getName() + ", Ability: " + attribute.getStringFromAttribute() + ", IsHero: " + isHero;
+        return "Name: " + this.getName() + ", Ability: " + attribute.getStringFromAttribute() + "" + ", IsHero: " + isHero;
     }
 }
