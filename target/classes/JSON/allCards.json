@@ -731,6 +731,7 @@
     {
       "name": "Vreemde",
       "power": 2,
+      "numberOfCards": 1,
       "type": "Close Combat Unit"
     }
   ],

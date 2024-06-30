@@ -1,6 +1,8 @@
 package Model;
 
 import View.Animations.FlipCardAnimation;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.geometry.Point3D;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
@@ -8,6 +10,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.effect.Effect;
 import javafx.scene.effect.Glow;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Paint;
@@ -27,16 +30,20 @@ public class CardView extends Pane {
     private final double HEIGHT = 100;
     private final String path;
     private final ImageView background;
+    private final Image face;
+    private final Image back;
     private final Group items = new Group();
     private final boolean isSoldier;
     private boolean isUp = false;
     private boolean isSelected = false;
 
 
-    public CardView(Card card,double x,double y) {
+    public CardView(Card card, double x, double y) {
         this.allCardView.add(this);
         this.card = card;
         this.path = "/Images/Raw/" + card.getUser().getFaction().getName() + "/" + card.getName() + ".jpg";
+        this.face = new Image(path);
+        this.back = new Image("/Images/icons/deck_back_" + card.getUser().getFaction().getName().toLowerCase() + ".png");
         this.background = new ImageView(path);
         this.background.setFitHeight(100);
         this.background.setFitWidth(70);
@@ -95,7 +102,19 @@ public class CardView extends Pane {
         super.setLayoutX(x);
         super.setLayoutY(y);
         super.setVisible(true);
-        super.setRotationAxis(new Point3D(0,1,0));
+        super.setRotationAxis(new Point3D(0, 1, 0));
+        super.rotateProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observableValue, Number number, Number t1) {
+                if (Math.cos(Math.toRadians((double) number)) <= 0){
+                    background.setImage(back);
+                    items.setVisible(false);
+                } else {
+                    background.setImage(face);
+                    items.setVisible(true);
+                }
+            }
+        });
         super.setOnMouseEntered(e -> {
             goUp();
         });
@@ -103,7 +122,7 @@ public class CardView extends Pane {
             goDown();
         });
         super.setOnMouseClicked(e -> {
-            new FlipCardAnimation(this).play();
+//            new FlipCardAnimation(this,1298,701).play();
         });
     }
 

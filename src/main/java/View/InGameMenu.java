@@ -6,26 +6,41 @@ import Controller.InGameMenuController;
 import Controller.SaveApplicationAsObject;
 import Model.*;
 import Regex.GameMenuRegex;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.concurrent.Task;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 import java.io.File;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.FutureTask;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class InGameMenu extends Application {
     private final double X_POSITION_HAND_LEFT = 482;
     private final double X_POSITION_HAND_RIGHT = 1260;
+    private final double X_POSITION_ROW_LEFT = 591;
+    private final double X_POSITION_ROW_RIGHT = 1264;
     private final double Y_POSITION_HAND = 704;
     private final double CARD_WIDTH = 70;
     private final double CARD_HEIGHT = 100;
@@ -61,18 +76,22 @@ public class InGameMenu extends Application {
     public Label remainsDeck1;
     public Pane mainPain;
 
+    private ArrayList<CardView> hand1 = new ArrayList<>();
+    private ArrayList<CardView> hand2 = new ArrayList<>();
+    private ArrayList<CardView> deck1 = new ArrayList<>();
+    private ArrayList<CardView> deck2 = new ArrayList<>();
+    private ArrayList<CardView> discard1 = new ArrayList<>();
+    private ArrayList<CardView> discard2 = new ArrayList<>();
+    private ArrayList<CardView> row_11 = new ArrayList<>();
+    private ArrayList<CardView> row_12 = new ArrayList<>();
+    private ArrayList<CardView> row_13 = new ArrayList<>();
+    private ArrayList<CardView> row_21 = new ArrayList<>();
+    private ArrayList<CardView> row_22 = new ArrayList<>();
+    private ArrayList<CardView> row_23 = new ArrayList<>();
 
     public Pane changePain;
-    public ImageView image3;
-    public ImageView image4;
-    public ImageView image5;
-    public ImageView image2;
-    public ImageView image1;
-    private ArrayList<Image> changeArray;
-    private int selectedImage;
-    private volatile int lastSelected;
-
-
+    private ArrayList<Image> changeArray = new ArrayList<>();
+    private volatile int selectedImage;
 
 
     private InGameMenuController inGameMenuController;
@@ -123,73 +142,49 @@ public class InGameMenu extends Application {
         }
     }
 
-//    private void selectBetweenCars(ArrayList<Card> arrayList) {
-//        changePain.setVisible(true);
-//        changePain.setDisable(false);
-//        mainPain.setDisable(true);
-//        image3.requestFocus();
-//        changeArray = new ArrayList<>();
-//
-//        for (Card c : arrayList) {
-//            Image image = new Image(f.toURI().toString(), 1, 1, getNameFromFile(f));
-//            changeArray.add(image);
-//        }
-//        selectedImage = 0;
-//        setImageChange(selectedImage);
-//    }
-//
-//    private void setImageChange(int number) {
-//        int n = 3 - number;
-//        image1.setImage(null);
-//        image2.setImage(null);
-//        image3.setImage(null);
-//        image4.setImage(null);
-//        image5.setImage(null);
-//        for (Image image : changeArray) {
-//            try {
-//                Field field = this.getClass().getDeclaredField("image" + (n++));
-//                if (n == 4) name.setText(image.getName());
-//                field.setAccessible(true);
-//                ((ImageView) field.get(this)).setImage(image.getImage());
-//                field.setAccessible(false);
-//            } catch (NoSuchFieldException | IllegalAccessException ignored) {
-//            }
-//        }
-//    }
-//
-//    public void done(MouseEvent mouseEvent) {
-//        changePain.setVisible(false);
-//        changePain.setDisable(true);
-//        mainPain.setDisable(false);
-//        image3.getParent().requestFocus();
-//        if (isCommander) {
-//            String toRegex = "select leader " + name.getText();
-//            Matcher matcher = Pattern.compile(GameMenuRegex.SELECTLEADER.getRegex()).matcher(toRegex);
-//            matcher.matches();
-//            GameMenuController.selectLeader(matcher);
-//        } else {
-//            String toRegex = "select faction -f " + name.getText();
-//            Matcher matcher = Pattern.compile(GameMenuRegex.SELECTFACTION.getRegex()).matcher(toRegex);
-//            matcher.matches();
-//            GameMenuController.selectFaction(matcher);
-//            createCards();
-//
-//        }
-//        changeLabel();
-//    }
-//
-//    public void forward(MouseEvent mouseEvent) {
-//        if (selectedImage != changeArray.size() - 1) selectedImage++;
-//        setImageChange(selectedImage);
-//    }
-//
-//    public void backward(MouseEvent mouseEvent) {
-//        if (selectedImage != 0) selectedImage--;
-//        setImageChange(selectedImage);
-//    }
-//
-//    public void cancel(MouseEvent mouseEvent) {
-//    }
+    private Card selectBetweenCards(ArrayList<Card> arrayList) throws ExecutionException, InterruptedException {
+        changePain.setVisible(true);
+        changePain.setDisable(false);
+        mainPain.setDisable(true);
+        changeArray.clear();
+        selectedImage = -1;
+        for (Card c : arrayList) {
+            Image image = new Image("/Images/Soldiers/" + c.getUser().getFaction().getName() + "/" + c.getName() + ".jpg", 1, 1, "" + arrayList.indexOf(c));
+            image.setLayoutX(300 + 100 * arrayList.indexOf(c));
+            image.setLayoutY(500);
+            image.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent mouseEvent) {
+                    selectedImage = Integer.parseInt(((Image) mouseEvent.getSource()).getName());
+                }
+            });
+            changeArray.add(image);
+        }
+        for (Image i : changeArray){
+            SaveApplicationAsObject.getApplicationController().getPane().getChildren().add(i);
+        }
+
+        Task<Card> task = new Task<Card>() {
+            @Override
+            protected Card call() throws Exception {
+                while (selectedImage == -1) {
+                    Thread.sleep(100); // Wait until an item is selected
+                }
+                return arrayList.get(selectedImage);
+            }
+        };
+
+        new Thread(task).start();
+        System.out.println(task.get());
+
+        return task.getValue();
+    }
+
+
+    public static void removeCardFromHand(GameBoard gameBoard, Card card, int playerIndex) {
+
+    }
+
 
 
     public static Card showDiscardPileAndLetUserChoose(GameBoard gameBoard, int playerIndex) {
@@ -215,6 +210,11 @@ public class InGameMenu extends Application {
 
     public static void showSoldiersHp(GameBoard gameBoard, Soldier soldier, int shownHp) {
         // TODO: implement this, do use shownHp, it's different from soldier.getHp(), you may also use soldier.getShownHp()
+    }
+
+
+    private void refresh(){
+
     }
 
 

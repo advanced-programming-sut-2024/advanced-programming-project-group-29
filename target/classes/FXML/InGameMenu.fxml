@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.effect.BoxBlur?>
 <?import javafx.scene.effect.Shadow?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -232,11 +231,16 @@
                   <Image url="@../Images/icons/icon_leader_active.png" />
                </image>
             </ImageView>
+            <ImageView fitHeight="100.0" fitWidth="70.0" layoutX="1298.0" layoutY="701.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../Images/icons/deck_back_scoiatael.jpg" />
+               </image>
+            </ImageView>
          </children>
       </Pane>
-      <Pane fx:id="changePain" disable="true" layoutX="298.0" layoutY="82.0" prefHeight="699.0" prefWidth="1141.0" visible="false">
+      <Pane fx:id="changePain" layoutX="43.0" layoutY="82.0" prefHeight="699.0" prefWidth="1516.0">
          <children>
-            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#eed092" height="662.0" layoutX="22.0" layoutY="19.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="0.0" width="1097.0">
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#eed092" height="245.0" layoutX="56.0" layoutY="227.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="0.0" width="1405.0">
                <effect>
                   <Shadow height="60.0" radius="29.5" width="60.0">
                      <color>
@@ -245,52 +249,6 @@
                   </Shadow>
                </effect>
             </Rectangle>
-            <ImageView fx:id="image3" fitHeight="538.0" fitWidth="280.0" layoutX="430.0" layoutY="57.0" pickOnBounds="true" preserveRatio="true" />
-            <ImageView fx:id="image4" fitHeight="363.0" fitWidth="192.0" layoutX="739.0" layoutY="121.0" opacity="0.7" pickOnBounds="true" preserveRatio="true">
-               <effect>
-                  <BoxBlur />
-               </effect>
-            </ImageView>
-            <ImageView fx:id="image5" fitHeight="246.0" fitWidth="130.0" layoutX="958.0" layoutY="180.0" opacity="0.4" pickOnBounds="true" preserveRatio="true">
-               <effect>
-                  <BoxBlur height="8.0" width="8.0" />
-               </effect>
-            </ImageView>
-            <ImageView fx:id="image2" fitHeight="363.0" fitWidth="192.0" layoutX="211.0" layoutY="121.0" opacity="0.7" pickOnBounds="true" preserveRatio="true">
-               <effect>
-                  <BoxBlur />
-               </effect>
-            </ImageView>
-            <ImageView fx:id="image1" fitHeight="246.0" fitWidth="130.0" layoutX="57.0" layoutY="180.0" opacity="0.4" pickOnBounds="true" preserveRatio="true">
-               <effect>
-                  <BoxBlur height="8.0" width="8.0" />
-               </effect>
-            </ImageView>
-            <ImageView fitHeight="53.0" fitWidth="43.0" layoutX="102.0" layoutY="574.0" onMouseClicked="#backward" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../Images/icons/cursur.png" />
-               </image>
-            </ImageView>
-            <ImageView fitHeight="53.0" fitWidth="43.0" layoutX="1003.0" layoutY="574.0" onMouseClicked="#forward" pickOnBounds="true" preserveRatio="true" rotate="180.0">
-               <image>
-                  <Image url="@../Images/icons/cursur.png" />
-               </image>
-            </ImageView>
-            <Label fx:id="name" alignment="CENTER" layoutX="193.0" layoutY="601.0" prefHeight="66.0" prefWidth="755.0" text="name" textFill="#dea543">
-               <font>
-                  <Font name="System Bold" size="30.0" />
-               </font>
-            </Label>
-            <ImageView fitHeight="43.0" fitWidth="54.0" layoutX="95.0" layoutY="54.0" onMouseClicked="#done" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../Images/icons/checkMark.png" />
-               </image>
-            </ImageView>
-            <ImageView fitHeight="43.0" fitWidth="54.0" layoutX="1002.0" layoutY="54.0" onMouseClicked="#cancel" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../Images/icons/cancel.png" />
-               </image>
-            </ImageView>
          </children>
       </Pane>
    </children>
