@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.effect.Shadow?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -215,6 +216,13 @@
                <image>
                   <Image url="@../Images/Raw/Realms/Dethmold.jpg" />
                </image>
+               <effect>
+                  <DropShadow blurType="GAUSSIAN" spread="0.63">
+                     <color>
+                        <Color red="1.0" green="1.0" blue="1.0" />
+                     </color>
+                  </DropShadow>
+               </effect>
             </ImageView>
             <ImageView fx:id="leader2" fitHeight="108.0" fitWidth="77.0" layoutX="120.0" layoutY="68.0" pickOnBounds="true" preserveRatio="true">
                <image>
@@ -244,6 +252,29 @@
                   </Shadow>
                </effect>
             </Rectangle>
+         </children>
+      </Pane>
+      <Pane fx:id="descriptionPain" disable="true" layoutX="1202.0" layoutY="32.0" prefHeight="821.0" prefWidth="390.0" visible="false">
+         <children>
+            <ImageView fx:id="imageWhenSelected" fitHeight="570.0" fitWidth="289.0" layoutX="76.0" layoutY="30.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../Images/Soldiers/Realms/Dandelion.jpg" />
+               </image>
+            </ImageView>
+            <Rectangle fx:id="darkBackDescription" arcHeight="5.0" arcWidth="5.0" fill="#eed092" height="207.0" layoutX="76.0" layoutY="584.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="0.0" width="289.0">
+               <effect>
+                  <Shadow height="60.0" radius="29.5" width="60.0">
+                     <color>
+                        <Color red="0.07000000029802322" green="0.048661667853593826" blue="0.028699999675154686" />
+                     </color>
+                  </Shadow>
+               </effect>
+            </Rectangle>
+            <Label fx:id="description" alignment="TOP_LEFT" layoutX="109.0" layoutY="611.0" prefHeight="91.0" prefWidth="215.0" text="description" textFill="#dea543" textOverrun="CLIP" wrapText="true">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Label>
          </children>
       </Pane>
    </children>

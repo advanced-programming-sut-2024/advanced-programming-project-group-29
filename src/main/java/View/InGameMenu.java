@@ -23,8 +23,10 @@ import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import Enum.Attribute;
 
 import java.io.File;
 import java.lang.reflect.Field;
@@ -44,7 +46,7 @@ public class InGameMenu extends Application {
     private final double Y_POSITION_HAND = 704;
     private final double CARD_WIDTH = 70;
     private final double CARD_HEIGHT = 100;
-    private final double SPACING = 3;
+    private final double SPACING = 5;
 
     public Pane row11;
     public Pane row12;
@@ -74,7 +76,9 @@ public class InGameMenu extends Application {
     public Label score11;
     public Label remainsDeck2;
     public Label remainsDeck1;
-    public Pane mainPain;
+    public ImageView imageWhenSelected;
+    public Label description;
+    public Rectangle darkBackDescription;
 
     private ArrayList<CardView> hand1 = new ArrayList<>();
     private ArrayList<CardView> hand2 = new ArrayList<>();
@@ -89,18 +93,26 @@ public class InGameMenu extends Application {
     private ArrayList<CardView> row_22 = new ArrayList<>();
     private ArrayList<CardView> row_23 = new ArrayList<>();
 
+    public Pane mainPain;
     public Pane changePain;
-    private ArrayList<Image> changeArray = new ArrayList<>();
-    private volatile int selectedImage;
+    public Pane descriptionPain;
 
+    private final ArrayList<Image> changeArray = new ArrayList<>();
+    private int selectedImage = -1;
 
     private InGameMenuController inGameMenuController;
-
     private GameBoard gameBoard;
+
 
     @FXML
     public void initialize() {
-
+        mainPain.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                mainPain.requestFocus();
+            }
+        });
+        SaveApplicationAsObject.getApplicationController().setMenu(this);
     }
 
     @Override
@@ -113,7 +125,7 @@ public class InGameMenu extends Application {
         stage.show();
         int n = ApplicationController.getCurrentUser().getDeck().size();
         for (int i = 0; i < n; i++) {
-            pane.getChildren().add(new CardView(ApplicationController.getCurrentUser().getDeck().get(i), getXPosition(i, n,false), Y_POSITION_HAND));
+            pane.getChildren().add(new CardView(ApplicationController.getCurrentUser().getDeck().get(i), getXPosition(i, n, false), Y_POSITION_HAND));
         }
         SaveApplicationAsObject.getApplicationController().setPane(pane);
     }
@@ -126,49 +138,57 @@ public class InGameMenu extends Application {
         this.inGameMenuController = inGameMenuController;
     }
 
+    public void selectBeforeMove(Card card) {
+        String describe = card.getInformation();
+        int n = (int) (describe.length() / 30) + 1;
+        darkBackDescription.setHeight(50 + n * 22);
+        description.setPrefHeight(n * 22);
+        description.setText(describe);
+        imageWhenSelected.setImage(new javafx.scene.image.Image("/Images/Soldiers/" + card.getUser().getFaction().getName() + "/" + card.getName() + ".jpg"));
+        descriptionPain.setVisible(true);
+        descriptionPain.setDisable(false);
+    }
 
-    private Card selectBetweenCards(ArrayList<Card> arrayList) throws ExecutionException, InterruptedException {
-//        changePain.setVisible(true);
-//        changePain.setDisable(false);
-//        mainPain.setDisable(true);
-//        changeArray.clear();
-//        selectedImage = -1;
-//        for (Card c : arrayList) {
-//            Image image = new Image("/Images/Soldiers/" + c.getUser().getFaction().getName() + "/" + c.getName() + ".jpg", 1, 1, "" + arrayList.indexOf(c));
-//            image.setLayoutX(300 + 100 * arrayList.indexOf(c));
-//            image.setLayoutY(500);
-//            image.setOnMouseClicked(new EventHandler<MouseEvent>() {
-//                @Override
-//                public void handle(MouseEvent mouseEvent) {
-//                    selectedImage = Integer.parseInt(((Image) mouseEvent.getSource()).getName());
-//                }
-//            });
-//            changeArray.add(image);
-//        }
-//        for (Image i : changeArray) {
-//            SaveApplicationAsObject.getApplicationController().getPane().getChildren().add(i);
-//        }
-//
-//        Task<Card> task = new Task<Card>() {
-//            @Override
-//            protected Card call() throws Exception {
-//                while (selectedImage == -1) {
-//                    Thread.sleep(100); // Wait until an item is selected
-//                }
-//                return arrayList.get(selectedImage);
-//            }
-//        };
-//
-//        new Thread(task).start();
-//        System.out.println(task.get());
-//
-//        return task.getValue();
-        //TODO implement this
-        return null;
+    public void deselectBeforeMove() {
+        descriptionPain.setVisible(false);
+        descriptionPain.setDisable(true);
+    }
+
+
+    private void selectBetweenCards(ArrayList<Card> arrayList) {
+        changePain.setVisible(true);
+        changePain.setDisable(false);
+        mainPain.setDisable(true);
+        changeArray.clear();
+        for (Card c : arrayList) {
+            Image image = new Image("/Images/Soldiers/" + c.getUser().getFaction().getName() + "/" + c.getName() + ".jpg", 1, 1, "" + arrayList.indexOf(c));
+            image.setLayoutX(300 + 100 * arrayList.indexOf(c));
+            image.setLayoutY(500);
+            //TODO width and height and other things
+            image.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent mouseEvent) {
+                    selectedImage = Integer.parseInt(((Image) mouseEvent.getSource()).getName());
+                    //TODO implement next function
+                }
+            });
+            changeArray.add(image);
+        }
+        for (Image img : changeArray) {
+            changePain.getChildren().add(img);
+        }
     }
 
 
     public static void removeCardFromHand(GameBoard gameBoard, Card card, int playerIndex) {
+
+    }
+
+    public static void moveSoldier(Soldier soldier, int playerNumber, int rowNumber) {
+
+    }
+
+    public static void moveDiscardPileToDeck(User user) {
 
     }
 

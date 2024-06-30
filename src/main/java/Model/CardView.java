@@ -1,6 +1,8 @@
 package Model;
 
+import Controller.SaveApplicationAsObject;
 import View.Animations.FlipCardAnimation;
+import View.InGameMenu;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Point3D;
@@ -37,6 +39,7 @@ public class CardView extends Pane {
     private final boolean isSoldier;
     private boolean isUp = false;
     private boolean isSelected = false;
+    private boolean isInHand = true;
 
 
     public CardView(Card card, double x, double y) {
@@ -107,7 +110,7 @@ public class CardView extends Pane {
         super.rotateProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observableValue, Number number, Number t1) {
-                if (Math.cos(Math.toRadians((double) number)) <= 0){
+                if (Math.cos(Math.toRadians((double) number)) <= 0) {
                     background.setImage(back);
                     items.setVisible(false);
                 } else {
@@ -117,18 +120,34 @@ public class CardView extends Pane {
             }
         });
         super.setOnMouseEntered(e -> {
-            goUp();
+            if (isInHand && !isUp){
+                goUp();
+                super.setStyle("-fx-effect: dropshadow(gaussian, rgb(222, 165, 107, 1), 15, 0.7, 0, 0);");
+            }
         });
         super.setOnMouseExited(e -> {
-            goDown();
+            if (isInHand && isUp){
+                goDown();
+                super.setStyle(null);
+            }
         });
         super.setOnMouseClicked(e -> {
-            new FlipCardAnimation(this,1298,701,true,true).play();
+            if (isInHand) super.requestFocus();
+        });
+        super.focusedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observableValue, Boolean aBoolean, Boolean t1) {
+                if (t1) {
+                    ((InGameMenu) SaveApplicationAsObject.getApplicationController().getMenu()).selectBeforeMove(card);
+                } else {
+                    ((InGameMenu) SaveApplicationAsObject.getApplicationController().getMenu()).deselectBeforeMove();
+                }
+            }
         });
     }
 
     private ImageView getImageViewAbilitySpells(Spell card) {
-        ImageView power = switch (card.getName()) {
+        return switch (card.getName()) {
             case "Biting Frost" -> new ImageView("/Images/icons/power_frost.png");
             case "Impenetrable fog" -> new ImageView("/Images/icons/power_fog.png");
             case "Torrential Rain" -> new ImageView("/Images/icons/power_rain.png");
@@ -140,7 +159,6 @@ public class CardView extends Pane {
             case "Mardroeme" -> new ImageView("/Images/icons/power_mardroeme.png");
             default -> new ImageView();
         };
-        return power;
     }
 
     private static ImageView getImageViewType(Soldier card) {
@@ -195,10 +213,6 @@ public class CardView extends Pane {
         return path;
     }
 
-    public ImageView getBackGround() {
-        return background;
-    }
-
     public boolean isSelected() {
         return isSelected;
     }
@@ -213,10 +227,12 @@ public class CardView extends Pane {
 
     private void goUp() {
         this.setLayoutY(this.getLayoutY() - 12);
+        this.isUp = true;
     }
 
     private void goDown() {
         this.setLayoutY(this.getLayoutY() + 12);
+        this.isUp = false;
     }
 
     private void glow(boolean isGlowing) {
