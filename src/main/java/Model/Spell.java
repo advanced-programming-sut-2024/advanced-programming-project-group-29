@@ -47,6 +47,26 @@ public class Spell extends Card {
         return spell.remains;
     }
 
+    public static Spell getRandomWeatherCard(User user) {
+        ArrayList<String> weatherCards = new ArrayList<>();
+        for (String cardName : Card.getAllCardNames()) {
+            if (isSpell(cardName) && getIfThisSpellIsWeather(cardName))
+                weatherCards.add(cardName);
+        }
+        int randomIndex = (int) (Math.random() * weatherCards.size());
+        return new Spell(weatherCards.get(randomIndex), user);
+    }
+
+    public static Spell getRandomSpecialCard(User user) {
+        ArrayList<String> specialCards = new ArrayList<>();
+        for (String cardName : Card.getAllCardNames()) {
+            if (isSpell(cardName) && !getIfThisSpellIsWeather(cardName))
+                specialCards.add(cardName);
+        }
+        int randomIndex = (int) (Math.random() * specialCards.size());
+        return new Spell(specialCards.get(randomIndex), user);
+    }
+
     @Override
     public void executeAction() {
         String name = this.getName().toLowerCase();

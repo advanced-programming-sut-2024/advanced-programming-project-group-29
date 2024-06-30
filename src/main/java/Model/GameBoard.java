@@ -225,4 +225,13 @@ public class GameBoard {
             scoreSum += soldier.getShownHp();
         return scoreSum;
     }
+
+    public Soldier getRandomSoldier(User user) {
+        int playerIndex = getPlayerNumber(user);
+        ArrayList<Soldier> soldiers = new ArrayList<>();
+        for (int i = 0; i < 3; i++) {
+            soldiers.addAll(rows[playerIndex][i]);
+        }
+        return soldiers.get((int) (Math.random() * soldiers.size()));
+    }
 }

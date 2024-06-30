@@ -137,6 +137,29 @@ public abstract class Card {
         return true;
     }
 
+    protected static ArrayList<String> getAllCardNames() {
+        ArrayList<String> cardNames = new ArrayList<>();
+        try {
+            URI uri = Card.class.getResource("/JSON/allCards.json").toURI();
+            String content = new String(Files.readAllBytes(Paths.get(uri)));
+            JSONObject allCards = new JSONObject(content);
+            Iterator<String> keys = allCards.keys();
+            while (keys.hasNext()) {
+                String key = keys.next();
+                JSONArray jsonArray = allCards.getJSONArray(key);
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject card = jsonArray.getJSONObject(i);
+                    cardNames.add(card.getString("name"));
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
+        return cardNames;
+    }
+
     public String getDescription() {
         return description;
     }

@@ -12,8 +12,11 @@ public class Commander extends Card {
 
     public Commander(String name, User user) {
         super(name, user);
-        if (name.equals("King Bran")) hasAction = false;
-        if (name.equals("Daisy of the Valley")) hasAction = false;
+        hasAction = !hasPassiveAbility();
+    }
+
+    public boolean hasPassiveAbility() {
+        return this.getName().equals("King Bran") || this.getName().equals("Daisy of the Valley");
     }
 
     private Runnable getExecuteActionByCommanderName(String commanderName) {

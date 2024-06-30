@@ -74,6 +74,16 @@ public class Soldier extends Card {
         return true;
     }
 
+    public static Soldier getRandomCard(User user) {
+        ArrayList<String> soldiers = new ArrayList<>();
+        for (String cardName : Card.getAllCardNames()) {
+            if (isSoldier(cardName))
+                soldiers.add(cardName);
+        }
+        int randomIndex = (int) (Math.random() * soldiers.size());
+        return new Soldier(soldiers.get(randomIndex), user);
+    }
+
 
     public Attribute getAttribute() {
         return attribute;
