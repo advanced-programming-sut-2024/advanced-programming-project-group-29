@@ -20,7 +20,7 @@
       <Pane fx:id="mainPain" layoutX="1.0" prefHeight="900.0" prefWidth="1598.0">
          <children>
             <Pane fx:id="row11" layoutX="470.0" layoutY="588.0" prefHeight="100.0" prefWidth="795.0" />
-            <Pane fx:id="row12" layoutX="448.0" layoutY="476.0" prefHeight="100.0" prefWidth="795.0" />
+            <Pane fx:id="row12" layoutX="470.0" layoutY="474.0" prefHeight="100.0" prefWidth="795.0" />
             <Pane fx:id="row13" layoutX="470.0" layoutY="362.0" prefHeight="100.0" prefWidth="795.0" />
             <Pane fx:id="row23" layoutX="470.0" layoutY="237.0" prefHeight="100.0" prefWidth="795.0" />
             <Pane fx:id="row22" layoutX="470.0" layoutY="124.0" prefHeight="100.0" prefWidth="795.0" />
@@ -231,14 +231,9 @@
                   <Image url="@../Images/icons/icon_leader_active.png" />
                </image>
             </ImageView>
-            <ImageView fitHeight="100.0" fitWidth="70.0" layoutX="1298.0" layoutY="701.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../Images/icons/deck_back_scoiatael.jpg" />
-               </image>
-            </ImageView>
          </children>
       </Pane>
-      <Pane fx:id="changePain" layoutX="43.0" layoutY="82.0" prefHeight="699.0" prefWidth="1516.0">
+      <Pane fx:id="changePain" disable="true" layoutX="43.0" layoutY="82.0" prefHeight="699.0" prefWidth="1516.0" visible="false">
          <children>
             <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#eed092" height="245.0" layoutX="56.0" layoutY="227.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="0.0" width="1405.0">
                <effect>

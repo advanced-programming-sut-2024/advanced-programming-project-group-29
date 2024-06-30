@@ -113,7 +113,7 @@ public class InGameMenu extends Application {
         stage.show();
         int n = ApplicationController.getCurrentUser().getDeck().size();
         for (int i = 0; i < n; i++) {
-            pane.getChildren().add(new CardView(ApplicationController.getCurrentUser().getDeck().get(i), getXPosition(i, n), Y_POSITION_HAND));
+            pane.getChildren().add(new CardView(ApplicationController.getCurrentUser().getDeck().get(i), getXPosition(i, n,false), Y_POSITION_HAND));
         }
         SaveApplicationAsObject.getApplicationController().setPane(pane);
     }
@@ -126,65 +126,51 @@ public class InGameMenu extends Application {
         this.inGameMenuController = inGameMenuController;
     }
 
-    private double getXPosition(int i, int n) {
-        if ((n * CARD_WIDTH + (n - 1) * SPACING) > (X_POSITION_HAND_RIGHT - X_POSITION_HAND_LEFT)) {
-            double xFirst = X_POSITION_HAND_LEFT;
-            for (int j = 0; j < i; j++) {
-                xFirst += (X_POSITION_HAND_RIGHT - X_POSITION_HAND_LEFT - CARD_WIDTH) / (n - 1);
-            }
-            return xFirst;
-        } else {
-            double xFirst = (((X_POSITION_HAND_RIGHT - X_POSITION_HAND_LEFT) - (n * CARD_WIDTH + (n - 1) * SPACING)) / 2) + X_POSITION_HAND_LEFT;
-            for (int j = 0; j < i; j++) {
-                xFirst += CARD_WIDTH + SPACING;
-            }
-            return xFirst;
-        }
-    }
 
     private Card selectBetweenCards(ArrayList<Card> arrayList) throws ExecutionException, InterruptedException {
-        changePain.setVisible(true);
-        changePain.setDisable(false);
-        mainPain.setDisable(true);
-        changeArray.clear();
-        selectedImage = -1;
-        for (Card c : arrayList) {
-            Image image = new Image("/Images/Soldiers/" + c.getUser().getFaction().getName() + "/" + c.getName() + ".jpg", 1, 1, "" + arrayList.indexOf(c));
-            image.setLayoutX(300 + 100 * arrayList.indexOf(c));
-            image.setLayoutY(500);
-            image.setOnMouseClicked(new EventHandler<MouseEvent>() {
-                @Override
-                public void handle(MouseEvent mouseEvent) {
-                    selectedImage = Integer.parseInt(((Image) mouseEvent.getSource()).getName());
-                }
-            });
-            changeArray.add(image);
-        }
-        for (Image i : changeArray){
-            SaveApplicationAsObject.getApplicationController().getPane().getChildren().add(i);
-        }
-
-        Task<Card> task = new Task<Card>() {
-            @Override
-            protected Card call() throws Exception {
-                while (selectedImage == -1) {
-                    Thread.sleep(100); // Wait until an item is selected
-                }
-                return arrayList.get(selectedImage);
-            }
-        };
-
-        new Thread(task).start();
-        System.out.println(task.get());
-
-        return task.getValue();
+//        changePain.setVisible(true);
+//        changePain.setDisable(false);
+//        mainPain.setDisable(true);
+//        changeArray.clear();
+//        selectedImage = -1;
+//        for (Card c : arrayList) {
+//            Image image = new Image("/Images/Soldiers/" + c.getUser().getFaction().getName() + "/" + c.getName() + ".jpg", 1, 1, "" + arrayList.indexOf(c));
+//            image.setLayoutX(300 + 100 * arrayList.indexOf(c));
+//            image.setLayoutY(500);
+//            image.setOnMouseClicked(new EventHandler<MouseEvent>() {
+//                @Override
+//                public void handle(MouseEvent mouseEvent) {
+//                    selectedImage = Integer.parseInt(((Image) mouseEvent.getSource()).getName());
+//                }
+//            });
+//            changeArray.add(image);
+//        }
+//        for (Image i : changeArray) {
+//            SaveApplicationAsObject.getApplicationController().getPane().getChildren().add(i);
+//        }
+//
+//        Task<Card> task = new Task<Card>() {
+//            @Override
+//            protected Card call() throws Exception {
+//                while (selectedImage == -1) {
+//                    Thread.sleep(100); // Wait until an item is selected
+//                }
+//                return arrayList.get(selectedImage);
+//            }
+//        };
+//
+//        new Thread(task).start();
+//        System.out.println(task.get());
+//
+//        return task.getValue();
+        //TODO implement this
+        return null;
     }
 
 
     public static void removeCardFromHand(GameBoard gameBoard, Card card, int playerIndex) {
 
     }
-
 
 
     public static Card showDiscardPileAndLetUserChoose(GameBoard gameBoard, int playerIndex) {
@@ -212,10 +198,39 @@ public class InGameMenu extends Application {
         // TODO: implement this, do use shownHp, it's different from soldier.getHp(), you may also use soldier.getShownHp()
     }
 
-
-    private void refresh(){
-
+    private double getXPosition(int i, int n, boolean row) {
+        double dX = (row ? (X_POSITION_ROW_RIGHT - X_POSITION_ROW_LEFT) : (X_POSITION_HAND_RIGHT - X_POSITION_HAND_LEFT));
+        double rX = n * CARD_WIDTH + (n - 1) * SPACING;
+        double xFirst;
+        if (rX > dX) {
+            xFirst = (row ? X_POSITION_ROW_LEFT : X_POSITION_HAND_LEFT);
+            for (int j = 0; j < i; j++) {
+                xFirst += (dX - CARD_WIDTH) / (n - 1);
+            }
+        } else {
+            xFirst = ((dX - rX) / 2) + (row ? X_POSITION_ROW_LEFT : X_POSITION_HAND_LEFT);
+            for (int j = 0; j < i; j++) {
+                xFirst += CARD_WIDTH + SPACING;
+            }
+        }
+        return xFirst;
     }
 
+    private void refreshCardArrays(Pane pane, ArrayList<CardView> array, boolean row, double yPosition) {
+        int n = array.size();
+        for (CardView c : array) {
+            pane.getChildren().remove(c);
+        }
+        for (int i = 0; i < n; i++) {
+            array.get(i).setPos(getXPosition(i, n, row), yPosition);
+            pane.getChildren().add(array.get(i));
+        }
+    }
 
+    private void refresh() {
+        Pane pane = SaveApplicationAsObject.getApplicationController().getPane();
+        refreshCardArrays(pane, hand1, false, Y_POSITION_HAND);
+        refreshCardArrays(pane, hand2, false, Y_POSITION_HAND);
+        //TODO other arrays
+    }
 }

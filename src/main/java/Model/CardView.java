@@ -22,6 +22,7 @@ import javafx.scene.text.FontWeight;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
+import java.util.Random;
 
 public class CardView extends Pane {
     private ArrayList<CardView> allCardView = new ArrayList<>();
@@ -122,7 +123,7 @@ public class CardView extends Pane {
             goDown();
         });
         super.setOnMouseClicked(e -> {
-//            new FlipCardAnimation(this,1298,701).play();
+            new FlipCardAnimation(this,1298,701,true,true).play();
         });
     }
 
@@ -225,5 +226,10 @@ public class CardView extends Pane {
         } else {
             background.setEffect(null);
         }
+    }
+
+    public void setPos(double x, double y) {
+        this.setLayoutX(x);
+        this.setLayoutY(y);
     }
 }
