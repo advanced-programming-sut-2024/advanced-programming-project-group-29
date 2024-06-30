@@ -32,6 +32,11 @@ public class InGameMenuController extends Thread {
         InGameMenu.addCardToHand(gameBoard, card, playerIndex);
     }
 
+    public static void removeCardFromHand(GameBoard gameBoard, Card card, int playerIndex) {
+        gameBoard.getPlayers()[playerIndex].getHand().remove(card);
+        InGameMenu.removeCardFromHand(gameBoard, card, playerIndex);
+    }
+
     public static void changeThisCardInGraphic(GameBoard gameBoard, Soldier thisCard, Soldier anotherCard) {
         InGameMenu.changeThisCardInGraphic(gameBoard, thisCard, anotherCard);
     }
@@ -58,6 +63,28 @@ public class InGameMenuController extends Thread {
 
     public static void removeAllWeatherInGraphic(GameBoard gameBoard) {
         // TODO: implement this
+    }
+
+    public static void moveDiscardPileToDeck(User user) {
+        ArrayList<Card> discardPile = user.getDiscardPile();
+        user.getDeck().addAll(discardPile);
+        user.getDiscardPile().clear();
+        InGameMenu.moveDiscardPileToDeck(user);
+    }
+
+    public static void moveSoldier(Soldier soldier, int playerNumber, int rowNumber) {
+        GameBoard gameBoard = soldier.getGameBoard();
+        int previousRowNumber = Soldier.getPlacedRowNumber(soldier, gameBoard);
+        if (previousRowNumber == rowNumber)
+            return;
+        gameBoard.getRows()[playerNumber][previousRowNumber].remove(soldier);
+        gameBoard.getRows()[playerNumber][rowNumber].add(soldier);
+        InGameMenu.moveSoldier(soldier, playerNumber, rowNumber);
+    }
+
+    public static Card showAndSelectCard(GameBoard gameBoard, ArrayList<Card> options) {
+        //TODO
+        return null;
     }
 
     private void changeCurrentUser() {

@@ -1,9 +1,8 @@
 package Model;
 
-import Controller.ApplicationController;
-import Controller.GameMenuController;
 import Controller.InGameMenuController;
 import Enum.Attribute;
+import Enum.Type;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -14,6 +13,7 @@ public class Commander extends Card {
     public Commander(String name, User user) {
         super(name, user);
         if (name.equals("King Bran")) hasAction = false;
+        if (name.equals("Daisy of the Valley")) hasAction = false;
     }
 
     private Runnable getExecuteActionByCommanderName(String commanderName) {
@@ -35,7 +35,6 @@ public class Commander extends Card {
             case "The Treacherous" -> this::theTreacherous;
             case "Queen of Dol Blathanna" -> this::queenOfDolBlathanna;
             case "The Beautiful" -> this::theBeautiful;
-            case "Daisy of the Valley" -> this::daisyOfTheValley;
             case "Pureblood Elf" -> this::purebloodElf;
             case "Hope of the Aen Seidhe" -> this::hopeOfTheAenSeidhe;
             case "Crach an Craite" -> this::crachAnCraite;
@@ -75,9 +74,9 @@ public class Commander extends Card {
     }
 
     private void kingOfTemeria() {
-        for (int playerNumber = 0; playerNumber < 2; playerNumber++)
-            if (!gameBoard.isThereAnyCommendersHornInRow(playerNumber, 2))
-                Card.executeCommanderHornForRowNumber(this.gameBoard, playerNumber, 2);
+        int playerNumber = this.gameBoard.getPlayerNumber(this.user);
+        if (!gameBoard.isThereAnyCommendersHornInRow(playerNumber, 2))
+            Card.executeCommanderHornForRowNumber(this.gameBoard, playerNumber, 2);
     }
 
     private void lordCommanderOfTheNorth() {
@@ -95,11 +94,37 @@ public class Commander extends Card {
     }
 
     private void crachAnCraite() {
-        //TODO
+        InGameMenuController.moveDiscardPileToDeck(this.user);
+        InGameMenuController.moveDiscardPileToDeck(this.user.getOpponent());
     }
 
     private void hopeOfTheAenSeidhe() {
-        //TODO
+        int[] betterRowNumber = new int[2];
+        if (this.gameBoard.rowHasWeather(0)){
+            betterRowNumber[0] = 1;
+            betterRowNumber[1] = 1;
+        }
+        else if (this.gameBoard.rowHasWeather(1)){
+            betterRowNumber[0] = 0;
+            betterRowNumber[1] = 2;
+        }
+        else {
+            for (int playerNumber = 0; playerNumber < 2; playerNumber++) {
+                if (this.gameBoard.isThereAnyCommendersHornInRow(playerNumber, 0))
+                    betterRowNumber[playerNumber] = 0;
+                else
+                    betterRowNumber[playerNumber] = 1;
+            }
+        }
+        for (int playerNumber = 0; playerNumber < 2; playerNumber++) {
+            for (int rowNumber = 0; rowNumber < 2; rowNumber++) {
+                if (rowNumber == betterRowNumber[playerNumber]) continue;
+                for (Soldier soldier : this.gameBoard.getRows()[playerNumber][rowNumber]) {
+                    if (soldier.type == Type.AGILE)
+                        InGameMenuController.moveSoldier(soldier, playerNumber, betterRowNumber[playerNumber]);
+                }
+            }
+        }
     }
 
     private void purebloodElf() {
@@ -114,14 +139,10 @@ public class Commander extends Card {
         InGameMenuController.addWeather((Spell) selectedCard);
     }
 
-    private void daisyOfTheValley() {
-        //TODO
-    }
-
     private void theBeautiful() {
-        for (int playerNumber = 0; playerNumber < 2; playerNumber++)
-            if (!gameBoard.isThereAnyCommendersHornInRow(playerNumber, 1))
-                Card.executeCommanderHornForRowNumber(this.gameBoard, playerNumber, 1);
+        int playerNumber = this.gameBoard.getPlayerNumber(this.user);
+        if (!gameBoard.isThereAnyCommendersHornInRow(playerNumber, 1))
+            Card.executeCommanderHornForRowNumber(this.gameBoard, playerNumber, 1);
     }
 
     private void queenOfDolBlathanna() {
@@ -152,11 +173,27 @@ public class Commander extends Card {
     }
 
     private void commanderOfTheRedRiders() {
-        //TODO
+        ArrayList<Card> options = new ArrayList<>();
+        for (Card card : this.user.getDeck()) {
+            if (card instanceof Spell) {
+                if (((Spell) card).isWeather())
+                    options.add(card);
+            }
+        }
+        if (options.isEmpty()) return;
+        Card selectedCard = InGameMenuController.showAndSelectCard(gameBoard, options);
+        InGameMenuController.addWeather((Spell) selectedCard);
+        user.getDeck().remove(selectedCard);
     }
 
     private void destroyerOfWorlds() {
-        //TODO
+        Card[] removedCards = new Card[2];
+        for (int i = 0; i < 2; i++) {
+            removedCards[i] = InGameMenuController.showAndSelectCard(gameBoard, user.getHand());
+            InGameMenuController.removeCardFromHand(gameBoard, removedCards[i], gameBoard.getPlayerNumber(user));
+        }
+        Card card = InGameMenuController.showAndSelectCard(gameBoard, user.getDeck());
+        InGameMenuController.addCardToHand(gameBoard, card, gameBoard.getPlayerNumber(user));
     }
 
     private void kingOfTheWildHunt() {
@@ -167,9 +204,9 @@ public class Commander extends Card {
     }
 
     private void bringerOfDeath() {
-        for (int playerNumber = 0; playerNumber < 2; playerNumber++)
-            if (!gameBoard.isThereAnyCommendersHornInRow(playerNumber, 0))
-                Card.executeCommanderHornForRowNumber(this.gameBoard, playerNumber, 0);
+        int playerNumber = this.gameBoard.getPlayerNumber(this.user);
+        if (!gameBoard.isThereAnyCommendersHornInRow(playerNumber, 0))
+            Card.executeCommanderHornForRowNumber(this.gameBoard, playerNumber, 0);
     }
 
     private void invaderOfTheNorth() {
