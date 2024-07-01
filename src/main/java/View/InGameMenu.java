@@ -1,10 +1,8 @@
 package View;
 
-import Controller.ApplicationController;
-import Controller.GameMenuController;
-import Controller.InGameMenuController;
-import Controller.SaveApplicationAsObject;
+import Controller.*;
 import Model.*;
+import Enum.*;
 import Regex.GameMenuRegex;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -18,12 +16,18 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import Enum.Attribute;
@@ -79,6 +83,10 @@ public class InGameMenu extends Application {
     public ImageView imageWhenSelected;
     public Label description;
     public Rectangle darkBackDescription;
+    public Text result;
+    public TextField cheatCode;
+    public Button cheatCodeDone;
+    public Pane cheatPane;
 
     private ArrayList<CardView> hand1 = new ArrayList<>();
     private ArrayList<CardView> hand2 = new ArrayList<>();
@@ -106,6 +114,14 @@ public class InGameMenu extends Application {
 
     @FXML
     public void initialize() {
+        mainPain.requestFocus();
+        mainPain.setOnKeyPressed(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent event) {
+                if(event.getCode() == KeyCode.COMMAND)
+                    showCheatMenu();
+            }
+        });
         mainPain.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
@@ -247,10 +263,53 @@ public class InGameMenu extends Application {
         }
     }
 
+    private void showCheatMenu() {
+        cheatPane.setVisible(true);
+        cheatPane.setDisable(false);
+        cheatPane.requestFocus();
+        result.setVisible(false);
+        cheatCode.setText("");
+        mainPain.setDisable(true);
+    }
+
+    @FXML
+    private void processCheatCode(){
+        String cheatCodeString = this.cheatCode.getText();
+        CheatCode cheatCode = CheatCode.getMatchedCheadCode(cheatCodeString);
+        if(cheatCode == null) {
+            showErrorInCheatMenu();
+            return;
+        }
+        showSuccessfulCheatCode();
+        CheatMenuController.applyCheatCode(cheatCode);
+    }
+
+    private void showSuccessfulCheatCode() {
+        result.setVisible(true);
+        result.setFill(Paint.valueOf("#008000"));
+        result.setText("Cheat code applied!");
+    }
+
+    private void showErrorInCheatMenu() {
+        result.setVisible(true);
+        result.setFill(Paint.valueOf("#FF0000"));
+        result.setText("Cheat code isn't valid!");
+    }
+
+
     private void refresh() {
         Pane pane = SaveApplicationAsObject.getApplicationController().getPane();
         refreshCardArrays(pane, hand1, false, Y_POSITION_HAND);
         refreshCardArrays(pane, hand2, false, Y_POSITION_HAND);
         //TODO other arrays
+    }
+
+    public void exitCheatPane(KeyEvent keyEvent) {
+        if(keyEvent.getCode() == KeyCode.ESCAPE){
+            mainPain.setDisable(false);
+            cheatPane.setVisible(false);
+            cheatPane.setDisable(true);
+            mainPain.requestFocus();
+        }
     }
 }

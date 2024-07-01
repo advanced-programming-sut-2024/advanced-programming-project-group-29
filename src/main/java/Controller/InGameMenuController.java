@@ -246,6 +246,26 @@ public class InGameMenuController extends Thread {
         return new Result(true);
     }
 
+    private static Commander getCommander(){
+        User user = ApplicationController.getCurrentUser();
+        GameBoard gameBoard = user.getCurrentGameBoard();
+        int playerIndex = gameBoard.getPlayerNumber(user);
+        Commander commander = gameBoard.getPlayerLeader(playerIndex);
+        return commander;
+    }
+
+    public static Result showCommander(){
+        return new Result(true, getCommander().getName());
+    }
+
+    public static Result playCommanderPower(){
+        Commander commander = getCommander();
+        commander.executeAction();
+        return new Result(true);
+    }
+
+
+
     public static void addWeather(Spell spell){
         if(spell == null)
             return;

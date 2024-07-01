@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.effect.Shadow?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -10,8 +11,9 @@
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="900.0" prefWidth="1600.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.InGameMenu">
+<AnchorPane prefHeight="900.0" prefWidth="1600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.InGameMenu">
    <children>
       <ImageView fitHeight="900.0" fitWidth="1600.0" pickOnBounds="true" preserveRatio="true">
          <image>
@@ -216,13 +218,6 @@
                <image>
                   <Image url="@../Images/Raw/Realms/Dethmold.jpg" />
                </image>
-               <effect>
-                  <DropShadow blurType="GAUSSIAN" spread="0.63">
-                     <color>
-                        <Color red="1.0" green="1.0" blue="1.0" />
-                     </color>
-                  </DropShadow>
-               </effect>
             </ImageView>
             <ImageView fx:id="leader2" fitHeight="108.0" fitWidth="77.0" layoutX="120.0" layoutY="68.0" pickOnBounds="true" preserveRatio="true">
                <image>
@@ -239,6 +234,7 @@
                   <Image url="@../Images/icons/icon_leader_active.png" />
                </image>
             </ImageView>
+            <Pane layoutX="118.0" layoutY="372.0" prefHeight="120.0" prefWidth="230.0" />
          </children>
       </Pane>
       <Pane fx:id="changePain" disable="true" layoutX="43.0" layoutY="82.0" prefHeight="699.0" prefWidth="1516.0" visible="false">
@@ -275,6 +271,38 @@
                   <Font size="15.0" />
                </font>
             </Label>
+         </children>
+      </Pane>
+      <Pane fx:id="cheatPane" disable="true" layoutX="329.0" layoutY="179.0" onKeyPressed="#exitCheatPane" prefHeight="514.0" prefWidth="952.0" visible="false">
+         <children>
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#eed092" height="514.0" opacity="0.81" stroke="WHITE" strokeType="INSIDE" strokeWidth="0.0" width="955.0">
+               <effect>
+                  <Shadow height="60.0" radius="29.5" width="60.0">
+                     <color>
+                        <Color red="0.07000000029802322" green="0.048661667853593826" blue="0.028699999675154686" />
+                     </color>
+                  </Shadow>
+               </effect>
+            </Rectangle>
+            <Text fill="#f5f5f5" layoutX="342.0" layoutY="150.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Enter a cheat code 💀" textAlignment="CENTER" wrappingWidth="306.5648306343144">
+               <font>
+                  <Font name="System Bold" size="31.0" />
+               </font>
+            </Text>
+            <TextField fx:id="cheatCode" layoutX="388.0" layoutY="210.0" prefHeight="52.0" prefWidth="229.0" promptText="cheat code">
+               <font>
+                  <Font size="20.0" />
+               </font>
+            </TextField>
+            <Button fx:id="cheatCodeDone" layoutX="457.0" layoutY="289.0" mnemonicParsing="false" onMouseClicked="#processCheatCode" prefHeight="32.0" prefWidth="100.0" text="Done!">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Button>
+            <Text fx:id="result" fill="RED" layoutX="428.0" layoutY="382.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Error" textAlignment="CENTER" textOrigin="CENTER" wrappingWidth="156.38638813318676">
+               <font>
+                  <Font size="16.0" />
+               </font></Text>
          </children>
       </Pane>
    </children>

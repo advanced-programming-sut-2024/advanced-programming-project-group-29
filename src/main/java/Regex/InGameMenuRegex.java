@@ -9,6 +9,8 @@ public enum InGameMenuRegex {
     SPELLS_IN_PLAY("spells in play"),
     PLACE_CARD("place card (?<cardNumber>\\d+)( in row (?<rowNumber>\\d+))?"),
     PLACE_DECOY("place decoy (?<thisCardNumber>\\d+) (?<cardNumber>\\d+) in row (?<rowNumber>\\d+)"),
+    SHOW_COMMANDER("show commander"),
+    COMMANDER_POWER_PLAY("commander power play")
     ;
 
     String regex;

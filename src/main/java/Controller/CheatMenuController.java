@@ -1,6 +1,7 @@
 package Controller;
 
 import Model.*;
+import Enum.*;
 
 import java.util.regex.Matcher;
 
@@ -51,5 +52,9 @@ public class CheatMenuController {
 
     public static void endGame(Matcher matcher) {
         //TODO
+    }
+
+    public static void applyCheatCode(CheatCode cheatCode){
+        // TODO
     }
 }
