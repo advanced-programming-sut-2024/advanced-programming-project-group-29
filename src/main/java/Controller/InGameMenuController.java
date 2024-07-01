@@ -21,6 +21,15 @@ public class InGameMenuController extends Thread {
         controllers.add(this);
     }
 
+    public static void startGame(){
+        User user = ApplicationController.getCurrentUser();
+        GameBoard gameBoard = user.getCurrentGameBoard();
+        User opponent = user.getOpponent();
+        user.createHand();
+        opponent.createHand();
+        // TODO: let user veto card
+    }
+
     public static Card getCardFromDiscardPileAndRemoveIt(GameBoard gameBoard, int playerIndex) {
         Card card = InGameMenu.showDiscardPileAndLetUserChoose(gameBoard, playerIndex);
         gameBoard.getPlayer(playerIndex).getDiscardPile().remove(card);

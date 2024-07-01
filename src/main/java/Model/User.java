@@ -9,10 +9,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class User {
     private static final String[] securityQuestions = {
@@ -427,5 +424,13 @@ public class User {
         if (friendRequests.contains(user))
             return "Pending";
         return "Not a Friend Yet";
+    }
+
+    public void createHand(){ // have all cards in deck, it will remove all in hand
+        hand.clear();
+        Collections.shuffle(deck);
+        for(int i = 0; i < Math.min(10, deck.size()); i++){
+            hand.add(deck.get(i));
+        }
     }
 }

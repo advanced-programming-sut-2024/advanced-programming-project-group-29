@@ -147,4 +147,19 @@ public class Spell extends Card {
     public String getInformation() {
         return "Name: " + this.getName() + ", Ability: " + type.getStringFromType() + ", IsHero: false";
     }
+
+    @Override
+    public ArrayList<Space> getAllowedSpaces() {
+        ArrayList<Space> spaces = new ArrayList<>();
+        if(isWeather)
+            spaces.add(Space.WEATHER);
+        else if(getName().matches("(S|s)corch"))
+            spaces.add(Space.CARD);
+        else{
+            spaces.add(Space.CLOSE_COMBAT);
+            spaces.add(Space.RANGED);
+            spaces.add(Space.SIEGE);
+        }
+        return spaces;
+    }
 }

@@ -3,7 +3,7 @@ package Model;
 import Controller.InGameMenuController;
 import Enum.Attribute;
 import Enum.Faction;
-import Enum.Type;
+import Enum.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -69,7 +69,10 @@ public abstract class Card {
             return null;
         if (card.has("description") == false)
             return "";
-        return card.getString("description");
+        String description = card.getString("description");
+        if(description.equals("-"))
+            return "";
+        return description;
     }
 
     public static int getAllowedNumberByCardName(String cardName) {
@@ -193,5 +196,9 @@ public abstract class Card {
 
     public String getInformation(){
         return name;
+    }
+
+    public ArrayList<Space> getAllowedSpaces(){
+        return new ArrayList<>();
     }
 }
