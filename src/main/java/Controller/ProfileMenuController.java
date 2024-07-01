@@ -120,4 +120,20 @@ public class ProfileMenuController {
         }
         return new Result(true, games);
     }
+
+    public static Result sendFriendRequest(Matcher matcher) {
+        String username = matcher.group("username");
+        if (username.equals(ApplicationController.getCurrentUser().getUsername())) {
+            return new Result(false, "You cannot send friend request to yourself.");
+        }
+        User user = User.getUserByUsername(username);
+        if (user == null) {
+            return new Result(false, "User with this username does not exist.");
+        }
+        if (user.getStatusFriendRequest(ApplicationController.getCurrentUser()).equals("Friend")) {
+            return new Result(false, "You are already friends with this user.");
+        }
+        ApplicationController.getCurrentUser().sendFriendRequest(user);
+        return new Result(true, "Friend request sent successfully.");
+    }
 }
