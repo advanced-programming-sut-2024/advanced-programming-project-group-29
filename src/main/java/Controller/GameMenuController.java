@@ -244,4 +244,9 @@ public class GameMenuController {
         ApplicationController.setCurrentUser(gameBoard.getPlayer(gameBoard.getCurrentPlayer()));
         return new Result(true, "Turn changed successfully.");
     }
+
+    public static Result processRequest(String inputCommand) {
+        // TODO
+        return null;
+    }
 }

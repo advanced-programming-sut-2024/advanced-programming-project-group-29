@@ -53,4 +53,9 @@ public class LoginMenuController {
         user.setPassword(password);
         return new Result(true, "Password changed successfully.");
     }
+
+    public static Result processRequest(String inputCommand) {
+        // TODO
+        return null;
+    }
 }

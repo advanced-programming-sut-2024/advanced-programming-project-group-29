@@ -136,4 +136,9 @@ public class ProfileMenuController {
         ApplicationController.getCurrentUser().sendFriendRequest(user);
         return new Result(true, "Friend request sent successfully.");
     }
+
+    public static Result processRequest(String inputCommand) {
+        // TODO
+        return null;
+    }
 }

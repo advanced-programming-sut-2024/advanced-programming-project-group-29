@@ -91,4 +91,8 @@ public class RegisterMenuController {
         return true;
     }
 
+    public static Result processRequest(String inputCommand) {
+        // TODO
+        return null;
+    }
 }

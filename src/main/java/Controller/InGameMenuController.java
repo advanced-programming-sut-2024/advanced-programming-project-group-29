@@ -96,6 +96,11 @@ public class InGameMenuController extends Thread {
         return null;
     }
 
+    public static Result processRequest(String inputCommand) {
+        // TODO
+        return null;
+    }
+
     private void changeCurrentUser() {
         currentUser = 1 - currentUser;
     }

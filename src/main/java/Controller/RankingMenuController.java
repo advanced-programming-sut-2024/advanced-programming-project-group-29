@@ -1,5 +1,6 @@
 package Controller;
 
+import Model.Result;
 import Model.User;
 
 import java.util.ArrayList;
@@ -27,5 +28,10 @@ public class RankingMenuController {
             result.add(temporary);
         }
         return result;
+    }
+
+    public static Result processRequest(String inputCommand) {
+        // TODO
+        return null;
     }
 }

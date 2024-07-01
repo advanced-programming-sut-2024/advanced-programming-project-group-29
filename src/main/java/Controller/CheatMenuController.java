@@ -65,4 +65,9 @@ public class CheatMenuController {
             case END_GAME -> endGame();
         }
     }
+
+    public static Result processRequest(String inputCommand) {
+        // TODO
+        return null;
+    }
 }
