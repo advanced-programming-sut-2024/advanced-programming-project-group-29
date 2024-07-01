@@ -48,6 +48,7 @@ public class GameMenu extends Application {
     public Pane loadPain;
     public Rectangle darkbackLoad;
     public TextField loadName;
+    public Label changeTurn;
     private GridPane gridPaneSelected;
     private GridPane gridPaneNotSelected;
     public ImageView leader;
@@ -68,6 +69,7 @@ public class GameMenu extends Application {
     public Label name;
 
     private Label warning;
+    private boolean isChangeTurn = false;
 
     private ArrayList<Image> changeArray;
     private int selectedImage;
@@ -128,14 +130,13 @@ public class GameMenu extends Application {
         selectedCards.clear();
         notSelectedCards.clear();
         File directory = new File((GameMenu.class.getResource("/Images/Soldiers/" + ApplicationController.getCurrentUser().getFaction().getName())).getPath());
-        File directory1 = new File((GameMenu.class.getResource("/Images/Soldiers/Neutral")).getPath());
-        File directory2 = new File((GameMenu.class.getResource("/Images/Soldiers/Spells")).getPath());
-        File[] files = Stream.of(directory.listFiles(), directory1.listFiles(), directory2.listFiles()).filter(Objects::nonNull).flatMap(Arrays::stream).toArray(File[]::new);
+        ArrayList<File> files = new ArrayList<>(Arrays.asList(Objects.requireNonNull(directory.listFiles())));
+        files.removeIf(f -> f.getName().equals("Berserker.jpg") || f.getName().equals("Young Berserker.jpg"));
         main:
-        for (int j = 0; j <= (int) (Objects.requireNonNull(files).length / 3); j++) {
+        for (int j = 0; j <= (int) (Objects.requireNonNull(files).size() / 3); j++) {
             for (int i = 0; i < 3; i++) {
-                if ((3 * j) + i == files.length) break main;
-                File file = files[(3 * j) + i];
+                if ((3 * j) + i == files.size()) break main;
+                File file = files.get((3 * j) + i);
                 Model.Image image = new Model.Image(file.toURI().toString(), 325, 172, getNameFromFile(file));
                 image.setOnMouseClicked(event -> {
                     moveCard((Image) event.getSource());
@@ -150,7 +151,6 @@ public class GameMenu extends Application {
         scrollNotSelected.setContent(gridPaneNotSelected);
 
     }
-
 
     private void moveCard(Image image) {
         if (image.getParent().equals(gridPaneNotSelected)) {
@@ -206,6 +206,12 @@ public class GameMenu extends Application {
     }
 
     public void changeTurn(MouseEvent mouseEvent) throws Exception {
+        if (!isChangeTurn) {
+            GameMenuController.changeTurn();
+
+        }
+
+
         new InGameMenu().start(SaveApplicationAsObject.getApplicationController().getStage());
     }
 
@@ -231,10 +237,10 @@ public class GameMenu extends Application {
         Matcher matcher = Pattern.compile(GameMenuRegex.SAVEDECK.getRegex()).matcher(toRegex);
         matcher.matches();
         Result result = GameMenuController.saveDeck(matcher);
-        if (result.isSuccessful()){
+        if (result.isSuccessful()) {
             cancel(null);
         } else {
-            sayAlert(result.getMessage().getFirst(),true,darkbackSave);
+            sayAlert(result.getMessage().getFirst(), true, darkbackSave);
         }
     }
 
@@ -245,17 +251,17 @@ public class GameMenu extends Application {
         File file = filechooser.showSaveDialog(SaveApplicationAsObject.getApplicationController().getStage());
         if (file != null) {
             try {
-                toRegex += file.getPath() + (overwrite.isSelected() ? " -o" : "") ;
+                toRegex += file.getPath() + (overwrite.isSelected() ? " -o" : "");
             } catch (Exception ignored) {
             }
         }
         Matcher matcher = Pattern.compile(GameMenuRegex.LOADDECK.getRegex()).matcher(toRegex);
         matcher.matches();
         Result result = GameMenuController.saveDeck(matcher);
-        if (result.isSuccessful()){
+        if (result.isSuccessful()) {
             cancel(null);
         } else {
-            sayAlert(result.getMessage().getFirst(),true,darkbackSave);
+            sayAlert(result.getMessage().getFirst(), true, darkbackSave);
         }
     }
 
@@ -273,11 +279,11 @@ public class GameMenu extends Application {
         Matcher matcher = Pattern.compile(GameMenuRegex.LOADDECK.getRegex()).matcher(toRegex);
         matcher.matches();
         Result result = GameMenuController.loadDeck(matcher);
-        if (result.isSuccessful()){
+        if (result.isSuccessful()) {
             moveCard();
             cancel(null);
         } else {
-            sayAlert(result.getMessage().getFirst(),true,darkbackLoad);
+            sayAlert(result.getMessage().getFirst(), true, darkbackLoad);
         }
     }
 
@@ -295,19 +301,19 @@ public class GameMenu extends Application {
         Matcher matcher = Pattern.compile(GameMenuRegex.LOADDECK.getRegex()).matcher(toRegex);
         matcher.matches();
         Result result = GameMenuController.loadDeck(matcher);
-        if (result.isSuccessful()){
+        if (result.isSuccessful()) {
             moveCard();
             cancel(null);
         } else {
-            sayAlert(result.getMessage().getFirst(),true,darkbackLoad);
+            sayAlert(result.getMessage().getFirst(), true, darkbackLoad);
         }
     }
 
     private void moveCard() {
         createCards();
-        for (Card card : ApplicationController.getCurrentUser().getDeck()){
-            for (Image i : new ArrayList<>(notSelectedCards)){
-                if (card.getName().equals(i.getName())){
+        for (Card card : ApplicationController.getCurrentUser().getDeck()) {
+            for (Image i : new ArrayList<>(notSelectedCards)) {
+                if (card.getName().equals(i.getName())) {
                     notSelectedCards.remove(i);
                     selectedCards.add(i);
                 }
@@ -450,7 +456,7 @@ public class GameMenu extends Application {
         darkbackSave.setHeight(HEIGHT_OF_DARK_BACK);
     }
 
-    private void sayAlert(String warning, boolean isRed,Rectangle darkBack) {
+    private void sayAlert(String warning, boolean isRed, Rectangle darkBack) {
         int n = (int) (warning.length() / LENGTH_OF_FULL_LINE);
         deleteWarning();
         darkBack.setHeight(darkBack.getHeight() + (n + 1) * HEIGHT_OF_TEXT_WARNING);

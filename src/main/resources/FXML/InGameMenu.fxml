@@ -241,7 +241,7 @@
             </ImageView>
          </children>
       </Pane>
-      <Pane fx:id="changePain" layoutX="43.0" layoutY="82.0" prefHeight="699.0" prefWidth="1516.0">
+      <Pane fx:id="changePain" disable="true" layoutX="43.0" layoutY="82.0" prefHeight="699.0" prefWidth="1516.0" visible="false">
          <children>
             <Rectangle fx:id="darkBackSelect" arcHeight="5.0" arcWidth="5.0" fill="#eed092" height="245.0" layoutX="643.0" layoutY="227.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="0.0" width="231.0">
                <effect>
