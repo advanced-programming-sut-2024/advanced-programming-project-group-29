@@ -6,6 +6,8 @@ import Controller.SaveApplicationAsObject;
 import Model.*;
 import Regex.GameMenuRegex;
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -98,6 +100,18 @@ public class GameMenu extends Application {
         });
         createCards();
         changeLabel();
+        soldiers.setTextFill(Paint.valueOf("red"));
+        soldiers.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observableValue, String s, String t1) {
+                if (ApplicationController.getCurrentUser().getNumberOfSoldiersInDeck() < 22) {
+                    soldiers.setTextFill(Paint.valueOf("red"));
+                } else {
+                    soldiers.setTextFill(Paint.valueOf("dea543"));
+                }
+            }
+        });
+
     }
 
 
@@ -207,12 +221,20 @@ public class GameMenu extends Application {
 
     public void changeTurn(MouseEvent mouseEvent) throws Exception {
         if (!isChangeTurn) {
-            GameMenuController.changeTurn();
-
+            Result result = GameMenuController.changeTurn();
+            if (result.isSuccessful()) {
+                changeTurn.setText("Start Game");
+                isChangeTurn = true;
+                createCards();
+                refresh();
+            }
+        } else {
+            Result result = GameMenuController.changeTurn();
+            if (result.isSuccessful()) {
+                InGameMenu inGameMenu = new InGameMenu();
+                inGameMenu.start(SaveApplicationAsObject.getApplicationController().getStage());
+            }
         }
-
-
-        new InGameMenu().start(SaveApplicationAsObject.getApplicationController().getStage());
     }
 
     public void loadDeck(MouseEvent mouseEvent) {
@@ -336,8 +358,8 @@ public class GameMenu extends Application {
     private void changeLabel() {
         Result result = GameMenuController.showInfoCurrentUser();
         deckSize.setText(result.getMessage().get(2));
-        soldiers.setText(result.getMessage().get(3));
-        spells.setText(result.getMessage().get(4));
+        soldiers.setText(result.getMessage().get(3) + "/22");
+        spells.setText(result.getMessage().get(4) + "/10");
         heroes.setText(result.getMessage().get(5));
         power.setText(result.getMessage().get(6));
         username.setText(result.getMessage().get(0));

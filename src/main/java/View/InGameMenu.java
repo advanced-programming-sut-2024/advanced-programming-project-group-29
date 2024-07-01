@@ -87,6 +87,7 @@ public class InGameMenu extends Application {
     public TextField cheatCode;
     public Button cheatCodeDone;
     public Pane cheatPane;
+    public Rectangle darkBackSelect;
 
     private ArrayList<CardView> hand1 = new ArrayList<>();
     private ArrayList<CardView> hand2 = new ArrayList<>();
@@ -111,14 +112,26 @@ public class InGameMenu extends Application {
     private InGameMenuController inGameMenuController;
     private GameBoard gameBoard;
 
+    public InGameMenu() {
+        super();
+    }
+
+    public GameBoard getGameBoard() {
+        return gameBoard;
+    }
+
+    public void setGameBoard(GameBoard gameBoard) {
+        this.gameBoard = gameBoard;
+    }
 
     @FXML
     public void initialize() {
+        this.gameBoard = ApplicationController.getCurrentUser().getCurrentGameBoard();
         mainPain.requestFocus();
         mainPain.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent event) {
-                if(event.getCode() == KeyCode.COMMAND)
+                if (event.getCode() == KeyCode.NUMPAD0)
                     showCheatMenu();
             }
         });
@@ -129,6 +142,7 @@ public class InGameMenu extends Application {
             }
         });
         SaveApplicationAsObject.getApplicationController().setMenu(this);
+        refresh();
     }
 
     @Override
@@ -139,10 +153,10 @@ public class InGameMenu extends Application {
         Scene scene = new Scene(pane);
         stage.setScene(scene);
         stage.show();
-        int n = ApplicationController.getCurrentUser().getDeck().size();
-        for (int i = 0; i < n; i++) {
-            pane.getChildren().add(new CardView(ApplicationController.getCurrentUser().getDeck().get(i), getXPosition(i, n, false), Y_POSITION_HAND));
-        }
+//        int n = ApplicationController.getCurrentUser().getDeck().size();
+//        for (int i = 0; i < n; i++) {
+//            pane.getChildren().add(new CardView(ApplicationController.getCurrentUser().getDeck().get(i), getXPosition(i, n, false), Y_POSITION_HAND));
+//        }
         SaveApplicationAsObject.getApplicationController().setPane(pane);
     }
 
@@ -273,10 +287,10 @@ public class InGameMenu extends Application {
     }
 
     @FXML
-    private void processCheatCode(){
+    private void processCheatCode() {
         String cheatCodeString = this.cheatCode.getText();
         CheatCode cheatCode = CheatCode.getMatchedCheadCode(cheatCodeString);
-        if(cheatCode == null) {
+        if (cheatCode == null) {
             showErrorInCheatMenu();
             return;
         }
@@ -299,13 +313,22 @@ public class InGameMenu extends Application {
 
     private void refresh() {
         Pane pane = SaveApplicationAsObject.getApplicationController().getPane();
-        refreshCardArrays(pane, hand1, false, Y_POSITION_HAND);
-        refreshCardArrays(pane, hand2, false, Y_POSITION_HAND);
+        leader1.setImage(new javafx.scene.image.Image("/Images/Raw/" + gameBoard.getPlayer(gameBoard.getCurrentPlayer()).getFaction().getName() + "/" + gameBoard.getPlayer(gameBoard.getCurrentPlayer()).getCommander().getName() + ".jpg"));
+        leader2.setImage(new javafx.scene.image.Image("/Images/Raw/" + gameBoard.getPlayer(gameBoard.getCurrentPlayer()).getOpponent().getFaction().getName() + "/" + gameBoard.getPlayer(gameBoard.getCurrentPlayer()).getOpponent().getCommander().getName() + ".jpg"));
+        factionIcon1.setImage(new javafx.scene.image.Image("/Images/icons/deck_shield_" + gameBoard.getPlayer(gameBoard.getCurrentPlayer()).getFaction().getName().toLowerCase() + ".png"));
+        factionIcon2.setImage(new javafx.scene.image.Image("/Images/icons/deck_shield_" + gameBoard.getPlayer(gameBoard.getCurrentPlayer()).getOpponent().getFaction().getName().toLowerCase() + ".png"));
+
+
+        //TODO add card to hand
+
+
+//        refreshCardArrays(pane, hand1, false, Y_POSITION_HAND);
+//        refreshCardArrays(pane, hand2, false, Y_POSITION_HAND);
         //TODO other arrays
     }
 
     public void exitCheatPane(KeyEvent keyEvent) {
-        if(keyEvent.getCode() == KeyCode.ESCAPE){
+        if (keyEvent.getCode() == KeyCode.ESCAPE) {
             mainPain.setDisable(false);
             cheatPane.setVisible(false);
             cheatPane.setDisable(true);

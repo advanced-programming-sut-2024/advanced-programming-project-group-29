@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.effect.Blend?>
 <?import javafx.scene.effect.Glow?>
 <?import javafx.scene.effect.Shadow?>
@@ -12,7 +13,7 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="800.0" prefWidth="1200.0" stylesheets="@CSS/GameMenu.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.RankingMenu">
+<AnchorPane prefHeight="800.0" prefWidth="1200.0" stylesheets="@CSS/RankingMenu.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.RankingMenu">
    <children>
       <ImageView fitHeight="800.0" fitWidth="1200.0" pickOnBounds="true" preserveRatio="true">
          <image>
@@ -54,6 +55,11 @@
             </Blend>
          </effect>
       </Label>
-      <ScrollPane fx:id="scrollPain" hbarPolicy="NEVER" layoutX="380.0" layoutY="281.0" prefHeight="280.0" prefWidth="443.0" vbarPolicy="NEVER" />
+      <TableView fx:id="tableView" layoutX="379.0" layoutY="281.0" prefHeight="284.0" prefWidth="475.0">
+        <columns>
+          <TableColumn prefWidth="75.0" text="C1" />
+          <TableColumn prefWidth="75.0" text="C2" />
+        </columns>
+      </TableView>
    </children>
 </AnchorPane>

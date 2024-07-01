@@ -2,18 +2,33 @@
   {
     "username": "a",
     "password": "a",
-    "nickname": "aaaa",
-    "email": "ali@gmail.com",
+    "nickname": "aa",
+    "email": "a@gmail.com",
     "questionNumber": 0,
-    "answer": "red"
+    "answer": "red",
+    "faction": "NORTH_REALMS",
+    "commander": {
+      "hasAction": true,
+      "name": "the siegemaster"
+    },
+    "gameHistory": [],
+    "friends": [],
+    "savedDecks": {}
   },
   {
     "username": "b",
     "password": "b",
-    "nickname": "b",
+    "nickname": "bb",
     "email": "b@gmail.com",
     "questionNumber": 0,
-    "answer": "a",
+    "answer": "red",
+    "faction": "MONSTERS",
+    "commander": {
+      "hasAction": true,
+      "name": "bringer of death"
+    },
+    "gameHistory": [],
+    "friends": [],
     "savedDecks": {}
   }
 ]

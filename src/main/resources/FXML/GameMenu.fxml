@@ -95,7 +95,7 @@
                   </Shadow>
                </effect>
             </Rectangle>
-            <Label fx:id="changeTurn" layoutX="699.0" layoutY="901.0" onMouseClicked="#changeTurn" onMouseEntered="#buttonEntered" onMouseExited="#buttonExited" text="Change Turn">
+            <Label fx:id="changeTurn" alignment="CENTER" layoutX="694.0" layoutY="901.0" onMouseClicked="#changeTurn" onMouseEntered="#buttonEntered" onMouseExited="#buttonExited" prefHeight="22.0" prefWidth="112.0" text="Change Turn">
                <font>
                   <Font name="System Bold" size="16.0" />
                </font>
