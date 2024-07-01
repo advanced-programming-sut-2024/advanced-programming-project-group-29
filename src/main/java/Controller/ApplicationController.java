@@ -47,19 +47,19 @@ public class ApplicationController extends Thread {
                     Result result = null;
                     switch(currentMenu){
                         case LOGIN_MENU:
-                            result = LoginMenuController.processRequest(inputCommand);
+                            result = LoginMenuController.processRequest(this, inputCommand);
                         case REGISTER_MENU:
-                            result = RegisterMenuController.processRequest(inputCommand);
+                            result = RegisterMenuController.processRequest(this, inputCommand);
                         case CHEAT_MENU:
-                            result = CheatMenuController.processRequest(inputCommand);
+                            result = CheatMenuController.processRequest(this, inputCommand);
                         case PROFILE_MENU:
-                            result = ProfileMenuController.processRequest(inputCommand);
+                            result = ProfileMenuController.processRequest(this, inputCommand);
                         case GAME_MENU:
-                            result = GameMenuController.processRequest(inputCommand);
+                            result = GameMenuController.processRequest(this, inputCommand);
                         case IN_GAME_MENU:
-                            result = InGameMenuController.processRequest(inputCommand);
+                            result = InGameMenuController.processRequest(this, inputCommand);
                         case RANKING_MENU:
-                            result = RankingMenuController.processRequest(inputCommand);
+                            result = RankingMenuController.processRequest(this, inputCommand);
                     }
                     outputCommand = gson.toJson(result);
                     dataOutputStream.writeUTF(outputCommand);

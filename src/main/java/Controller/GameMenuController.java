@@ -245,7 +245,7 @@ public class GameMenuController {
         return new Result(true, "Turn changed successfully.");
     }
 
-    public static Result processRequest(String inputCommand) {
+    public static Result processRequest(ApplicationController applicationController, String inputCommand) {
         // TODO
         return null;
     }
