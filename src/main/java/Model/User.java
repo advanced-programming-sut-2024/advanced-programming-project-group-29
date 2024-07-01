@@ -32,6 +32,7 @@ public class User {
     private String answer;
     private transient ArrayList<Card> hand = new ArrayList<>();
     private transient ArrayList<Card> deck = new ArrayList<>();
+    private ArrayList<Card> preDeck = new ArrayList<>();
     private transient ArrayList<Card> discardPile = new ArrayList<>();
     private Faction faction;
     private Commander commander;
@@ -316,6 +317,12 @@ public class User {
             user.commander.setUser(user);
             user.commander.setGameBoard(null);
             user.currentGameBoard = null;
+            if (user.preDeck != null) {
+                for (Card card : user.preDeck) {
+                    card.setUser(user);
+                    user.deck.add(card);
+                }
+            }
         }
         User.setAllUsers(users);
     }
