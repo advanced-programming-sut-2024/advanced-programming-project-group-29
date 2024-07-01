@@ -5,8 +5,9 @@ import java.util.Date;
 
 public class GameHistory {
     private User[] players = new User[2];
-    private Date gameDate;
     private ArrayList<Integer>[] scorePerRound = new ArrayList[2];
+    private Date gameDate;
+    private int winner; // 0 for player1, 1 for player2 and -1 for draw
 
     public GameHistory(User player1, User player2, Date gameDate) {
         players[0] = player1;
@@ -50,4 +51,11 @@ public class GameHistory {
         return scorePerRound[playerNumber];
     }
 
+    public int getWinner() {
+        return winner;
+    }
+
+    public void setWinner(int winner) {
+        this.winner = winner;
+    }
 }

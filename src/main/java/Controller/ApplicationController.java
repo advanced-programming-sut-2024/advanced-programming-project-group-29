@@ -58,6 +58,10 @@ public class ApplicationController extends Thread {
         return currentUser;
     }
 
+    public void logOut() {
+        currentUser = null;
+    }
+
     public Stage getStage() {
         return stage;
     }

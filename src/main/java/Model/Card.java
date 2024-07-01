@@ -17,20 +17,17 @@ import java.util.Iterator;
 import java.util.Objects;
 
 public abstract class Card {
-    private static final ArrayList<Card> allCards = new ArrayList<>();
     protected String description;
     private final String name;
     protected Faction faction;
-    protected Runnable deployRunnable;
-    protected GameBoard gameBoard;
-    protected User user;
+    protected transient GameBoard gameBoard;
+    protected transient User user;
     protected Type type;
 
 
     public Card(String name, User user) {
         this.name = name;
         this.user = user;
-        allCards.add(this);
     }
 
     private static JSONObject getCardByName(JSONArray jsonArray, String cardName) {
@@ -184,6 +181,10 @@ public abstract class Card {
 
     public GameBoard getGameBoard() {
         return gameBoard;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public User getUser() {

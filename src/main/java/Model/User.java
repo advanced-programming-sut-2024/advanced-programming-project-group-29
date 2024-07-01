@@ -36,19 +36,21 @@ public class User {
     private transient ArrayList<Card> hand = new ArrayList<>();
     private transient ArrayList<Card> deck = new ArrayList<>();
     private transient ArrayList<Card> discardPile = new ArrayList<>();
-    private transient Faction faction;
-    private transient Commander commander;
+    private Faction faction;
+    private Commander commander;
     private transient GameBoard currentGameBoard;
-    private transient ArrayList<GameHistory> gameHistory = new ArrayList<>();
-    private HashMap<String, SavedDeck> savedDecks = new HashMap<>();
+    private final ArrayList<GameHistory> gameHistory = new ArrayList<>();
+    private final ArrayList<User> friends = new ArrayList<>();
+    private final ArrayList<User> friendRequests = new ArrayList<>();
+    private final HashMap<String, SavedDeck> savedDecks = new HashMap<>();
 
     public User(String username, String password, String nickname, String email) {
         this.username = username;
         this.password = password;
         this.nickname = nickname;
         this.email = email;
-        this.faction = Faction.MONSTERS;
-        this.commander = new Commander("king of the wild hunt", this);
+        this.faction = Faction.SCOIATAELL;
+        this.commander = new Commander("queen of dol blathanna", this);
         allUsers.add(this);
     }
 
@@ -218,17 +220,7 @@ public class User {
         int numberOfWins = 0;
         for (GameHistory gameHistory : this.gameHistory) {
             int playerNumber = gameHistory.getPlayerNumber(this);
-            int rounds = gameHistory.getScorePerRound(playerNumber).size();
-            int wonRounds = 0, lostRounds = 0;
-            for (int i = 0; i < rounds; i++) {
-                if (gameHistory.getScorePerRound(playerNumber).get(i) >
-                        gameHistory.getScorePerRound(1 - playerNumber).get(i))
-                    wonRounds++;
-                else if (gameHistory.getScorePerRound(playerNumber).get(i) <
-                        gameHistory.getScorePerRound(1 - playerNumber).get(i))
-                    lostRounds++;
-            }
-            if (wonRounds > lostRounds)
+            if (gameHistory.getWinner() == playerNumber)
                 numberOfWins++;
         }
         return numberOfWins;
@@ -237,26 +229,14 @@ public class User {
     public int getNumberOfDraws() {
         int numberOfDraws = 0;
         for (GameHistory gameHistory : this.gameHistory) {
-            int playerNumber = gameHistory.getPlayerNumber(this);
-            int rounds = gameHistory.getScorePerRound(playerNumber).size();
-            int wonRounds = 0, lostRounds = 0;
-            for (int i = 0; i < rounds; i++) {
-                if (gameHistory.getScorePerRound(playerNumber).get(i) >
-                        gameHistory.getScorePerRound(1 - playerNumber).get(i))
-                    wonRounds++;
-                else if (gameHistory.getScorePerRound(playerNumber).get(i) <
-                        gameHistory.getScorePerRound(1 - playerNumber).get(i))
-                    lostRounds++;
-            }
-            if (wonRounds == lostRounds)
+            if (gameHistory.getWinner() == -1)
                 numberOfDraws++;
         }
         return numberOfDraws;
     }
 
     public int getNumberOfLosses() {
-        int numberOfLosses = this.gameHistory.size() - this.getNumberOfWins() - this.getNumberOfDraws();
-        return numberOfLosses;
+        return this.gameHistory.size() - this.getNumberOfWins() - this.getNumberOfDraws();
     }
 
     public int getRank() {
@@ -333,13 +313,12 @@ public class User {
         if (users == null)
             users = new ArrayList<>();
         for (User user : users) {
-            user.setCommander(new Commander("king of the wild hunt", user));
-            user.setFaction(Faction.MONSTERS);
             user.hand = new ArrayList<>();
             user.deck = new ArrayList<>();
             user.discardPile = new ArrayList<>();
-            user.gameHistory = new ArrayList<>();
-            //TODO load game history
+            user.commander.setUser(user);
+            user.commander.setGameBoard(null);
+            user.currentGameBoard = null;
         }
         User.setAllUsers(users);
     }
@@ -418,5 +397,35 @@ public class User {
 
     public User getOpponent(){
         return currentGameBoard.getPlayer(1 - currentGameBoard.getPlayerNumber(this));
+    }
+
+    public void addFriend(User user) {
+        friends.add(user);
+    }
+
+    public void acceptFriendRequest(User user) {
+        friendRequests.remove(user);
+        friends.add(user);
+    }
+
+    public void rejectFriendRequest(User user) {
+        friendRequests.remove(user);
+    }
+
+    public void recieveFriendRequest(User user) {
+        if (!friends.contains(user) && !friendRequests.contains(user))
+            friendRequests.add(user);
+    }
+
+    public void sendFriendRequest(User user) {
+        user.recieveFriendRequest(this);
+    }
+
+    public String getStatusFriendRequest(User user) {
+        if (friends.contains(user))
+            return "Friend";
+        if (friendRequests.contains(user))
+            return "Pending";
+        return "Not a Friend Yet";
     }
 }
