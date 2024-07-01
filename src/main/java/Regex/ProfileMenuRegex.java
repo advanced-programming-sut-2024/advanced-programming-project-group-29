@@ -1,12 +1,13 @@
 package Regex;
 
 public enum ProfileMenuRegex {
-    CHANGEUSERNAME("change username -u (?<username>\\S+)"),
-    CHANGENICKNAME("change nickname -u (?<nickname>\\S+)"),
-    CHANGEEMAIL("change email -e (?<email>\\S+)"),
-    CHANGEPASSWORD("change password -p (?<password>\\S+) -o (?<oldPassword>\\S+)"),
-    SHOWINFO("menu enter user info"),
-    GAMEHISTORY("game history( -n (?<numberOfGames>-?\\d+))?");
+    CHANGE_USERNAME("change username -u (?<username>\\S+)"),
+    CHANGE_NICKNAME("change nickname -u (?<nickname>\\S+)"),
+    CHANGE_EMAIL("change email -e (?<email>\\S+)"),
+    CHANGE_PASSWORD("change password -p (?<password>\\S+) -o (?<oldPassword>\\S+)"),
+    SHOW_INFO("menu enter user info"),
+    GAME_HISTORY("game history( -n (?<numberOfGames>-?\\d+))?"),
+    SEND_FRIEND_REQUEST("send friend request (?<username>\\S+)");
 
     private final String regex;
 

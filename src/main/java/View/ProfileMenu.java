@@ -1,22 +1,18 @@
 package View;
 
-import Controller.LoginMenuController;
 import Controller.ProfileMenuController;
 import Controller.SaveApplicationAsObject;
 import Model.Result;
-import Regex.LoginMenuRegex;
 import Regex.ProfileMenuRegex;
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
@@ -213,7 +209,7 @@ public class ProfileMenu extends Application {
     private void showHistory() {
         int n = (countHistory.getText().isEmpty() ? 0 : Integer.parseInt(countHistory.getText()));
         String toRegex = "game history" + (n == 0 ? "" : " -n " + n);
-        Matcher matcher = Pattern.compile(ProfileMenuRegex.GAMEHISTORY.getRegex()).matcher(toRegex);
+        Matcher matcher = Pattern.compile(ProfileMenuRegex.GAME_HISTORY.getRegex()).matcher(toRegex);
         matcher.matches();
         Result result = ProfileMenuController.gameHistory(matcher);
         if (!result.isSuccessful()) {
@@ -249,19 +245,19 @@ public class ProfileMenu extends Application {
         Matcher matcher;
         Result result =null;
         if (Fields.getValue().equals("Password")) {
-            matcher = Pattern.compile(ProfileMenuRegex.CHANGEPASSWORD.getRegex()).matcher("change password -p " + textField1.getText() + " -o " + textField2.getText());
+            matcher = Pattern.compile(ProfileMenuRegex.CHANGE_PASSWORD.getRegex()).matcher("change password -p " + textField1.getText() + " -o " + textField2.getText());
             matcher.matches();
             result = ProfileMenuController.changePassword(matcher);
         } else if (Fields.getValue().equals("Username")) {
-            matcher = Pattern.compile(ProfileMenuRegex.CHANGEUSERNAME.getRegex()).matcher("change username -u " + textField1.getText());
+            matcher = Pattern.compile(ProfileMenuRegex.CHANGE_USERNAME.getRegex()).matcher("change username -u " + textField1.getText());
             matcher.matches();
             result = ProfileMenuController.changeUsername(matcher);
         } else if (Fields.getValue().equals("Nickname")) {
-            matcher = Pattern.compile(ProfileMenuRegex.CHANGENICKNAME.getRegex()).matcher("change nickname -u " + textField1.getText());
+            matcher = Pattern.compile(ProfileMenuRegex.CHANGE_NICKNAME.getRegex()).matcher("change nickname -u " + textField1.getText());
             matcher.matches();
             result = ProfileMenuController.changeNickname(matcher);
         } else if (Fields.getValue().equals("Email")) {
-            matcher = Pattern.compile(ProfileMenuRegex.CHANGEEMAIL.getRegex()).matcher("change email -e " + textField1.getText());
+            matcher = Pattern.compile(ProfileMenuRegex.CHANGE_EMAIL.getRegex()).matcher("change email -e " + textField1.getText());
             matcher.matches();
             result = ProfileMenuController.changeEmail(matcher);
         }
