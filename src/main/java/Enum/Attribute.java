@@ -37,26 +37,26 @@ public enum Attribute {
         return null;
     }
 
-    public String getStringFromAttribute() {
-        if (this == MEDIC)
+    public static String getStringFromAttribute(Attribute attribute) {
+        if (attribute == MEDIC)
             return "Medic";
-        if (this == MORAL_BOOST)
+        if (attribute == MORAL_BOOST)
             return "Moral Boost";
-        if (this == MUSTER)
+        if (attribute == MUSTER)
             return "Muster";
-        if (this == SPY)
+        if (attribute == SPY)
             return "Spy";
-        if (this == TIGHT_BOND)
+        if (attribute == TIGHT_BOND)
             return "Tight Bond";
-        if (this == SCORCH)
+        if (attribute == SCORCH)
             return "Scorch";
-        if (this == BERSERKER)
+        if (attribute == BERSERKER)
             return "Berserker";
-        if (this == MARDROEME)
+        if (attribute == MARDROEME)
             return "Mardroeme";
-        if (this == TRANSFORMERS)
+        if (attribute == TRANSFORMERS)
             return "Transformers";
-        if (this == COMMANDERS_HORN)
+        if (attribute == COMMANDERS_HORN)
             return "Commander's Horn";
         return "";
     }
