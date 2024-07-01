@@ -2,8 +2,14 @@ package Enum;
 
 public enum CheatCode {
 
-    TEST("test")
-    ;
+    RESET_CRYSTAL("Let me fix our past, and our future"),
+    ADD_WEATHER("How's the weather today?"),
+    ADD_SPECIAL("I wanna be special"),
+    ADD_SOLDIER("fight for me, like a soldier"),
+    REFILL_COMMANDER("I wanna be your slave"),
+    KILL_RANDOM_SOLDIER("I wanna be your master"),
+    END_GAME("This is going to be my last breath");
+
     String string;
 
     CheatCode(String s){
