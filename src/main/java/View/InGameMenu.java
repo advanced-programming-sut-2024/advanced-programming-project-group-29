@@ -4,6 +4,8 @@ import Controller.*;
 import Model.*;
 import Enum.*;
 import Regex.GameMenuRegex;
+import Regex.InGameMenuRegex;
+import View.Animations.FlipCardAnimation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
@@ -24,6 +26,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
@@ -48,6 +51,8 @@ public class InGameMenu extends Application {
     private final double X_POSITION_ROW_LEFT = 591;
     private final double X_POSITION_ROW_RIGHT = 1264;
     private final double Y_POSITION_HAND = 704;
+    private final double X_POSITION_CENTER_OF_SELECT = 759;
+    private final double Y_POSITION_CENTER_OF_SELECT = 350;
     private final double CARD_WIDTH = 70;
     private final double CARD_HEIGHT = 100;
     private final double SPACING = 5;
@@ -58,6 +63,7 @@ public class InGameMenu extends Application {
     public Pane row23;
     public Pane row22;
     public Pane row21;
+    public Pane rowWeather;
     public ImageView factionIcon2;
     public ImageView factionIcon1;
     public Label username2;
@@ -88,6 +94,14 @@ public class InGameMenu extends Application {
     public Button cheatCodeDone;
     public Pane cheatPane;
     public Rectangle darkBackSelect;
+    public AnchorPane pain;
+    public ImageView image3;
+    public ImageView image4;
+    public ImageView image5;
+    public ImageView image2;
+    public ImageView image1;
+    private String regexToDo;
+
 
     private ArrayList<CardView> hand1 = new ArrayList<>();
     private ArrayList<CardView> hand2 = new ArrayList<>();
@@ -110,23 +124,14 @@ public class InGameMenu extends Application {
     private int selectedImage = -1;
 
     private InGameMenuController inGameMenuController;
-    private GameBoard gameBoard;
 
     public InGameMenu() {
         super();
     }
 
-    public GameBoard getGameBoard() {
-        return gameBoard;
-    }
-
-    public void setGameBoard(GameBoard gameBoard) {
-        this.gameBoard = gameBoard;
-    }
-
     @FXML
     public void initialize() {
-        this.gameBoard = ApplicationController.getCurrentUser().getCurrentGameBoard();
+        InGameMenuController.startGame();
         mainPain.requestFocus();
         mainPain.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
@@ -142,7 +147,97 @@ public class InGameMenu extends Application {
             }
         });
         SaveApplicationAsObject.getApplicationController().setMenu(this);
-        refresh();
+        row11.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                if (!((Pane) mouseEvent.getSource()).getChildren().isEmpty()) {
+                    for (CardView c : hand1) {
+                        if (c.isSelected()) {
+                            Matcher matcher = Pattern.compile(InGameMenuRegex.PLACE_CARD.getRegex()).matcher("place card " + hand1.indexOf(c) + " in row " + 1);
+                            matcher.matches();
+                            Result result = InGameMenuController.placeCard(matcher);
+                            if (result.isSuccessful()){
+                                hand1.remove(c);
+                                row_11.add(c);
+                            }
+                        }
+                    }
+                }
+            }
+        });
+        row12.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                if (!((Pane) mouseEvent.getSource()).getChildren().isEmpty()) {
+                    for (CardView c : hand1) {
+                        if (c.isSelected()) {
+                            (new FlipCardAnimation(c,X_POSITION_HAND_LEFT,470,true,true)).play();
+                        }
+                    }
+                }
+            }
+        });
+        row13.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                if (!((Pane) mouseEvent.getSource()).getChildren().isEmpty()) {
+                    for (CardView c : hand1) {
+                        if (c.isSelected()) {
+                            //TODO ACTION
+                        }
+                    }
+                }
+            }
+        });
+        row21.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                if (!((Pane) mouseEvent.getSource()).getChildren().isEmpty()) {
+                    for (CardView c : hand1) {
+                        if (c.isSelected()) {
+                            //TODO ACTION
+                        }
+                    }
+                }
+            }
+        });
+        row22.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                if (!((Pane) mouseEvent.getSource()).getChildren().isEmpty()) {
+                    for (CardView c : hand1) {
+                        if (c.isSelected()) {
+                            //TODO ACTION
+                        }
+                    }
+                }
+            }
+        });
+        row23.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                if (!((Pane) mouseEvent.getSource()).getChildren().isEmpty()) {
+                    for (CardView c : hand1) {
+                        if (c.isSelected()) {
+                            //TODO ACTION
+                        }
+                    }
+                }
+            }
+        });
+        rowWeather.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                if (!((Pane) mouseEvent.getSource()).getChildren().isEmpty()) {
+                    for (CardView c : hand1) {
+                        if (c.isSelected()) {
+                            //TODO ACTION
+                        }
+                    }
+                }
+            }
+        });
+        firstRefresh();
     }
 
     @Override
@@ -153,10 +248,6 @@ public class InGameMenu extends Application {
         Scene scene = new Scene(pane);
         stage.setScene(scene);
         stage.show();
-//        int n = ApplicationController.getCurrentUser().getDeck().size();
-//        for (int i = 0; i < n; i++) {
-//            pane.getChildren().add(new CardView(ApplicationController.getCurrentUser().getDeck().get(i), getXPosition(i, n, false), Y_POSITION_HAND));
-//        }
         SaveApplicationAsObject.getApplicationController().setPane(pane);
     }
 
@@ -168,13 +259,13 @@ public class InGameMenu extends Application {
         this.inGameMenuController = inGameMenuController;
     }
 
-    public void selectBeforeMove(Card card) {
-        String describe = card.getInformation();
+    public void selectBeforeMove(Cardin card) {
+        String describe = card.getFaction().getName();
         int n = (int) (describe.length() / 30) + 1;
         darkBackDescription.setHeight(50 + n * 22);
         description.setPrefHeight(n * 22);
         description.setText(describe);
-        imageWhenSelected.setImage(new javafx.scene.image.Image("/Images/Soldiers/" + card.getUser().getFaction().getName() + "/" + card.getName() + ".jpg"));
+        imageWhenSelected.setImage(new javafx.scene.image.Image("/Images/Soldiers/" + card.getFaction().getName() + "/" + card.name + ".jpg"));
         descriptionPain.setVisible(true);
         descriptionPain.setDisable(false);
     }
@@ -184,29 +275,57 @@ public class InGameMenu extends Application {
         descriptionPain.setDisable(true);
     }
 
+    public void moveCard(CardView c,double x,double y,boolean face,boolean flip){
+        (new FlipCardAnimation(c,x,y,face,flip)).play();
+    }
 
-    private void selectBetweenCards(ArrayList<Card> arrayList) {
+
+    private void selectBetweenCards(ArrayList<Card> arrayList, String regexToDo) {
         changePain.setVisible(true);
         changePain.setDisable(false);
         mainPain.setDisable(true);
+        image3.requestFocus();
         changeArray.clear();
         for (Card c : arrayList) {
             Image image = new Image("/Images/Soldiers/" + c.getUser().getFaction().getName() + "/" + c.getName() + ".jpg", 1, 1, "" + arrayList.indexOf(c));
-            image.setLayoutX(300 + 100 * arrayList.indexOf(c));
-            image.setLayoutY(500);
-            //TODO width and height and other things
-            image.setOnMouseClicked(new EventHandler<MouseEvent>() {
-                @Override
-                public void handle(MouseEvent mouseEvent) {
-                    selectedImage = Integer.parseInt(((Image) mouseEvent.getSource()).getName());
-                    //TODO implement next function
-                }
-            });
             changeArray.add(image);
         }
-        for (Image img : changeArray) {
-            changePain.getChildren().add(img);
+        selectedImage = 0;
+        setImageChange(selectedImage);
+        regexToDo = regexToDo;
+    }
+
+    private void setImageChange(int number) {
+        int n = 3 - number;
+        image1.setImage(null);
+        image2.setImage(null);
+        image3.setImage(null);
+        image4.setImage(null);
+        image5.setImage(null);
+        for (Image image : changeArray) {
+            try {
+                Field field = this.getClass().getDeclaredField("image" + (n++));
+                field.setAccessible(true);
+                ((ImageView) field.get(this)).setImage(image.getImage());
+                field.setAccessible(false);
+            } catch (NoSuchFieldException | IllegalAccessException ignored) {
+            }
         }
+    }
+
+    public void done(MouseEvent mouseEvent) {
+        Image image = changeArray.get(selectedImage);
+        //TODOregex
+    }
+
+    public void forward(MouseEvent mouseEvent) {
+        if (selectedImage != changeArray.size() - 1) selectedImage++;
+        setImageChange(selectedImage);
+    }
+
+    public void backward(MouseEvent mouseEvent) {
+        if (selectedImage != 0) selectedImage--;
+        setImageChange(selectedImage);
     }
 
 
@@ -266,6 +385,7 @@ public class InGameMenu extends Application {
         return xFirst;
     }
 
+
     private void refreshCardArrays(Pane pane, ArrayList<CardView> array, boolean row, double yPosition) {
         int n = array.size();
         for (CardView c : array) {
@@ -285,6 +405,130 @@ public class InGameMenu extends Application {
         cheatCode.setText("");
         mainPain.setDisable(true);
     }
+
+
+
+    private void setCrystal(ImageView crystal,boolean on){
+        crystal.setImage(new javafx.scene.image.Image(on ? "/Images/icons/icon_gem_on.png" : "/Images/icons/icon_gem_off.png"));
+    }
+
+    private void firstRefresh() {
+        GameBoardin gameBoardin = new GameBoardin();
+        int player1Crystal = gameBoardin.getPlayer1Crystal();
+        int player2Crystal = gameBoardin.getPlayer2Crystal();
+        ArrayList<Cardin> player1Hand = gameBoardin.getPlayer1Hand();
+        ArrayList<Cardin> player2Hand = gameBoardin.getPlayer2Hand();
+        ArrayList<Cardin> player1Deck = gameBoardin.getPlayer1Deck();
+        ArrayList<Cardin> player2Deck = gameBoardin.getPlayer2Deck();
+        ArrayList<Cardin> player1Discard = gameBoardin.getPlayer1Discard();
+        ArrayList<Cardin> player2Discard = gameBoardin.getPlayer2Discard();
+        String player1Username = gameBoardin.getPlayer1Username();
+        String player2Username = gameBoardin.getPlayer2Username();
+        String player1Faction = gameBoardin.getPlayer1Faction();
+        String player2Faction = gameBoardin.getPlayer2Faction();
+        String player1Commander = gameBoardin.getPlayer1Commander();
+        String player2Commander = gameBoardin.getPlayer2Commander();
+        boolean player1HasAction = gameBoardin.isPlayer1CommanderHasAction();
+        boolean player2HasAction = gameBoardin.isPlayer2CommanderHasAction();
+        ////////////////////////////
+        for (int i = 0; i < player1Hand.size(); i++) hand1.add(new CardView(player2Hand.get(i), getXPosition(i, player1Hand.size(), false), Y_POSITION_HAND));
+        for (int i = 0; i < player2Hand.size(); i++) hand2.add(new CardView(player2Hand.get(i), getXPosition(i, player2Hand.size(), false), Y_POSITION_HAND));
+        for (CardView c : hand1) pain.getChildren().add(c);
+        leader1.setImage(new javafx.scene.image.Image("/Images/Raw/" + player1Faction + "/" + player1Commander + ".jpg"));
+        leader2.setImage(new javafx.scene.image.Image("/Images/Raw/" + player2Faction + "/" + player2Commander + ".jpg"));
+        leaderActive1.setImage(player1HasAction ? new javafx.scene.image.Image("/Images/icons/icon_leader_active.png") : null);
+        leaderActive2.setImage(player2HasAction ? new javafx.scene.image.Image("/Images/icons/icon_leader_active.png") : null);
+        factionIcon1.setImage(new javafx.scene.image.Image("/Images/icons/deck_shield_" + player1Faction.toLowerCase() + ".png"));
+        factionIcon2.setImage(new javafx.scene.image.Image("/Images/icons/deck_shield_" + player2Faction.toLowerCase() + ".png"));
+        username1.setText(player1Username);
+        username2.setText(player2Username);
+        setCrystal(crystal11,(player1Crystal >= 1));
+        setCrystal(crystal12,(player1Crystal == 2));
+        setCrystal(crystal21,(player2Crystal >= 1));
+        setCrystal(crystal22,(player2Crystal == 2));
+    }
+
+
+
+    private void refresh() {
+        GameBoardin gameBoardin = new GameBoardin();
+        int player1Crystal = gameBoardin.getPlayer1Crystal();
+        int player2Crystal = gameBoardin.getPlayer2Crystal();
+        ArrayList<Cardin> player1Hand = gameBoardin.getPlayer1Hand();
+        ArrayList<Cardin> player2Hand = gameBoardin.getPlayer2Hand();
+        ArrayList<Cardin> player1Deck = gameBoardin.getPlayer1Deck();
+        ArrayList<Cardin> player2Deck = gameBoardin.getPlayer2Deck();
+        ArrayList<Cardin> player1Discard = gameBoardin.getPlayer1Discard();
+        ArrayList<Cardin> player2Discard = gameBoardin.getPlayer2Discard();
+        String player1Username = gameBoardin.getPlayer1Username();
+        String player2Username = gameBoardin.getPlayer2Username();
+        String player1Faction = gameBoardin.getPlayer1Faction();
+        String player2Faction = gameBoardin.getPlayer2Faction();
+        String player1Commander = gameBoardin.getPlayer1Commander();
+        String player2Commander = gameBoardin.getPlayer2Commander();
+        boolean player1HasAction = gameBoardin.isPlayer1CommanderHasAction();
+        boolean player2HasAction = gameBoardin.isPlayer2CommanderHasAction();
+        for (int i = 0; i < player1Hand.size(); i++) hand1.add(new CardView(player2Hand.get(i), getXPosition(i, player1Hand.size(), false), Y_POSITION_HAND));
+        for (int i = 0; i < player2Hand.size(); i++) hand2.add(new CardView(player2Hand.get(i), getXPosition(i, player2Hand.size(), false), Y_POSITION_HAND));
+        for (CardView c : hand1) pain.getChildren().add(c);
+        leader1.setImage(new javafx.scene.image.Image("/Images/Raw/" + player1Faction + "/" + player1Commander + ".jpg"));
+        leader2.setImage(new javafx.scene.image.Image("/Images/Raw/" + player2Faction + "/" + player2Commander + ".jpg"));
+        leaderActive1.setImage(player1HasAction ? new javafx.scene.image.Image("/Images/icons/icon_leader_active.png") : null);
+        leaderActive2.setImage(player2HasAction ? new javafx.scene.image.Image("/Images/icons/icon_leader_active.png") : null);
+        factionIcon1.setImage(new javafx.scene.image.Image("/Images/icons/deck_shield_" + player1Faction.toLowerCase() + ".png"));
+        factionIcon2.setImage(new javafx.scene.image.Image("/Images/icons/deck_shield_" + player2Faction.toLowerCase() + ".png"));
+        username1.setText(player1Username);
+        username2.setText(player2Username);
+        setCrystal(crystal11,(player1Crystal >= 1));
+        setCrystal(crystal12,(player1Crystal == 2));
+        setCrystal(crystal21,(player2Crystal >= 1));
+        setCrystal(crystal22,(player2Crystal == 2));
+    }
+
+
+
+    ////////////// select Card and Yellow
+    private ImageView imageYellowRow() {
+        ImageView imageYellowRow = new ImageView(new javafx.scene.image.Image("Images/icons/row.png"));
+        imageYellowRow.setFitHeight(100);
+        imageYellowRow.setFitWidth(795);
+        return imageYellowRow;
+    }
+
+    private ImageView imageYellowWeather() {
+        ImageView imageYellowWeather = new ImageView(new javafx.scene.image.Image("Images/icons/Weather.jpg"));
+        imageYellowWeather.setFitHeight(120);
+        imageYellowWeather.setFitWidth(230);
+        return imageYellowWeather;
+    }
+
+
+    public void showAllowedRows(String name) {
+        ArrayList<Space> spaces = Card.getAllowedSpaces(name);
+        for (Space s : spaces) {
+            switch (s) {
+                case SIEGE -> row11.getChildren().add(imageYellowRow());
+                case RANGED -> row12.getChildren().add(imageYellowRow());
+                case CLOSE_COMBAT -> row13.getChildren().add(imageYellowRow());
+                case OPPONENT_SIEGE -> row21.getChildren().add(imageYellowRow());
+                case OPPONENT_RANGED -> row22.getChildren().add(imageYellowRow());
+                case OPPONENT_CLOSE_COMBAT -> row23.getChildren().add(imageYellowRow());
+                case WEATHER -> rowWeather.getChildren().add(imageYellowWeather());
+            }
+        }
+    }
+
+    public void unShowAllowedRows() {
+        row11.getChildren().clear();
+        row12.getChildren().clear();
+        row13.getChildren().clear();
+        row21.getChildren().clear();
+        row22.getChildren().clear();
+        row23.getChildren().clear();
+        rowWeather.getChildren().clear();
+    }
+
+    ///////////////// cheat code
 
     @FXML
     private void processCheatCode() {
@@ -308,23 +552,6 @@ public class InGameMenu extends Application {
         result.setVisible(true);
         result.setFill(Paint.valueOf("#FF0000"));
         result.setText("Cheat code isn't valid!");
-    }
-
-
-    private void refresh() {
-        Pane pane = SaveApplicationAsObject.getApplicationController().getPane();
-        leader1.setImage(new javafx.scene.image.Image("/Images/Raw/" + gameBoard.getPlayer(gameBoard.getCurrentPlayer()).getFaction().getName() + "/" + gameBoard.getPlayer(gameBoard.getCurrentPlayer()).getCommander().getName() + ".jpg"));
-        leader2.setImage(new javafx.scene.image.Image("/Images/Raw/" + gameBoard.getPlayer(gameBoard.getCurrentPlayer()).getOpponent().getFaction().getName() + "/" + gameBoard.getPlayer(gameBoard.getCurrentPlayer()).getOpponent().getCommander().getName() + ".jpg"));
-        factionIcon1.setImage(new javafx.scene.image.Image("/Images/icons/deck_shield_" + gameBoard.getPlayer(gameBoard.getCurrentPlayer()).getFaction().getName().toLowerCase() + ".png"));
-        factionIcon2.setImage(new javafx.scene.image.Image("/Images/icons/deck_shield_" + gameBoard.getPlayer(gameBoard.getCurrentPlayer()).getOpponent().getFaction().getName().toLowerCase() + ".png"));
-
-
-        //TODO add card to hand
-
-
-//        refreshCardArrays(pane, hand1, false, Y_POSITION_HAND);
-//        refreshCardArrays(pane, hand2, false, Y_POSITION_HAND);
-        //TODO other arrays
     }
 
     public void exitCheatPane(KeyEvent keyEvent) {

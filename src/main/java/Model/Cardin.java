@@ -1,15 +1,17 @@
 package Model;
 
 import Enum.*;
+import Enum.Faction;
 
 public class Cardin {
 
-    String name;
-    int hp;
-    Attribute attribute;
-    Type type;
-    boolean isHero;
-    boolean isSoldier;
+    public String name;
+    public int hp;
+    public Attribute attribute;
+    public Type type;
+    public boolean isHero;
+    public boolean isSoldier;
+    public Faction faction;
 
     public Cardin(Card card){
         this.name = card.getName();
@@ -18,6 +20,7 @@ public class Cardin {
         this.type = card.getType();
         this.isHero = card.isHero();
         this.isSoldier = card.isSoldier();
+        this.faction = card.getUser().getFaction();
     }
 
     public void setName(String name) {
@@ -44,5 +47,7 @@ public class Cardin {
         isSoldier = soldier;
     }
 
-
+    public Faction getFaction() {
+        return faction;
+    }
 }

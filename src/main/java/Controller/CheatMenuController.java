@@ -39,8 +39,9 @@ public class CheatMenuController {
     public static void refillCommanderAbility() {
         User user = ApplicationController.getCurrentUser();
         Commander commander = user.getCommander();
-        if (!commander.HasAction() && !commander.hasPassiveAbility())
-            commander.setHasAction(true);
+//        if (!commander.HasAction() && !commander.hasPassiveAbility())
+//            commander.setHasAction(true);
+        //TODO
     }
 
     public static void killRandomSoldier() {
