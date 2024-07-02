@@ -62,7 +62,7 @@ public class ApplicationController extends Thread {
                             result = RankingMenuController.processRequest(this, inputCommand);
                     }
                     outputCommand = gson.toJson(result);
-                    dataOutputStream.writeUTF(outputCommand);
+                    dataOutputStream.writeUTF(result.getClass().getName() + ":" + outputCommand);
             }
             //dataOutputStream.close();
             //dataInputStream.close();
