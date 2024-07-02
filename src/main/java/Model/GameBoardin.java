@@ -37,7 +37,7 @@ public class GameBoardin {
     int player1XP;
     int player2XP;
 
-    GameBoardin(){
+    public GameBoardin(){
         GameBoard gameBoard = ApplicationController.getCurrentUser().getCurrentGameBoard();
         User user1 = gameBoard.getPlayer(0);
         User user2 = gameBoard.getPlayer(1);
