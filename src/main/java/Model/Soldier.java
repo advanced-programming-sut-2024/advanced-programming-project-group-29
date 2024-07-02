@@ -250,42 +250,4 @@ public class Soldier extends Card {
         return "Name: " + this.getName() + ", Ability: " + Attribute.getStringFromAttribute(attribute) + "" + ", IsHero: " + isHero;
     }
 
-    @Override
-    public ArrayList<Space> getAllowedSpaces(){
-        ArrayList<Space> spaces = new ArrayList<>();
-        if(this.getName().matches("(S|s)py")){
-            switch (type){
-                case CLOSE_COMBAT:
-                    spaces.add(Space.OPPONENT_CLOSE_COMBAT);
-                    break;
-                case RANGED:
-                    spaces.add(Space.OPPONENT_RANGED);
-                    break;
-                case SIEGE:
-                    spaces.add(Space.OPPONENT_SIEGE);
-                    break;
-                case AGILE:
-                    spaces.add(Space.OPPONENT_CLOSE_COMBAT);
-                    spaces.add(Space.OPPONENT_RANGED);
-                    break;
-            }
-            return spaces;
-        }
-        switch (type){
-            case CLOSE_COMBAT:
-                spaces.add(Space.CLOSE_COMBAT);
-                break;
-            case RANGED:
-                spaces.add(Space.RANGED);
-                break;
-            case SIEGE:
-                spaces.add(Space.SIEGE);
-                break;
-            case AGILE:
-                spaces.add(Space.CLOSE_COMBAT);
-                spaces.add(Space.RANGED);
-                break;
-        }
-        return spaces;
-    }
 }

@@ -28,6 +28,7 @@ import java.util.Random;
 
 public class CardView extends Pane {
     private ArrayList<CardView> allCardView = new ArrayList<>();
+    private final InGameMenu inGameMenu;
     private final Cardin card;
     private final double WIDTH = 70;
     private final double HEIGHT = 100;
@@ -38,11 +39,12 @@ public class CardView extends Pane {
     private final Group items = new Group();
     private boolean isUp = false;
     private boolean isSelected = false;
-    private boolean isInHand = true;
+    private boolean isInHand = false;
 
 
-    public CardView(Cardin card, double x, double y) {
+    public CardView(Cardin card, double x, double y,InGameMenu inGameMenu) {
         this.allCardView.add(this);
+        this.inGameMenu = inGameMenu;
         this.card = card;
         this.path = "/Images/Raw/" +  card.faction.getName() + "/" + card.name + ".jpg";
         this.face = new Image(path);
@@ -221,6 +223,14 @@ public class CardView extends Pane {
 
     public void setSelected(boolean selected) {
         isSelected = selected;
+    }
+
+    public void setInHand(boolean inHand) {
+        isInHand = inHand;
+    }
+
+    public InGameMenu getInGameMenu() {
+        return inGameMenu;
     }
 
     private void setHP(int hp) {
