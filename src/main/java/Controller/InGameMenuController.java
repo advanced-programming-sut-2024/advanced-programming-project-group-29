@@ -36,9 +36,9 @@ public class InGameMenuController extends Thread {
         return card;
     }
 
-    public static void addCardToHand(GameBoard gameBoard, Card card, int playerIndex) {
+    public static String addCardToHand(GameBoard gameBoard, Card card, int playerIndex) {
         gameBoard.getPlayers()[playerIndex].getHand().add(card);
-        InGameMenu.addCardToHand(gameBoard, card, playerIndex);
+        return "add card to hand " + playerIndex + " " + card.getName();
     }
 
     public static void removeCardFromHand(GameBoard gameBoard, Card card, int playerIndex) {
@@ -50,13 +50,15 @@ public class InGameMenuController extends Thread {
         InGameMenu.changeThisCardInGraphic(gameBoard, thisCard, anotherCard);
     }
 
-    public static void destroySoldier(GameBoard gameBoard, Soldier soldier) {
+    public static Commands destroySoldier(GameBoard gameBoard, Soldier soldier) {
         if(soldier == null)
-            return;
+            return null;
         int playerIndex = gameBoard.getPlayerNumber(soldier.getUser());
         int rowNumber = Soldier.getPlacedRowNumber(soldier, gameBoard);
         gameBoard.getRows()[playerIndex][rowNumber].remove(soldier);
-        InGameMenu.destroySoldier(gameBoard, soldier);
+        gameBoard.setPlayerScore(playerIndex, gameBoard.getPlayerScore(playerIndex) - soldier.getShownHp());
+        return new Commands("destroy soldier " + playerIndex + " " + rowNumber + " " + soldier.getPlacedNumber(),
+                "set score " + playerIndex + " " + gameBoard.getPlayerScore(playerIndex));
     }
 
     public static void showChangedPlayerScoreAndCardsHp(GameBoard gameBoard) {

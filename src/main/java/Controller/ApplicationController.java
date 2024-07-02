@@ -44,25 +44,29 @@ public class ApplicationController extends Thread {
             com.google.gson.Gson gson = new GsonBuilder().setPrettyPrinting().create();
             while(true) {
                     inputCommand = dataInputStream.readUTF();
-                    Result result = null;
+                    Object object = null;
                     switch(currentMenu){
                         case LOGIN_MENU:
-                            result = LoginMenuController.processRequest(this, inputCommand);
+                            object = LoginMenuController.processRequest(this, inputCommand);
                         case REGISTER_MENU:
-                            result = RegisterMenuController.processRequest(this, inputCommand);
+                            object = RegisterMenuController.processRequest(this, inputCommand);
                         case CHEAT_MENU:
-                            result = CheatMenuController.processRequest(this, inputCommand);
+                            object = CheatMenuController.processRequest(this, inputCommand);
                         case PROFILE_MENU:
-                            result = ProfileMenuController.processRequest(this, inputCommand);
+                            object = ProfileMenuController.processRequest(this, inputCommand);
                         case GAME_MENU:
-                            result = GameMenuController.processRequest(this, inputCommand);
+                            object = GameMenuController.processRequest(this, inputCommand);
                         case IN_GAME_MENU:
-                            result = InGameMenuController.processRequest(this, inputCommand);
+                            object = InGameMenuController.processRequest(this, inputCommand);
                         case RANKING_MENU:
-                            result = RankingMenuController.processRequest(this, inputCommand);
+                            object = RankingMenuController.processRequest(this, inputCommand);
                     }
-                    outputCommand = gson.toJson(result);
-                    dataOutputStream.writeUTF(result.getClass().getName() + ":" + outputCommand);
+                    if(object == null)
+                        dataOutputStream.writeUTF("null");
+                    else {
+                        outputCommand = gson.toJson(object);
+                        dataOutputStream.writeUTF(object.getClass().getName() + ":" + outputCommand);
+                    }
             }
             //dataOutputStream.close();
             //dataInputStream.close();

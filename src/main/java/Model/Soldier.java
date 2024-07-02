@@ -81,7 +81,9 @@ public class Soldier extends Card {
                 soldiers.add(cardName);
         }
         int randomIndex = (int) (Math.random() * soldiers.size());
-        return new Soldier(soldiers.get(randomIndex), user);
+        Soldier soldier = new Soldier(soldiers.get(randomIndex), user);
+        soldier.setGameBoard(user.getCurrentGameBoard());
+        return soldier;
     }
 
 
@@ -287,5 +289,15 @@ public class Soldier extends Card {
                 break;
         }
         return spaces;
+    }
+
+    public int getPlacedNumber() {
+        GameBoard gameBoard = this.getGameBoard();
+        int placedRow = Soldier.getPlacedRowNumber(this, gameBoard);
+        int playerIndex = gameBoard.getPlayerNumber(this.getUser());
+        for(int i = 0; i < gameBoard.getRows()[playerIndex][placedRow].size(); i++)
+            if(gameBoard.getRows()[playerIndex][placedRow].get(i) == this)
+                return i;
+        return -1;
     }
 }

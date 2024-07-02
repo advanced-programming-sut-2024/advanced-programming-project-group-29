@@ -54,7 +54,9 @@ public class Spell extends Card {
                 weatherCards.add(cardName);
         }
         int randomIndex = (int) (Math.random() * weatherCards.size());
-        return new Spell(weatherCards.get(randomIndex), user);
+        Spell spell = new Spell(weatherCards.get(randomIndex), user);
+        spell.setGameBoard(user.getCurrentGameBoard());
+        return spell;
     }
 
     public static Spell getRandomSpecialCard(User user) {
@@ -64,7 +66,9 @@ public class Spell extends Card {
                 specialCards.add(cardName);
         }
         int randomIndex = (int) (Math.random() * specialCards.size());
-        return new Spell(specialCards.get(randomIndex), user);
+        Spell spell = new Spell(specialCards.get(randomIndex), user);
+        spell.setGameBoard(user.getCurrentGameBoard());
+        return spell;
     }
 
     @Override
