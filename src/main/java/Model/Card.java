@@ -172,7 +172,7 @@ public abstract class Card {
         return faction;
     }
 
-    private Type getType() {
+    public Type getType() {
         return type;
     }
 
@@ -200,5 +200,29 @@ public abstract class Card {
 
     public ArrayList<Space> getAllowedSpaces(){
         return new ArrayList<>();
+    }
+
+    public int getHp() {
+        if(this instanceof Soldier)
+            return ((Soldier) this).getHp();
+        return 0;
+    }
+
+    public Attribute getAttribute() {
+        if(this instanceof Soldier)
+            return ((Soldier) this).getAttribute();
+        return null;
+    }
+
+    public boolean isHero() {
+        if(this instanceof Soldier)
+            return ((Soldier) this).isHero();
+        return false;
+    }
+
+    public boolean isSoldier() {
+        if(this instanceof Soldier)
+            return ((Soldier) this).isSoldier();
+        return false;
     }
 }
