@@ -1,9 +1,10 @@
-package Controller;
+package Server.Controller;
 
 import Model.GameHistory;
 import Model.Result;
 import Model.User;
 import Regex.ProfileMenuRegex;
+import Server.Controller.ApplicationController;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

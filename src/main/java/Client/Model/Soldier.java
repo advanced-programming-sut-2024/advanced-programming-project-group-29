@@ -251,4 +251,14 @@ public class Soldier extends Card {
     public String getInformation() {
         return "Name: " + this.getName() + ", Ability: " + Attribute.getStringFromAttribute(attribute) + "" + ", IsHero: " + isHero;
     }
+
+    public int getPlacedNumber() {
+        GameBoard gameBoard = this.getGameBoard();
+        int rowNumber = getPlacedRowNumber(this, gameBoard);
+        int playerIndex = gameBoard.getPlayerNumber(this.getUser());
+        for(int i = 0; i < gameBoard.getRows()[playerIndex][rowNumber].size(); i++)
+            if(gameBoard.getRows()[playerIndex][rowNumber].get(i) == this)
+                return i;
+        return -1;
+    }
 }

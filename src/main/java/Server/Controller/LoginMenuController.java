@@ -3,6 +3,7 @@ package Controller;
 import Model.Result;
 import Model.User;
 import Regex.LoginMenuRegex;
+import Server.Controller.ApplicationController;
 
 import java.util.regex.Matcher;
 

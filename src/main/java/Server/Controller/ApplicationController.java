@@ -1,7 +1,8 @@
-package Controller;
+package Server.Controller;
 
-import Model.*;
-import Enum.*;
+import Model.User;
+import Enum.Menu;
+import Model.Sender;
 import com.google.gson.GsonBuilder;
 import javafx.application.Application;
 import javafx.scene.layout.Pane;
@@ -15,7 +16,6 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
-import java.util.regex.Matcher;
 
 public class ApplicationController extends Thread {
 
@@ -69,19 +69,19 @@ public class ApplicationController extends Thread {
                     Object object = null;
                     switch(currentMenu){
                         case LOGIN_MENU:
-                            object = LoginMenuController.processRequest(this, inputCommand);
+                            object = Server.Controller.LoginMenuController.processRequest(this, inputCommand);
                         case REGISTER_MENU:
-                            object = RegisterMenuController.processRequest(this, inputCommand);
+                            object = Server.Controller.RegisterMenuController.processRequest(this, inputCommand);
                         case CHEAT_MENU:
-                            object = CheatMenuController.processRequest(this, inputCommand);
+                            object = Server.Controller.CheatMenuController.processRequest(this, inputCommand);
                         case PROFILE_MENU:
-                            object = ProfileMenuController.processRequest(this, inputCommand);
+                            object = Server.Controller.ProfileMenuController.processRequest(this, inputCommand);
                         case GAME_MENU:
-                            object = GameMenuController.processRequest(this, inputCommand);
+                            object = Server.Controller.GameMenuController.processRequest(this, inputCommand);
                         case IN_GAME_MENU:
-                            object = InGameMenuController.processRequest(this, inputCommand);
+                            object = Server.Controller.InGameMenuController.processRequest(this, inputCommand);
                         case RANKING_MENU:
-                            object = RankingMenuController.processRequest(this, inputCommand);
+                            object = Server.Controller.RankingMenuController.processRequest(this, inputCommand);
                     }
                     if(object == null)
                         dataOutputStream.writeUTF("null");

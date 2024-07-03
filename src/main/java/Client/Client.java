@@ -1,14 +1,10 @@
-package View;
+package Client;
 
 import com.google.gson.GsonBuilder;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.util.Scanner;
-import Model.*;
+import Model.Listener;
+import Model.Sender;
+import View.Main;
 
 public class Client {
 
