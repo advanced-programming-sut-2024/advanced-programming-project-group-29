@@ -5,6 +5,7 @@ import Server.Enum.Faction;
 
 public class Cardin {
 
+    public String description;
     public String name;
     public int hp;
     public Attribute attribute;
@@ -21,6 +22,7 @@ public class Cardin {
         this.isHero = card.isHero();
         this.isSoldier = card.isSoldier();
         this.faction = card.getUser().getFaction();
+        this.description = card.getDescription();
     }
 
     public void setName(String name) {
