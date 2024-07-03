@@ -19,6 +19,9 @@ import java.util.regex.Matcher;
 
 public class ApplicationController extends Thread {
 
+    private static String IP = "127.0.0.1";
+    private static int PORT = 4000;
+
     public static final int THREAD_COUNT = 15;
     private final static ArrayList<User> allUsers = new ArrayList<>();
     private User currentUser;
@@ -26,21 +29,40 @@ public class ApplicationController extends Thread {
     private Pane pane;
     private Application menu;
     private Menu currentMenu;
-    private Socket socket;
+    private Sender sender;
+    private Socket listenerSocket;
+
+    public static void main(String[] args){
+        ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(THREAD_COUNT);
+        try {
+            ServerSocket server = new ServerSocket(4000);
+            Socket socket;
+            while (true) {
+                socket = server.accept();
+                executor.submit(new ApplicationController(socket));
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     public ApplicationController(Socket socket) {
         currentUser = null;
-        this.socket = socket;
+        this.listenerSocket = socket;
     }
 
     @Override
     public void run() {
         try{
             currentMenu = Menu.LOGIN_MENU;
-            DataInputStream dataInputStream = new DataInputStream(socket.getInputStream());
-            DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream());
+            DataInputStream dataInputStream = new DataInputStream(listenerSocket.getInputStream());
+            DataOutputStream dataOutputStream = new DataOutputStream(listenerSocket.getOutputStream());
             String outputCommand = "";
-            String inputCommand;
+            String inputCommand = dataInputStream.readUTF();
+            int ipEndIndex = inputCommand.indexOf(" ");
+            sender = new Sender(inputCommand.substring(0, ipEndIndex),
+                    Integer.parseInt(inputCommand.substring(ipEndIndex + 1)));
             com.google.gson.Gson gson = new GsonBuilder().setPrettyPrinting().create();
             while(true) {
                     inputCommand = dataInputStream.readUTF();
@@ -70,9 +92,22 @@ public class ApplicationController extends Thread {
             }
             //dataOutputStream.close();
             //dataInputStream.close();
+            //sender.endConnection();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public Sender getSender(){
+        return sender;
+    }
+
+    public Object sendObject(Object object) {
+        return sender.sendObject(object);
+    }
+
+    public Object sendCommand(String command) {
+        return sender.sendCommand(command);
     }
 
     public void  setCurrentMenu(Menu menu){
@@ -131,18 +166,4 @@ public class ApplicationController extends Thread {
         this.pane = pane;
     }
 
-    public static void main(String[] args){
-        ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(THREAD_COUNT);
-        Socket socket;
-        try {
-            ServerSocket server = new ServerSocket(4000);
-            while (true) {
-                socket = server.accept();
-                executor.submit(new ApplicationController(socket));
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 }
