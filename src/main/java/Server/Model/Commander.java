@@ -1,8 +1,8 @@
-package Model;
+package Server.Model;
 
-import Controller.InGameMenuController;
-import Enum.Attribute;
-import Enum.Type;
+import Server.Controller.InGameMenuController;
+import Server.Enum.Attribute;
+import Server.Enum.Type;
 
 import java.util.ArrayList;
 import java.util.Random;

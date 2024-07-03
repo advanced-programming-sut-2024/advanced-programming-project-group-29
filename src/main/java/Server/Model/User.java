@@ -1,6 +1,23 @@
-package Model;
+package Server.Model;
 
-import Enum.Faction;
+import Server.Enum.Faction;
+import Server.Model.Card;
+import Server.Enum.Faction;
+import Server.Enum.Type;
+import Server.Regex.GameMenuRegex;
+import Server.Model.Result;
+import Server.Model.User;
+import Server.Model.Soldier;
+import Server.Model.Spell;
+import Server.Model.Card;
+import Server.Model.GameBoard;
+import Server.Model.Commander;
+import Server.Model.SavedDeck;
+import Server.Model.GameHistory;
+import Server.Model.Cardin;
+import Server.Model.GameBoardin;
+import Server.Controller.ApplicationController;
+import Server.Controller.ApplicationController;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;

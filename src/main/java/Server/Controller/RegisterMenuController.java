@@ -1,8 +1,8 @@
-package Controller;
+package Server.Controller;
 
-import Model.Result;
-import Model.User;
-import Regex.RegisterMenuRegex;
+import Server.Model.Result;
+import Server.Model.User;
+import Server.Regex.RegisterMenuRegex;
 import Server.Controller.ApplicationController;
 
 import java.util.Random;

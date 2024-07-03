@@ -1,7 +1,7 @@
-package Model;
+package Server.Model;
 
-import Controller.InGameMenuController;
-import Enum.*;
+import Server.Controller.InGameMenuController;
+import Server.Enum.*;
 import org.json.*;
 
 import java.util.ArrayList;

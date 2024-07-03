@@ -1,8 +1,8 @@
-package Controller;
+package Server.Controller;
 
-import Model.Result;
-import Model.User;
-import Regex.LoginMenuRegex;
+import Server.Model.*;
+import Server.Regex.LoginMenuRegex;
+
 import Server.Controller.ApplicationController;
 
 import java.util.regex.Matcher;

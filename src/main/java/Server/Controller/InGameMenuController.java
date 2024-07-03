@@ -1,22 +1,16 @@
 package Server.Controller;
 
-import Enum.Faction;
-import Enum.Type;
-import Regex.GameMenuRegex;
-import Model.Result;
-import Model.User;
-import Model.Soldier;
-import Model.Spell;
-import Model.Card;
-import Model.GameBoard;
-import Model.Commander;
-import Model.SavedDeck;
-import Model.GameHistory;
-import Model.Cardin;
-import Model.GameBoardin;
+import Server.Enum.Faction;
+import Server.Enum.*;
+import Server.Regex.GameMenuRegex;
+import Server.Model.*;
+import Server.Model.Commander;
+import Server.Model.SavedDeck;
+import Server.Model.GameHistory;
+import Server.Model.Cardin;
+import Server.Model.GameBoardin;
 import Server.Controller.ApplicationController;
 import Server.Controller.ApplicationController;
-import View.InGameMenu;
 
 import java.util.ArrayList;
 import java.util.regex.Matcher;
@@ -49,7 +43,9 @@ public class InGameMenuController extends Thread {
     }
 
     public static Card getCardFromDiscardPileAndRemoveIt(GameBoard gameBoard, int playerIndex) {
-        Card card = InGameMenu.showDiscardPileAndLetUserChoose(gameBoard, playerIndex);
+        // TODO: Solve this usage
+        //Card card = InGameMenu.showDiscardPileAndLetUserChoose(gameBoard, playerIndex);
+        Card card = null;
         gameBoard.getPlayer(playerIndex).getDiscardPile().remove(card);
         return card;
     }
@@ -61,11 +57,13 @@ public class InGameMenuController extends Thread {
 
     public static void removeCardFromHand(GameBoard gameBoard, Card card, int playerIndex) {
         gameBoard.getPlayers()[playerIndex].getHand().remove(card);
-        InGameMenu.removeCardFromHand(gameBoard, card, playerIndex);
+        // TODO:
+        //InGameMenu.removeCardFromHand(gameBoard, card, playerIndex);
     }
 
     public static void changeThisCardInGraphic(GameBoard gameBoard, Soldier thisCard, Soldier anotherCard) {
-        InGameMenu.changeThisCardInGraphic(gameBoard, thisCard, anotherCard);
+        // TODO:
+        //InGameMenu.changeThisCardInGraphic(gameBoard, thisCard, anotherCard);
     }
 
     public static Commands destroySoldier(GameBoard gameBoard, Soldier soldier) {
@@ -81,10 +79,12 @@ public class InGameMenuController extends Thread {
 
     public static void showChangedPlayerScoreAndCardsHp(GameBoard gameBoard) {
         for(int i = 0; i < 2; i++) {
-            InGameMenu.showPlayersScore(gameBoard, i, gameBoard.getPlayerScore(i));
+            //TODO:
+            //InGameMenu.showPlayersScore(gameBoard, i, gameBoard.getPlayerScore(i));
             for(int j = 0; j < 3; j++) {
                 for (Soldier soldier : gameBoard.getRows()[i][j]) {
-                    InGameMenu.showSoldiersHp(gameBoard, soldier, soldier.getShownHp());
+                    //TODO:
+                    //InGameMenu.showSoldiersHp(gameBoard, soldier, soldier.getShownHp());
                 }
             }
         }
@@ -98,7 +98,8 @@ public class InGameMenuController extends Thread {
         ArrayList<Card> discardPile = user.getDiscardPile();
         user.getDeck().addAll(discardPile);
         user.getDiscardPile().clear();
-        InGameMenu.moveDiscardPileToDeck(user);
+        // TODO:
+        //InGameMenu.moveDiscardPileToDeck(user);
     }
 
     public static void moveSoldier(Soldier soldier, int playerNumber, int rowNumber) {
@@ -108,7 +109,8 @@ public class InGameMenuController extends Thread {
             return;
         gameBoard.getRows()[playerNumber][previousRowNumber].remove(soldier);
         gameBoard.getRows()[playerNumber][rowNumber].add(soldier);
-        InGameMenu.moveSoldier(soldier, playerNumber, rowNumber);
+        // TODO:
+        //InGameMenu.moveSoldier(soldier, playerNumber, rowNumber);
     }
 
     public static Card showAndSelectCard(GameBoard gameBoard, ArrayList<Card> options) {
@@ -122,8 +124,9 @@ public class InGameMenuController extends Thread {
         int previousHp = soldier.getShownHp();
         soldier.setHp(hp);
         gameBoard.setPlayerScore(playerIndex, gameBoard.getPlayerScore(playerIndex) - previousHp + soldier.getShownHp());
-        InGameMenu.showPlayersScore(gameBoard, playerIndex, gameBoard.getPlayerScore(playerIndex));
-        InGameMenu.showSoldiersHp(gameBoard, soldier, soldier.getShownHp());
+        // TODO:
+        //InGameMenu.showPlayersScore(gameBoard, playerIndex, gameBoard.getPlayerScore(playerIndex));
+        //InGameMenu.showSoldiersHp(gameBoard, soldier, soldier.getShownHp());
     }
 
     public static Result vetoCard(Matcher matcher){
@@ -285,8 +288,8 @@ public class InGameMenuController extends Thread {
         //InGameMenu.showThreeRandomCardsFromOpponentsHand();
     }
 
-    public static GameBoardin getGameBoardin(){
-        return new GameBoardin();
+    public static GameBoardin getGameBoardin(User user){
+        return new GameBoardin(user);
     }
 
 }

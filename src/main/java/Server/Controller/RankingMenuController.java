@@ -1,8 +1,8 @@
-package Controller;
+package Server.Controller;
 
-import Model.Result;
-import Model.User;
-import Regex.RankingMenuRegex;
+import Server.Model.Result;
+import Server.Model.User;
+import Server.Regex.RankingMenuRegex;
 
 import java.util.ArrayList;
 

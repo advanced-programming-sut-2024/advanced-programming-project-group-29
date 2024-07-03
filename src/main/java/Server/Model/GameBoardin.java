@@ -1,6 +1,6 @@
-package Model;
+package Server.Model;
 
-import Controller.ApplicationController;
+import Server.Controller.ApplicationController;
 
 import java.util.ArrayList;
 
@@ -37,8 +37,8 @@ public class GameBoardin {
     int player1XP;
     int player2XP;
 
-    public GameBoardin(){
-        GameBoard gameBoard = ApplicationController.getCurrentUser().getCurrentGameBoard();
+    public GameBoardin(User user){
+        GameBoard gameBoard = user.getCurrentGameBoard();
         User user1 = gameBoard.getPlayer(0);
         User user2 = gameBoard.getPlayer(1);
         player1Hand = new ArrayList<>();

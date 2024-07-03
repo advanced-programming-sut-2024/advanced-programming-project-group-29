@@ -1,7 +1,7 @@
-package Model;
+package Server.Model;
 
-import Enum.*;
-import Enum.Faction;
+import Server.Enum.*;
+import Server.Enum.Faction;
 
 public class Cardin {
 

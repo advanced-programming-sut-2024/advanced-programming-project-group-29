@@ -1,7 +1,16 @@
-package Controller;
+package Server.Controller;
 
-import Model.*;
-import Enum.*;
+import Server.Enum.Faction;
+import Server.Enum.Type;
+import Server.Enum.CheatCode;
+import Server.Regex.GameMenuRegex;
+import Server.Model.Result;
+import Server.Model.User;
+import Server.Model.GameBoard;
+import Server.Model.*;
+import Server.Model.Commander;
+import Server.Controller.ApplicationController;
+import Server.Controller.ApplicationController;
 import Server.Controller.ApplicationController;
 
 import java.util.regex.Matcher;
@@ -59,12 +68,12 @@ public class CheatMenuController {
 
     public static Object refillCommanderAbility() {
         Commander commander = user.getCommander();
-        if (!commander.HasAction() && !commander.hasPassiveAbility())
+        if (!commander.hasAction() && !commander.hasPassiveAbility())
             commander.setHasAction(true);
         return null;
     }
 
-    public static Commands killRandomSoldier() {
+    public static Object killRandomSoldier() {
         User opponent = user.getOpponent();
         GameBoard gameBoard = opponent.getCurrentGameBoard();
         Soldier soldier = gameBoard.getRandomSoldier(opponent);

@@ -1,8 +1,8 @@
-package Model;
+package Server.Model;
 
 import java.util.ArrayList;
 
-import Enum.Faction;
+import Server.Enum.Faction;
 
 public class SavedDeck {
     private final ArrayList<Card> deck;

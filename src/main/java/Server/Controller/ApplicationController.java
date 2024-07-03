@@ -1,8 +1,8 @@
 package Server.Controller;
 
-import Model.User;
-import Enum.Menu;
-import Model.Sender;
+import Server.Model.User;
+import Server.Enum.Menu;
+import Server.Model.Sender;
 import com.google.gson.GsonBuilder;
 import javafx.application.Application;
 import javafx.scene.layout.Pane;

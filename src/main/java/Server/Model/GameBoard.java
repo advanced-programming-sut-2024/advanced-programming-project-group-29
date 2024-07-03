@@ -1,11 +1,25 @@
-package Model;
+package Server.Model;
 
-import Controller.InGameMenuController;
+import Server.Enum.Faction;
+import Server.Enum.Type;
+import Server.Enum.Attribute;
+import Server.Enum.CheatCode;
+import Server.Regex.GameMenuRegex;
+import Server.Model.Result;
+import Server.Model.User;
+import Server.Model.Soldier;
+import Server.Model.Spell;
+import Server.Model.Card;
+import Server.Model.Commander;
+import Server.Model.SavedDeck;
+import Server.Model.GameHistory;
+import Server.Model.Cardin;
+import Server.Model.GameBoardin;
+import Server.Controller.*;
 
 import java.util.ArrayList;
 import java.util.Date;
 
-import Enum.*;
 
 public class GameBoard {
     private final User[] players = new User[2];

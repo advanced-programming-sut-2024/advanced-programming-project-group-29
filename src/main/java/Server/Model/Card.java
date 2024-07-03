@@ -1,9 +1,8 @@
-package Model;
+package Server.Model;
 
-import Controller.InGameMenuController;
-import Enum.Attribute;
-import Enum.Faction;
-import Enum.*;
+import Server.Controller.InGameMenuController;
+import Server.Enum.Attribute;
+import Server.Enum.Faction;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -15,6 +14,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Objects;
+import Server.Enum.*;
 
 public abstract class Card {
     protected String description;

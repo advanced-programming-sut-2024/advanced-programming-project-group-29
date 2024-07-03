@@ -1,4 +1,4 @@
-package Enum;
+package Server.Enum;
 
 public enum Space {
     CLOSE_COMBAT,

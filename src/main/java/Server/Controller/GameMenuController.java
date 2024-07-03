@@ -1,19 +1,17 @@
 package Server.Controller;
 
-import Enum.Faction;
-import Enum.Type;
-import Regex.GameMenuRegex;
-import Model.Result;
-import Model.User;
-import Model.Soldier;
-import Model.Spell;
-import Model.Card;
-import Model.GameBoard;
-import Model.Commander;
-import Model.SavedDeck;
-import Model.GameHistory;
-import Model.Cardin;
-import Model.GameBoardin;
+import Server.Enum.Faction;
+import Server.Enum.Type;
+import Server.Regex.GameMenuRegex;
+import Server.Model.Result;
+import Server.Model.User;
+import Server.Model.Soldier;
+import Server.Model.*;
+import Server.Model.Commander;
+import Server.Model.SavedDeck;
+import Server.Model.GameHistory;
+import Server.Model.Cardin;
+import Server.Model.GameBoardin;
 import Server.Controller.ApplicationController;
 
 import java.nio.file.Files;
