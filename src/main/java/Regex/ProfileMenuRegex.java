@@ -1,5 +1,8 @@
 package Regex;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public enum ProfileMenuRegex {
     CHANGE_USERNAME("change username -u (?<username>\\S+)"),
     CHANGE_NICKNAME("change nickname -u (?<nickname>\\S+)"),
@@ -17,5 +20,9 @@ public enum ProfileMenuRegex {
 
     public String getRegex() {
         return regex;
+    }
+
+    public Matcher getMatcher(String inputCommand) {
+        return Pattern.compile(regex).matcher(inputCommand);
     }
 }

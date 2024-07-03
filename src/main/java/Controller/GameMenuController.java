@@ -2,6 +2,7 @@ package Controller;
 
 import Enum.Faction;
 import Enum.Type;
+import Regex.GameMenuRegex;
 import Model.*;
 
 import java.nio.file.Files;
@@ -11,17 +12,47 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 
 public class GameMenuController {
-    public static Result createGame(Matcher matcher) {
+    public static Result processRequest(ApplicationController applicationController, String inputCommand) {
+        if (inputCommand.matches(GameMenuRegex.CREATEGAME.getRegex())) {
+            return createGame(applicationController.getCurrentUser(), GameMenuRegex.CREATEGAME.getMatcher(inputCommand));
+        } else if (inputCommand.matches(GameMenuRegex.SHOWFACTIONS.getRegex())) {
+            return showFactions();
+        } else if (inputCommand.matches(GameMenuRegex.SELECTFACTION.getRegex())) {
+            return selectFaction(applicationController.getCurrentUser(), GameMenuRegex.SELECTFACTION.getMatcher(inputCommand));
+        } else if (inputCommand.matches(GameMenuRegex.SHOWCARDS.getRegex())) {
+            return showCards(applicationController.getCurrentUser());
+        } else if (inputCommand.matches(GameMenuRegex.SHOWDECK.getRegex())) {
+            return showDeck(applicationController.getCurrentUser());
+        } else if (inputCommand.matches(GameMenuRegex.SHOWINFOCURRENTUSER.getRegex())) {
+            return showInfoCurrentUser(applicationController.getCurrentUser());
+        } else if (inputCommand.matches(GameMenuRegex.SAVEDECK.getRegex())) {
+            return saveDeck(applicationController.getCurrentUser(), GameMenuRegex.SAVEDECK.getMatcher(inputCommand));
+        } else if (inputCommand.matches(GameMenuRegex.LOADDECK.getRegex())) {
+            return loadDeck(applicationController.getCurrentUser(), GameMenuRegex.LOADDECK.getMatcher(inputCommand));
+        } else if (inputCommand.matches(GameMenuRegex.SHOW_LEADERS.getRegex())) {
+            return showLeaders(applicationController.getCurrentUser());
+        } else if (inputCommand.matches(GameMenuRegex.SELECT_LEADER.getRegex())) {
+            return selectLeader(applicationController.getCurrentUser(), GameMenuRegex.SELECT_LEADER.getMatcher(inputCommand));
+        } else if (inputCommand.matches(GameMenuRegex.ADD_TO_DECK.getRegex())) {
+            return addCardToDeck(applicationController.getCurrentUser(), GameMenuRegex.ADD_TO_DECK.getMatcher(inputCommand));
+        } else if (inputCommand.matches(GameMenuRegex.DELETEFROMDECK.getRegex())) {
+            return removeCardFromDeck(applicationController.getCurrentUser(), GameMenuRegex.DELETEFROMDECK.getMatcher(inputCommand));
+        } else if (inputCommand.matches(GameMenuRegex.CHANGE_TURN.getRegex())) {
+            return changeTurn(applicationController.getCurrentUser());
+        }
+        return null;
+    }
+
+    public static Result createGame(User user1, Matcher matcher) {
         String player2 = matcher.group("player2");
         if (player2 == null) {
             return new Result(false, "You should enter the second player's username.");
         }
-        User user1 = ApplicationController.getCurrentUser();
         User user2 = User.getUserByUsername(player2);
         if (user2 == null) {
             return new Result(false, "There is no player with this username.");
         }
-        if (user2.equals(ApplicationController.getCurrentUser())) {
+        if (user2.equals(user1)) {
             return new Result(false, "You can't play with yourself.");
         }
         if (user1.getCurrentGameBoard() != null) {
@@ -44,20 +75,19 @@ public class GameMenuController {
         return new Result(true, messages);
     }
 
-    public static Result selectFaction(Matcher matcher) {
+    public static Result selectFaction(User user, Matcher matcher) {
         String factionName = matcher.group("faction");
         Faction faction = Faction.getFactionFromString(factionName);
         if (faction == null) {
             return new Result(false, "Invalid faction name.");
         }
-        User user = ApplicationController.getCurrentUser();
         user.setFaction(faction);
         user.setCommander(new Commander(faction.getCommanders().getFirst(),user));
         user.resetDeck();
         return new Result(true, "Faction selected successfully.");
     }
 
-    public static String showCard(String cardName) {
+    private static String showCard(User user, String cardName) {
         String cardDescription = cardName + " ";
         if (Soldier.isSoldier(cardName)) {
             cardDescription += "Soldier Card";
@@ -70,36 +100,33 @@ public class GameMenuController {
             return null;
         }
         cardDescription += " " + Card.getAllowedNumberByCardName(cardName);
-        cardDescription += " " + ApplicationController.getCurrentUser().getNumberOfOccurrenceInDeck(cardName);
+        cardDescription += " " + user.getNumberOfOccurrenceInDeck(cardName);
         return cardDescription;
     }
 
-    public static Result showCards() {
-        User user = ApplicationController.getCurrentUser();
+    public static Result showCards(User user) {
         Faction faction = user.getFaction();
         ArrayList<String> messages = new ArrayList<>();
         for (String cardName : faction.getCards()) {
-            String cardDescription = showCard(cardName);
+            String cardDescription = showCard(user, cardName);
             if (cardDescription == null) return new Result(false, "Error showing cards.");
             messages.add(cardDescription);
         }
         return new Result(true, messages);
     }
 
-    public static Result showDeck() {
-        User user = ApplicationController.getCurrentUser();
+    public static Result showDeck(User user) {
         ArrayList<String> messages = new ArrayList<>();
         for (int i = 0; i < user.getDeck().size(); i++) {
             Card card = user.getDeck().get(i);
-            String cardDescription = showCard(card.getName());
+            String cardDescription = showCard(user, card.getName());
             if (cardDescription == null) return new Result(false, "Error showing deck.");
             messages.add(cardDescription);
         }
         return new Result(true, messages);
     }
 
-    public static Result showInfoCurrentUser() {
-        User user = ApplicationController.getCurrentUser();
+    public static Result showInfoCurrentUser(User user) {
         ArrayList<String> messages = new ArrayList<>();
         messages.add("Username: " + user.getUsername());
         messages.add("Faction: " + user.getFaction().getName());
@@ -119,9 +146,8 @@ public class GameMenuController {
         return new Result(true, messages);
     }
 
-    public static Result saveDeck(Matcher matcher) {
+    public static Result saveDeck(User user, Matcher matcher) {
         String type = matcher.group("type");
-        User user = ApplicationController.getCurrentUser();
         boolean overwrite = matcher.group("overwrite") != null;
         if (type.equals("-f")) {
             SavedDeck savedDeck = new SavedDeck(user.getDeck(), user.getCommander(), user.getFaction());
@@ -144,9 +170,8 @@ public class GameMenuController {
         return new Result(true, "Deck saved successfully.");
     }
 
-    public static Result loadDeck(Matcher matcher) {
+    public static Result loadDeck(User user, Matcher matcher) {
         String type = matcher.group("type");
-        User user = ApplicationController.getCurrentUser();
         if (type.equals("-f")) {
             Path path = Paths.get(matcher.group("name"));
             if (!Files.exists(path)) {
@@ -170,10 +195,10 @@ public class GameMenuController {
         return new Result(true, "Deck loaded successfully.");
     }
 
-    public static Result showLeaders() {
+    public static Result showLeaders(User user) {
         ArrayList<String> messages = new ArrayList<>();
-        Faction faction = ApplicationController.getCurrentUser().getFaction();
-        String currentCommander = ApplicationController.getCurrentUser().getCommander().getName();
+        Faction faction = user.getFaction();
+        String currentCommander = user.getCommander().getName();
         messages.add(currentCommander);
         for (String commander : faction.getCommanders()) {
             if (commander.equals(currentCommander)) continue;
@@ -182,9 +207,8 @@ public class GameMenuController {
         return new Result(true, messages);
     }
 
-    public static Result selectLeader(Matcher matcher) {
+    public static Result selectLeader(User user, Matcher matcher) {
         String name = matcher.group("name");
-        User user = ApplicationController.getCurrentUser();
         Faction faction = user.getFaction();
         if (!faction.getCommanders().contains(name)) {
             return new Result(false, "Invalid commander name.");
@@ -193,13 +217,12 @@ public class GameMenuController {
         return new Result(true, "Commander selected successfully.");
     }
 
-    public static Result addCardToDeck(Matcher matcher) {
+    public static Result addCardToDeck(User user, Matcher matcher) {
         String name = matcher.group("name");
         int number = matcher.group("number") == null ? 1 : Integer.parseInt(matcher.group("number"));
         if (number < 1) {
             return new Result(false, "Number should be positive.");
         }
-        User user = ApplicationController.getCurrentUser();
         int currentNumber = user.getNumberOfOccurrenceInDeck(name);
         if (currentNumber + number > Card.getAllowedNumberByCardName(name)) {
             return new Result(false, "You can't add more than " + Card.getAllowedNumberByCardName(name) + " of this card.");
@@ -217,13 +240,12 @@ public class GameMenuController {
         return new Result(true, "Card added successfully.");
     }
 
-    public static Result removeCardFromDeck(Matcher matcher) {
+    public static Result removeCardFromDeck(User user, Matcher matcher) {
         String name = matcher.group("name");
         int number = matcher.group("number") == null ? 1 : Integer.parseInt(matcher.group("number"));
         if (number < 1) {
             return new Result(false, "Number should be positive.");
         }
-        User user = ApplicationController.getCurrentUser();
         int currentNumber = user.getNumberOfOccurrenceInDeck(name);
         if (currentNumber < number) {
             return new Result(false, "You don't have this number of this card in your deck.");
@@ -234,8 +256,7 @@ public class GameMenuController {
         return new Result(true, "Card removed successfully.");
     }
 
-    public static Result changeTurn() {
-        User user = ApplicationController.getCurrentUser();
+    public static Result changeTurn(User user) {
         if (user.getNumberOfSoldiersInDeck() < 22) {
             return new Result(false, "You should have at least 22 soldiers in your deck.");
         }
@@ -243,10 +264,5 @@ public class GameMenuController {
         gameBoard.changeTurn();
         ApplicationController.setCurrentUser(gameBoard.getPlayer(gameBoard.getCurrentPlayer()));
         return new Result(true, "Turn changed successfully.");
-    }
-
-    public static Result processRequest(ApplicationController applicationController, String inputCommand) {
-        // TODO
-        return null;
     }
 }
