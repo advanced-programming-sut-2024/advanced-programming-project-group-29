@@ -35,7 +35,7 @@ public class ApplicationController extends Thread {
     public static void main(String[] args){
         ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(THREAD_COUNT);
         try {
-            ServerSocket server = new ServerSocket(4000);
+            ServerSocket server = new ServerSocket(PORT);
             Socket socket;
             while (true) {
                 socket = server.accept();
