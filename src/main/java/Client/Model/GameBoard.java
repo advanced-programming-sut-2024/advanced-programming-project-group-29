@@ -1,11 +1,16 @@
-package Model;
+package Client.Model;
 
-import Controller.InGameMenuController;
+import Server.Controller.InGameMenuController;
 
 import java.util.ArrayList;
 import java.util.Date;
 
-import Enum.*;
+import Enum.Attribute;
+import Model.Commander;
+import Model.Soldier;
+import Model.Spell;
+import Model.User;
+import Model.GameHistory;
 
 public class GameBoard {
     private final User[] players = new User[2];

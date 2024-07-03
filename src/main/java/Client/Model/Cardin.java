@@ -1,6 +1,7 @@
-package Model;
+package  Client.Model;
 
-import Enum.*;
+import Enum.Attribute;
+import Enum.Type;
 import Enum.Faction;
 
 public class Cardin {

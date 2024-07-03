@@ -1,9 +1,13 @@
-package Model;
+package Client.Model;
 
-import Controller.InGameMenuController;
+import Server.Controller.InGameMenuController;
 import Enum.Attribute;
 import Enum.Faction;
-import Enum.*;
+import Enum.Type;
+import Model.GameBoard;
+import Model.Soldier;
+import Model.User;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
