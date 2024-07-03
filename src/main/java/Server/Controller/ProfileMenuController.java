@@ -12,7 +12,7 @@ import java.util.Date;
 import java.util.regex.Matcher;
 
 public class ProfileMenuController {
-    public static Result processRequest(ApplicationController applicationController, String inputCommand) {
+    public static Object processRequest(ApplicationController applicationController, String inputCommand) {
         if (inputCommand.matches(ProfileMenuRegex.CHANGE_USERNAME.getRegex())) {
             return changeUsername(applicationController.getCurrentUser(), ProfileMenuRegex.CHANGE_USERNAME.getMatcher(inputCommand));
         } else if (inputCommand.matches(ProfileMenuRegex.CHANGE_NICKNAME.getRegex())) {
@@ -22,7 +22,7 @@ public class ProfileMenuController {
         } else if (inputCommand.matches(ProfileMenuRegex.CHANGE_PASSWORD.getRegex())) {
             return changePassword(applicationController.getCurrentUser(), ProfileMenuRegex.CHANGE_PASSWORD.getMatcher(inputCommand));
         } else if (inputCommand.matches(ProfileMenuRegex.SHOW_INFO.getRegex())) {
-            return new Result(true, showInfo(applicationController.getCurrentUser())); //TODO returning Result and not ArrayList<String>
+            return showInfo(applicationController.getCurrentUser());
         } else if (inputCommand.matches(ProfileMenuRegex.GAME_HISTORY.getRegex())) {
             return gameHistory(applicationController.getCurrentUser(), ProfileMenuRegex.GAME_HISTORY.getMatcher(inputCommand));
         } else if (inputCommand.matches(ProfileMenuRegex.SEND_FRIEND_REQUEST.getRegex())) {

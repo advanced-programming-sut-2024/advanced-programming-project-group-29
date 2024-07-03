@@ -1,7 +1,8 @@
 package Client.View;
 
-import Controller.RankingMenuController;
-import Controller.SaveApplicationAsObject;
+import Client.Client;
+import Client.Regex.RankingMenuRegex;
+import Client.Controller.SaveApplicationAsObject;
 import javafx.application.Application;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -12,25 +13,33 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Objects;
 
 public class RankingMenu extends Application {
 
     public Label nUsers;
     public TableView tableView;
+    private Client client;
+
+    public RankingMenu() {
+        super();
+        client = Client.getClient();
+    }
 
     @FXML
     public void initialize() {
-        ArrayList<ArrayList<String>> result = RankingMenuController.getRanking();
+        ArrayList<String> ranks = (ArrayList<String>) client.sendCommand(RankingMenuRegex.GET_RANKING.getRegex());
+        ArrayList<ArrayList<String>> result = new ArrayList<>();
+        for (String line : ranks) {
+            result.add((ArrayList<String>) Arrays.asList(line.split("\t")));
+        }
         ArrayList<String> names = new ArrayList<>(){{
             add("Rank");
             add("Username");
@@ -60,29 +69,6 @@ public class RankingMenu extends Application {
             }
         });
         tableView.setItems(data);
-
-
-
-//
-//
-//
-//
-//
-//        nUsers.setText("Ranking between " + result.size() + " users");
-//        VBox vBox = new VBox();
-//        for (String s : result) {
-//            Label label = new Label(s);
-//            label.setTextFill(Paint.valueOf("green"));
-//            label.setWrapText(true);
-//            label.setLayoutX(10);
-//            label.setLayoutY(10);
-//            label.setPrefWidth(450);
-//            label.setPrefHeight(30);
-//            label.setFont(Font.font("System", FontWeight.BOLD, 16));
-//            vBox.getChildren().add(label);
-//        }
-//        vBox.setSpacing(20);
-//        scrollPain.setContent(vBox);
     }
 
     @Override

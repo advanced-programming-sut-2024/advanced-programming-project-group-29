@@ -1,9 +1,9 @@
 package Client.View;
 
-import Controller.ProfileMenuController;
-import Controller.SaveApplicationAsObject;
-import Model.Result;
-import Regex.ProfileMenuRegex;
+import Client.Client;
+import Client.Controller.SaveApplicationAsObject;
+import Client.Model.Result;
+import Client.Regex.ProfileMenuRegex;
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -49,8 +49,13 @@ public class ProfileMenu extends Application {
     public ScrollPane scrollPane;
 
     private Label warning;
+    private Client client;
 
-    private ProfileMenuController profileMenuController;
+    public ProfileMenu() {
+        super();
+        client = Client.getClient();
+    }
+
     private static final String[] changeFields = {
             "Username",
             "Nickname",
@@ -135,15 +140,6 @@ public class ProfileMenu extends Application {
         SaveApplicationAsObject.getApplicationController().setPane(pane);
     }
 
-    public ProfileMenuController getProfileMenuController() {
-        return profileMenuController;
-    }
-
-    public void setProfileMenuController(ProfileMenuController profileMenuController) {
-        this.profileMenuController = profileMenuController;
-    }
-
-
     public void showInfo(MouseEvent mouseEvent) {
         deleteWarning();
         showInfo();
@@ -156,7 +152,7 @@ public class ProfileMenu extends Application {
     }
 
     private void showInfo() {
-        ArrayList<String> info = ProfileMenuController.showInfo();
+        ArrayList<String> info = (ArrayList<String>) client.sendCommand(ProfileMenuRegex.SHOW_INFO.getRegex());
         username.setText(info.get(0));
         nickname.setText(info.get(1));
         highestScore.setText(info.get(2));
@@ -209,9 +205,7 @@ public class ProfileMenu extends Application {
     private void showHistory() {
         int n = (countHistory.getText().isEmpty() ? 0 : Integer.parseInt(countHistory.getText()));
         String toRegex = "game history" + (n == 0 ? "" : " -n " + n);
-        Matcher matcher = Pattern.compile(ProfileMenuRegex.GAME_HISTORY.getRegex()).matcher(toRegex);
-        matcher.matches();
-        Result result = ProfileMenuController.gameHistory(matcher);
+        Result result = (Result) client.sendCommand(toRegex);
         if (!result.isSuccessful()) {
             Label label = new Label(result.getMessage().getFirst());
             label.setTextFill(Paint.valueOf("red"));
@@ -242,27 +236,18 @@ public class ProfileMenu extends Application {
 
 
     public void applyChanges(MouseEvent mouseEvent) {
-        Matcher matcher;
-        Result result =null;
+        String toRegex = "";
         if (Fields.getValue().equals("Password")) {
-            matcher = Pattern.compile(ProfileMenuRegex.CHANGE_PASSWORD.getRegex()).matcher("change password -p " + textField1.getText() + " -o " + textField2.getText());
-            matcher.matches();
-            result = ProfileMenuController.changePassword(matcher);
+            toRegex = "change password -p " + textField1.getText() + " -o " + textField2.getText();
         } else if (Fields.getValue().equals("Username")) {
-            matcher = Pattern.compile(ProfileMenuRegex.CHANGE_USERNAME.getRegex()).matcher("change username -u " + textField1.getText());
-            matcher.matches();
-            result = ProfileMenuController.changeUsername(matcher);
+            toRegex = "change username -u " + textField1.getText();
         } else if (Fields.getValue().equals("Nickname")) {
-            matcher = Pattern.compile(ProfileMenuRegex.CHANGE_NICKNAME.getRegex()).matcher("change nickname -u " + textField1.getText());
-            matcher.matches();
-            result = ProfileMenuController.changeNickname(matcher);
+            toRegex = "change nickname -u " + textField1.getText();
         } else if (Fields.getValue().equals("Email")) {
-            matcher = Pattern.compile(ProfileMenuRegex.CHANGE_EMAIL.getRegex()).matcher("change email -e " + textField1.getText());
-            matcher.matches();
-            result = ProfileMenuController.changeEmail(matcher);
+            toRegex = "change email -e " + textField1.getText();
         }
-        assert result != null;
-        sayAlert(result.getMessage().get(0), !result.isSuccessful());
+        Result result = (Result) client.sendCommand(toRegex);
+        sayAlert(result.getMessage().getFirst(), !result.isSuccessful());
         removeTextFields();
     }
 
