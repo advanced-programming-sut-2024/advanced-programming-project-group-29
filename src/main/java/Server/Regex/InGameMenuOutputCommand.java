@@ -15,7 +15,6 @@ public enum InGameMenuOutputCommand {
     MOVE_DISCARD_TO_DECK("move discard pile to deck"), // move both users discard pile to deck
     MOVE_SOLDIER_TO_ROW("move soldier (?<rowNumber>\\d) (?<cardNumber>\\d+) to (?<newRowNumber>\\d)"), // move soldier in rowNumber and cardNumber to the end of newRowNumber
     SEE_THREE_CARD("see three random cards from opponent's hand"),
-
     ;
     private String command;
 
