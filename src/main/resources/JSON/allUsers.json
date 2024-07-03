@@ -7,10 +7,10 @@
     "questionNumber": 0,
     "answer": "red",
     "preDeck": [],
-    "faction": "SCOIATAELL",
+    "faction": "NORTH_REALMS",
     "commander": {
       "hasAction": true,
-      "name": "queen of dol blathanna"
+      "name": "son of medell"
     },
     "gameHistory": [],
     "friends": [],
@@ -25,10 +25,10 @@
     "questionNumber": 0,
     "answer": "red",
     "preDeck": [],
-    "faction": "SCOIATAELL",
+    "faction": "NILFGAARDIAN_EMPIRE",
     "commander": {
       "hasAction": true,
-      "name": "queen of dol blathanna"
+      "name": "the white flame"
     },
     "gameHistory": [],
     "friends": [],

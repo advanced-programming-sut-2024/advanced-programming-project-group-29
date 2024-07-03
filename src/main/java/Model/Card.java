@@ -172,7 +172,7 @@ public abstract class Card {
         return faction;
     }
 
-    private Type getType() {
+    public Type getType() {
         return type;
     }
 
@@ -198,7 +198,62 @@ public abstract class Card {
         return name;
     }
 
-    public ArrayList<Space> getAllowedSpaces(){
-        return new ArrayList<>();
+    public static ArrayList<Space> getAllowedSpaces(String name) {
+        JSONObject card = Card.getCardByName(name);
+        assert card != null;
+        String cardName = card.getString("name");
+        Type type = Type.getTypeFromString(card.getString("type"));
+        ArrayList<Space> spaces = new ArrayList<>();
+        boolean spy = cardName.matches("(S|s)py");
+        switch (type) {
+            case CLOSE_COMBAT:
+                spaces.add(spy ? Space.OPPONENT_CLOSE_COMBAT : Space.CLOSE_COMBAT);
+                break;
+            case RANGED:
+                spaces.add(spy ? Space.OPPONENT_RANGED : Space.RANGED);
+                break;
+            case SIEGE:
+                spaces.add(spy ? Space.OPPONENT_SIEGE : Space.SIEGE);
+                break;
+            case AGILE:
+                spaces.add(spy ? Space.OPPONENT_CLOSE_COMBAT : Space.CLOSE_COMBAT);
+                spaces.add(spy ? Space.OPPONENT_RANGED : Space.RANGED);
+                break;
+            case WEATHER:
+                spaces.add(Space.WEATHER);
+                break;
+            case SPELL:
+                if (cardName.matches("(S|s)corch")) {
+                    spaces.add(Space.CARD);
+                } else {
+                    spaces.add(Space.CLOSE_COMBAT);
+                    spaces.add(Space.RANGED);
+                    spaces.add(Space.SIEGE);
+                }
+                break;
+        }
+        return spaces;
+    }
+
+    public int getHp() {
+        if(this instanceof Soldier)
+            return ((Soldier) this).getHp();
+        return 0;
+    }
+
+    public Attribute getAttribute() {
+        if(this instanceof Soldier)
+            return ((Soldier) this).getAttribute();
+        return null;
+    }
+
+    public boolean isHero() {
+        if(this instanceof Soldier)
+            return ((Soldier) this).isHero();
+        return false;
+    }
+
+    public boolean isSoldier() {
+        return this instanceof Soldier;
     }
 }

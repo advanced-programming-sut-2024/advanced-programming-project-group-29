@@ -3,6 +3,7 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.BoxBlur?>
 <?import javafx.scene.effect.Shadow?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -13,7 +14,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="900.0" prefWidth="1600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.InGameMenu">
+<AnchorPane fx:id="pain" prefHeight="900.0" prefWidth="1600.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.InGameMenu">
    <children>
       <ImageView fitHeight="900.0" fitWidth="1600.0" pickOnBounds="true" preserveRatio="true">
          <image>
@@ -22,12 +23,42 @@
       </ImageView>
       <Pane fx:id="mainPain" layoutX="1.0" prefHeight="900.0" prefWidth="1598.0">
          <children>
-            <Pane fx:id="row11" layoutX="470.0" layoutY="588.0" prefHeight="100.0" prefWidth="795.0" />
-            <Pane fx:id="row12" layoutX="470.0" layoutY="474.0" prefHeight="100.0" prefWidth="795.0" />
-            <Pane fx:id="row13" layoutX="470.0" layoutY="362.0" prefHeight="100.0" prefWidth="795.0" />
-            <Pane fx:id="row23" layoutX="470.0" layoutY="237.0" prefHeight="100.0" prefWidth="795.0" />
-            <Pane fx:id="row22" layoutX="470.0" layoutY="124.0" prefHeight="100.0" prefWidth="795.0" />
-            <Pane fx:id="row21" layoutX="470.0" layoutY="14.0" prefHeight="100.0" prefWidth="795.0" />
+            <ImageView fx:id="rowWeather11" fitHeight="120.0" fitWidth="793.0" layoutX="473.0" layoutY="575.0" pickOnBounds="true" preserveRatio="true" visible="false">
+               <image>
+                  <Image url="@../Images/icons/overlay_rain.png" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="rowWeather12" fitHeight="116.0" fitWidth="793.0" layoutX="473.0" layoutY="462.0" pickOnBounds="true" preserveRatio="true" visible="false">
+               <image>
+                  <Image url="@../Images/icons/overlay_fog.png" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="rowWeather13" fitHeight="116.0" fitWidth="793.0" layoutX="473.0" layoutY="352.0" pickOnBounds="true" preserveRatio="true" visible="false">
+               <image>
+                  <Image url="@../Images/icons/overlay_frost.png" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="rowWeather23" fitHeight="116.0" fitWidth="793.0" layoutX="473.0" layoutY="226.0" pickOnBounds="true" preserveRatio="true" visible="false">
+               <image>
+                  <Image url="@../Images/icons/overlay_frost.png" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="rowWeather22" fitHeight="116.0" fitWidth="793.0" layoutX="473.0" layoutY="113.0" pickOnBounds="true" preserveRatio="true" visible="false">
+               <image>
+                  <Image url="@../Images/icons/overlay_fog.png" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="rowWeather21" fitHeight="116.0" fitWidth="793.0" layoutX="473.0" layoutY="2.0" pickOnBounds="true" preserveRatio="true" visible="false">
+               <image>
+                  <Image url="@../Images/icons/overlay_rain.png" />
+               </image>
+            </ImageView>
+            <Pane fx:id="row11" layoutX="589.0" layoutY="588.0" opacity="0.15" prefHeight="100.0" prefWidth="675.0" />
+            <Pane fx:id="row12" layoutX="589.0" layoutY="474.0" opacity="0.15" prefHeight="100.0" prefWidth="675.0" />
+            <Pane fx:id="row13" layoutX="589.0" layoutY="362.0" opacity="0.15" prefHeight="100.0" prefWidth="675.0" />
+            <Pane fx:id="row23" layoutX="589.0" layoutY="237.0" opacity="0.15" prefHeight="100.0" prefWidth="675.0" />
+            <Pane fx:id="row22" layoutX="589.0" layoutY="124.0" opacity="0.15" prefHeight="100.0" prefWidth="675.0" />
+            <Pane fx:id="row21" layoutX="589.0" layoutY="14.0" opacity="0.15" prefHeight="100.0" prefWidth="675.0" />
             <ImageView fitHeight="100.0" fitWidth="70.0" layoutX="1446.0" layoutY="698.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../Images/icons/deck_back_scoiatael.jpg" />
@@ -234,12 +265,18 @@
                   <Image url="@../Images/icons/icon_leader_active.png" />
                </image>
             </ImageView>
-            <Pane layoutX="118.0" layoutY="372.0" prefHeight="120.0" prefWidth="230.0" />
+            <Pane fx:id="rowWeather" layoutX="118.0" layoutY="372.0" opacity="0.15" prefHeight="120.0" prefWidth="230.0" />
+            <Pane fx:id="rowHorn11" layoutX="472.0" layoutY="587.0" opacity="0.15" prefHeight="100.0" prefWidth="110.0" />
+            <Pane fx:id="rowHorn12" layoutX="472.0" layoutY="472.0" opacity="0.15" prefHeight="100.0" prefWidth="110.0" />
+            <Pane fx:id="rowHorn13" layoutX="472.0" layoutY="361.0" opacity="0.15" prefHeight="100.0" prefWidth="110.0" />
+            <Pane fx:id="rowHorn23" layoutX="472.0" layoutY="237.0" opacity="0.15" prefHeight="100.0" prefWidth="110.0" />
+            <Pane fx:id="rowHorn22" layoutX="472.0" layoutY="123.0" opacity="0.15" prefHeight="100.0" prefWidth="110.0" />
+            <Pane fx:id="rowHorn21" layoutX="472.0" layoutY="13.0" opacity="0.15" prefHeight="100.0" prefWidth="110.0" />
          </children>
       </Pane>
-      <Pane fx:id="changePain" disable="true" layoutX="43.0" layoutY="82.0" prefHeight="699.0" prefWidth="1516.0" visible="false">
+      <Pane fx:id="changePain" disable="true" layoutX="2.0" layoutY="11.0" prefHeight="886.0" prefWidth="1592.0" visible="false">
          <children>
-            <Rectangle fx:id="darkBackSelect" arcHeight="5.0" arcWidth="5.0" fill="#eed092" height="245.0" layoutX="643.0" layoutY="227.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="0.0" width="231.0">
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#eed092" height="662.0" layoutX="248.0" layoutY="112.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="0.0" width="1097.0">
                <effect>
                   <Shadow height="60.0" radius="29.5" width="60.0">
                      <color>
@@ -248,6 +285,42 @@
                   </Shadow>
                </effect>
             </Rectangle>
+            <ImageView fx:id="image3" fitHeight="538.0" fitWidth="280.0" layoutX="656.0" layoutY="150.0" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fx:id="image4" fitHeight="363.0" fitWidth="192.0" layoutX="965.0" layoutY="214.0" opacity="0.7" pickOnBounds="true" preserveRatio="true">
+               <effect>
+                  <BoxBlur />
+               </effect>
+            </ImageView>
+            <ImageView fx:id="image5" fitHeight="246.0" fitWidth="130.0" layoutX="1184.0" layoutY="273.0" opacity="0.4" pickOnBounds="true" preserveRatio="true">
+               <effect>
+                  <BoxBlur height="8.0" width="8.0" />
+               </effect>
+            </ImageView>
+            <ImageView fx:id="image2" fitHeight="363.0" fitWidth="192.0" layoutX="437.0" layoutY="214.0" opacity="0.7" pickOnBounds="true" preserveRatio="true">
+               <effect>
+                  <BoxBlur />
+               </effect>
+            </ImageView>
+            <ImageView fx:id="image1" fitHeight="246.0" fitWidth="130.0" layoutX="283.0" layoutY="273.0" opacity="0.4" pickOnBounds="true" preserveRatio="true">
+               <effect>
+                  <BoxBlur height="8.0" width="8.0" />
+               </effect>
+            </ImageView>
+            <ImageView fitHeight="53.0" fitWidth="43.0" layoutX="328.0" layoutY="667.0" onMouseClicked="#backward" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../Images/icons/cursur.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="53.0" fitWidth="43.0" layoutX="1229.0" layoutY="667.0" onMouseClicked="#forward" pickOnBounds="true" preserveRatio="true" rotate="180.0">
+               <image>
+                  <Image url="@../Images/icons/cursur.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="43.0" fitWidth="54.0" layoutX="321.0" layoutY="147.0" onMouseClicked="#done" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../Images/icons/checkMark.png" />
+               </image>
+            </ImageView>
          </children>
       </Pane>
       <Pane fx:id="descriptionPain" disable="true" layoutX="1202.0" layoutY="32.0" prefHeight="821.0" prefWidth="390.0" visible="false">

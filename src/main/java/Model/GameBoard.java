@@ -234,4 +234,8 @@ public class GameBoard {
         }
         return soldiers.get((int) (Math.random() * soldiers.size()));
     }
+
+    public int getCurrentPlayerIndex() {
+        return currentPlayer;
+    }
 }

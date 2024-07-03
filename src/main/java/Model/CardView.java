@@ -28,7 +28,8 @@ import java.util.Random;
 
 public class CardView extends Pane {
     private ArrayList<CardView> allCardView = new ArrayList<>();
-    private final Card card;
+    private final InGameMenu inGameMenu;
+    private final Cardin card;
     private final double WIDTH = 70;
     private final double HEIGHT = 100;
     private final String path;
@@ -36,28 +37,26 @@ public class CardView extends Pane {
     private final Image face;
     private final Image back;
     private final Group items = new Group();
-    private final boolean isSoldier;
     private boolean isUp = false;
     private boolean isSelected = false;
-    private boolean isInHand = true;
+    private boolean isInHand = false;
 
 
-    public CardView(Card card, double x, double y) {
+    public CardView(Cardin card, double x, double y,InGameMenu inGameMenu) {
         this.allCardView.add(this);
+        this.inGameMenu = inGameMenu;
         this.card = card;
-        this.path = "/Images/Raw/" + card.getUser().getFaction().getName() + "/" + card.getName() + ".jpg";
+        this.path = "/Images/Raw/" +  card.faction.getName() + "/" + card.name + ".jpg";
         this.face = new Image(path);
-        this.back = new Image("/Images/icons/deck_back_" + card.getUser().getFaction().getName().toLowerCase() + ".png");
+        this.back = new Image("/Images/icons/deck_back_" + card.faction.getName().toLowerCase() + ".png");
         this.background = new ImageView(path);
         this.background.setFitHeight(100);
         this.background.setFitWidth(70);
         this.background.setLayoutX(0);
         this.background.setLayoutY(0);
         ////////////////////////////////////////////
-        this.isSoldier = card instanceof Soldier;
-
-        if (this.isSoldier) {
-            Label hp = new Label("" + ((Soldier) card).getHp());
+        if (card.isSoldier) {
+            Label hp = new Label("" + card.hp);
             hp.setFont(Font.font("System", FontWeight.BOLD, 15));
             hp.setAlignment(Pos.CENTER);
             hp.setLayoutX(3);
@@ -65,17 +64,17 @@ public class CardView extends Pane {
             hp.setPrefHeight(15);
             hp.setPrefWidth(20);
             ImageView hpBackground = new ImageView();
-            ImageView type = getImageViewType((Soldier) card);
+            ImageView type = getImageViewType(card);
             type.setFitHeight(25);
             type.setFitWidth(25);
             type.setLayoutY(73);
             type.setLayoutX(43);
-            ImageView ability = getImageViewAbility((Soldier) card);
+            ImageView ability = getImageViewAbility(card);
             ability.setFitHeight(25);
             ability.setFitWidth(25);
             ability.setLayoutY(73);
             ability.setLayoutX(16);
-            if (((Soldier) card).isHero()) {
+            if (card.isHero) {
                 hp.setTextFill(Paint.valueOf("white"));
                 hpBackground = new ImageView("/Images/icons/power_hero.png");
             } else {
@@ -91,7 +90,7 @@ public class CardView extends Pane {
             this.items.getChildren().add(type);
             this.items.getChildren().add(ability);
         } else {
-            ImageView ability = getImageViewAbilitySpells((Spell) card);
+            ImageView ability = getImageViewAbilitySpells(card);
             ability.setLayoutX(-3);
             ability.setLayoutY(-3);
             ability.setFitWidth(50);
@@ -137,17 +136,22 @@ public class CardView extends Pane {
         super.focusedProperty().addListener(new ChangeListener<Boolean>() {
             @Override
             public void changed(ObservableValue<? extends Boolean> observableValue, Boolean aBoolean, Boolean t1) {
+                InGameMenu inGameMenu = (InGameMenu) SaveApplicationAsObject.getApplicationController().getMenu();
                 if (t1) {
-                    ((InGameMenu) SaveApplicationAsObject.getApplicationController().getMenu()).selectBeforeMove(card);
+                    isSelected = true;
+                    inGameMenu.selectBeforeMove(card);
+                    inGameMenu.showAllowedRows(card.name);
                 } else {
-                    ((InGameMenu) SaveApplicationAsObject.getApplicationController().getMenu()).deselectBeforeMove();
+                    isSelected = false;
+                    inGameMenu.deselectBeforeMove();
+                    inGameMenu.unShowAllowedRows();
                 }
             }
         });
     }
 
-    private ImageView getImageViewAbilitySpells(Spell card) {
-        return switch (card.getName()) {
+    private ImageView getImageViewAbilitySpells(Cardin card) {
+        return switch (card.name) {
             case "Biting Frost" -> new ImageView("/Images/icons/power_frost.png");
             case "Impenetrable fog" -> new ImageView("/Images/icons/power_fog.png");
             case "Torrential Rain" -> new ImageView("/Images/icons/power_rain.png");
@@ -161,43 +165,43 @@ public class CardView extends Pane {
         };
     }
 
-    private static ImageView getImageViewType(Soldier card) {
+    private static ImageView getImageViewType(Cardin card) {
         ImageView type = new ImageView();
-        if (card.getType() == null) return type;
-        if (card.getType().equals(Type.SIEGE)) type = new ImageView("/Images/icons/card_row_siege.png");
-        else if (card.getType().equals(Type.AGILE)) type = new ImageView("/Images/icons/card_row_agile.png");
-        else if (card.getType().equals(Type.CLOSE_COMBAT)) type = new ImageView("/Images/icons/card_row_close.png");
-        else if (card.getType().equals(Type.RANGED)) type = new ImageView("/Images/icons/card_row_ranged.png");
+        if (card.type == null) return type;
+        if (card.type.equals(Type.SIEGE)) type = new ImageView("/Images/icons/card_row_siege.png");
+        else if (card.type.equals(Type.AGILE)) type = new ImageView("/Images/icons/card_row_agile.png");
+        else if (card.type.equals(Type.CLOSE_COMBAT)) type = new ImageView("/Images/icons/card_row_close.png");
+        else if (card.type.equals(Type.RANGED)) type = new ImageView("/Images/icons/card_row_ranged.png");
         return type;
     }
 
-    private static ImageView getImageViewAbility(Soldier card) {
+    private static ImageView getImageViewAbility(Cardin card) {
         ImageView ability = new ImageView();
-        if (card.getAttribute() == null) return ability;
-        if (card.getAttribute().equals(Attribute.MEDIC))
+        if (card.attribute == null) return ability;
+        if (card.attribute.equals(Attribute.MEDIC))
             ability = new ImageView("/Images/icons/card_ability_medic.png");
-        else if (card.getAttribute().equals(Attribute.MORAL_BOOST))
+        else if (card.attribute.equals(Attribute.MORAL_BOOST))
             ability = new ImageView("/Images/icons/card_ability_morale.png");
-        else if (card.getAttribute().equals(Attribute.MUSTER))
+        else if (card.attribute.equals(Attribute.MUSTER))
             ability = new ImageView("/Images/icons/card_ability_muster.png");
-        else if (card.getAttribute().equals(Attribute.SPY))
+        else if (card.attribute.equals(Attribute.SPY))
             ability = new ImageView("/Images/icons/card_ability_spy.png");
-        else if (card.getAttribute().equals(Attribute.TIGHT_BOND))
+        else if (card.attribute.equals(Attribute.TIGHT_BOND))
             ability = new ImageView("/Images/icons/card_ability_bond.png");
-        else if (card.getAttribute().equals(Attribute.BERSERKER))
+        else if (card.attribute.equals(Attribute.BERSERKER))
             ability = new ImageView("/Images/icons/card_ability_berserker.png");
-        else if (card.getAttribute().equals(Attribute.TRANSFORMERS))
+        else if (card.attribute.equals(Attribute.TRANSFORMERS))
             ability = new ImageView("/Images/icons/card_ability_avenger.png");
-        else if (card.getAttribute().equals(Attribute.SCORCH))
+        else if (card.attribute.equals(Attribute.SCORCH))
             ability = new ImageView("/Images/icons/card_ability_scorch.png");
-        else if (card.getAttribute().equals(Attribute.MARDROEME))
+        else if (card.attribute.equals(Attribute.MARDROEME))
             ability = new ImageView("/Images/icons/card_ability_mardroeme.png");
-        else if (card.getAttribute().equals(Attribute.COMMANDERS_HORN))
+        else if (card.attribute.equals(Attribute.COMMANDERS_HORN))
             ability = new ImageView("/Images/icons/card_ability_horn.png");
         return ability;
     }
 
-    public Card getCard() {
+    public Cardin getCard() {
         return card;
     }
 
@@ -221,8 +225,16 @@ public class CardView extends Pane {
         isSelected = selected;
     }
 
+    public void setInHand(boolean inHand) {
+        isInHand = inHand;
+    }
+
+    public InGameMenu getInGameMenu() {
+        return inGameMenu;
+    }
+
     private void setHP(int hp) {
-        if (this.isSoldier) ((Label) items.getChildren().get(1)).setText("" + hp);
+        if (this.card.isSoldier) ((Label) items.getChildren().get(1)).setText("" + hp);
     }
 
     private void goUp() {

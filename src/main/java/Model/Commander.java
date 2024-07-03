@@ -52,7 +52,7 @@ public class Commander extends Card {
         this.hasAction = false;
     }
 
-    public boolean HasAction() {
+    public boolean hasAction() {
         return hasAction;
     }
 

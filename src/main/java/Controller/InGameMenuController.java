@@ -271,4 +271,8 @@ public class InGameMenuController extends Thread {
         //InGameMenu.showThreeRandomCardsFromOpponentsHand();
     }
 
+    public static GameBoardin getGameBoardin(){
+        return new GameBoardin();
+    }
+
 }

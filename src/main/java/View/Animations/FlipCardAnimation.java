@@ -1,5 +1,6 @@
 package View.Animations;
 
+import Model.CardView;
 import javafx.animation.Transition;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -61,6 +62,7 @@ public class FlipCardAnimation extends Transition {
                 pane.setRotate(face ? 0 : 180);
                 pane.setLayoutX(xDestination);
                 pane.setLayoutY(yDestination);
+                ((CardView) pane).getInGameMenu().refresh();
             }
         });
     }
