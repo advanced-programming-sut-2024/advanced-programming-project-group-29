@@ -2,9 +2,8 @@ package Client;
 
 import com.google.gson.GsonBuilder;
 
-import Model.Listener;
-import Model.Sender;
-import View.Main;
+import Client.Model.*;
+import Client.View.*;
 
 public class Client {
 

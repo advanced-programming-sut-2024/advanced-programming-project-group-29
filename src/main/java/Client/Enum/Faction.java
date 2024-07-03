@@ -1,16 +1,7 @@
 package Client.Enum;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 
 public enum Faction {
     NORTH_REALMS("Realms", new ArrayList<>(Arrays.asList("the siegemaster",
@@ -61,31 +52,4 @@ public enum Faction {
     public ArrayList<String> getCommanders() {
         return commanders;
     }
-
-    public ArrayList<String> getCards() {
-        ArrayList<String> soldiersName = new ArrayList<>();
-        try {
-            URI uri = Card.class.getResource("/JSON/allCards.json").toURI();
-            String content = new String(Files.readAllBytes(Paths.get(uri)));
-            JSONObject allCards = new JSONObject(content);
-            Iterator<String> keys = allCards.keys();
-            while (keys.hasNext()) {
-                String key = keys.next();
-                if (getFactionFromString(key) != this)
-                    continue;
-                JSONArray jsonArray = allCards.getJSONArray(key);
-                for (int i = 0; i < jsonArray.length(); i++) {
-                    JSONObject card = jsonArray.getJSONObject(i);
-                    soldiersName.add(card.getString("name"));
-                }
-                return soldiersName;
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (URISyntaxException e) {
-            throw new RuntimeException(e);
-        }
-        return null;
-    }
-
 }
