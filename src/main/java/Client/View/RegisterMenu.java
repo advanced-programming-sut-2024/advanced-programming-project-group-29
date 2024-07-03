@@ -1,6 +1,7 @@
 package Client.View;
 
-import Server.Controller.*;
+import Client.Client;
+import Client.Controller.SaveApplicationAsObject;
 import Client.Model.*;
 import Client.Regex.*;
 import javafx.application.Application;
@@ -20,8 +21,6 @@ import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
 import java.util.Objects;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class RegisterMenu extends Application {
     private final double HEIGHT_OF_TEXT_WARNING = 25;
@@ -44,13 +43,18 @@ public class RegisterMenu extends Application {
     public TextField confirmAnswer;
 
     private Label warning;
-    private RegisterMenuController registerMenuController;
+    private Client client;
 
+    public RegisterMenu() {
+        super();
+        client = Client.getClient();
+    }
 
     @FXML
     public void initialize() {
-        this.questions.getItems().addAll(User.getSecurityQuestions());
-        this.questions.setValue(User.getSecurityQuestions()[0]);
+        Result result = (Result) client.sendCommand(RegisterMenuRegex.GET_SECURITY_QUESTIONS.getRegex());
+        this.questions.getItems().addAll(result.getMessage());
+        this.questions.setValue(result.getMessage().getFirst());
     }
 
 
@@ -65,19 +69,9 @@ public class RegisterMenu extends Application {
         SaveApplicationAsObject.getApplicationController().setPane(pane);
     }
 
-    public RegisterMenuController getRegisterMenuController() {
-        return registerMenuController;
-    }
-
-    public void setRegisterMenuController(RegisterMenuController registerMenuController) {
-        this.registerMenuController = registerMenuController;
-    }
-
     public void signup(MouseEvent mouseEvent) {
         String toRegex = "register -u " + this.username.getText() + " -p " + this.password.getText() + " " + this.confirmPassword.getText() + " -n " + this.nickname.getText() + " -e " + this.email.getText();
-        Matcher matcher = Pattern.compile(RegisterMenuRegex.REGISTER.getRegex()).matcher(toRegex);
-        matcher.matches();
-        Result result = RegisterMenuController.register(matcher);
+        Result result = (Result) client.sendCommand(toRegex);
         if (!result.isSuccessful()) {
             sayAlert(result.getMessage().get(0), true, true);
             if (result.getMessage().size() > 1) {
@@ -101,26 +95,21 @@ public class RegisterMenu extends Application {
     }
 
     public void randomPassword(MouseEvent mouseEvent) {
-        String random = RegisterMenuController.generateRandomPassword();
+        String random = (String) client.sendCommand(RegisterMenuRegex.GENERATE_RANDOM_PASSWORD.getRegex());
         this.password.setText(random);
         this.confirmPassword.setText(random);
     }
 
     public void setQuestion(MouseEvent mouseEvent) {
-        String toRegex = "pick question -q " + questions.getSelectionModel().getSelectedIndex() + " -a " + this.answer.getText() + " -c " + this.confirmAnswer.getText();
-        Matcher matcher = Pattern.compile(RegisterMenuRegex.PICK_QUESTION.getRegex()).matcher(toRegex);
-        matcher.matches();
-        Result result = RegisterMenuController.answerSecurityQuestion(matcher, this.username.getText());
-        if (!result.isSuccessful()) {
-            sayAlert(result.getMessage().get(0), false, true);
-        } else {
-            sayAlert(result.getMessage().get(0), false, false);
-        }
+        String toRegex = "pick question -q " + questions.getSelectionModel().getSelectedIndex() + " -a " + this.answer.getText() + " -c " + this.confirmAnswer.getText() + " -u " + this.username.getText();
+        Result result = (Result) client.sendCommand(toRegex);
+        sayAlert(result.getMessage().getFirst(), false, !result.isSuccessful());
     }
 
     public void finish(MouseEvent mouseEvent) throws Exception {
-        User user = User.getUserByUsername(this.username.getText());
-        if (user.hasUserAnswerTheQuestion()){
+        String toRegex = "has answered question -u " + this.username.getText();
+        boolean hasAnsweredTheQuestion = (boolean) client.sendCommand(toRegex);
+        if (hasAnsweredTheQuestion){
             new LoginMenu().start(SaveApplicationAsObject.getApplicationController().getStage());
         } else {
             sayAlert("Please answer the security question! and set question", false, true);

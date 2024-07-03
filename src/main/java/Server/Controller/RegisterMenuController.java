@@ -10,12 +10,18 @@ import java.util.regex.Matcher;
 
 public class RegisterMenuController {
 
-    public static Result processRequest(ApplicationController applicationController, String inputCommand) {
+    public static Object processRequest(ApplicationController applicationController, String inputCommand) {
         if (inputCommand.matches(RegisterMenuRegex.REGISTER.getRegex())) {
             return register(RegisterMenuRegex.REGISTER.getMatcher(inputCommand));
         }
+        if (inputCommand.matches(RegisterMenuRegex.GET_SECURITY_QUESTIONS.getRegex())) {
+            return new Result(true, User.getSecurityQuestions());
+        }
+        if (inputCommand.matches(RegisterMenuRegex.HAS_ANSWERED_QUESTION.getRegex())) {
+            return hasAnsweredQuestion(RegisterMenuRegex.HAS_ANSWERED_QUESTION.getMatcher(inputCommand));
+        }
         if (inputCommand.matches(RegisterMenuRegex.GENERATE_RANDOM_PASSWORD.getRegex())) {
-            return new Result(true, generateRandomPassword());
+            return generateRandomPassword();
         }
         if (inputCommand.matches(RegisterMenuRegex.PICK_QUESTION.getRegex())) {
             return answerSecurityQuestion(RegisterMenuRegex.PICK_QUESTION.getMatcher(inputCommand));
@@ -105,5 +111,11 @@ public class RegisterMenuController {
                 || !password.matches(".*[0-9].*") || !password.matches(".*[!@#$%^&*].*"))
             return false;
         return true;
+    }
+
+    public static boolean hasAnsweredQuestion (Matcher matcher) {
+        String username = matcher.group("username");
+        User user = User.getUserByUsername(username);
+        return user.hasUserAnswerTheQuestion();
     }
 }

@@ -1,9 +1,8 @@
 package Client.View;
 
-import Server.Controller.GameMenuController;
-import Server.Controller.SaveApplicationAsObject;
+import Client.Client;
+import Client.Controller.SaveApplicationAsObject;
 import Client.Model.Result;
-import Client.Regex.GameMenuRegex;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -18,8 +17,6 @@ import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
 import java.util.Objects;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class ChooseGameModelMenu extends Application {
     private final double HEIGHT_OF_TEXT_WARNING = 25;
@@ -30,6 +27,13 @@ public class ChooseGameModelMenu extends Application {
     public TextField opponentUsername;
     public Pane startPain;
     public Pane choosePain;
+
+    private Client client;
+
+    public ChooseGameModelMenu() {
+        super();
+        client = Client.getClient();
+    }
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -69,9 +73,7 @@ public class ChooseGameModelMenu extends Application {
 
     public void startGame(MouseEvent mouseEvent) throws Exception {
         String toRegex = "create game -p2 " + opponentUsername.getText();
-        Matcher matcher = Pattern.compile(GameMenuRegex.CREATEGAME.getRegex()).matcher(toRegex);
-        matcher.matches();
-        Result result = GameMenuController.createGame(matcher);
+        Result result = (Result) client.sendCommand(toRegex);
         if (!result.isSuccessful()) {
             sayAlert(result.getMessage().getFirst(), true);
         } else {
