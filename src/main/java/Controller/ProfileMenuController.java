@@ -3,17 +3,36 @@ package Controller;
 import Model.GameHistory;
 import Model.Result;
 import Model.User;
+import Regex.ProfileMenuRegex;
 
-import java.awt.print.Printable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.regex.Matcher;
 
 public class ProfileMenuController {
-    public static Result changeUsername(Matcher matcher) {
+    public static Result processRequest(ApplicationController applicationController, String inputCommand) {
+        if (inputCommand.matches(ProfileMenuRegex.CHANGE_USERNAME.getRegex())) {
+            return changeUsername(applicationController.getCurrentUser(), ProfileMenuRegex.CHANGE_USERNAME.getMatcher(inputCommand));
+        } else if (inputCommand.matches(ProfileMenuRegex.CHANGE_NICKNAME.getRegex())) {
+            return changeNickname(applicationController.getCurrentUser(), ProfileMenuRegex.CHANGE_NICKNAME.getMatcher(inputCommand));
+        } else if (inputCommand.matches(ProfileMenuRegex.CHANGE_EMAIL.getRegex())) {
+            return changeEmail(applicationController.getCurrentUser(), ProfileMenuRegex.CHANGE_EMAIL.getMatcher(inputCommand));
+        } else if (inputCommand.matches(ProfileMenuRegex.CHANGE_PASSWORD.getRegex())) {
+            return changePassword(applicationController.getCurrentUser(), ProfileMenuRegex.CHANGE_PASSWORD.getMatcher(inputCommand));
+        } else if (inputCommand.matches(ProfileMenuRegex.SHOW_INFO.getRegex())) {
+            return new Result(true, showInfo(applicationController.getCurrentUser())); //TODO returning Result and not ArrayList<String>
+        } else if (inputCommand.matches(ProfileMenuRegex.GAME_HISTORY.getRegex())) {
+            return gameHistory(applicationController.getCurrentUser(), ProfileMenuRegex.GAME_HISTORY.getMatcher(inputCommand));
+        } else if (inputCommand.matches(ProfileMenuRegex.SEND_FRIEND_REQUEST.getRegex())) {
+            return sendFriendRequest(applicationController.getCurrentUser(), ProfileMenuRegex.SEND_FRIEND_REQUEST.getMatcher(inputCommand));
+        }
+        return null;
+    }
+
+    public static Result changeUsername(User user, Matcher matcher) {
         String username = matcher.group("username");
-        if (username.equals(ApplicationController.getCurrentUser().getUsername())) {
+        if (username.equals(user.getUsername())) {
             return new Result(false, "You entered your current username.");
         }
         if (User.getUserByUsername(username) != null) {
@@ -22,35 +41,35 @@ public class ProfileMenuController {
         if (!username.matches("[a-zA-Z0-9-]+")) {
             return new Result(false, "Username is invalid. It should contain only letters, numbers and hyphens.");
         }
-        ApplicationController.getCurrentUser().setUsername(username);
+        user.setUsername(username);
         return new Result(true, "Username changed successfully.");
     }
 
-    public static Result changeNickname(Matcher matcher) {
+    public static Result changeNickname(User user, Matcher matcher) {
         String nickname = matcher.group("nickname");
-        if (nickname.equals(ApplicationController.getCurrentUser().getNickname())) {
+        if (nickname.equals(user.getNickname())) {
             return new Result(false, "You entered your current nickname.");
         }
-        ApplicationController.getCurrentUser().setNickname(nickname);
+        user.setNickname(nickname);
         return new Result(true, "Nickname changed successfully.");
     }
 
-    public static Result changeEmail(Matcher matcher) {
+    public static Result changeEmail(User user, Matcher matcher) {
         String email = matcher.group("email");
-        if (email.equals(ApplicationController.getCurrentUser().getEmail())) {
+        if (email.equals(user.getEmail())) {
             return new Result(false, "You entered your current email.");
         }
         if (!email.matches("[a-zA-Z0-9]+@[a-zA-Z0-9]+\\.[a-zA-Z0-9]+")) {
             return new Result(false, "Email is invalid.");
         }
-        ApplicationController.getCurrentUser().setEmail(email);
+        user.setEmail(email);
         return new Result(true, "Email changed successfully.");
     }
 
-    public static Result changePassword(Matcher matcher) {
+    public static Result changePassword(User user, Matcher matcher) {
         String password = matcher.group("password");
         String oldPassword = matcher.group("oldPassword");
-        if (!oldPassword.equals(ApplicationController.getCurrentUser().getPassword())) {
+        if (!oldPassword.equals(user.getPassword())) {
             return new Result(false, "Old password is incorrect.");
         }
         if (password.equals(oldPassword)) {
@@ -62,13 +81,12 @@ public class ProfileMenuController {
         if (!RegisterMenuController.checkPassword(password)) {
             return new Result(false, "Password is weak.");
         }
-        ApplicationController.getCurrentUser().setPassword(password);
+        user.setPassword(password);
         return new Result(true, "Password changed successfully.");
     }
 
-    public static ArrayList<String> showInfo() {
+    public static ArrayList<String> showInfo(User currentUser) {
         ArrayList<String> info = new ArrayList<>();
-        User currentUser = ApplicationController.getCurrentUser();
         info.add("Username: " + currentUser.getUsername());
         info.add("Nickname: " + currentUser.getNickname());
         info.add("Highest Score: " + currentUser.getHighestScore());
@@ -80,12 +98,12 @@ public class ProfileMenuController {
         return info;
     }
 
-    public static Result gameHistory(Matcher matcher) {
+    public static Result gameHistory(User user, Matcher matcher) {
         int numberOfGames = matcher.group("numberOfGames") == null ? 5 : Integer.parseInt(matcher.group("numberOfGames"));
         if (numberOfGames < 1) {
             return new Result(false, "Number of games should be at least 1.");
         }
-        ArrayList<GameHistory> gameHistory = ApplicationController.getCurrentUser().getGameHistory();
+        ArrayList<GameHistory> gameHistory = user.getGameHistory();
         numberOfGames = Math.min(numberOfGames, gameHistory.size());
         if (numberOfGames == 0) {
             return new Result(false, "You have not played any games yet.");
@@ -93,7 +111,7 @@ public class ProfileMenuController {
         ArrayList<String> games = new ArrayList<>();
         for (int i = gameHistory.size() - 1; i >= gameHistory.size() - numberOfGames; i--) {
             GameHistory game = gameHistory.get(i);
-            int playerNumber = game.getPlayerNumber(ApplicationController.getCurrentUser());
+            int playerNumber = game.getPlayerNumber(user);
             int opponentNumber = 1 - playerNumber;
 
             ArrayList<String> gameInfo = new ArrayList<>();
@@ -121,24 +139,19 @@ public class ProfileMenuController {
         return new Result(true, games);
     }
 
-    public static Result sendFriendRequest(Matcher matcher) {
+    public static Result sendFriendRequest(User currentUser, Matcher matcher) {
         String username = matcher.group("username");
-        if (username.equals(ApplicationController.getCurrentUser().getUsername())) {
+        if (username.equals(currentUser.getUsername())) {
             return new Result(false, "You cannot send friend request to yourself.");
         }
         User user = User.getUserByUsername(username);
         if (user == null) {
             return new Result(false, "User with this username does not exist.");
         }
-        if (user.getStatusFriendRequest(ApplicationController.getCurrentUser()).equals("Friend")) {
+        if (user.getStatusFriendRequest(currentUser).equals("Friend")) {
             return new Result(false, "You are already friends with this user.");
         }
-        ApplicationController.getCurrentUser().sendFriendRequest(user);
+        currentUser.sendFriendRequest(user);
         return new Result(true, "Friend request sent successfully.");
-    }
-
-    public static Result processRequest(ApplicationController applicationController, String inputCommand) {
-        // TODO
-        return null;
     }
 }
