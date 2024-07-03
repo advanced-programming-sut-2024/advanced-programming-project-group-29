@@ -1,33 +1,129 @@
 package Controller;
 
-import Model.User;
+import Model.*;
+import Enum.*;
+import com.google.gson.GsonBuilder;
 import javafx.application.Application;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.ArrayList;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.regex.Matcher;
 
 public class ApplicationController extends Thread {
+
+    private static String IP = "127.0.0.1";
+    private static int PORT = 4000;
+
+    public static final int THREAD_COUNT = 15;
     private final static ArrayList<User> allUsers = new ArrayList<>();
-    private static User currentUser;
-    private InGameMenuController inGameMenuController;
+    private User currentUser;
     private Stage stage;
     private Pane pane;
     private Application menu;
+    private Menu currentMenu;
+    private Sender sender;
+    private Socket listenerSocket;
 
-    public ApplicationController() {
+    public static void main(String[] args){
+        ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(THREAD_COUNT);
+        try {
+            ServerSocket server = new ServerSocket(PORT);
+            Socket socket;
+            while (true) {
+                socket = server.accept();
+                executor.submit(new ApplicationController(socket));
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-//    public ApplicationController(){
-//        currentUser = null;
-//    }
+    public ApplicationController(Socket socket) {
+        currentUser = null;
+        this.listenerSocket = socket;
+    }
+
+    @Override
+    public void run() {
+        try{
+            currentMenu = Menu.LOGIN_MENU;
+            DataInputStream dataInputStream = new DataInputStream(listenerSocket.getInputStream());
+            DataOutputStream dataOutputStream = new DataOutputStream(listenerSocket.getOutputStream());
+            String outputCommand = "";
+            String inputCommand = dataInputStream.readUTF();
+            int ipEndIndex = inputCommand.indexOf(" ");
+            sender = new Sender(inputCommand.substring(0, ipEndIndex),
+                    Integer.parseInt(inputCommand.substring(ipEndIndex + 1)));
+            com.google.gson.Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            while(true) {
+                    inputCommand = dataInputStream.readUTF();
+                    Object object = null;
+                    switch(currentMenu){
+                        case LOGIN_MENU:
+                            object = LoginMenuController.processRequest(this, inputCommand);
+                        case REGISTER_MENU:
+                            object = RegisterMenuController.processRequest(this, inputCommand);
+                        case CHEAT_MENU:
+                            object = CheatMenuController.processRequest(this, inputCommand);
+                        case PROFILE_MENU:
+                            object = ProfileMenuController.processRequest(this, inputCommand);
+                        case GAME_MENU:
+                            object = GameMenuController.processRequest(this, inputCommand);
+                        case IN_GAME_MENU:
+                            object = InGameMenuController.processRequest(this, inputCommand);
+                        case RANKING_MENU:
+                            object = RankingMenuController.processRequest(this, inputCommand);
+                    }
+                    if(object == null)
+                        dataOutputStream.writeUTF("null");
+                    else {
+                        outputCommand = gson.toJson(object);
+                        dataOutputStream.writeUTF(object.getClass().getName() + ":" + outputCommand);
+                    }
+            }
+            //dataOutputStream.close();
+            //dataInputStream.close();
+            //sender.endConnection();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public Sender getSender(){
+        return sender;
+    }
+
+    public Object sendObject(Object object) {
+        return sender.sendObject(object);
+    }
+
+    public Object sendCommand(String command) {
+        return sender.sendCommand(command);
+    }
+
+    public void  setCurrentMenu(Menu menu){
+        this.currentMenu = menu;
+    }
 
     public static void addUser(User user) {
-        allUsers.add(user);
+        synchronized (allUsers) {
+            allUsers.add(user);
+        }
     }
 
     public static void removeUser(User user) {
-        allUsers.remove(user);
+        synchronized (allUsers) {
+            allUsers.remove(user);
+        }
     }
 
     public static ArrayList<User> getAllUsers() {
@@ -42,19 +138,11 @@ public class ApplicationController extends Thread {
         return menu;
     }
 
-    public void setInGameMenuController(InGameMenuController inGameMenuController) {
-        this.inGameMenuController = inGameMenuController;
+    public static void setCurrentUser(User givenCurrentUser) { // TODO: needed to be removed
+        return;
     }
 
-    public InGameMenuController getInGameMenuController() {
-        return inGameMenuController;
-    }
-
-    public static void setCurrentUser(User givenCurrentUser) {
-        currentUser = givenCurrentUser;
-    }
-
-    public static User getCurrentUser() {
+    public User getCurrentUser() {
         return currentUser;
     }
 
@@ -77,4 +165,5 @@ public class ApplicationController extends Thread {
     public void setPane(Pane pane) {
         this.pane = pane;
     }
+
 }

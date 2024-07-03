@@ -9,25 +9,29 @@ import java.util.regex.Matcher;
 
 public class InGameMenuController extends Thread {
     private static final ArrayList<InGameMenuController> controllers = new ArrayList<>();
-    private final GameBoard gameBoard;
+    private static User user;
     private int currentUser;
     private final User[] users = new User[2];
 
-    public InGameMenuController(GameBoard gameBoard, User user1, User user2) {
-        this.gameBoard = gameBoard;
-        this.currentUser = 0;
-        this.users[0] = user1;
-        this.users[1] = user2;
-        controllers.add(this);
+    public static Object processRequest(ApplicationController applicationController, String inputCommand) {
+        user = applicationController.getCurrentUser();
+        Object result = null;
+        Matcher matcher;
+        // TODO: do this
+        return result;
     }
 
     public static void startGame(){
-        User user = ApplicationController.getCurrentUser();
         GameBoard gameBoard = user.getCurrentGameBoard();
         User opponent = user.getOpponent();
         user.createHand();
         opponent.createHand();
         // TODO: let user veto card
+    }
+
+    public static ArrayList<int> chooseFromPile(ArrayList<Card> pile, String command){
+        // TODO: implement this
+        return null;
     }
 
     public static Card getCardFromDiscardPileAndRemoveIt(GameBoard gameBoard, int playerIndex) {
@@ -36,9 +40,9 @@ public class InGameMenuController extends Thread {
         return card;
     }
 
-    public static void addCardToHand(GameBoard gameBoard, Card card, int playerIndex) {
+    public static String addCardToHand(GameBoard gameBoard, Card card, int playerIndex) {
         gameBoard.getPlayers()[playerIndex].getHand().add(card);
-        InGameMenu.addCardToHand(gameBoard, card, playerIndex);
+        return "add card to hand " + playerIndex + " " + card.getName();
     }
 
     public static void removeCardFromHand(GameBoard gameBoard, Card card, int playerIndex) {
@@ -50,13 +54,15 @@ public class InGameMenuController extends Thread {
         InGameMenu.changeThisCardInGraphic(gameBoard, thisCard, anotherCard);
     }
 
-    public static void destroySoldier(GameBoard gameBoard, Soldier soldier) {
+    public static Commands destroySoldier(GameBoard gameBoard, Soldier soldier) {
         if(soldier == null)
-            return;
+            return null;
         int playerIndex = gameBoard.getPlayerNumber(soldier.getUser());
         int rowNumber = Soldier.getPlacedRowNumber(soldier, gameBoard);
         gameBoard.getRows()[playerIndex][rowNumber].remove(soldier);
-        InGameMenu.destroySoldier(gameBoard, soldier);
+        gameBoard.setPlayerScore(playerIndex, gameBoard.getPlayerScore(playerIndex) - soldier.getShownHp());
+        return new Commands("destroy soldier " + playerIndex + " " + rowNumber + " " + soldier.getPlacedNumber(),
+                "set score " + playerIndex + " " + gameBoard.getPlayerScore(playerIndex));
     }
 
     public static void showChangedPlayerScoreAndCardsHp(GameBoard gameBoard) {
@@ -96,22 +102,6 @@ public class InGameMenuController extends Thread {
         return null;
     }
 
-    private void changeCurrentUser() {
-        currentUser = 1 - currentUser;
-    }
-
-    public static ArrayList<InGameMenuController> getControllers() {
-        return controllers;
-    }
-
-    public User getCurrentUser(){
-        return users[currentUser];
-    }
-
-    public GameBoard getGameBoard() {
-        return gameBoard;
-    }
-
     public static void changeHpForSoldier(GameBoard gameBoard, Soldier soldier, int hp){
         int playerIndex = gameBoard.getPlayerNumber(soldier.getUser());
         int rowNumber = Soldier.getPlacedRowNumber(soldier, gameBoard);
@@ -125,7 +115,6 @@ public class InGameMenuController extends Thread {
     public static Result vetoCard(Matcher matcher){
         if(!matcher.matches())
             return new Result(false, "Invalid command");
-        User user = ApplicationController.getCurrentUser();
         Card card = user.getHand().get(Integer.parseInt(matcher.group("cardNumber")));
         user.getHand().remove(card);
         Card anotherCard = user.getCardFromDeckRandomly();
@@ -135,7 +124,6 @@ public class InGameMenuController extends Thread {
     }
 
     public static Result showInHandDeck(Matcher matcher){
-        User user = ApplicationController.getCurrentUser();
         if(!matcher.matches())
             return new Result(false, "Invalid command");
         ArrayList<String> cardsInformation = new ArrayList<>();
@@ -150,14 +138,12 @@ public class InGameMenuController extends Thread {
     }
 
     public static Result showRemainingCardsNumber(){
-        User user = ApplicationController.getCurrentUser();
         if(user == null)
             return new Result(false);
         return new Result(true, user.getDeck().size() + "");
     }
 
     public static Result showOutOfPlayCards(){
-        User user = ApplicationController.getCurrentUser();
         if(user == null)
             return new Result(false);
         StringBuilder usersCards = new StringBuilder();
@@ -170,7 +156,6 @@ public class InGameMenuController extends Thread {
     }
 
     public static Result showCardsInRow(Matcher matcher){
-        User user = ApplicationController.getCurrentUser();
         int playerIndex = user.getCurrentGameBoard().getPlayerNumber(user);
         if(!matcher.matches())
             return new Result(false, "Invalid command");
@@ -191,7 +176,7 @@ public class InGameMenuController extends Thread {
     }
 
     public static Result showSpellsInPlay(){
-        GameBoard gameBoard = ApplicationController.getCurrentUser().getCurrentGameBoard();
+        GameBoard gameBoard = user.getCurrentGameBoard();
         ArrayList<String> spells = new ArrayList<>();
         for(Spell spell : gameBoard.getWeather())
             spells.add(spell.getInformation());
@@ -208,7 +193,6 @@ public class InGameMenuController extends Thread {
             rowNumber = Integer.parseInt(rowNumberString);
         if(rowNumber < 0 || rowNumber > 2)
             return new Result(false, "invalid row number");
-        User user = ApplicationController.getCurrentUser();
         int playerIndex = user.getCurrentGameBoard().getPlayerNumber(user);
         GameBoard gameBoard = user.getCurrentGameBoard();
         if(user.getHand().size() >= cardNumber)
@@ -237,7 +221,6 @@ public class InGameMenuController extends Thread {
         int thisCardNumber = Integer.parseInt(matcher.group("thisCardNumber"));
         int cardNumber = Integer.parseInt(matcher.group("cardNumber"));
         int rowNumber = Integer.parseInt(matcher.group("rowNumber"));
-        User user = ApplicationController.getCurrentUser();
         int playerIndex = user.getCurrentGameBoard().getPlayerNumber(user);
         GameBoard gameBoard = user.getCurrentGameBoard();
         if(user.getHand().size() <= thisCardNumber ||
@@ -256,7 +239,6 @@ public class InGameMenuController extends Thread {
     }
 
     private static Commander getCommander(){
-        User user = ApplicationController.getCurrentUser();
         GameBoard gameBoard = user.getCurrentGameBoard();
         int playerIndex = gameBoard.getPlayerNumber(user);
         Commander commander = gameBoard.getPlayerLeader(playerIndex);
@@ -284,7 +266,6 @@ public class InGameMenuController extends Thread {
     }
 
     public static void seeThreeRandomCardsFromOpponentsHand(){
-        User user = ApplicationController.getCurrentUser();
         User opponent = user.getOpponent();
         // TODO: implement this
         //InGameMenu.showThreeRandomCardsFromOpponentsHand();

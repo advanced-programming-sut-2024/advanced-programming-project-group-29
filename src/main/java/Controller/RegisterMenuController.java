@@ -2,11 +2,25 @@ package Controller;
 
 import Model.Result;
 import Model.User;
+import Regex.RegisterMenuRegex;
 
 import java.util.Random;
 import java.util.regex.Matcher;
 
 public class RegisterMenuController {
+
+    public static Result processRequest(ApplicationController applicationController, String inputCommand) {
+        if (inputCommand.matches(RegisterMenuRegex.REGISTER.getRegex())) {
+            return register(RegisterMenuRegex.REGISTER.getMatcher(inputCommand));
+        }
+        if (inputCommand.matches(RegisterMenuRegex.GENERATE_RANDOM_PASSWORD.getRegex())) {
+            return new Result(true, generateRandomPassword());
+        }
+        if (inputCommand.matches(RegisterMenuRegex.PICK_QUESTION.getRegex())) {
+            return answerSecurityQuestion(RegisterMenuRegex.PICK_QUESTION.getMatcher(inputCommand));
+        }
+        return null;
+    }
 
     public static Result register(Matcher matcher) {
         String username = matcher.group("username");
@@ -67,10 +81,11 @@ public class RegisterMenuController {
         return password;
     }
 
-    public static Result answerSecurityQuestion(Matcher matcher, String username) {
+    public static Result answerSecurityQuestion(Matcher matcher) {
         int question = Integer.parseInt(matcher.group("question"));
         String answer = matcher.group("answer");
         String confirm = matcher.group("confirm");
+        String username = matcher.group("username");
         if (question > User.getSecurityQuestions().length) {
             return new Result(false, "Invalid question number.");
         }
@@ -82,7 +97,7 @@ public class RegisterMenuController {
         return new Result(true, "Question set successfully.");
     }
 
-    public static boolean checkPassword(String password) {
+    protected static boolean checkPassword(String password) {
         if (password.length() < 8)
             return false;
         if (!password.matches(".*[a-z].*") || !password.matches(".*[A-Z].*")
@@ -90,5 +105,4 @@ public class RegisterMenuController {
             return false;
         return true;
     }
-
 }

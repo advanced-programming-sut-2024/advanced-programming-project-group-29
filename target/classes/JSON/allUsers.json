@@ -6,13 +6,15 @@
     "email": "a@gmail.com",
     "questionNumber": 0,
     "answer": "red",
-    "faction": "NORTH_REALMS",
+    "preDeck": [],
+    "faction": "SCOIATAELL",
     "commander": {
       "hasAction": true,
-      "name": "the siegemaster"
+      "name": "queen of dol blathanna"
     },
     "gameHistory": [],
     "friends": [],
+    "friendRequests": [],
     "savedDecks": {}
   },
   {
@@ -22,13 +24,15 @@
     "email": "b@gmail.com",
     "questionNumber": 0,
     "answer": "red",
-    "faction": "MONSTERS",
+    "preDeck": [],
+    "faction": "SCOIATAELL",
     "commander": {
       "hasAction": true,
-      "name": "bringer of death"
+      "name": "queen of dol blathanna"
     },
     "gameHistory": [],
     "friends": [],
+    "friendRequests": [],
     "savedDecks": {}
   }
 ]

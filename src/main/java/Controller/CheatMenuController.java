@@ -6,64 +6,72 @@ import Enum.*;
 import java.util.regex.Matcher;
 
 public class CheatMenuController {
-    public static void resetCrystal() {
-        User user = ApplicationController.getCurrentUser();
-        GameBoard gameBoard = user.getCurrentGameBoard();
-        gameBoard.setPlayerCrystals(gameBoard.getPlayerNumber(user), 2);
+
+    private static User user;
+
+    public static Object processRequest(ApplicationController applicationController, String inputCommand) {
+        CheatCode cheatCode = CheatCode.getMatchedCheadCode(inputCommand);
+        user = applicationController.getCurrentUser();
+        return applyCheatCode(cheatCode);
     }
 
-    public static void addRandomWeatherToHand() {
-        User user = ApplicationController.getCurrentUser();
+    public static Object applyCheatCode(CheatCode cheatCode){
+        Object result = null;
+        switch (cheatCode){
+            case RESET_CRYSTAL -> result = resetCrystal();
+            case ADD_WEATHER -> result = addRandomWeatherToHand();
+            case ADD_SOLDIER -> result = addRandomSoldierToHand();
+            case ADD_SPECIAL -> result = addRandomSpecialCardToHand();
+            case REFILL_COMMANDER -> result = refillCommanderAbility();
+            case KILL_RANDOM_SOLDIER -> result = killRandomSoldier();
+            case END_GAME -> endGame();
+        }
+        return result;
+    }
+    public static String resetCrystal() {
+        GameBoard gameBoard = user.getCurrentGameBoard();
+        gameBoard.setPlayerCrystals(gameBoard.getPlayerNumber(user), 2);
+        int playerIndex = gameBoard.getPlayerNumber(user);
+        return "set crystal " + playerIndex + " 2";
+    }
+
+    public static Object addRandomWeatherToHand() {
         GameBoard gameBoard = user.getCurrentGameBoard();
         int playerIndex = gameBoard.getPlayerNumber(user);
         Spell card = Spell.getRandomWeatherCard(user);
-        InGameMenuController.addCardToHand(gameBoard, card, playerIndex);
+        return InGameMenuController.addCardToHand(gameBoard, card, playerIndex);
     }
 
-    public static void addRandomSpecialCardToHand() {
-        User user = ApplicationController.getCurrentUser();
+    public static Object addRandomSpecialCardToHand() {
         GameBoard gameBoard = user.getCurrentGameBoard();
         int playerIndex = gameBoard.getPlayerNumber(user);
         Spell card = Spell.getRandomSpecialCard(user);
-        InGameMenuController.addCardToHand(gameBoard, card, playerIndex);
+        return InGameMenuController.addCardToHand(gameBoard, card, playerIndex);
     }
 
-    public static void addRandomSoldierToHand() {
-        User user = ApplicationController.getCurrentUser();
+    public static Object addRandomSoldierToHand() {
         GameBoard gameBoard = user.getCurrentGameBoard();
         int playerIndex = gameBoard.getPlayerNumber(user);
         Soldier card = Soldier.getRandomCard(user);
-        InGameMenuController.addCardToHand(gameBoard, card, playerIndex);
+        return InGameMenuController.addCardToHand(gameBoard, card, playerIndex);
     }
 
-    public static void refillCommanderAbility() {
-        User user = ApplicationController.getCurrentUser();
+    public static Object refillCommanderAbility() {
         Commander commander = user.getCommander();
-//        if (!commander.HasAction() && !commander.hasPassiveAbility())
-//            commander.setHasAction(true);
-        //TODO
+        if (!commander.HasAction() && !commander.hasPassiveAbility())
+            commander.setHasAction(true);
+        return null;
     }
 
-    public static void killRandomSoldier() {
-        User user = ApplicationController.getCurrentUser().getOpponent();
-        GameBoard gameBoard = user.getCurrentGameBoard();
-        Soldier soldier = gameBoard.getRandomSoldier(user);
-        InGameMenuController.destroySoldier(gameBoard, soldier);
+    public static Commands killRandomSoldier() {
+        User opponent = user.getOpponent();
+        GameBoard gameBoard = opponent.getCurrentGameBoard();
+        Soldier soldier = gameBoard.getRandomSoldier(opponent);
+        return InGameMenuController.destroySoldier(gameBoard, soldier);
     }
 
     public static void endGame() {
         //TODO
     }
 
-    public static void applyCheatCode(CheatCode cheatCode){
-        switch (cheatCode){
-            case RESET_CRYSTAL -> resetCrystal();
-            case ADD_WEATHER -> addRandomWeatherToHand();
-            case ADD_SOLDIER -> addRandomSoldierToHand();
-            case ADD_SPECIAL -> addRandomSpecialCardToHand();
-            case REFILL_COMMANDER -> refillCommanderAbility();
-            case KILL_RANDOM_SOLDIER -> killRandomSoldier();
-            case END_GAME -> endGame();
-        }
-    }
 }

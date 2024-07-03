@@ -81,7 +81,9 @@ public class Soldier extends Card {
                 soldiers.add(cardName);
         }
         int randomIndex = (int) (Math.random() * soldiers.size());
-        return new Soldier(soldiers.get(randomIndex), user);
+        Soldier soldier = new Soldier(soldiers.get(randomIndex), user);
+        soldier.setGameBoard(user.getCurrentGameBoard());
+        return soldier;
     }
 
 
@@ -249,5 +251,4 @@ public class Soldier extends Card {
     public String getInformation() {
         return "Name: " + this.getName() + ", Ability: " + Attribute.getStringFromAttribute(attribute) + "" + ", IsHero: " + isHero;
     }
-
 }

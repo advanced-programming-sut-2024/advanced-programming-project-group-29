@@ -2,10 +2,27 @@ package Controller;
 
 import Model.Result;
 import Model.User;
+import Regex.LoginMenuRegex;
 
 import java.util.regex.Matcher;
 
 public class LoginMenuController {
+    public static Result processRequest(ApplicationController applicationController, String inputCommand) {
+        if (inputCommand.matches(LoginMenuRegex.LOGIN.getRegex())) {
+            return login(LoginMenuRegex.LOGIN.getMatcher(inputCommand));
+        }
+        if (inputCommand.matches(LoginMenuRegex.FORGETPASSWORD.getRegex())) {
+            return forgetPassword(LoginMenuRegex.FORGETPASSWORD.getMatcher(inputCommand));
+        }
+        if (inputCommand.matches(LoginMenuRegex.ANSWER.getRegex())) {
+            return answerQuestion(LoginMenuRegex.ANSWER.getMatcher(inputCommand));
+        }
+        if (inputCommand.matches(LoginMenuRegex.CHANGEPASSWORD.getRegex())) {
+            return changePassword(LoginMenuRegex.CHANGEPASSWORD.getMatcher(inputCommand));
+        }
+        return null;
+    }
+
     public static Result login(Matcher matcher) {
         String username = matcher.group("username");
         String password = matcher.group("password");
@@ -28,8 +45,9 @@ public class LoginMenuController {
         return new Result(true, user.getQuestion());
     }
 
-    public static Result answerQuestion(Matcher matcher, String username) {
+    public static Result answerQuestion(Matcher matcher) {
         String answer = matcher.group("answer");
+        String username = matcher.group("username");
         User user = User.getUserByUsername(username);
         if (user == null)
             return new Result(false, "Username does not exist.");
@@ -38,9 +56,10 @@ public class LoginMenuController {
         return new Result(true, "Select a new password.");
     }
 
-    public static Result changePassword(Matcher matcher, String username) {
+    public static Result changePassword(Matcher matcher) {
         String password = matcher.group("password");
         String passwordConfirm = matcher.group("passwordConfirm");
+        String username = matcher.group("username");
         User user = User.getUserByUsername(username);
         if (user == null)
             return new Result(false, "Username does not exist.");
