@@ -456,5 +456,19 @@ public class User {
         for(int i = 0; i < Math.min(10, deck.size()); i++){
             hand.add(deck.get(i));
         }
+        for(Card card : hand){
+            deck.remove(card);
+        }
+    }
+
+    public void setAllCardsSenders(Sender sender) {
+        for(Card card : discardPile)
+            card.setSender(sender);
+        for(Card card : hand)
+            card.setSender(sender);
+        for(Card card : deck)
+            card.setSender(sender);
+        if(currentGameBoard != null)
+            currentGameBoard.setAllCardsForUserSender(sender, this);
     }
 }

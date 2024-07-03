@@ -187,7 +187,7 @@ public class Soldier extends Card {
     private static void executeActionForMedic(Soldier soldier) {
         GameBoard gameBoard = soldier.getGameBoard();
         int playerIndex = soldier.getGameBoard().getPlayerNumber(soldier.getUser());
-        Card card = InGameMenuController.getCardFromDiscardPileAndRemoveIt(gameBoard, playerIndex);
+        Card card = InGameMenuController.getCardFromDiscardPileAndRemoveIt(soldier.getSender(), gameBoard, playerIndex);
         InGameMenuController.addCardToHand(gameBoard, card, playerIndex);
     }
 
@@ -226,6 +226,8 @@ public class Soldier extends Card {
     }
 
     public int getShownHp() {
+        if(isHero)
+            return hp;
         GameBoard gameBoard = this.getGameBoard();
         int rowNumber = getPlacedRowNumber(this, gameBoard);
         if (gameBoard.rowHasWeather(rowNumber)) {
@@ -242,9 +244,9 @@ public class Soldier extends Card {
         GameBoard gameBoard = this.getGameBoard();
         int rowNumber = getPlacedRowNumber(this, gameBoard);
         int playerIndex = gameBoard.getPlayerNumber(this.getUser());
-        gameBoard.getRows()[playerIndex][rowNumber].remove(this);
-        gameBoard.getRows()[playerIndex][rowNumber].add(bear);
-        InGameMenuController.changeThisCardInGraphic(gameBoard,this, bear);
+        int cardNumber = getPlacedNumber();
+        gameBoard.getRows()[playerIndex][rowNumber].set(cardNumber, bear);
+        InGameMenuController.changeCardPlaceInGraphic(sender, rowNumber, cardNumber, bear);
     }
 
     @Override

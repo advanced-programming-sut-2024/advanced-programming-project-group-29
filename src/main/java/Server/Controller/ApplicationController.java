@@ -1,5 +1,6 @@
 package Server.Controller;
 
+import Server.Model.Cardin;
 import Server.Model.User;
 import Server.Enum.Menu;
 import Server.Model.Sender;
@@ -52,6 +53,11 @@ public class ApplicationController extends Thread {
         this.listenerSocket = socket;
     }
 
+    public static String getSendableObject(Object object) {
+        com.google.gson.Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        return object.getClass().getName() + ":" + gson.toJson(object);
+    }
+
     @Override
     public void run() {
         try{
@@ -63,7 +69,6 @@ public class ApplicationController extends Thread {
             int ipEndIndex = inputCommand.indexOf(" ");
             sender = new Sender(inputCommand.substring(0, ipEndIndex),
                     Integer.parseInt(inputCommand.substring(ipEndIndex + 1)));
-            com.google.gson.Gson gson = new GsonBuilder().setPrettyPrinting().create();
             while(true) {
                     inputCommand = dataInputStream.readUTF();
                     Object object = null;
@@ -83,11 +88,13 @@ public class ApplicationController extends Thread {
                         case RANKING_MENU:
                             object = Server.Controller.RankingMenuController.processRequest(this, inputCommand);
                     }
+                    // TODO: if user logged in, set current user
+                    if(currentUser != null)
+                        currentUser.setAllCardsSenders(sender);
                     if(object == null)
                         dataOutputStream.writeUTF("null");
                     else {
-                        outputCommand = gson.toJson(object);
-                        dataOutputStream.writeUTF(object.getClass().getName() + ":" + outputCommand);
+                        dataOutputStream.writeUTF(getSendableObject(object));
                     }
             }
             //dataOutputStream.close();

@@ -9,6 +9,7 @@ import java.util.Random;
 
 public class Commander extends Card {
     private boolean hasAction = true;
+    private Sender sender;
 
     public Commander(String name, User user) {
         super(name, user);
@@ -73,7 +74,7 @@ public class Commander extends Card {
     }
 
     private void theSteelForged() {
-        this.gameBoard.clearAllWeather();
+        this.gameBoard.clearAllWeather(sender);
     }
 
     private void kingOfTemeria() {
@@ -97,8 +98,7 @@ public class Commander extends Card {
     }
 
     private void crachAnCraite() {
-        InGameMenuController.moveDiscardPileToDeck(this.user);
-        InGameMenuController.moveDiscardPileToDeck(this.user.getOpponent());
+        InGameMenuController.moveDiscardPileToDeckForBoth(this.user, sender);
     }
 
     private void hopeOfTheAenSeidhe() {
@@ -124,7 +124,7 @@ public class Commander extends Card {
                 if (rowNumber == betterRowNumber[playerNumber]) continue;
                 for (Soldier soldier : this.gameBoard.getRows()[playerNumber][rowNumber]) {
                     if (soldier.type == Type.AGILE)
-                        InGameMenuController.moveSoldier(soldier, playerNumber, betterRowNumber[playerNumber]);
+                        InGameMenuController.moveSoldier(sender, soldier, playerNumber, betterRowNumber[playerNumber]);
                 }
             }
         }
@@ -176,15 +176,9 @@ public class Commander extends Card {
     }
 
     private void commanderOfTheRedRiders() {
-        ArrayList<Card> options = new ArrayList<>();
-        for (Card card : this.user.getDeck()) {
-            if (card instanceof Spell) {
-                if (((Spell) card).isWeather())
-                    options.add(card);
-            }
-        }
-        if (options.isEmpty()) return;
-        Card selectedCard = InGameMenuController.showAndSelectCard(gameBoard, options);
+        Card selectedCard = InGameMenuController.getOneCardWeathersInDeck(sender, user);
+        if(selectedCard == null)
+            return;
         InGameMenuController.addWeather((Spell) selectedCard);
         user.getDeck().remove(selectedCard);
     }
@@ -192,15 +186,15 @@ public class Commander extends Card {
     private void destroyerOfWorlds() {
         Card[] removedCards = new Card[2];
         for (int i = 0; i < 2; i++) {
-            removedCards[i] = InGameMenuController.showAndSelectCard(gameBoard, user.getHand());
-            InGameMenuController.removeCardFromHand(gameBoard, removedCards[i], gameBoard.getPlayerNumber(user));
+            removedCards[i] = InGameMenuController.getOneCardFromHand(sender, user);
+            InGameMenuController.removeCardFromHand(sender, gameBoard, removedCards[i], gameBoard.getPlayerNumber(user));
         }
-        Card card = InGameMenuController.showAndSelectCard(gameBoard, user.getDeck());
+        Card card = InGameMenuController.getOneCardFromDeck(sender, user);
         InGameMenuController.addCardToHand(gameBoard, card, gameBoard.getPlayerNumber(user));
     }
 
     private void kingOfTheWildHunt() {
-        Card card = InGameMenuController.getCardFromDiscardPileAndRemoveIt(gameBoard, gameBoard.getPlayerNumber(this.user));
+        Card card = InGameMenuController.getCardFromDiscardPileAndRemoveIt(sender, gameBoard, gameBoard.getPlayerNumber(this.user));
         if (card == null)
             return;
         InGameMenuController.addCardToHand(gameBoard, card, gameBoard.getPlayerNumber(this.user));
@@ -231,7 +225,7 @@ public class Commander extends Card {
     }
 
     private void theRelentless() {
-        Card card = InGameMenuController.getCardFromDiscardPileAndRemoveIt(gameBoard, 1 - gameBoard.getPlayerNumber(this.user));
+        Card card = InGameMenuController.getCardFromDiscardPileAndRemoveIt(sender, gameBoard, 1 - gameBoard.getPlayerNumber(this.user));
         if (card == null)
             return;
         InGameMenuController.addCardToHand(gameBoard, card, gameBoard.getPlayerNumber(this.user));
@@ -245,7 +239,7 @@ public class Commander extends Card {
     }
 
     private void hisImperialMajesty() {
-        InGameMenuController.seeThreeRandomCardsFromOpponentsHand();
+        InGameMenuController.seeThreeRandomCardsFromOpponentsHand(sender);
     }
 
     private void theWhiteFlame() {
@@ -280,5 +274,9 @@ public class Commander extends Card {
         int length = list.size();
         int index = random.nextInt() % length;
         return list.get(index);
+    }
+
+    public Sender getSender(){
+        return sender;
     }
 }

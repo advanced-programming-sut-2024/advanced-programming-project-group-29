@@ -16,7 +16,7 @@ public class Cardin {
 
     public Cardin(Card card){
         this.name = card.getName();
-        this.hp = card.getHp();
+        this.hp = card.getShowHp();
         this.attribute = card.getAttribute();
         this.type = card.getType();
         this.isHero = card.isHero();

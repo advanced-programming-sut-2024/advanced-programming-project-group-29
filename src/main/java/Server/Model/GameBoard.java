@@ -35,6 +35,8 @@ public class GameBoard {
     private final GameHistory gameHistory;
 
     public GameBoard(User player1, User player2) {
+        playersCrystals[0] = 2;
+        playersCrystals[1] = 2;
         players[0] = player1;
         players[1] = player2;
         gameHistory = new GameHistory(player1, player2, new Date());
@@ -168,14 +170,13 @@ public class GameBoard {
         return players;
     }
 
-    public void clearAllWeather() {
+    public void clearAllWeather(Sender sender) {
         rowHasWeather[0] = false;
         rowHasWeather[1] = false;
         rowHasWeather[2] = false;
         weather.clear();
         recalculatePlayersScore();
-        InGameMenuController.showChangedPlayerScoreAndCardsHp(this);
-        InGameMenuController.removeAllWeatherInGraphic(this);
+        InGameMenuController.removeAllWeatherInGraphic(sender);
     }
 
     private void recalculatePlayersScore() {
@@ -211,7 +212,6 @@ public class GameBoard {
     private void addWeatherForRow(int i) {
         rowHasWeather[i] = true;
         recalculatePlayersScore();
-        InGameMenuController.showChangedPlayerScoreAndCardsHp(this);
     }
 
 
@@ -251,5 +251,17 @@ public class GameBoard {
 
     public int getCurrentPlayerIndex() {
         return currentPlayer;
+    }
+
+    public void setAllCardsForUserSender(Sender sender, User user) {
+        int playerIndex = getPlayerNumber(user);
+        for(int i = 0; i < 3; i++) {
+            for (Card card : rows[playerIndex][i])
+                card.setSender(sender);
+            if(specialCards[playerIndex][i] != null)
+                specialCards[playerIndex][i].setSender(sender);
+        }
+        if(playersLeaders[playerIndex] != null)
+            playersLeaders[playerIndex].setSender(sender);
     }
 }

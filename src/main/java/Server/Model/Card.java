@@ -1,5 +1,6 @@
 package Server.Model;
 
+import Server.Controller.ApplicationController;
 import Server.Controller.InGameMenuController;
 import Server.Enum.Attribute;
 import Server.Enum.Faction;
@@ -23,6 +24,7 @@ public abstract class Card {
     protected transient GameBoard gameBoard;
     protected transient User user;
     protected Type type;
+    protected Sender sender;
 
 
     public Card(String name, User user) {
@@ -255,5 +257,31 @@ public abstract class Card {
 
     public boolean isSoldier() {
         return this instanceof Soldier;
+    }
+
+    public int getShowHp() {
+        if(this instanceof Soldier)
+            return ((Soldier) this).getShownHp();
+        return 0;
+    }
+
+    public String getSendableCardin() {
+        Cardin cardin = new Cardin(this);
+        return ApplicationController.getSendableObject(cardin);
+    }
+
+    public int getPlacedNumberInDiscardPile() {
+        for(int i = 0; i < user.getDiscardPile().size(); i++)
+            if(user.getDiscardPile().get(i) == this)
+                return i;
+        return -1;
+    }
+
+    public void setSender(Sender sender) {
+        this.sender = sender;
+    }
+
+    public Sender getSender(){
+        return sender;
     }
 }

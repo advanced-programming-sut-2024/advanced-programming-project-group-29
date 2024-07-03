@@ -96,7 +96,7 @@ public class Spell extends Card {
 
     private static void executeActionForClearWeather(Spell spell) {
         GameBoard gameBoard = spell.getGameBoard();
-        gameBoard.clearAllWeather();
+        gameBoard.clearAllWeather(spell.getSender());
     }
 
     private static void executeActionForCommanderHorn(Spell spell) {
