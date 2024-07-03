@@ -1,6 +1,5 @@
-package Model;
+package Client.Model;
 
-import Controller.ApplicationController;
 
 import java.util.ArrayList;
 
@@ -36,67 +35,6 @@ public class GameBoardin {
     int row23XP;
     int player1XP;
     int player2XP;
-
-    public GameBoardin(){
-        GameBoard gameBoard = ApplicationController.getCurrentUser().getCurrentGameBoard();
-        User user1 = gameBoard.getPlayer(0);
-        User user2 = gameBoard.getPlayer(1);
-        player1Hand = new ArrayList<>();
-        player2Hand = new ArrayList<>();
-        player1Deck = new ArrayList<>();
-        player2Deck = new ArrayList<>();
-        player1Discard = new ArrayList<>();
-        player2Discard = new ArrayList<>();
-        row11 = new ArrayList<>();
-        row12 = new ArrayList<>();
-        row13 = new ArrayList<>();
-        row21 = new ArrayList<>();
-        row22 = new ArrayList<>();
-        row23 = new ArrayList<>();
-        player1Crystal = gameBoard.getPlayerCrystals(0);
-        player2Crystal = gameBoard.getPlayerCrystals(1);
-        for(Card card : user1.getHand())
-            player1Hand.add(new Cardin(card));
-        for(Card card : user2.getHand())
-            player2Hand.add(new Cardin(card));
-        for(Card card : user1.getDeck())
-            player1Deck.add(new Cardin(card));
-        for(Card card : user2.getDeck())
-            player2Deck.add(new Cardin(card));
-        for(Card card : user1.getDiscardPile())
-            player1Discard.add(new Cardin(card));
-        for(Card card : user2.getDiscardPile())
-            player2Discard.add(new Cardin(card));
-        for(Card card : gameBoard.getRows()[0][2])
-            row11.add(new Cardin(card));
-        for(Card card : gameBoard.getRows()[0][1])
-            row12.add(new Cardin(card));
-        for(Card card : gameBoard.getRows()[0][0])
-            row13.add(new Cardin(card));
-        for(Card card : gameBoard.getRows()[1][2])
-            row21.add(new Cardin(card));
-        for(Card card : gameBoard.getRows()[1][1])
-            row22.add(new Cardin(card));
-        for(Card card : gameBoard.getRows()[1][0])
-            row23.add(new Cardin(card));
-        player1Username = user1.getUsername();
-        player2Username = user2.getUsername();
-        player1Faction = user1.getFaction().getName();
-        player2Faction = user2.getFaction().getName();
-        player1Commander = user1.getCommander().getName();
-        player2Commander = user2.getCommander().getName();
-        player1CommanderHasAction = user1.getCommander().hasAction();
-        player2CommanderHasAction = user2.getCommander().hasAction();
-        row11XP = gameBoard.getRowShownScore(0, 2);
-        row12XP = gameBoard.getRowShownScore(0, 1);
-        row13XP = gameBoard.getRowShownScore(0, 0);
-        row21XP = gameBoard.getRowShownScore(1, 2);
-        row22XP = gameBoard.getRowShownScore(1, 1);
-        row23XP = gameBoard.getRowShownScore(1, 0);
-        player1XP = gameBoard.getPlayerScore(0);
-        player2XP = gameBoard.getPlayerScore(1);
-        currentPlayerIndex = gameBoard.getCurrentPlayerIndex() + 1;
-    }
 
     public ArrayList<Cardin> getPlayer2Deck() {
         return player2Deck;

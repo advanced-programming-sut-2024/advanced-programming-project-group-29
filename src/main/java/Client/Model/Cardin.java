@@ -1,11 +1,10 @@
 package  Client.Model;
 
-import Enum.Attribute;
-import Enum.Type;
-import Enum.Faction;
+import Client.Enum.*;
 
 public class Cardin {
 
+    public String description;
     public String name;
     public int hp;
     public Attribute attribute;
@@ -14,15 +13,6 @@ public class Cardin {
     public boolean isSoldier;
     public Faction faction;
 
-    public Cardin(Card card){
-        this.name = card.getName();
-        this.hp = card.getHp();
-        this.attribute = card.getAttribute();
-        this.type = card.getType();
-        this.isHero = card.isHero();
-        this.isSoldier = card.isSoldier();
-        this.faction = card.getUser().getFaction();
-    }
 
     public void setName(String name) {
         this.name = name;

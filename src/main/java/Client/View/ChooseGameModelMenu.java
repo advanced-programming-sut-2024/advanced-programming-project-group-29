@@ -1,9 +1,9 @@
-package View;
+package Client.View;
 
-import Controller.GameMenuController;
-import Controller.SaveApplicationAsObject;
-import Model.Result;
-import Regex.GameMenuRegex;
+import Server.Controller.GameMenuController;
+import Server.Controller.SaveApplicationAsObject;
+import Client.Model.Result;
+import Client.Regex.GameMenuRegex;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;

@@ -1,4 +1,4 @@
-package Regex;
+package Client.Regex;
 
 public enum CheatMenuOutputCommand {
 

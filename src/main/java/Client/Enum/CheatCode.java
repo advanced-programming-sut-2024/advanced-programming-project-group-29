@@ -1,4 +1,4 @@
-package Enum;
+package Client.Enum;
 
 public enum CheatCode {
 

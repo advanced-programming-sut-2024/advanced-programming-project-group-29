@@ -1,26 +1,26 @@
-package Model;
+package Client.Model;
 
 import java.util.ArrayList;
 
-import Enum.Faction;
+import Client.Enum.*;
 
 public class SavedDeck {
-    private final ArrayList<Card> deck;
-    private final Commander commander;
+    private final ArrayList<Cardin> deck;
+    private final String commanderName;
     private final Faction faction;
 
-    public SavedDeck(ArrayList<Card> deck, Commander commander, Faction faction) {
+    public SavedDeck(ArrayList<Cardin> deck, String commanderName, Faction faction) {
         this.deck = deck;
-        this.commander = commander;
+        this.commanderName = commanderName;
         this.faction = faction;
     }
 
-    public ArrayList<Card> getDeck() {
+    public ArrayList<Cardin> getDeck() {
         return deck;
     }
 
-    public Commander getCommander() {
-        return commander;
+    public String getCommander() {
+        return commanderName;
     }
 
     public Faction getFaction() {

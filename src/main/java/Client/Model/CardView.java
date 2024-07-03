@@ -1,30 +1,22 @@
-package Model;
+package Client.Model;
 
-import Controller.SaveApplicationAsObject;
-import View.Animations.FlipCardAnimation;
-import View.InGameMenu;
+import Client.View.InGameMenu;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Point3D;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.control.Label;
-import javafx.scene.effect.Effect;
 import javafx.scene.effect.Glow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
-import Enum.Type;
-import Enum.Attribute;
+import Client.Enum.*;
 import javafx.scene.text.FontWeight;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Objects;
-import java.util.Random;
 
 public class CardView extends Pane {
     private ArrayList<CardView> allCardView = new ArrayList<>();
@@ -136,7 +128,9 @@ public class CardView extends Pane {
         super.focusedProperty().addListener(new ChangeListener<Boolean>() {
             @Override
             public void changed(ObservableValue<? extends Boolean> observableValue, Boolean aBoolean, Boolean t1) {
-                InGameMenu inGameMenu = (InGameMenu) SaveApplicationAsObject.getApplicationController().getMenu();
+                // TODO:
+                InGameMenu inGameMenu = null;
+                //InGameMenu inGameMenu = (InGameMenu) SaveApplicationAsObject.getApplicationController().getMenu();
                 if (t1) {
                     isSelected = true;
                     inGameMenu.selectBeforeMove(card);

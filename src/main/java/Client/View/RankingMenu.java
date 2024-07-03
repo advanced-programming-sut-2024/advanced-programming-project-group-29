@@ -1,4 +1,4 @@
-package View;
+package Client.View;
 
 import Controller.RankingMenuController;
 import Controller.SaveApplicationAsObject;

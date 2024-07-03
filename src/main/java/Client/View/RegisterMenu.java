@@ -1,14 +1,8 @@
-package View;
+package Client.View;
 
-import Controller.ApplicationController;
-import Controller.ProfileMenuController;
-import Controller.RegisterMenuController;
-import Controller.SaveApplicationAsObject;
-import Model.Result;
-import Model.User;
-import Regex.RegisterMenuRegex;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
+import Server.Controller.*;
+import Client.Model.*;
+import Client.Regex.*;
 import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -24,7 +18,6 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 
 import java.util.Objects;
 import java.util.regex.Matcher;
@@ -115,7 +108,7 @@ public class RegisterMenu extends Application {
 
     public void setQuestion(MouseEvent mouseEvent) {
         String toRegex = "pick question -q " + questions.getSelectionModel().getSelectedIndex() + " -a " + this.answer.getText() + " -c " + this.confirmAnswer.getText();
-        Matcher matcher = Pattern.compile(RegisterMenuRegex.PICKQUESTION.getRegex()).matcher(toRegex);
+        Matcher matcher = Pattern.compile(RegisterMenuRegex.PICK_QUESTION.getRegex()).matcher(toRegex);
         matcher.matches();
         Result result = RegisterMenuController.answerSecurityQuestion(matcher, this.username.getText());
         if (!result.isSuccessful()) {

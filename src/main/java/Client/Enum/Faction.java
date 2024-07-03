@@ -1,6 +1,5 @@
-package Enum;
+package Client.Enum;
 
-import Model.Card;
 import org.json.JSONArray;
 import org.json.JSONObject;
 

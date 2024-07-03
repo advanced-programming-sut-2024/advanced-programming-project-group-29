@@ -1,4 +1,4 @@
-package Model;
+package Client.Model;
 
 import javafx.scene.image.ImageView;
 

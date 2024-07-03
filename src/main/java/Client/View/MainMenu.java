@@ -1,4 +1,4 @@
-package View;
+package Client.View;
 
 import Controller.ApplicationController;
 import Controller.SaveApplicationAsObject;

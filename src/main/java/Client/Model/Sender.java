@@ -1,4 +1,4 @@
-package Model;
+package Client.Model;
 
 import com.google.gson.GsonBuilder;
 

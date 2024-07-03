@@ -37,7 +37,7 @@ public class InGameMenuController extends Thread {
         // TODO: let user veto card
     }
 
-    public static ArrayList<int> chooseFromPile(ArrayList<Card> pile, String command){
+    public static ArrayList<Integer> chooseFromPile(ArrayList<Card> pile, String command){
         // TODO: implement this
         return null;
     }

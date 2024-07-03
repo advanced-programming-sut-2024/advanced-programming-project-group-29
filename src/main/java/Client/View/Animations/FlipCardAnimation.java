@@ -1,6 +1,6 @@
-package View.Animations;
+package Client.View.Animations;
 
-import Model.CardView;
+import Client.Model.CardView;
 import javafx.animation.Transition;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;

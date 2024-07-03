@@ -1,7 +1,7 @@
-package View;
+package Client.View;
 
-import Controller.ApplicationController;
-import Controller.GameMenuController;
+import Server.Controller.ApplicationController;
+import Server.Controller.GameMenuController;
 import Controller.SaveApplicationAsObject;
 import Model.*;
 import Regex.GameMenuRegex;

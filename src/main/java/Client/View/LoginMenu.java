@@ -1,12 +1,8 @@
-package View;
+package Client.View;
 
-import Controller.ApplicationController;
-import Controller.LoginMenuController;
-import Controller.RegisterMenuController;
 import Controller.SaveApplicationAsObject;
-import Model.Result;
-import Model.User;
-import Regex.LoginMenuRegex;
+import Client.Model.Result;
+import Client.Regex.LoginMenuRegex;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;

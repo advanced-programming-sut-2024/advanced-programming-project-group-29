@@ -1,8 +1,8 @@
-package View;
+package Client.View;
 
-import Controller.*;
-import Model.*;
-import Enum.*;
+import Server.Controller.*;
+import Client.Model.*;
+import Client.Enum.*;
 import Regex.GameMenuRegex;
 import Regex.InGameMenuRegex;
 import View.Animations.FlipCardAnimation;

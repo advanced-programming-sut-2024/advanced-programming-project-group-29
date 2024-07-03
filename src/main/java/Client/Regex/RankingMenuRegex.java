@@ -1,4 +1,4 @@
-package Regex;
+package Client.Regex;
 
 public enum RankingMenuRegex {
     GET_RANKING("get ranking");
