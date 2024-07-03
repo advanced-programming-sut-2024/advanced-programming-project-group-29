@@ -1,6 +1,7 @@
 package Client.View;
 
-import Controller.SaveApplicationAsObject;
+import Client.Client;
+import Client.Controller.SaveApplicationAsObject;
 import Client.Model.Result;
 import Client.Regex.LoginMenuRegex;
 import javafx.application.Application;
@@ -20,8 +21,6 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.Objects;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class LoginMenu extends Application {
     private final double HEIGHT_OF_TEXT_WARNING = 25;
@@ -47,21 +46,25 @@ public class LoginMenu extends Application {
     public CheckBox stayIn;
 
     private Label warning;
-    private LoginMenuController loginMenuController;
+    private Client client;
+    private String usernameLoggedIn;
 
-    private User user;
+    public LoginMenu() {
+        super();
+        client = Client.getClient();
+    }
 
     public void run(String[] args) throws IOException {
         Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
             public void run() {
                 try {
-                    User.saveUser();
+                    client.sendCommand(LoginMenuRegex.SAVE_USER.getRegex());
                 } catch (Exception e) {
                     System.out.println(e.toString());
                 }
             }
         }, "Program existing..."));
-        User.loadUser();
+        client.sendCommand(LoginMenuRegex.LOAD_USER.getRegex());
         launch(args);
     }
 
@@ -77,23 +80,13 @@ public class LoginMenu extends Application {
         SaveApplicationAsObject.getApplicationController().setPane(pane);
     }
 
-    public LoginMenuController getLoginMenuController() {
-        return loginMenuController;
-    }
-
-    public void setLoginMenuController(LoginMenuController loginMenuController) {
-        this.loginMenuController = loginMenuController;
-    }
-
     public void createNewAccount(MouseEvent mouseEvent) throws Exception {
         new RegisterMenu().start(SaveApplicationAsObject.getApplicationController().getStage());
     }
 
     public void signIn(MouseEvent mouseEvent) throws Exception {
         String toRegex = "login -u " + this.username.getText() + " -p " + this.password.getText() + (stayIn.isSelected() ? " -stay-logged-in" : " ");
-        Matcher matcher = Pattern.compile(LoginMenuRegex.LOGIN.getRegex()).matcher(toRegex);
-        matcher.matches();
-        Result result = LoginMenuController.login(matcher);
+        Result result = (Result) client.sendCommand(toRegex);
         if (!result.isSuccessful()) {
             sayAlert(result.getMessage().get(0), 516, true, dark1, 297);
         } else {
@@ -115,15 +108,13 @@ public class LoginMenu extends Application {
 
     public void enterName(MouseEvent mouseEvent) {
         String toRegex = "forget password -u " + this.usernameChange.getText();
-        Matcher matcher = Pattern.compile(LoginMenuRegex.FORGETPASSWORD.getRegex()).matcher(toRegex);
-        matcher.matches();
-        Result result = LoginMenuController.forgetPassword(matcher);
+        Result result = (Result) client.sendCommand(toRegex);
         if (!result.isSuccessful()) {
             sayAlert(result.getMessage().get(0), 458, true, dark2, 212);
         } else {
             deleteWarning();
             question.setText(result.getMessage().get(0));
-            this.user = User.getUserByUsername(this.usernameChange.getText());
+            this.usernameLoggedIn = this.usernameChange.getText();
             usernamePain.setDisable(true);
             usernamePain.setVisible(false);
             questionPain.setDisable(false);
@@ -133,10 +124,8 @@ public class LoginMenu extends Application {
 
 
     public void answerQuestion(MouseEvent mouseEvent) {
-        String toRegex = "answer -a " + this.answer.getText();
-        Matcher matcher = Pattern.compile(LoginMenuRegex.ANSWER.getRegex()).matcher(toRegex);
-        matcher.matches();
-        Result result = LoginMenuController.answerQuestion(matcher, this.user.getUsername());
+        String toRegex = "answer -a " + this.answer.getText() + " -u " + usernameLoggedIn;
+        Result result = (Result) client.sendCommand(toRegex);
         if (!result.isSuccessful()) {
             sayAlert(result.getMessage().get(0), 458, true, dark3, 212);
         } else {
@@ -149,10 +138,8 @@ public class LoginMenu extends Application {
     }
 
     public void finish(MouseEvent mouseEvent) {
-        String toRegex = "change password -p " + this.newPassword.getText() + " -c " + this.confirmPassword.getText();
-        Matcher matcher = Pattern.compile(LoginMenuRegex.CHANGEPASSWORD.getRegex()).matcher(toRegex);
-        matcher.matches();
-        Result result = LoginMenuController.changePassword(matcher, this.user.getUsername());
+        String toRegex = "change password -p " + this.newPassword.getText() + " -c " + this.confirmPassword.getText() + " -u " + usernameLoggedIn;
+        Result result = (Result) client.sendCommand(toRegex);
         if (!result.isSuccessful()) {
             sayAlert(result.getMessage().get(0), 507, true, dark4, 265);
         } else {

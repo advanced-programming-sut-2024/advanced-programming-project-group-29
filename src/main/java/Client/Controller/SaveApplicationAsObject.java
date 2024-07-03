@@ -1,6 +1,6 @@
-package Server.Controller;
+package Client.Controller;
 
-import javafx.stage.Stage;
+import Server.Controller.ApplicationController;
 
 public class SaveApplicationAsObject {
     private static ApplicationController applicationController;

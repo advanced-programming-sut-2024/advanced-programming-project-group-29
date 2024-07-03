@@ -3,8 +3,6 @@ package Server.Controller;
 import Server.Model.*;
 import Server.Regex.LoginMenuRegex;
 
-import Server.Controller.ApplicationController;
-
 import java.util.regex.Matcher;
 
 public class LoginMenuController {
@@ -12,14 +10,20 @@ public class LoginMenuController {
         if (inputCommand.matches(LoginMenuRegex.LOGIN.getRegex())) {
             return login(LoginMenuRegex.LOGIN.getMatcher(inputCommand));
         }
-        if (inputCommand.matches(LoginMenuRegex.FORGETPASSWORD.getRegex())) {
-            return forgetPassword(LoginMenuRegex.FORGETPASSWORD.getMatcher(inputCommand));
+        if (inputCommand.matches(LoginMenuRegex.FORGET_PASSWORD.getRegex())) {
+            return forgetPassword(LoginMenuRegex.FORGET_PASSWORD.getMatcher(inputCommand));
         }
         if (inputCommand.matches(LoginMenuRegex.ANSWER.getRegex())) {
             return answerQuestion(LoginMenuRegex.ANSWER.getMatcher(inputCommand));
         }
-        if (inputCommand.matches(LoginMenuRegex.CHANGEPASSWORD.getRegex())) {
-            return changePassword(LoginMenuRegex.CHANGEPASSWORD.getMatcher(inputCommand));
+        if (inputCommand.matches(LoginMenuRegex.CHANGE_PASSWORD.getRegex())) {
+            return changePassword(LoginMenuRegex.CHANGE_PASSWORD.getMatcher(inputCommand));
+        }
+        if (inputCommand.matches(LoginMenuRegex.SAVE_USER.getRegex())) {
+            return saveUsers();
+        }
+        if (inputCommand.matches(LoginMenuRegex.LOAD_USER.getRegex())) {
+            return loadUsers();
         }
         return null;
     }
@@ -72,5 +76,23 @@ public class LoginMenuController {
             return new Result(false, "Passwords do not match.");
         user.setPassword(password);
         return new Result(true, "Password changed successfully.");
+    }
+
+    public static Result saveUsers () {
+        try {
+            User.saveUser();
+            return new Result(true, "Users saved successfully.");
+        } catch (Exception e) {
+            return new Result(false, "Error saving users.");
+        }
+    }
+
+    private static Result loadUsers() {
+        try {
+            User.loadUser();
+            return new Result(true, "Users loaded successfully.");
+        } catch (Exception e) {
+            return new Result(false, "Error loading users.");
+        }
     }
 }
