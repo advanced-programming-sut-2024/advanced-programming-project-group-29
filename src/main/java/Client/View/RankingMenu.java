@@ -2,7 +2,7 @@ package Client.View;
 
 import Client.Client;
 import Client.Regex.RankingMenuRegex;
-import Client.Controller.SaveApplicationAsObject;
+import Client.Model.ApplicationRunningTimeData;
 import javafx.application.Application;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -79,16 +79,16 @@ public class RankingMenu extends Application {
         Scene scene = new Scene(pane);
         stage.setScene(scene);
         stage.show();
-        SaveApplicationAsObject.getApplicationController().setPane(pane);
+        ApplicationRunningTimeData.setPane(pane);
     }
 
     public void back(MouseEvent mouseEvent) throws Exception {
-        new MainMenu().start(SaveApplicationAsObject.getApplicationController().getStage());
+        new MainMenu().start(ApplicationRunningTimeData.getStage());
     }
 
     public void buttonEntered(MouseEvent mouseEvent) {
         if (mouseEvent.getSource() instanceof Rectangle) {
-            Pane pane = SaveApplicationAsObject.getApplicationController().getPane();
+            Pane pane = ApplicationRunningTimeData.getPane();
             int n = pane.getChildren().indexOf((Rectangle) mouseEvent.getSource()) + 1;
             ((Label) pane.getChildren().get(n)).setTextFill(Paint.valueOf("e47429"));
         } else {
@@ -98,7 +98,7 @@ public class RankingMenu extends Application {
 
     public void buttonExited(MouseEvent mouseEvent) {
         if (mouseEvent.getSource() instanceof Rectangle) {
-            Pane pane = SaveApplicationAsObject.getApplicationController().getPane();
+            Pane pane = ApplicationRunningTimeData.getPane();
             int n = pane.getChildren().indexOf((Rectangle) mouseEvent.getSource()) + 1;
             ((Label) pane.getChildren().get(n)).setTextFill(Paint.valueOf("black"));
         } else {

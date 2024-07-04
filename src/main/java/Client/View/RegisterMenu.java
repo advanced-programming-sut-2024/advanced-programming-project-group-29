@@ -1,7 +1,7 @@
 package Client.View;
 
 import Client.Client;
-import Client.Controller.SaveApplicationAsObject;
+import Client.Model.ApplicationRunningTimeData;
 import Client.Model.*;
 import Client.Regex.*;
 import javafx.application.Application;
@@ -66,7 +66,7 @@ public class RegisterMenu extends Application {
         Scene scene = new Scene(pane);
         stage.setScene(scene);
         stage.show();
-        SaveApplicationAsObject.getApplicationController().setPane(pane);
+        ApplicationRunningTimeData.setPane(pane);
     }
 
     public void signup(MouseEvent mouseEvent) {
@@ -110,7 +110,7 @@ public class RegisterMenu extends Application {
         String toRegex = "has answered question -u " + this.username.getText();
         boolean hasAnsweredTheQuestion = (boolean) client.sendCommand(toRegex);
         if (hasAnsweredTheQuestion){
-            new LoginMenu().start(SaveApplicationAsObject.getApplicationController().getStage());
+            new LoginMenu().start(ApplicationRunningTimeData.getStage());
         } else {
             sayAlert("Please answer the security question! and set question", false, true);
         }
@@ -121,7 +121,7 @@ public class RegisterMenu extends Application {
         Rectangle back = (isMain ? darkBack : darkBack1);
         back.setHeight(isMain ? HEIGHT_OF_DARK_BACK : HEIGHT_OF_DARK_BACK1);
         back.setHeight(back.getHeight() + (n + 1) * HEIGHT_OF_TEXT_WARNING);
-        Pane pane = SaveApplicationAsObject.getApplicationController().getPane();
+        Pane pane = ApplicationRunningTimeData.getPane();
         pane.getChildren().remove(this.warning);
         this.warning = createWarningLabel(warning, n + 1, isRed, isMain);
         pane.getChildren().add(this.warning);
@@ -160,7 +160,7 @@ public class RegisterMenu extends Application {
     }
 
     public void cancel(MouseEvent mouseEvent) throws Exception {
-        new LoginMenu().start(SaveApplicationAsObject.getApplicationController().getStage());
+        new LoginMenu().start(ApplicationRunningTimeData.getStage());
     }
 }
 

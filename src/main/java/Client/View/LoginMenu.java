@@ -1,7 +1,7 @@
 package Client.View;
 
 import Client.Client;
-import Client.Controller.SaveApplicationAsObject;
+import Client.Model.ApplicationRunningTimeData;
 import Client.Model.Result;
 import Client.Regex.LoginMenuRegex;
 import javafx.application.Application;
@@ -76,12 +76,12 @@ public class LoginMenu extends Application {
         Scene scene = new Scene(pane);
         stage.setScene(scene);
         stage.show();
-        SaveApplicationAsObject.getApplicationController().setStage(stage);
-        SaveApplicationAsObject.getApplicationController().setPane(pane);
+        ApplicationRunningTimeData.setStage(stage);
+        ApplicationRunningTimeData.setPane(pane);
     }
 
     public void createNewAccount(MouseEvent mouseEvent) throws Exception {
-        new RegisterMenu().start(SaveApplicationAsObject.getApplicationController().getStage());
+        new RegisterMenu().start(ApplicationRunningTimeData.getStage());
     }
 
     public void signIn(MouseEvent mouseEvent) throws Exception {
@@ -90,7 +90,8 @@ public class LoginMenu extends Application {
         if (!result.isSuccessful()) {
             sayAlert(result.getMessage().get(0), 516, true, dark1, 297);
         } else {
-            new MainMenu().start(SaveApplicationAsObject.getApplicationController().getStage());
+            ApplicationRunningTimeData.setLoggedInUserUsername(this.username.getText());
+            new MainMenu().start(ApplicationRunningTimeData.getStage());
         }
     }
 
@@ -171,7 +172,7 @@ public class LoginMenu extends Application {
     }
 
     private void deleteWarning() {
-        Pane pane = SaveApplicationAsObject.getApplicationController().getPane();
+        Pane pane = ApplicationRunningTimeData.getPane();
         pane.getChildren().remove(this.warning);
     }
 
@@ -181,7 +182,7 @@ public class LoginMenu extends Application {
         back.setHeight(back.getHeight() + (n + 1) * HEIGHT_OF_TEXT_WARNING);
         deleteWarning();
         this.warning = createWarningLabel(warning, n + 1, isRed, Y);
-        SaveApplicationAsObject.getApplicationController().getPane().getChildren().add(this.warning);
+        ApplicationRunningTimeData.getPane().getChildren().add(this.warning);
     }
 
     private Label createWarningLabel(String warning, int n, boolean isRed, int Y) {

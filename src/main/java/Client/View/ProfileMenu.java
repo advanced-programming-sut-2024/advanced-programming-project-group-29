@@ -1,7 +1,7 @@
 package Client.View;
 
 import Client.Client;
-import Client.Controller.SaveApplicationAsObject;
+import Client.Model.ApplicationRunningTimeData;
 import Client.Model.Result;
 import Client.Regex.ProfileMenuRegex;
 import javafx.application.Application;
@@ -21,8 +21,6 @@ import javafx.stage.Stage;
 
 import java.util.ArrayList;
 import java.util.Objects;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class ProfileMenu extends Application {
     private final double HEIGHT_OF_TEXT_WARNING = 25;
@@ -137,7 +135,7 @@ public class ProfileMenu extends Application {
         Scene scene = new Scene(pane);
         stage.setScene(scene);
         stage.show();
-        SaveApplicationAsObject.getApplicationController().setPane(pane);
+        ApplicationRunningTimeData.setPane(pane);
     }
 
     public void showInfo(MouseEvent mouseEvent) {
@@ -252,7 +250,7 @@ public class ProfileMenu extends Application {
     }
 
     private void deleteWarning() {
-        SaveApplicationAsObject.getApplicationController().getPane().getChildren().remove(this.warning);
+        ApplicationRunningTimeData.getPane().getChildren().remove(this.warning);
         darkBack.setHeight(302 + (Fields.getValue().equals("Password") ? 60 : 0));
     }
 
@@ -263,7 +261,7 @@ public class ProfileMenu extends Application {
         darkBack.setHeight(302 + (Fields.getValue().equals("Password") ? 60 : 0));
         darkBack.setHeight(darkBack.getHeight() + (n + 1) * HEIGHT_OF_TEXT_WARNING);
         this.warning = createWarningLabel(warning, n + 1, isRed, 465 + (Fields.getValue().equals("Password") ? 60 : 0));
-        SaveApplicationAsObject.getApplicationController().getPane().getChildren().add(this.warning);
+        ApplicationRunningTimeData.getPane().getChildren().add(this.warning);
     }
 
     private Label createWarningLabel(String warning, int n, boolean isRed, int Y) {
@@ -299,6 +297,6 @@ public class ProfileMenu extends Application {
     }
 
     public void back(MouseEvent mouseEvent) throws Exception {
-        new MainMenu().start(SaveApplicationAsObject.getApplicationController().getStage());
+        new MainMenu().start(ApplicationRunningTimeData.getStage());
     }
 }

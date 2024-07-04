@@ -1,5 +1,6 @@
 package Client.View;
 
+import Client.Model.ApplicationRunningTimeData;
 import Server.Controller.*;
 import Client.Model.*;
 import Client.Enum.*;
@@ -9,17 +10,12 @@ import View.Animations.FlipCardAnimation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
-import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
@@ -36,15 +32,9 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import Enum.Attribute;
 
-import java.io.File;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Objects;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.FutureTask;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class InGameMenu extends Application {
     private final double X_POSITION_HAND_LEFT = 481;
@@ -174,7 +164,7 @@ public class InGameMenu extends Application {
                 mainPain.requestFocus();
             }
         });
-        SaveApplicationAsObject.getApplicationController().setMenu(this);
+        ApplicationRunningTimeData.getApplicationController().setMenu(this);
         row11.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
@@ -338,7 +328,7 @@ public class InGameMenu extends Application {
         Scene scene = new Scene(pane);
         stage.setScene(scene);
         stage.show();
-        SaveApplicationAsObject.getApplicationController().setPane(pane);
+        ApplicationRunningTimeData.getApplicationController().setPane(pane);
     }
 
     public InGameMenuController getInGameMenuController() {

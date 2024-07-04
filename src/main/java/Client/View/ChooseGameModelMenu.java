@@ -1,7 +1,7 @@
 package Client.View;
 
 import Client.Client;
-import Client.Controller.SaveApplicationAsObject;
+import Client.Model.ApplicationRunningTimeData;
 import Client.Model.Result;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -43,7 +43,7 @@ public class ChooseGameModelMenu extends Application {
         Scene scene = new Scene(pane);
         stage.setScene(scene);
         stage.show();
-        SaveApplicationAsObject.getApplicationController().setPane(pane);
+        ApplicationRunningTimeData.setPane(pane);
     }
 
 
@@ -59,7 +59,7 @@ public class ChooseGameModelMenu extends Application {
     }
 
     public void cancel(MouseEvent mouseEvent) throws Exception {
-        new MainMenu().start(SaveApplicationAsObject.getApplicationController().getStage());
+        new MainMenu().start(ApplicationRunningTimeData.getStage());
     }
 
     public void cancelIn(MouseEvent mouseEvent) {
@@ -77,7 +77,7 @@ public class ChooseGameModelMenu extends Application {
         if (!result.isSuccessful()) {
             sayAlert(result.getMessage().getFirst(), true);
         } else {
-            new GameMenu().start(SaveApplicationAsObject.getApplicationController().getStage());
+            new GameMenu().start(ApplicationRunningTimeData.getStage());
         }
     }
 
@@ -102,7 +102,7 @@ public class ChooseGameModelMenu extends Application {
     }
 
     private void deleteWarning() {
-        SaveApplicationAsObject.getApplicationController().getPane().getChildren().remove(this.warning);
+        ApplicationRunningTimeData.getPane().getChildren().remove(this.warning);
         darkBack.setHeight(HEIGHT_OF_DARK_BACK);
     }
 
@@ -111,7 +111,7 @@ public class ChooseGameModelMenu extends Application {
         deleteWarning();
         darkBack.setHeight(darkBack.getHeight() + (n + 1) * HEIGHT_OF_TEXT_WARNING);
         this.warning = createWarningLabel(warning, n + 1, isRed, 449);
-        SaveApplicationAsObject.getApplicationController().getPane().getChildren().add(this.warning);
+        ApplicationRunningTimeData.getPane().getChildren().add(this.warning);
     }
 
     private Label createWarningLabel(String warning, int n, boolean isRed, int Y) {

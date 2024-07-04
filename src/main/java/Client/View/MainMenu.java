@@ -1,7 +1,6 @@
 package Client.View;
 
-import Controller.ApplicationController;
-import Controller.SaveApplicationAsObject;
+import Client.Model.ApplicationRunningTimeData;
 import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -13,7 +12,6 @@ import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
-import java.awt.*;
 import java.util.Objects;
 
 public class MainMenu extends Application {
@@ -22,7 +20,7 @@ public class MainMenu extends Application {
 
     @FXML
     public void initialize() {
-        nickname.setText("Welcome Master " + ApplicationController.getCurrentUser().getNickname());
+        nickname.setText("Welcome Master " + ApplicationRunningTimeData.getLoggedInUserUsername());
     }
 
     @Override
@@ -33,16 +31,16 @@ public class MainMenu extends Application {
         Scene scene = new Scene(pane);
         stage.setScene(scene);
         stage.show();
-        SaveApplicationAsObject.getApplicationController().setPane(pane);
+        ApplicationRunningTimeData.setPane(pane);
     }
 
 
     public void newGame(MouseEvent mouseEvent) throws Exception {
-        new ChooseGameModelMenu().start(SaveApplicationAsObject.getApplicationController().getStage());
+        new ChooseGameModelMenu().start(ApplicationRunningTimeData.getStage());
     }
 
     public void profile(MouseEvent mouseEvent) throws Exception{
-        new ProfileMenu().start(SaveApplicationAsObject.getApplicationController().getStage());
+        new ProfileMenu().start(ApplicationRunningTimeData.getStage());
     }
 
     public void logout(MouseEvent mouseEvent) {
@@ -51,7 +49,7 @@ public class MainMenu extends Application {
 
     public void buttonEntered(MouseEvent mouseEvent) {
         if (mouseEvent.getSource() instanceof Rectangle) {
-            Pane pane = SaveApplicationAsObject.getApplicationController().getPane();
+            Pane pane = ApplicationRunningTimeData.getPane();
             int n = pane.getChildren().indexOf((Rectangle) mouseEvent.getSource()) + 1;
             ((Label) pane.getChildren().get(n)).setTextFill(Paint.valueOf("e47429"));
         } else {
@@ -61,7 +59,7 @@ public class MainMenu extends Application {
 
     public void buttonExited(MouseEvent mouseEvent) {
         if (mouseEvent.getSource() instanceof Rectangle) {
-            Pane pane = SaveApplicationAsObject.getApplicationController().getPane();
+            Pane pane = ApplicationRunningTimeData.getPane();
             int n = pane.getChildren().indexOf((Rectangle) mouseEvent.getSource()) + 1;
             ((Label) pane.getChildren().get(n)).setTextFill(Paint.valueOf("black"));
         } else {
@@ -70,6 +68,6 @@ public class MainMenu extends Application {
     }
 
     public void ranking(MouseEvent mouseEvent) throws Exception {
-        new RankingMenu().start(SaveApplicationAsObject.getApplicationController().getStage());
+        new RankingMenu().start(ApplicationRunningTimeData.getStage());
     }
 }
