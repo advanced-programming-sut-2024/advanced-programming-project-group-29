@@ -151,6 +151,8 @@ public class InGameMenu extends Application {
     private final ArrayList<CardView>[][] horn = new ArrayList[2][3];
     private final ArrayList<CardView> weather = new ArrayList<>();
 
+    private InGameMenu inGameMenu;
+
     public InGameMenu() {
         super();
     }
@@ -305,6 +307,14 @@ public class InGameMenu extends Application {
 
     public void changeDecoy(Cardin card) {
         //TODO
+    }
+
+    public void setInGameMenu(InGameMenu inGameMenu) {
+        this.inGameMenu = inGameMenu;
+    }
+
+    public InGameMenu getInGameMenu(){
+        return inGameMenu;
     }
 
     public void removeCardFromHandAndKillIt(int cardNumber) {
