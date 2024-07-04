@@ -162,8 +162,8 @@ public class Soldier extends Card {
     private void executeActionForSpy(Soldier soldier) {
         GameBoard gameBoard = soldier.getGameBoard();
         int playerIndex = gameBoard.getPlayerNumber(soldier.getUser());
-        gameBoard.getRandomCardFromDeckAndAddItToHand(playerIndex);
-        gameBoard.getRandomCardFromDeckAndAddItToHand(playerIndex);
+        gameBoard.getRandomCardFromDeckAndAddItToHand(sender, playerIndex);
+        gameBoard.getRandomCardFromDeckAndAddItToHand(sender, playerIndex);
     }
 
     private void executeActionForScorch(Soldier soldier) {
@@ -174,21 +174,23 @@ public class Soldier extends Card {
             ArrayList<Soldier> notHeroSoldiers = new ArrayList<>();
             for (Soldier otherSoldier : gameBoard.getRows()[1 - playerIndex][i])
                 if (!otherSoldier.isHero()) {
-                    powerSum += otherSoldier.getHp();
+                    powerSum += otherSoldier.getShownHp();
                     notHeroSoldiers.add(otherSoldier);
                 }
             if (powerSum < 10)
                 continue;
             for (Soldier otherSoldier : notHeroSoldiers)
-                InGameMenuController.destroySoldier(gameBoard, otherSoldier);
+                InGameMenuController.destroySoldier(soldier.getSender(), gameBoard, otherSoldier);
         }
     }
 
     private static void executeActionForMedic(Soldier soldier) {
         GameBoard gameBoard = soldier.getGameBoard();
         int playerIndex = soldier.getGameBoard().getPlayerNumber(soldier.getUser());
-        Card card = InGameMenuController.getCardFromDiscardPileAndRemoveIt(soldier.getSender(), gameBoard, playerIndex);
-        InGameMenuController.addCardToHand(gameBoard, card, playerIndex);
+        Card card = InGameMenuController.getOneCardFromDiscardPile(soldier.getSender(), soldier.getUser());
+        if(card == null)
+            return;
+        InGameMenuController.moveCardFromDiscardToHand(soldier.getSender(), card);
     }
 
 

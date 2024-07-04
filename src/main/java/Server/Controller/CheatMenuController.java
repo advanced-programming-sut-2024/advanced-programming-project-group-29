@@ -17,67 +17,62 @@ import java.util.regex.Matcher;
 
 public class CheatMenuController {
 
-    private static User user;
-
     public static Object processRequest(ApplicationController applicationController, String inputCommand) {
         CheatCode cheatCode = CheatCode.getMatchedCheadCode(inputCommand);
-        user = applicationController.getCurrentUser();
-        return applyCheatCode(cheatCode);
+        return applyCheatCode(applicationController.getCurrentUser(), applicationController.getSender(), cheatCode);
     }
 
-    public static Object applyCheatCode(CheatCode cheatCode){
+    public static Object applyCheatCode(User user, Sender sender, CheatCode cheatCode){
         Object result = null;
         switch (cheatCode){
-            case RESET_CRYSTAL -> result = resetCrystal();
-            case ADD_WEATHER -> result = addRandomWeatherToHand();
-            case ADD_SOLDIER -> result = addRandomSoldierToHand();
-            case ADD_SPECIAL -> result = addRandomSpecialCardToHand();
-            case REFILL_COMMANDER -> result = refillCommanderAbility();
-            case KILL_RANDOM_SOLDIER -> result = killRandomSoldier();
+            case RESET_CRYSTAL -> resetCrystal(user);
+            case ADD_WEATHER -> addRandomWeatherToHand(user, sender);
+            case ADD_SOLDIER -> addRandomSoldierToHand(user, sender);
+            case ADD_SPECIAL -> addRandomSpecialCardToHand(user, sender);
+            case REFILL_COMMANDER -> refillCommanderAbility(user);
+            case KILL_RANDOM_SOLDIER ->  killRandomSoldier(user, sender);
             case END_GAME -> endGame();
         }
         return result;
     }
-    public static String resetCrystal() {
+    public static void resetCrystal(User user) {
         GameBoard gameBoard = user.getCurrentGameBoard();
         gameBoard.setPlayerCrystals(gameBoard.getPlayerNumber(user), 2);
         int playerIndex = gameBoard.getPlayerNumber(user);
-        return "set crystal " + playerIndex + " 2";
     }
 
-    public static Object addRandomWeatherToHand() {
+    public static void addRandomWeatherToHand(User user, Sender sender) {
         GameBoard gameBoard = user.getCurrentGameBoard();
         int playerIndex = gameBoard.getPlayerNumber(user);
         Spell card = Spell.getRandomWeatherCard(user);
-        return InGameMenuController.addCardToHand(gameBoard, card, playerIndex);
+        InGameMenuController.addCardToHand(sender, gameBoard, card, playerIndex);
     }
 
-    public static Object addRandomSpecialCardToHand() {
+    public static void addRandomSpecialCardToHand(User user, Sender sender) {
         GameBoard gameBoard = user.getCurrentGameBoard();
         int playerIndex = gameBoard.getPlayerNumber(user);
         Spell card = Spell.getRandomSpecialCard(user);
-        return InGameMenuController.addCardToHand(gameBoard, card, playerIndex);
+        InGameMenuController.addCardToHand(sender, gameBoard, card, playerIndex);
     }
 
-    public static Object addRandomSoldierToHand() {
+    public static void addRandomSoldierToHand(User user, Sender sender) {
         GameBoard gameBoard = user.getCurrentGameBoard();
         int playerIndex = gameBoard.getPlayerNumber(user);
         Soldier card = Soldier.getRandomCard(user);
-        return InGameMenuController.addCardToHand(gameBoard, card, playerIndex);
+        InGameMenuController.addCardToHand(sender, gameBoard, card, playerIndex);
     }
 
-    public static Object refillCommanderAbility() {
+    public static void refillCommanderAbility(User user) {
         Commander commander = user.getCommander();
         if (!commander.hasAction() && !commander.hasPassiveAbility())
             commander.setHasAction(true);
-        return null;
     }
 
-    public static Object killRandomSoldier() {
+    public static void killRandomSoldier(User user, Sender sender) {
         User opponent = user.getOpponent();
         GameBoard gameBoard = opponent.getCurrentGameBoard();
         Soldier soldier = gameBoard.getRandomSoldier(opponent);
-        return InGameMenuController.destroySoldier(gameBoard, soldier);
+        InGameMenuController.destroySoldier(sender, gameBoard, soldier);
     }
 
     public static void endGame() {

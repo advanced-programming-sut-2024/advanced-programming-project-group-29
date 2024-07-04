@@ -88,13 +88,13 @@ public class Commander extends Card {
         Soldier card = null;
         int sumHp = 0;
         for (Soldier soldier : this.gameBoard.getRows()[opponentNumber][2]) {
-            int currentHp = soldier.getHp();
+            int currentHp = soldier.getShownHp();
             sumHp += currentHp;
             if (card == null) if (currentHp > 10) card = soldier;
-            else if (currentHp > card.getHp()) card = soldier;
+            else if (currentHp > card.getShownHp()) card = soldier;
         }
         if (sumHp <= 10) return;
-        InGameMenuController.destroySoldier(this.gameBoard, card);
+        InGameMenuController.destroySoldier(sender, this.gameBoard, card);
     }
 
     private void crachAnCraite() {
@@ -152,15 +152,15 @@ public class Commander extends Card {
         int opponentNumber = 1 - this.gameBoard.getPlayerNumber(this.user);
         int sumHp = 0;
         for (Soldier soldier : this.gameBoard.getRows()[opponentNumber][0]) {
-            sumHp += soldier.getHp();
+            sumHp += soldier.getShownHp();
         }
         if (sumHp <= 10) return;
         Soldier card = null;
         for (Soldier soldier : this.gameBoard.getRows()[opponentNumber][1]) {
             if (card == null) card = soldier;
-            else if (soldier.getHp() > card.getHp()) card = soldier;
+            else if (soldier.getShownHp() > card.getShownHp()) card = soldier;
         }
-        InGameMenuController.destroySoldier(gameBoard, card);
+        InGameMenuController.destroySoldier(sender, gameBoard, card);
     }
 
     private void theTreacherous() {
@@ -190,14 +190,14 @@ public class Commander extends Card {
             InGameMenuController.removeCardFromHand(sender, gameBoard, removedCards[i], gameBoard.getPlayerNumber(user));
         }
         Card card = InGameMenuController.getOneCardFromDeck(sender, user);
-        InGameMenuController.addCardToHand(gameBoard, card, gameBoard.getPlayerNumber(user));
+        InGameMenuController.moveCardFromDeckToHand(sender, card);
     }
 
     private void kingOfTheWildHunt() {
-        Card card = InGameMenuController.getCardFromDiscardPileAndRemoveIt(sender, gameBoard, gameBoard.getPlayerNumber(this.user));
+        Card card = InGameMenuController.getOneCardFromDiscardPile(sender, user);
         if (card == null)
             return;
-        InGameMenuController.addCardToHand(gameBoard, card, gameBoard.getPlayerNumber(this.user));
+        InGameMenuController.moveCardFromDiscardToHand(sender, card);
     }
 
     private void bringerOfDeath() {
@@ -210,25 +210,23 @@ public class Commander extends Card {
         ArrayList<Card> discardPile = user.getDiscardPile();
         User opponent = user.getOpponent();
         ArrayList<Card> opponentDiscardPile = opponent.getDiscardPile();
-        Random random = new Random();
         Card card;
         card = selectCardRandomly(discardPile);
         if (card != null) {
-            discardPile.remove(card);
-            InGameMenuController.addCardToHand(gameBoard, card, gameBoard.getPlayerNumber(user));
+            InGameMenuController.moveCardFromDiscardToHand(sender, card);
         }
         card = selectCardRandomly(opponentDiscardPile);
         if (card != null) {
-            discardPile.remove(card);
-            InGameMenuController.addCardToHand(gameBoard, card, gameBoard.getPlayerNumber(opponent));
+            InGameMenuController.moveCardFromOpponentDiscardPileToHand(sender, card);
         }
     }
 
     private void theRelentless() {
-        Card card = InGameMenuController.getCardFromDiscardPileAndRemoveIt(sender, gameBoard, 1 - gameBoard.getPlayerNumber(this.user));
+        Card card = InGameMenuController.getOneCardFromDiscardPile(sender, user);
         if (card == null)
             return;
-        InGameMenuController.addCardToHand(gameBoard, card, gameBoard.getPlayerNumber(this.user));
+        int placedNumber = card.getPlacedNumberInDiscardPile();
+        InGameMenuController.moveCardFromDiscardToHand(sender, card);
     }
 
     private void emperorOfNilfgaard() {
@@ -259,13 +257,13 @@ public class Commander extends Card {
         Soldier card = null;
         int sumHp = 0;
         for (Soldier soldier : this.gameBoard.getRows()[playerNumber][1]) {
-            int currentHp = soldier.getHp();
+            int currentHp = soldier.getShownHp();
             sumHp += currentHp;
             if (card == null) if (currentHp > 10) card = soldier;
-            else if (currentHp > card.getHp()) card = soldier;
+            else if (currentHp > card.getShownHp()) card = soldier;
         }
         if (sumHp <= 10) return;
-        InGameMenuController.destroySoldier(this.gameBoard, card);
+        InGameMenuController.destroySoldier(sender, this.gameBoard, card);
     }
 
     private Card selectCardRandomly (ArrayList<Card> list) {

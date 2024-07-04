@@ -284,4 +284,11 @@ public abstract class Card {
     public Sender getSender(){
         return sender;
     }
+
+    public int getPlacedNumberInDeck() {
+        for(int i = 0; i < user.getDeck().size(); i++)
+            if(user.getDeck().get(i) == this)
+                return i;
+        return -1;
+    }
 }

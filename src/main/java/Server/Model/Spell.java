@@ -113,18 +113,18 @@ public class Spell extends Card {
         for (int i = 0; i < 2; i++) {
             for (int j = 1; j <= 3; j++) {
                 for (Soldier soldier : gameBoard.getRows()[i][j]) {
-                    if (soldier.getHp() > maxPower) {
-                        maxPower = soldier.getHp();
+                    if (soldier.getShownHp() > maxPower) {
+                        maxPower = soldier.getShownHp();
                         maxPowerSoldiers.clear();
                         maxPowerSoldiers.add(soldier);
-                    } else if (soldier.getHp() == maxPower) {
+                    } else if (soldier.getShownHp() == maxPower) {
                         maxPowerSoldiers.add(soldier);
                     }
                 }
             }
         }
         for (Soldier soldier : maxPowerSoldiers) {
-            InGameMenuController.destroySoldier(gameBoard, soldier);
+            InGameMenuController.destroySoldier(spell.getSender(), gameBoard, soldier);
         }
     }
 

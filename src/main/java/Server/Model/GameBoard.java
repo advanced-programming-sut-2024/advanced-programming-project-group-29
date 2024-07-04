@@ -160,10 +160,9 @@ public class GameBoard {
         }
     }
 
-    public void getRandomCardFromDeckAndAddItToHand(int playerIndex) {
+    public void getRandomCardFromDeckAndAddItToHand(Sender sender, int playerIndex) {
         Card card = players[playerIndex].getCardFromDeckRandomly();
-        players[playerIndex].removeCardFromDeck(card);
-        InGameMenuController.addCardToHand(this, card, playerIndex);
+        InGameMenuController.moveCardFromDeckToHand(sender, card);
     }
 
     public User[] getPlayers() {

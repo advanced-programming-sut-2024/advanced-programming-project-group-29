@@ -35,22 +35,23 @@ public class InGameMenuController extends Thread {
         // TODO: let user veto card
     }
 
-    public static ArrayList<Integer> chooseFromPile(ArrayList<Card> pile, String command){
-        // TODO: implement this
-        return null;
-    }
-
     public static Card getOneCardFromDiscardPile(Sender sender, User user){
+        if(user.getDiscardPile().size() == 0)
+            return null;
         ArrayList<Integer> cardNumber = (ArrayList<Integer>) sender.sendCommand("show pile type " + 0 + " and let user choose " + 1);
         return user.getDiscardPile().get(cardNumber.get(0));
     }
 
     public static Card getOneCardFromHand(Sender sender, User user){
+        if(user.getHand().size() == 0)
+            return null;
         ArrayList<Integer> cardNumber = (ArrayList<Integer>) sender.sendCommand("show pile type " + 1 + " and let user choose " + 1);
         return user.getHand().get(cardNumber.get(0));
     }
 
     public static Card getOneCardFromDeck(Sender sender, User user){
+        if(user.getDeck().size() == 0)
+            return null;
         ArrayList<Integer> cardNumber = (ArrayList<Integer>) sender.sendCommand("show pile type " + 2 + " and let user choose " + 1);
         return user.getDeck().get(cardNumber.get(0));
     }
@@ -69,17 +70,10 @@ public class InGameMenuController extends Thread {
         return options.get(cardNumber.get(0));
     }
 
-    public static Card getCardFromDiscardPileAndRemoveIt(Sender sender, GameBoard gameBoard, int playerIndex) {
-        Card card = getOneCardFromDiscardPile(sender, gameBoard.getPlayer(playerIndex));
-        int cardNumber = card.getPlacedNumberInDiscardPile();
-        sender.sendCommand("remove card from discard pile " + cardNumber);
-        gameBoard.getPlayer(playerIndex).getDiscardPile().remove(cardNumber);
-        return card;
-    }
 
-    public static String addCardToHand(GameBoard gameBoard, Card card, int playerIndex) {
+    public static void addCardToHand(Sender sender, GameBoard gameBoard, Card card, int playerIndex) {
         gameBoard.getPlayers()[playerIndex].getHand().add(card);
-        return "add card to hand " + playerIndex + " " + card.getName();
+        sender.sendCommand("add card to hand " + card.getSendableCardin());
     }
 
     public static void removeCardFromHand(Sender sender, GameBoard gameBoard, Card card, int playerIndex) {
@@ -92,15 +86,14 @@ public class InGameMenuController extends Thread {
         sender.sendCommand("change card in " + rowNumber + " " + cardNumber + " to " + soldier.getSendableCardin());
     }
 
-    public static Commands destroySoldier(GameBoard gameBoard, Soldier soldier) {
+    public static void destroySoldier(Sender sender, GameBoard gameBoard, Soldier soldier) {
         if(soldier == null)
-            return null;
+            return;
         int playerIndex = gameBoard.getPlayerNumber(soldier.getUser());
         int rowNumber = Soldier.getPlacedRowNumber(soldier, gameBoard);
         gameBoard.getRows()[playerIndex][rowNumber].remove(soldier);
         gameBoard.setPlayerScore(playerIndex, gameBoard.getPlayerScore(playerIndex) - soldier.getShownHp());
-        return new Commands("destroy soldier " + playerIndex + " " + rowNumber + " " + soldier.getPlacedNumber(),
-                "set score " + playerIndex + " " + gameBoard.getPlayerScore(playerIndex));
+        sender.sendCommand("destroy soldier " + playerIndex + " " + rowNumber + " " + soldier.getPlacedNumber());
     }
 
     public static void removeAllWeatherInGraphic(Sender sender) {
@@ -262,4 +255,24 @@ public class InGameMenuController extends Thread {
         return new GameBoardin(user);
     }
 
+    public static void moveCardFromDeckToHand(Sender sender, Card card) {
+        int placedNumber = card.getPlacedNumberInDeck();
+        card.getUser().getDeck().remove(placedNumber);
+        card.getUser().getHand().add(card);
+        sender.sendCommand("move soldier " + placedNumber + " from deck to hand");
+    }
+
+    public static void moveCardFromDiscardToHand(Sender sender, Card card) {
+        int placedNumber = card.getPlacedNumberInDeck();
+        card.getUser().getDiscardPile().remove(placedNumber);
+        card.getUser().getHand().add(card);
+        sender.sendCommand("move soldier " + placedNumber + " from discard pile to hand");
+    }
+
+    public static void moveCardFromOpponentDiscardPileToHand(Sender sender, Card card) {
+        int placedNumber = card.getPlacedNumberInDiscardPile();
+        card.getUser().getOpponent().getDiscardPile().remove(placedNumber);
+        card.getUser().getHand().add(card);
+        sender.sendCommand("move soldier " + placedNumber + " from opponent's discard pile to hand");
+    }
 }

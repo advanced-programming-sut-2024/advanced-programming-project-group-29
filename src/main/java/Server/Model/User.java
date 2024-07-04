@@ -452,9 +452,10 @@ public class User {
 
     public void createHand(){ // have all cards in deck, it will remove all in hand
         hand.clear();
-        Collections.shuffle(deck);
-        for(int i = 0; i < Math.min(10, deck.size()); i++){
-            hand.add(deck.get(i));
+        ArrayList<Card> keepDeck = new ArrayList<>(deck);
+        Collections.shuffle(keepDeck);
+        for(int i = 0; i < Math.min(10, keepDeck.size()); i++){
+            hand.add(keepDeck.get(i));
         }
         for(Card card : hand){
             deck.remove(card);
