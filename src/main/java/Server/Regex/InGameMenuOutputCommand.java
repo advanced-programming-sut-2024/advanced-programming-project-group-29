@@ -31,8 +31,9 @@ public enum InGameMenuOutputCommand {
         return command;
     }
 
-    public Matcher getMatcher(String input) {
-        return Pattern.compile(command).matcher(input);
+    public Matcher getMatcher(String inputCommand) {
+        Matcher matcher = Pattern.compile(command).matcher(inputCommand);
+        matcher.find();
+        return matcher;
     }
-
 }

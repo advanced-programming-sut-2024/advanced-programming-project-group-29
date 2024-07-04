@@ -1,6 +1,7 @@
 package Server.Regex;
 
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public enum GameMenuRegex {
     CREATE_GAME("create game -p2( (?<player2>\\S+))?"),
@@ -33,6 +34,8 @@ public enum GameMenuRegex {
     }
 
     public Matcher getMatcher(String inputCommand) {
-        return java.util.regex.Pattern.compile(regex).matcher(inputCommand);
+        Matcher matcher = Pattern.compile(regex).matcher(inputCommand);
+        matcher.find();
+        return matcher;
     }
 }

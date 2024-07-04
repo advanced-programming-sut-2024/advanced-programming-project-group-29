@@ -21,6 +21,7 @@ public enum RegisterMenuRegex {
     }
 
     public Matcher getMatcher(String inputCommand) {
-        return Pattern.compile(regex).matcher(inputCommand);
-    }
-}
+        Matcher matcher = Pattern.compile(regex).matcher(inputCommand);
+        matcher.find();
+        return matcher;
+    }}

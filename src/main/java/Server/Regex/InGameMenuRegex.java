@@ -23,7 +23,9 @@ public enum InGameMenuRegex {
         return regex;
     }
 
-    public Matcher getMatcher(String input) {
-        return Pattern.compile(regex).matcher(input);
+    public Matcher getMatcher(String inputCommand) {
+        Matcher matcher = Pattern.compile(regex).matcher(inputCommand);
+        matcher.find();
+        return matcher;
     }
 }

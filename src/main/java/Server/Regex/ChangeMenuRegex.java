@@ -4,7 +4,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public enum ChangeMenuRegex {
-    CHANGE_MENU("menu enter (?<menuName>\\.+)");
+    CHANGE_MENU("menu enter (?<menuName>.+)");
 
     private final String regex;
 
@@ -17,6 +17,8 @@ public enum ChangeMenuRegex {
     }
 
     public Matcher getMatcher(String inputCommand) {
-        return Pattern.compile(regex).matcher(inputCommand);
+        Matcher matcher = Pattern.compile(regex).matcher(inputCommand);
+        matcher.find();
+        return matcher;
     }
 }
