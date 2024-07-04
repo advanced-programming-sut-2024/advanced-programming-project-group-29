@@ -9,7 +9,11 @@ public enum LoginMenuRegex {
     ANSWER("answer -a (?<answer>\\S+) -u (?<username>\\S+)"),
     CHANGE_PASSWORD("change password -p (?<password>\\S+) -c (?<passwordConfirm>\\S+) -u (?<username>\\S+)"),
     SAVE_USER("save users"),
-    LOAD_USER("load users");
+    LOAD_USER("load users"),
+    GET_NEW_JWT("get new jwt"),
+    AUTHENTICATE("authenticate"),
+    SET_TOKEN("set new token (?<token>.+)")
+    ;
 
     private final String regex;
 

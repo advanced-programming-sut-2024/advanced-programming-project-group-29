@@ -4,7 +4,10 @@ import Server.Model.Result;
 import Server.Model.User;
 import Server.Regex.RegisterMenuRegex;
 import Server.Controller.ApplicationController;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 
+import java.util.Date;
 import java.util.Random;
 import java.util.regex.Matcher;
 
@@ -118,4 +121,5 @@ public class RegisterMenuController {
         User user = User.getUserByUsername(username);
         return user.hasUserAnswerTheQuestion();
     }
+
 }

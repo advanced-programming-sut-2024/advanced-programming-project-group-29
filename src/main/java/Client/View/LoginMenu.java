@@ -93,6 +93,7 @@ public class LoginMenu extends Application {
             sayAlert(result.getMessage().get(0), 516, true, dark1, 297);
         } else {
             ApplicationRunningTimeData.setLoggedInUserUsername(this.username.getText());
+            Client.getClient().getSender().setToken(result.getToken());
             new MainMenu().start(ApplicationRunningTimeData.getStage());
         }
     }

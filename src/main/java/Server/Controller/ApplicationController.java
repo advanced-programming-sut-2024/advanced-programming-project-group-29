@@ -3,6 +3,7 @@ package Server.Controller;
 import Server.Model.*;
 import Server.Enum.Menu;
 import Server.Regex.ChangeMenuRegex;
+import Server.Regex.LoginMenuRegex;
 import com.google.gson.GsonBuilder;
 import javafx.application.Application;
 import javafx.scene.layout.Pane;
@@ -74,11 +75,23 @@ public class ApplicationController extends Thread {
             dataOutputStream.writeUTF("null");
             while(true) {
                 inputCommand = dataInputStream.readUTF();
+                if(currentUser != null){
+                    int endOfToken = inputCommand.indexOf(":");
+                    String token = inputCommand.substring(0, endOfToken);
+                    while(!currentUser.checkJWT(inputCommand.substring(0, endOfToken))) {
+                        token = (String)sender.sendCommand("authenticate");
+                    }
+                    inputCommand = inputCommand.substring(endOfToken + 1);
+                }
                 System.out.println("got that command " + inputCommand);
                 System.err.println(currentMenu);
                 if (inputCommand.matches(ChangeMenuRegex.CHANGE_MENU.getRegex())) {
                     currentMenu = Menu.valueOf(ChangeMenuRegex.CHANGE_MENU.getMatcher(inputCommand).group("menuName"));
                     dataOutputStream.writeUTF("null");
+                    continue;
+                }
+                if(inputCommand.matches(LoginMenuRegex.GET_NEW_JWT.getRegex())){
+                    dataOutputStream.writeUTF(this.getCurrentUser().getJWT());
                     continue;
                 }
                 Object object = null;

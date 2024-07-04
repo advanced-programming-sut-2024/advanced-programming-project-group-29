@@ -21,6 +21,8 @@ import Server.Controller.ApplicationController;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -41,6 +43,8 @@ public class User {
     };
 
     private static ArrayList<User> allUsers = new ArrayList<>();
+    private static final int EXPIATION_TIME = 30;
+    private static final String SECRET_KEY = "For the rest of your days, you will be known as Robin Hood.";
     private String username;
     private String password;
     private String nickname;
@@ -471,5 +475,29 @@ public class User {
             card.setSender(sender);
         if(currentGameBoard != null)
             currentGameBoard.setAllCardsForUserSender(sender, this);
+    }
+
+    public String getJWT(){
+        String subject = username + "%&*" + password;
+        long nowMillis = System.currentTimeMillis();
+        Date now = new Date(nowMillis);
+        long expMillis = nowMillis + 1000 * EXPIATION_TIME;
+        Date exp = new Date(expMillis);
+
+        return Jwts.builder()
+                .setSubject(subject)
+                .setIssuedAt(now)
+                .setExpiration(exp)
+                .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
+                .compact();
+    }
+
+    public boolean checkJWT(String jwt){
+        try {
+            Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(jwt);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 }

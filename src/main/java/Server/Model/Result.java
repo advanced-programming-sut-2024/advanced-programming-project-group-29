@@ -6,6 +6,7 @@ import java.util.Arrays;
 public class Result {
     private final ArrayList<String> messages;
     private final boolean isSuccessful;
+    private String token = null;
 
     public Result(boolean isSuccessful, String... messages) {
         this.isSuccessful = isSuccessful;
@@ -23,6 +24,14 @@ public class Result {
 
     public boolean isSuccessful() {
         return isSuccessful;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 
 }

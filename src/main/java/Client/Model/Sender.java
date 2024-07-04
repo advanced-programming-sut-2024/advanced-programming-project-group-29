@@ -11,6 +11,7 @@ public class Sender {
     private Socket socket;
     private DataInputStream receiveBuffer;
     private DataOutputStream sendBuffer;
+    private String token = null;
 
     public Sender(String address, int port) {
         establishConnection(address, port);
@@ -47,7 +48,7 @@ public class Sender {
 
     private String sendMessage(String command) {
         try {
-            sendBuffer.writeUTF(command);
+            sendBuffer.writeUTF((token == null ? "" : token + ":" )+ command);
             return receiveBuffer.readUTF();
         } catch (Exception e) {
             return null;
@@ -90,5 +91,9 @@ public class Sender {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 }

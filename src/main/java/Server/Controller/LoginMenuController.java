@@ -2,7 +2,10 @@ package Server.Controller;
 
 import Server.Model.*;
 import Server.Regex.LoginMenuRegex;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 
+import java.util.Date;
 import java.util.regex.Matcher;
 
 public class LoginMenuController {
@@ -43,7 +46,9 @@ public class LoginMenuController {
             return new Result(false, "Password is incorrect.");
         }
         applicationController.setCurrentUser(user);
-        return new Result(true, "User logged in successfully.");
+        Result result = new Result(true, "User logged in successfully.");
+        result.setToken(user.getJWT());
+        return result;
     }
 
     public static Result forgetPassword(Matcher matcher) {
