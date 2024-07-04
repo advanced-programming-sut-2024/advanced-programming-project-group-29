@@ -160,7 +160,7 @@ public class InGameMenuController extends Thread {
     }
 
     public static void removeAllWeatherInGraphic(Sender sender) {
-        sender.sendCommand("clear all wheather cards");
+        sender.sendCommand("clear all weather cards");
     }
 
     public static void moveDiscardPileToDeckForBoth(User user, Sender sender) {

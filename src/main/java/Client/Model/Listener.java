@@ -43,9 +43,7 @@ public class Listener extends Thread{
                     else if ((matcher = InGameMenuOutputCommand.LET_PLAYER_SELECT_CARD.getMatcher(input)).matches()) {
                         inGameMenu.letUserChooseCard(matcher);
                         waitForAnswer = true;
-                    } else if ((matcher = InGameMenuOutputCommand.REMOVE_CARD_FROM_DISCARD.getMatcher(input)).matches())
-                        InGameMenuOutputCommand.REMOVE_CARD_FROM_DISCARD.run(matcher); // TODO: implement this function
-                    else if ((matcher = InGameMenuOutputCommand.REMOVE_CARD_FROM_HAND.getMatcher(input)).matches())
+                    } else if ((matcher = InGameMenuOutputCommand.REMOVE_CARD_FROM_HAND.getMatcher(input)).matches())
                         inGameMenu.removeCardFromHandAndKillIt(Integer.parseInt(matcher.group("cardNumber")));
                     else if ((matcher = InGameMenuOutputCommand.CHANGE_CARD.getMatcher(input)).matches())
                         inGameMenu.changeThisCard(matcher);
