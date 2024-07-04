@@ -1,25 +1,36 @@
 package Client.Model;
 
+import Client.Model.ApplicationRunningTimeData;
+import Client.View.Animations.FlipCardAnimation;
 import Client.View.InGameMenu;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.event.EventHandler;
 import javafx.geometry.Point3D;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
+import javafx.scene.effect.Effect;
 import javafx.scene.effect.Glow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
-import Client.Enum.*;
+import Client.Enum.Type;
+import Client.Enum.Attribute;
 import javafx.scene.text.FontWeight;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Objects;
+import java.util.Random;
 
 public class CardView extends Pane {
-    private ArrayList<CardView> allCardView = new ArrayList<>();
+    private static final ArrayList<CardView> allCardViews = new ArrayList<>();
     private final InGameMenu inGameMenu;
     private final Cardin card;
     private final double WIDTH = 70;
@@ -32,11 +43,25 @@ public class CardView extends Pane {
     private boolean isUp = false;
     private boolean isSelected = false;
     private boolean isInHand = false;
+    private SimpleBooleanProperty isInChangeSituation = new SimpleBooleanProperty(false);
+
+    private final EventHandler<MouseEvent> onMouseEnteredHandler = e -> {
+        if (isInHand && !isUp){
+            goUp();
+            super.setStyle("-fx-effect: dropshadow(gaussian, rgb(222, 165, 107, 1), 15, 0.7, 0, 0);");
+        }
+    };
+    private final EventHandler<MouseEvent> onMouseExitedHandler = e -> {
+        if (isInHand && isUp){
+            goDown();
+            super.setStyle(null);
+        }
+    };
 
 
-    public CardView(Cardin card, double x, double y,InGameMenu inGameMenu) {
-        this.allCardView.add(this);
+    public CardView(Cardin card, double x, double y,InGameMenu inGameMenu,boolean rotate) {
         this.inGameMenu = inGameMenu;
+        allCardViews.add(this);
         this.card = card;
         this.path = "/Images/Raw/" +  card.faction.getName() + "/" + card.name + ".jpg";
         this.face = new Image(path);
@@ -98,6 +123,14 @@ public class CardView extends Pane {
         super.setLayoutY(y);
         super.setVisible(true);
         super.setRotationAxis(new Point3D(0, 1, 0));
+        super.setRotate(rotate ? 180 : 0);
+        if (Math.cos(Math.toRadians(super.getRotate())) <= 0) {
+            background.setImage(back);
+            items.setVisible(false);
+        } else {
+            background.setImage(face);
+            items.setVisible(true);
+        }
         super.rotateProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observableValue, Number number, Number t1) {
@@ -110,27 +143,19 @@ public class CardView extends Pane {
                 }
             }
         });
-        super.setOnMouseEntered(e -> {
-            if (isInHand && !isUp){
-                goUp();
-                super.setStyle("-fx-effect: dropshadow(gaussian, rgb(222, 165, 107, 1), 15, 0.7, 0, 0);");
-            }
-        });
-        super.setOnMouseExited(e -> {
-            if (isInHand && isUp){
-                goDown();
-                super.setStyle(null);
-            }
-        });
+
+
+        super.setOnMouseEntered(onMouseEnteredHandler);
+        super.setOnMouseExited(onMouseExitedHandler);
         super.setOnMouseClicked(e -> {
             if (isInHand) super.requestFocus();
+            if (!isInHand && isInChangeSituation.get()){
+                inGameMenu.changeDecoy(card);
+            }
         });
         super.focusedProperty().addListener(new ChangeListener<Boolean>() {
             @Override
             public void changed(ObservableValue<? extends Boolean> observableValue, Boolean aBoolean, Boolean t1) {
-                // TODO:
-                InGameMenu inGameMenu = null;
-                //InGameMenu inGameMenu = (InGameMenu) SaveApplicationAsObject.getApplicationController().getMenu();
                 if (t1) {
                     isSelected = true;
                     inGameMenu.selectBeforeMove(card);
@@ -139,6 +164,17 @@ public class CardView extends Pane {
                     isSelected = false;
                     inGameMenu.deselectBeforeMove();
                     inGameMenu.unShowAllowedRows();
+                }
+            }
+        });
+
+        isInChangeSituation.addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observableValue, Boolean aBoolean, Boolean t1) {
+                if (!isInHand && t1) {
+                    CardView.super.setStyle("-fx-effect: dropshadow(gaussian, rgb(255, 192, 203, 1), 15, 0.7, 0, 0);");
+                } else {
+                    CardView.super.setStyle(null);
                 }
             }
         });
@@ -199,12 +235,20 @@ public class CardView extends Pane {
         return card;
     }
 
+    public static ArrayList<CardView> getAllCardViews() {
+        return allCardViews;
+    }
+
     public double getWIDTH() {
         return WIDTH;
     }
 
     public double getHEIGHT() {
         return HEIGHT;
+    }
+
+    public void setItem(boolean visible){
+        items.setVisible(visible);
     }
 
     public String getPath() {
@@ -239,6 +283,28 @@ public class CardView extends Pane {
     private void goDown() {
         this.setLayoutY(this.getLayoutY() + 12);
         this.isUp = false;
+    }
+
+    public void setHandler(){
+        super.setOnMouseEntered(onMouseEnteredHandler);
+        super.setOnMouseExited(onMouseExitedHandler);
+    }
+
+    public void removeHandler(){
+        super.setOnMouseEntered(null);
+        super.setOnMouseExited(null);
+        if (this.isUp){
+            goDown();
+            super.setStyle(null);
+        }
+    }
+
+    public boolean isInChangeSituation() {
+        return isInChangeSituation.get();
+    }
+
+    public void setInChangeSituation(boolean inChangeSituation) {
+        isInChangeSituation.set(inChangeSituation);
     }
 
     private void glow(boolean isGlowing) {

@@ -1,6 +1,7 @@
 package Client.Enum;
 
 public enum Space {
+    SPELL,
     CLOSE_COMBAT,
     SIEGE,
     RANGED,

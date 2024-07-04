@@ -1,21 +1,26 @@
 package Client.View;
 
-import Client.Model.ApplicationRunningTimeData;
-import Server.Controller.*;
+
 import Client.Model.*;
 import Client.Enum.*;
-import Regex.GameMenuRegex;
-import Regex.InGameMenuRegex;
-import View.Animations.FlipCardAnimation;
+import Client.Regex.GameMenuRegex;
+import Client.Regex.InGameMenuRegex;
+import Client.View.Animations.BurningCardAnimation;
+import Client.View.Animations.FlipCardAnimation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
@@ -30,11 +35,18 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import Enum.Attribute;
+import Client.Enum.Attribute;
 
+import java.io.File;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Objects;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.FutureTask;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class InGameMenu extends Application {
     private final double X_POSITION_HAND_LEFT = 481;
@@ -47,9 +59,10 @@ public class InGameMenu extends Application {
     private final double Y_POSITION_WEATHER = 383;
     private final double X_POSITION_CENTER_OF_SELECT = 759;
     private final double Y_POSITION_CENTER_OF_SELECT = 350;
-    private final double X_POSITION_DISCARD_1 = 1297;
+    private final double X_POSITION_DISCARD = 1297;
+    private final double X_POSITION_SPELL = 495;
     private final double Y_POSITION_DISCARD_1 = 700;
-    private final double X_POSITION_DISCARD_2 = 1297;
+    private final double X_POSITION_Deck = 1448;
     private final double Y_POSITION_DISCARD_2 = 70;
     private final double Y_POSITION_ROW_11 = 585;
     private final double Y_POSITION_ROW_12 = 470;
@@ -90,9 +103,12 @@ public class InGameMenu extends Application {
     public Label score11;
     public Label remainsDeck2;
     public Label remainsDeck1;
+    public Label remainsHand2;
+    public Label remainsHand1;
     public ImageView imageWhenSelected;
     public Label description;
     public Rectangle darkBackDescription;
+
     public Text result;
     public TextField cheatCode;
     public Button cheatCodeDone;
@@ -101,9 +117,6 @@ public class InGameMenu extends Application {
     public Pane rowHorn11;
     public Pane rowHorn12;
     public Pane rowHorn13;
-    public Pane rowHorn23;
-    public Pane rowHorn22;
-    public Pane rowHorn21;
     public ImageView rowWeather11;
     public ImageView rowWeather12;
     public ImageView rowWeather13;
@@ -111,44 +124,47 @@ public class InGameMenu extends Application {
     public ImageView rowWeather22;
     public ImageView rowWeather21;
 
+    public AnchorPane pain;
+    public Pane mainPain;
+    public Pane changePain;
+    public Pane descriptionPain;
+
     public ImageView image3;
     public ImageView image4;
     public ImageView image5;
     public ImageView image2;
     public ImageView image1;
     private final ArrayList<Image> changeArray = new ArrayList<>();
-    private ArrayList<Integer> selectedImages = new ArrayList<>();
+    private final ArrayList<Integer> selectedImages = new ArrayList<>();
+    public Pane showPain;
+    public ImageView showImage1;
+    public ImageView showImage2;
+    public ImageView showImage3;
     private int howManyChoice;
     private int step;
-    private String regexToDo;
 
-    private ArrayList<CardView> hand1 = new ArrayList<>();
-    private ArrayList<CardView> hand2 = new ArrayList<>();
-    private ArrayList<CardView> deck1 = new ArrayList<>();
-    private ArrayList<CardView> deck2 = new ArrayList<>();
-    private ArrayList<CardView> discard1 = new ArrayList<>();
-    private ArrayList<CardView> discard2 = new ArrayList<>();
-    private ArrayList<CardView> row_11 = new ArrayList<>();
-    private ArrayList<CardView> row_12 = new ArrayList<>();
-    private ArrayList<CardView> row_13 = new ArrayList<>();
-    private ArrayList<CardView> row_21 = new ArrayList<>();
-    private ArrayList<CardView> row_22 = new ArrayList<>();
-    private ArrayList<CardView> row_23 = new ArrayList<>();
-    private ArrayList<CardView> weather = new ArrayList<>();
-
-    public AnchorPane pain;
-    public Pane mainPain;
-    public Pane changePain;
-    public Pane descriptionPain;
-
-    private InGameMenuController inGameMenuController;
+    private final ArrayList<CardView>[] hand = new ArrayList[2];
+    private final ArrayList<CardView>[] deck = new ArrayList[2];
+    private final ArrayList<CardView>[] discard = new ArrayList[2];
+    private final ArrayList<CardView>[][] row = new ArrayList[2][3];
+    private final ArrayList<CardView>[][] horn = new ArrayList[2][3];
+    private final ArrayList<CardView> weather = new ArrayList<>();
 
     public InGameMenu() {
         super();
     }
 
     @FXML
-    public void initialize() {
+    public void initialize() throws NoSuchFieldException, IllegalAccessException {
+        for (int i = 0; i < 2; i++) {
+            hand[i] = new ArrayList<>();
+            deck[i] = new ArrayList<>();
+            discard[i] = new ArrayList<>();
+            for (int j = 0; j < 3; j++) {
+                row[i][j] = new ArrayList<>();
+                horn[i][j] = new ArrayList<>();
+            }
+        }
         InGameMenuController.startGame();
         mainPain.requestFocus();
         mainPain.setOnKeyPressed(new EventHandler<KeyEvent>() {
@@ -164,114 +180,75 @@ public class InGameMenu extends Application {
                 mainPain.requestFocus();
             }
         });
-        ApplicationRunningTimeData.getApplicationController().setMenu(this);
-        row11.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent mouseEvent) {
-                if (!((Pane) mouseEvent.getSource()).getChildren().isEmpty()) {
-                    for (CardView c : new ArrayList<>(hand1)) {
-                        if (c.isSelected()) {
-                            int n = row_11.size();
-                            (new FlipCardAnimation(c, (n == 0 ? (X_POSITION_HAND_LEFT + X_POSITION_HAND_RIGHT - CARD_WIDTH) / 2 : row_11.get(n - 1).getLayoutX() + CARD_WIDTH + SPACING), Y_POSITION_ROW_11, true, true)).play();
-                            hand1.remove(c);
-                            c.setInHand(false);
-                            row_11.add(c);
+        for (int i = 1; i < 3; i++) {
+            for (int j = 1; j < 4; j++) {
+                Field field = this.getClass().getDeclaredField("row" + i + j);
+                Field fieldY = this.getClass().getDeclaredField("Y_POSITION_ROW_" + i + j);
+                field.setAccessible(true);
+                fieldY.setAccessible(true);
+                double Y = (double) fieldY.get(this);
+                int finalI = i;
+                int finalJ = j;
+                ((Pane) field.get(this)).setOnMouseClicked(new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent mouseEvent) {
+                        if (!((Pane) mouseEvent.getSource()).getChildren().isEmpty()) {
+                            for (CardView c : new ArrayList<>(hand[0])) {
+                                if (c.isSelected()) {
+                                    int n = row[finalI - 1][finalJ - 1].size();
+                                    (new FlipCardAnimation(c, (n == 0 ? (X_POSITION_ROW_LEFT + X_POSITION_ROW_RIGHT - CARD_WIDTH) / 2 : row[finalI - 1][finalJ - 1].get(n - 1).getLayoutX() + CARD_WIDTH + SPACING), Y, true, true, false)).play();
+                                    hand[0].remove(c);
+                                    c.setInHand(false);
+                                    row[finalI - 1][finalJ - 1].add(c);
+                                    //TODO move soldier
+                                    refresh();
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        }
+        for (int j = 1; j < 4; j++) {
+            Field field = this.getClass().getDeclaredField("rowHorn1" + j);
+            Field fieldY = this.getClass().getDeclaredField("Y_POSITION_ROW_1" + j);
+            field.setAccessible(true);
+            fieldY.setAccessible(true);
+            double Y = (double) fieldY.get(this);
+            int finalJ = j;
+            ((Pane) field.get(this)).setOnMouseClicked(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent mouseEvent) {
+                    if (!((Pane) mouseEvent.getSource()).getChildren().isEmpty()) {
+                        for (CardView c : new ArrayList<>(hand[0])) {
+                            if (c.isSelected()) {
+                                (new FlipCardAnimation(c, X_POSITION_SPELL, Y, true, true, false)).play();
+                                hand[0].remove(c);
+                                c.setInHand(false);
+                                horn[0][finalJ - 1].add(c);
+                                //TODO spell
+
+                                refresh();
+                            }
                         }
                     }
                 }
-            }
-        });
-        row12.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent mouseEvent) {
-                if (!((Pane) mouseEvent.getSource()).getChildren().isEmpty()) {
-                    for (CardView c : new ArrayList<>(hand1)) {
-                        if (c.isSelected()) {
-                            int n = row_12.size();
-                            (new FlipCardAnimation(c, (n == 0 ? (X_POSITION_HAND_LEFT + X_POSITION_HAND_RIGHT - CARD_WIDTH) / 2 : row_12.get(n - 1).getLayoutX() + CARD_WIDTH + SPACING), Y_POSITION_ROW_12, true, true)).play();
-                            hand1.remove(c);
-                            c.setInHand(false);
-                            row_12.add(c);
-                        }
-                    }
-                }
-            }
-        });
-        row13.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent mouseEvent) {
-                if (!((Pane) mouseEvent.getSource()).getChildren().isEmpty()) {
-                    for (CardView c : new ArrayList<>(hand1)) {
-                        if (c.isSelected()) {
-                            int n = row_13.size();
-                            (new FlipCardAnimation(c, (n == 0 ? (X_POSITION_HAND_LEFT + X_POSITION_HAND_RIGHT - CARD_WIDTH) / 2 : row_13.get(n - 1).getLayoutX() + CARD_WIDTH + SPACING), Y_POSITION_ROW_13, true, true)).play();
-                            hand1.remove(c);
-                            c.setInHand(false);
-                            row_13.add(c);
-                        }
-                    }
-                }
-            }
-        });
-        row21.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent mouseEvent) {
-                if (!((Pane) mouseEvent.getSource()).getChildren().isEmpty()) {
-                    for (CardView c : new ArrayList<>(hand1)) {
-                        if (c.isSelected()) {
-                            int n = row_21.size();
-                            (new FlipCardAnimation(c, (n == 0 ? (X_POSITION_HAND_LEFT + X_POSITION_HAND_RIGHT - CARD_WIDTH) / 2 : row_21.get(n - 1).getLayoutX() + CARD_WIDTH + SPACING), Y_POSITION_ROW_21, true, true)).play();
-                            hand1.remove(c);
-                            c.setInHand(false);
-                            row_21.add(c);
-                        }
-                    }
-                }
-            }
-        });
-        row22.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent mouseEvent) {
-                if (!((Pane) mouseEvent.getSource()).getChildren().isEmpty()) {
-                    for (CardView c : new ArrayList<>(hand1)) {
-                        if (c.isSelected()) {
-                            int n = row_22.size();
-                            (new FlipCardAnimation(c, (n == 0 ? (X_POSITION_HAND_LEFT + X_POSITION_HAND_RIGHT - CARD_WIDTH) / 2 : row_22.get(n - 1).getLayoutX() + CARD_WIDTH + SPACING), Y_POSITION_ROW_22, true, true)).play();
-                            hand1.remove(c);
-                            c.setInHand(false);
-                            row_22.add(c);
-                        }
-                    }
-                }
-            }
-        });
-        row23.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent mouseEvent) {
-                if (!((Pane) mouseEvent.getSource()).getChildren().isEmpty()) {
-                    for (CardView c : new ArrayList<>(hand1)) {
-                        if (c.isSelected()) {
-                            int n = row_23.size();
-                            (new FlipCardAnimation(c, (n == 0 ? (X_POSITION_HAND_LEFT + X_POSITION_HAND_RIGHT - CARD_WIDTH) / 2 : row_23.get(n - 1).getLayoutX() + CARD_WIDTH + SPACING), Y_POSITION_ROW_23, true, true)).play();
-                            hand1.remove(c);
-                            c.setInHand(false);
-                            row_23.add(c);
-                        }
-                    }
-                }
-            }
-        });
+            });
+        }
         rowWeather.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
                 if (!((Pane) mouseEvent.getSource()).getChildren().isEmpty()) {
-                    for (CardView c : new ArrayList<>(hand1)) {
+                    for (CardView c : new ArrayList<>(hand[0])) {
                         if (c.isSelected()) {
                             int n = weather.size();
-                            (new FlipCardAnimation(c, (n == 0 ? (X_POSITION_WEATHER_LEFT + X_POSITION_WEATHER_RIGHT - CARD_WIDTH) / 2 : weather.get(n - 1).getLayoutX() + CARD_WIDTH + SPACING), Y_POSITION_WEATHER, true, true)).play();
-                            hand1.remove(c);
+                            (new FlipCardAnimation(c, (n == 0 ? (X_POSITION_WEATHER_LEFT + X_POSITION_WEATHER_RIGHT - CARD_WIDTH) / 2 : weather.get(n - 1).getLayoutX() + CARD_WIDTH + SPACING), Y_POSITION_WEATHER, true, true, false)).play();
+                            hand[0].remove(c);
                             c.setInHand(false);
                             weather.add(c);
+                            //TODO refresh weather
+                            //TODO add weather
+                            refresh();
                         }
                     }
                 }
@@ -282,17 +259,7 @@ public class InGameMenu extends Application {
             public void handle(MouseEvent mouseEvent) {
                 if (mouseEvent.getButton().equals(MouseButton.PRIMARY)) {
                     if (mouseEvent.getClickCount() == 3) {
-                        System.out.println("aa");
-                    }
-                }
-            }
-        });
-        leader2.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent mouseEvent) {
-                if (mouseEvent.getButton().equals(MouseButton.PRIMARY)) {
-                    if (mouseEvent.getClickCount() == 3) {
-                        //TODO
+                        //TODO: show commander power
                     }
                 }
             }
@@ -310,13 +277,6 @@ public class InGameMenu extends Application {
                     break;
             }
         });
-        Timeline t = new Timeline(new KeyFrame(Duration.seconds(2), new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                selectBetweenCards(hand1, "", 3);
-            }
-        }));
-        t.play();
         firstRefresh();
     }
 
@@ -328,52 +288,134 @@ public class InGameMenu extends Application {
         Scene scene = new Scene(pane);
         stage.setScene(scene);
         stage.show();
-        ApplicationRunningTimeData.getApplicationController().setPane(pane);
+        ApplicationRunningTimeData.setPane(pane);
     }
 
-    public InGameMenuController getInGameMenuController() {
-        return inGameMenuController;
+    public void changeDecoy(Cardin card) {
+        //TODO
     }
 
-    public void setInGameMenuController(InGameMenuController inGameMenuController) {
-        this.inGameMenuController = inGameMenuController;
+    public void removeCardFromHandAndKillIt(int cardNumber) {
+        CardView card = hand[0].get(cardNumber);
+        hand[0].remove(card);
+        discard[0].add(card);
+        (new FlipCardAnimation(card, X_POSITION_DISCARD, Y_POSITION_DISCARD_1, true, true, true)).play();
     }
 
-    public static void removeCardFromHand(GameBoard gameBoard, Card card, int playerIndex) {
-
+    public void moveSoldier(int rowNumber, int cardNumber, int newRowNumber) throws NoSuchFieldException, IllegalAccessException {
+        CardView c = row[0][convertRowNumber(rowNumber)].get(cardNumber);
+        row[0][convertRowNumber(rowNumber)].remove(cardNumber);
+        row[0][convertRowNumber(newRowNumber)].add(c);
+        Field field = this.getClass().getDeclaredField("Y_POSITION_ROW_1" + convertRowNumber(newRowNumber));
+        field.setAccessible(true);
+        double Y = (double) field.get(this);
+        (new FlipCardAnimation(c, (row[0][convertRowNumber(newRowNumber)].size() == 1 ? (X_POSITION_ROW_LEFT + X_POSITION_ROW_RIGHT - CARD_WIDTH) / 2 :
+                row[0][convertRowNumber(newRowNumber)].get(row[0][convertRowNumber(newRowNumber)].size() - 2).getLayoutX() + CARD_WIDTH + SPACING), Y, true, true, true)).play();
     }
 
-    public static void moveSoldier(Soldier soldier, int playerNumber, int rowNumber) {
-
+    public void moveDiscardPileToDeckForBoth() {
+        ArrayList<CardView> discard1Copy = new ArrayList<>(discard[0]);
+        ArrayList<CardView> discard2Copy = new ArrayList<>(discard[1]);
+        deck[0].addAll(discard[0]);
+        deck[1].addAll(discard[1]);
+        discard[0].clear();
+        discard[1].clear();
+        final int[] flag1 = {0};
+        Timeline timeline1 = new Timeline(new KeyFrame(Duration.seconds(0.3), new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                (new FlipCardAnimation(discard1Copy.get(flag1[0]++), X_POSITION_Deck, Y_POSITION_DISCARD_1, false, true, false)).play();
+            }
+        }));
+        final int[] flag2 = {0};
+        Timeline timeline2 = new Timeline(new KeyFrame(Duration.seconds(0.3), new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                (new FlipCardAnimation(discard2Copy.get(flag2[0]++), X_POSITION_Deck, Y_POSITION_DISCARD_2, false, true, false)).play();
+            }
+        }));
+        timeline1.setCycleCount(discard1Copy.size());
+        timeline2.setCycleCount(discard2Copy.size());
+        if (!discard1Copy.isEmpty()) timeline1.play();
+        if (!discard2Copy.isEmpty()) timeline2.play();
+        refresh();
     }
 
-    public static void moveDiscardPileToDeck(User user) {
-
+    public void addCardToHand(Cardin cardin) {
+        CardView c = new CardView(cardin, 0, 0, this, false);
+        hand[0].add(c);
+        refresh();
     }
 
-    public static Card showDiscardPileAndLetUserChoose(GameBoard gameBoard, int playerIndex) {
-        // TODO: implement this and return chosen card
-        return null;
+    public void addCardFromDeckToHand(int cardNumber) {
+        CardView c = deck[0].get(cardNumber);
+        deck[0].remove(cardNumber);
+        hand[0].add(c);
+        pain.getChildren().remove(c);
+        pain.getChildren().add(c);
+        (new FlipCardAnimation(c, (hand[0].size() == 1 ? (X_POSITION_HAND_LEFT + X_POSITION_HAND_RIGHT - CARD_WIDTH) / 2 : (hand[0].get(hand[0].size() - 2)).getLayoutX() + SPACING + CARD_WIDTH), Y_POSITION_HAND, true, true, true)).play();
     }
 
-    public static void addCardToHand(GameBoard gameBoard, Card card, int playerIndex) {
-        // TODO: show this card in hand
+    public void addCardFromDiscardToHand(int cardNumber) {
+        CardView c = discard[0].get(cardNumber);
+        discard[0].remove(cardNumber);
+        hand[0].add(c);
+        pain.getChildren().remove(c);
+        pain.getChildren().add(c);
+        (new FlipCardAnimation(c, (hand[0].size() == 1 ? (X_POSITION_HAND_LEFT + X_POSITION_HAND_RIGHT - CARD_WIDTH) / 2 : (hand[0].get(hand[0].size() - 2)).getLayoutX() + SPACING + CARD_WIDTH), Y_POSITION_HAND, true, true, true)).play();
     }
 
-    public static void changeThisCardInGraphic(GameBoard gameBoard, Soldier thisCard, Soldier anotherCard) {
-        // TODO: change this card in graphic, it is used for berserkers
+    public void showThreeCardOfOpponent() throws NoSuchFieldException, IllegalAccessException {
+        int n = hand[1].size();
+        ArrayList<CardView> copyHandOpponent = new ArrayList<>(hand[1]);
+        ArrayList<CardView> show = new ArrayList<>();
+        if (n == 1) {
+            show.add(copyHandOpponent.getFirst());
+        } else if (n == 2) {
+            show.add(copyHandOpponent.get(0));
+            show.add(copyHandOpponent.get(1));
+        } else if (n != 0) {
+            Collections.shuffle(copyHandOpponent);
+            show.add(copyHandOpponent.get(0));
+            show.add(copyHandOpponent.get(1));
+            show.add(copyHandOpponent.get(2));
+        }
+        for (int i = 0; i < show.size(); i++) {
+            Field field = this.getClass().getDeclaredField("showImage" + (i + 1));
+            field.setAccessible(true);
+            ((ImageView) field.get(this)).setImage(new javafx.scene.image.Image("Images/Soldiers/" + show.get(i).getCard().getFaction().getName() + "/" + show.get(i).getCard().name + ".jpg"));
+        }
+        showPain.setVisible(true);
+        showPain.setDisable(false);
+        Timeline t = new Timeline(new KeyFrame(Duration.seconds(10), new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                showPain.setVisible(false);
+                showPain.setDisable(true);
+            }
+        }));
+        t.play();
     }
 
-    public static void destroySoldier(GameBoard gameBoard, Soldier soldier) {
-        // TODO: implement this, burn the card or destroy it in any other way
+    public void changeThisCard(int rowNumber, int cardNumber, Cardin cardin) {
+        CardView oldC = row[0][convertRowNumber(rowNumber)].get(cardNumber);
+        CardView c = new CardView(cardin, oldC.getLayoutX(), oldC.getLayoutY(), this, false);
+        row[0][convertRowNumber(rowNumber)].set(cardNumber, c);
+        pain.getChildren().remove(oldC);
+        pain.getChildren().add(c);
+        refresh();
     }
 
-    public static void showPlayersScore(GameBoard gameBoard, int playerIndex, int playerScore) {
-        // TODO: implement this
+    public void destroySoldier(int rowNumber, int cardNumber) {
+        CardView c = row[0][convertRowNumber(rowNumber)].get(cardNumber);
+        row[0][convertRowNumber(rowNumber)].remove(cardNumber);
+        discard[0].add(c);
+        (new BurningCardAnimation(c,X_POSITION_DISCARD,Y_POSITION_DISCARD_1)).play();
     }
 
-    public static void showSoldiersHp(GameBoard gameBoard, Soldier soldier, int shownHp) {
-        // TODO: implement this, do use shownHp, it's different from soldier.getHp(), you may also use soldier.getShownHp()
+    private int convertRowNumber(int fatemehRowNumber) {
+        int ostadRowNumber = 2 - fatemehRowNumber; // :))
+        return ostadRowNumber;
     }
 
     //////////////////////// refresh
@@ -384,6 +426,7 @@ public class InGameMenu extends Application {
         rowWeather22.setVisible(fog);
         rowWeather13.setVisible(frost);
         rowWeather23.setVisible(frost);
+        // TODO
     }
 
     private void setCrystal(ImageView crystal, boolean on) {
@@ -398,6 +441,7 @@ public class InGameMenu extends Application {
         ArrayList<Cardin> player2Hand = gameBoardin.getPlayer2Hand();
         ArrayList<Cardin> player1Deck = gameBoardin.getPlayer1Deck();
         ArrayList<Cardin> player2Deck = gameBoardin.getPlayer2Deck();
+        System.err.println(player2Deck.get(0).faction);
         ArrayList<Cardin> player1Discard = gameBoardin.getPlayer1Discard();
         ArrayList<Cardin> player2Discard = gameBoardin.getPlayer2Discard();
         String player1Username = gameBoardin.getPlayer1Username();
@@ -410,16 +454,26 @@ public class InGameMenu extends Application {
         boolean player2HasAction = gameBoardin.isPlayer2CommanderHasAction();
         ////////////////////////////
         for (int i = 0; i < player1Hand.size(); i++) {
-            CardView c = new CardView(player2Hand.get(i), getXPosition(i, player1Hand.size(), false, false), Y_POSITION_HAND, this);
-            hand1.add(c);
+            CardView c = new CardView(player1Hand.get(i), getXPosition(i, player1Hand.size(), false, false), Y_POSITION_HAND, this, false);
+            hand[0].add(c);
             c.setInHand(true);
         }
         for (int i = 0; i < player2Hand.size(); i++) {
-            CardView c = new CardView(player2Hand.get(i), getXPosition(i, player2Hand.size(), false, false), Y_POSITION_HAND, this);
-            hand2.add(c);
+            CardView c = new CardView(player2Hand.get(i), getXPosition(i, player2Hand.size(), false, false), Y_POSITION_HAND, this, false);
+            hand[1].add(c);
             c.setInHand(true);
         }
-        for (CardView c : hand1) pain.getChildren().add(c);
+        for (Cardin cardin : player1Deck) {
+            CardView c = new CardView(cardin, X_POSITION_Deck, Y_POSITION_DISCARD_1, this, true);
+            deck[0].add(c);
+        }
+        for (Cardin cardin : player2Deck) {
+            CardView c = new CardView(cardin, X_POSITION_Deck, Y_POSITION_DISCARD_2, this, true);
+            deck[1].add(c);
+        }
+        for (CardView c : hand[0]) pain.getChildren().add(c);
+        for (CardView c : discard[0]) pain.getChildren().add(c);
+        for (CardView c : discard[1]) pain.getChildren().add(c);
         leader1.setImage(new javafx.scene.image.Image("/Images/Raw/" + player1Faction + "/" + player1Commander + ".jpg"));
         leader2.setImage(new javafx.scene.image.Image("/Images/Raw/" + player2Faction + "/" + player2Commander + ".jpg"));
         leaderActive1.setImage(player1HasAction ? new javafx.scene.image.Image("/Images/icons/icon_leader_active.png") : null);
@@ -432,6 +486,10 @@ public class InGameMenu extends Application {
         setCrystal(crystal12, (player1Crystal == 2));
         setCrystal(crystal21, (player2Crystal >= 1));
         setCrystal(crystal22, (player2Crystal == 2));
+        remainsDeck1.setText(gameBoardin.getPlayer1Deck().size() + "");
+        remainsDeck2.setText(gameBoardin.getPlayer2Deck().size() + "");
+        remainsHand1.setText(gameBoardin.getPlayer1Hand().size() + "");
+        remainsHand2.setText(gameBoardin.getPlayer2Hand().size() + "");
     }
 
     private double getXPosition(int i, int n, boolean row, boolean weather) {
@@ -458,14 +516,14 @@ public class InGameMenu extends Application {
     }
 
     public void refresh() {
-        setPosition(hand1, false, false, Y_POSITION_HAND);
-        setPosition(hand2, false, false, Y_POSITION_HAND);
-        setPosition(row_11, true, false, Y_POSITION_ROW_11);
-        setPosition(row_12, true, false, Y_POSITION_ROW_12);
-        setPosition(row_13, true, false, Y_POSITION_ROW_13);
-        setPosition(row_21, true, false, Y_POSITION_ROW_21);
-        setPosition(row_22, true, false, Y_POSITION_ROW_22);
-        setPosition(row_23, true, false, Y_POSITION_ROW_23);
+        setPosition(hand[0], false, false, Y_POSITION_HAND);
+        setPosition(hand[1], false, false, Y_POSITION_HAND);
+        setPosition(row[0][0], true, false, Y_POSITION_ROW_11);
+        setPosition(row[0][1], true, false, Y_POSITION_ROW_12);
+        setPosition(row[0][2], true, false, Y_POSITION_ROW_13);
+        setPosition(row[1][0], true, false, Y_POSITION_ROW_21);
+        setPosition(row[1][1], true, false, Y_POSITION_ROW_22);
+        setPosition(row[1][2], true, false, Y_POSITION_ROW_23);
         setPosition(weather, true, true, Y_POSITION_WEATHER);
 
         GameBoardin gameBoardin = new GameBoardin();
@@ -497,7 +555,19 @@ public class InGameMenu extends Application {
         setCrystal(crystal12, (player1Crystal == 2));
         setCrystal(crystal21, (player2Crystal >= 1));
         setCrystal(crystal22, (player2Crystal == 2));
-        //TODO other variables
+        score11.setText(gameBoardin.getRow11XP() + "");
+        score12.setText(gameBoardin.getRow12XP() + "");
+        score13.setText(gameBoardin.getRow13XP() + "");
+        score21.setText(gameBoardin.getRow21XP() + "");
+        score22.setText(gameBoardin.getRow22XP() + "");
+        score23.setText(gameBoardin.getRow23XP() + "");
+        totalScore1.setText(gameBoardin.getPlayer1XP() + "");
+        totalScore2.setText(gameBoardin.getPlayer2XP() + "");
+        remainsDeck1.setText(gameBoardin.getPlayer1Deck().size() + "");
+        remainsDeck2.setText(gameBoardin.getPlayer2Deck().size() + "");
+        remainsHand1.setText(gameBoardin.getPlayer1Hand().size() + "");
+        remainsHand2.setText(gameBoardin.getPlayer2Hand().size() + "");
+        // TODO show hp
     }
 
     ////////////// select Card and Yellow
@@ -508,6 +578,8 @@ public class InGameMenu extends Application {
         description.setPrefHeight(n * 22);
         description.setText(describe);
         imageWhenSelected.setImage(new javafx.scene.image.Image("/Images/Soldiers/" + card.getFaction().getName() + "/" + card.name + ".jpg"));
+        pain.getChildren().remove(descriptionPain);
+        pain.getChildren().add(descriptionPain);
         descriptionPain.setVisible(true);
         descriptionPain.setDisable(false);
     }
@@ -520,8 +592,15 @@ public class InGameMenu extends Application {
     private ImageView imageYellowRow() {
         ImageView imageYellowRow = new ImageView(new javafx.scene.image.Image("Images/icons/row.png"));
         imageYellowRow.setFitHeight(100);
-        imageYellowRow.setFitWidth(795);
+        imageYellowRow.setFitWidth(675);
         return imageYellowRow;
+    }
+
+    private ImageView imageYellowHorn() {
+        ImageView imageYellowHorn = new ImageView(new javafx.scene.image.Image("Images/icons/horn.png"));
+        imageYellowHorn.setFitHeight(100);
+        imageYellowHorn.setFitWidth(110);
+        return imageYellowHorn;
     }
 
     private ImageView imageYellowWeather() {
@@ -532,7 +611,7 @@ public class InGameMenu extends Application {
     }
 
     public void showAllowedRows(String name) {
-        ArrayList<Space> spaces = Card.getAllowedSpaces(name);
+        ArrayList<Space> spaces = Cardin.getAllowedSpaces(name);
         for (Space s : spaces) {
             switch (s) {
                 case SIEGE -> row11.getChildren().add(imageYellowRow());
@@ -542,6 +621,16 @@ public class InGameMenu extends Application {
                 case OPPONENT_RANGED -> row22.getChildren().add(imageYellowRow());
                 case OPPONENT_CLOSE_COMBAT -> row23.getChildren().add(imageYellowRow());
                 case WEATHER -> rowWeather.getChildren().add(imageYellowWeather());
+                case SPELL -> {
+                    if (horn[0][0].isEmpty()) rowHorn11.getChildren().add(imageYellowHorn());
+                    if (horn[0][1].isEmpty()) rowHorn12.getChildren().add(imageYellowHorn());
+                    if (horn[0][2].isEmpty()) rowHorn13.getChildren().add(imageYellowHorn());
+                }
+                case CARD -> {
+                    for (CardView cardView : row[0][0]) cardView.setInChangeSituation(true);
+                    for (CardView cardView : row[0][1]) cardView.setInChangeSituation(true);
+                    for (CardView cardView : row[0][2]) cardView.setInChangeSituation(true);
+                }
             }
         }
     }
@@ -553,7 +642,13 @@ public class InGameMenu extends Application {
         row21.getChildren().clear();
         row22.getChildren().clear();
         row23.getChildren().clear();
+        rowHorn11.getChildren().clear();
+        rowHorn12.getChildren().clear();
+        rowHorn13.getChildren().clear();
         rowWeather.getChildren().clear();
+        for (CardView cardView : row[0][0]) cardView.setInChangeSituation(false);
+        for (CardView cardView : row[0][1]) cardView.setInChangeSituation(false);
+        for (CardView cardView : row[0][2]) cardView.setInChangeSituation(false);
     }
 
     ///////////////// cheat code
@@ -600,7 +695,7 @@ public class InGameMenu extends Application {
     }
 
     /////////////////////////choice card
-    private void selectBetweenCards(ArrayList<CardView> arrayList, String regexToDo, int Choices) {
+    private void selectBetweenCards(ArrayList<CardView> arrayList, int Choices) {
         pain.getChildren().remove(changePain);
         pain.getChildren().add(changePain);
         changePain.setVisible(true);
@@ -613,12 +708,12 @@ public class InGameMenu extends Application {
             changeArray.add(image);
         }
         howManyChoice = Choices;
+        selectedImages.clear();
         for (int i = 0; i < howManyChoice; i++) {
             selectedImages.add(0);
         }
         step = 0;
         setImageChange(selectedImages.get(step));
-        regexToDo = regexToDo;
     }
 
     private void setImageChange(int number) {
@@ -659,13 +754,17 @@ public class InGameMenu extends Application {
 
     public void forward(MouseEvent mouseEvent) {
         if (selectedImages.get(step) != changeArray.size() - 1) selectedImages.set(step, selectedImages.get(step) + 1);
-        ;
         setImageChange(selectedImages.get(step));
     }
 
     public void backward(MouseEvent mouseEvent) {
         if (selectedImages.get(step) != 0) selectedImages.set(step, selectedImages.get(step) - 1);
-        ;
         setImageChange(selectedImages.get(step));
     }
+
+    public ArrayList<Integer> getSelectedImages() {
+        return selectedImages;
+    }
+
+
 }

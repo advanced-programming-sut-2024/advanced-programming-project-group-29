@@ -4,6 +4,8 @@ import Client.Model.CardView;
 import javafx.animation.Transition;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.layout.Pane;
 import javafx.util.Duration;
 
@@ -16,10 +18,13 @@ public class FlipCardAnimation extends Transition {
     private final boolean flip;
     private final boolean face;
     private final boolean faceFirst;
+    private final boolean refreshInEnd;
 
 
-    public FlipCardAnimation(Pane pane, double x, double y, boolean face, boolean flip) {
+    public FlipCardAnimation(Pane pane, double x, double y, boolean face, boolean flip,boolean refreshInEnd) {
+        for (CardView c : CardView.getAllCardViews()) c.removeHandler();
         this.pane = pane;
+        this.refreshInEnd = refreshInEnd;
         Pane p = ((Pane) pane.getParent());
         p.getChildren().remove(pane);
         p.getChildren().add(pane);
@@ -31,7 +36,7 @@ public class FlipCardAnimation extends Transition {
         this.xDestination = x;
         this.yDestination = y;
         this.setCycleCount(1);
-        this.setCycleDuration(Duration.seconds(2));
+        this.setCycleDuration(Duration.seconds(1));
     }
 
     @Override
@@ -60,7 +65,8 @@ public class FlipCardAnimation extends Transition {
                 pane.setRotate(face ? 0 : 180);
                 pane.setLayoutX(xDestination);
                 pane.setLayoutY(yDestination);
-                ((CardView) pane).getInGameMenu().refresh();
+                if (refreshInEnd) ((CardView) pane).getInGameMenu().refresh();
+                for (CardView c : CardView.getAllCardViews()) c.setHandler();
             }
         });
     }
