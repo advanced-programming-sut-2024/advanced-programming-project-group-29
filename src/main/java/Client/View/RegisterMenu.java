@@ -1,6 +1,7 @@
 package Client.View;
 
 import Client.Client;
+import Client.Enum.Menu;
 import Client.Model.ApplicationRunningTimeData;
 import Client.Model.*;
 import Client.Regex.*;
@@ -48,6 +49,7 @@ public class RegisterMenu extends Application {
     public RegisterMenu() {
         super();
         client = Client.getClient();
+        client.sendCommand("menu enter " + Menu.REGISTER_MENU.toString());
     }
 
     @FXML

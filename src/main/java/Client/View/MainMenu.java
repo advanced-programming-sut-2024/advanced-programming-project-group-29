@@ -1,5 +1,7 @@
 package Client.View;
 
+import Client.Client;
+import Client.Enum.Menu;
 import Client.Model.ApplicationRunningTimeData;
 import javafx.application.Application;
 import javafx.fxml.FXML;
@@ -17,6 +19,13 @@ import java.util.Objects;
 public class MainMenu extends Application {
 
     public Label nickname;
+    private Client client;
+
+    public MainMenu () {
+        super();
+        client = Client.getClient();
+        client.sendCommand("menu enter " + Menu.MAIN_MENU.toString());
+    }
 
     @FXML
     public void initialize() {

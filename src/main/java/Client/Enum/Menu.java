@@ -5,6 +5,7 @@ public enum Menu {
     IN_GAME_MENU,
     GAME_MENU,
     LOGIN_MENU,
+    MAIN_MENU,
     REGISTER_MENU,
     PROFILE_MENU,
     RANKING_MENU;

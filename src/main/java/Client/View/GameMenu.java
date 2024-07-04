@@ -1,6 +1,7 @@
 package Client.View;
 
 import Client.Client;
+import Client.Enum.Menu;
 import Client.Model.ApplicationRunningTimeData;
 import Client.Model.Image;
 import Client.Model.Result;
@@ -83,6 +84,7 @@ public class GameMenu extends Application {
     public GameMenu () {
         super();
         client = Client.getClient();
+        client.sendCommand("menu enter " + Menu.GAME_MENU.toString());
     }
 
     @FXML

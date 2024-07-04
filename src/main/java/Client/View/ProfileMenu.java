@@ -1,6 +1,7 @@
 package Client.View;
 
 import Client.Client;
+import Client.Enum.Menu;
 import Client.Model.ApplicationRunningTimeData;
 import Client.Model.Result;
 import Client.Regex.ProfileMenuRegex;
@@ -52,6 +53,7 @@ public class ProfileMenu extends Application {
     public ProfileMenu() {
         super();
         client = Client.getClient();
+        client.sendCommand("menu enter " + Menu.PROFILE_MENU.toString());
     }
 
     private static final String[] changeFields = {

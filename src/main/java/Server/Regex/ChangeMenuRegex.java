@@ -4,7 +4,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public enum ChangeMenuRegex {
-    CHANGE_MENU("menu enter (?<menuName>\\S+)");
+    CHANGE_MENU("menu enter (?<menuName>\\.+)");
 
     private final String regex;
 

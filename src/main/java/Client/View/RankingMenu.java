@@ -1,6 +1,7 @@
 package Client.View;
 
 import Client.Client;
+import Client.Enum.Menu;
 import Client.Regex.RankingMenuRegex;
 import Client.Model.ApplicationRunningTimeData;
 import javafx.application.Application;
@@ -31,6 +32,7 @@ public class RankingMenu extends Application {
     public RankingMenu() {
         super();
         client = Client.getClient();
+        client.sendCommand("menu enter " + Menu.RANKING_MENU.toString());
     }
 
     @FXML

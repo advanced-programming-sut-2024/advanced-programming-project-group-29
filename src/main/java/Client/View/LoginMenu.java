@@ -1,6 +1,7 @@
 package Client.View;
 
 import Client.Client;
+import Client.Enum.Menu;
 import Client.Model.ApplicationRunningTimeData;
 import Client.Model.Result;
 import Client.Regex.LoginMenuRegex;
@@ -52,6 +53,7 @@ public class LoginMenu extends Application {
     public LoginMenu() {
         super();
         client = Client.getClient();
+        client.sendCommand("menu enter " + Menu.LOGIN_MENU.toString());
     }
 
     public void run(String[] args) throws IOException {

@@ -153,6 +153,7 @@ public class InGameMenu extends Application {
 
     public InGameMenu() {
         super();
+        Client.getClient().sendCommand("menu enter " + Menu.GAME_MENU.toString());
     }
 
     @FXML
