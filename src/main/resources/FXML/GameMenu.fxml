@@ -14,7 +14,7 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="1000.0" prefWidth="1500.0" stylesheets="@CSS/GameMenu.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.GameMenu">
+<AnchorPane prefHeight="1000.0" prefWidth="1500.0" stylesheets="@CSS/GameMenu.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Client.View.GameMenu">
    <children>
       <ImageView fitHeight="1005.0" fitWidth="1500.0" pickOnBounds="true" preserveRatio="true">
          <image>

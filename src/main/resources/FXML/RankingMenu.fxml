@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.effect.Blend?>
 <?import javafx.scene.effect.Glow?>
@@ -55,11 +54,6 @@
             </Blend>
          </effect>
       </Label>
-      <TableView fx:id="tableView" layoutX="379.0" layoutY="281.0" prefHeight="284.0" prefWidth="475.0">
-        <columns>
-          <TableColumn prefWidth="75.0" text="C1" />
-          <TableColumn prefWidth="75.0" text="C2" />
-        </columns>
-      </TableView>
+      <TableView fx:id="tableView" layoutX="379.0" layoutY="281.0" prefHeight="284.0" prefWidth="475.0" />
    </children>
 </AnchorPane>

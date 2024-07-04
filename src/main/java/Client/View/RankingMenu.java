@@ -40,7 +40,7 @@ public class RankingMenu extends Application {
         for (String line : ranks) {
             result.add((ArrayList<String>) Arrays.asList(line.split("\t")));
         }
-        ArrayList<String> names = new ArrayList<>(){{
+        ArrayList<String> names = new ArrayList<>() {{
             add("Rank");
             add("Username");
             add("Count of Wins");
@@ -59,15 +59,25 @@ public class RankingMenu extends Application {
                 return new TableRow<ArrayList<String>>() {
                     protected void updateItem(ArrayList<String> score, boolean empty) {
                         super.updateItem(score, empty);
-                        if (getIndex() < 3 && !empty) {
+                        if (getIndex() == 0 && !empty) {
                             setStyle("-fx-background-color: gold;");
+                        } else if (getIndex() == 1 && !empty) {
+                            setStyle("-fx-background-color: silver;");
+                        } else if (getIndex() == 2 && !empty) {
+                            setStyle("-fx-background-color: rgb(205, 127, 50);");
                         } else {
-                            setStyle("");
+                            setStyle("-fx-background-color: gray;");
                         }
                     }
                 };
             }
         });
+        int numColumns = tableView.getColumns().size();
+        tableView.getColumns().forEach(column ->
+                ((TableColumn) column).prefWidthProperty().bind(
+                        tableView.widthProperty().divide(numColumns)
+                )
+        ); //CHECK
         tableView.setItems(data);
     }
 
