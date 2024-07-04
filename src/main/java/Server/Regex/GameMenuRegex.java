@@ -3,21 +3,26 @@ package Server.Regex;
 import java.util.regex.Matcher;
 
 public enum GameMenuRegex {
-    CREATEGAME("create game -p2( (?<player2>\\S+))?"),
-    SHOWFACTIONS("show factions"),
-    SELECTFACTION("select faction -f (?<faction>\\S+)"),
-    SHOWCARDS("show cards"),
-    SHOWDECK("show deck"),
-    SHOWINFOCURRENTUSER("show info current user"),
-    SAVEDECK("save deck (?<type>-(f|n)) (?<name>\\S+)( (?<overwrite>-o))?"),
-    LOADDECK("load deck (?<type>-(f|n)) (?<name>\\S+)"),
+    CREATE_GAME("create game -p2( (?<player2>\\S+))?"),
+    SHOW_FACTIONS("show factions"),
+    SELECT_FACTION("select faction -f (?<faction>\\S+)"),
+    SHOW_CARDS("show cards"),
+    SHOW_DECK("show deck"),
+    SHOW_INFO_CURRENT_USER("show info current user"),
+    SAVE_DECK("save deck (?<type>-(f|n)) (?<name>\\S+)( (?<overwrite>-o))?"),
+    LOAD_DECK("load deck (?<type>-(f|n)) (?<name>\\S+)"),
     SHOW_LEADERS("show leaders"),
     SELECT_LEADER("select leader (?<name>.+)"),
     ADD_TO_DECK("add to deck -n (?<name>.+)( (?<number>-?\\d+))?"),
-    DELETEFROMDECK("delete from deck -n (?<name>.+)( (?<number>-?\\d+))?"),
-    CHANGE_TURN("change turn");
+    DELETE_FROM_DECK("delete from deck -n (?<name>.+)( (?<number>-?\\d+))?"),
+    CHANGE_TURN("change turn"),
+    GET_NUMBER_OF_SOLDIERS_IN_DECK("get number of soldiers in deck"),
+    GET_USER_FACTION_NAME("get user faction name"),
+    GET_USER_COMMANDER_NAME("get user commander name"),
+    GET_ALLOWED_NUMBER_BY_CARD_NAME("get allowed number by card name -c (?<cardName>\\S+)"),
+    GET_CARDS_IN_DECK_NAMES("get cards in deck names");
 
-    String regex;
+    private final String regex;
 
     GameMenuRegex(String regex) {
         this.regex = regex;

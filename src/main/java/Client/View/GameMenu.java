@@ -1,10 +1,10 @@
 package Client.View;
 
-import Server.Controller.ApplicationController;
-import Server.Controller.GameMenuController;
-import Controller.SaveApplicationAsObject;
-import Model.*;
-import Regex.GameMenuRegex;
+import Client.Client;
+import Client.Model.ApplicationRunningTimeData;
+import Client.Model.Image;
+import Client.Model.Result;
+import Client.Regex.GameMenuRegex;
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -34,7 +34,6 @@ import java.util.Arrays;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Stream;
 
 public class GameMenu extends Application {
     private final double HEIGHT_OF_TEXT_WARNING = 25;
@@ -76,12 +75,15 @@ public class GameMenu extends Application {
     private ArrayList<Image> changeArray;
     private int selectedImage;
     private boolean isCommander;
+    private Client client;
 
-    private GameMenuController gameMenuController;
+    private final ArrayList<Image> notSelectedCards = new ArrayList<>();
+    private final ArrayList<Image> selectedCards = new ArrayList<>();
 
-    private final ArrayList<Model.Image> notSelectedCards = new ArrayList<>();
-    private final ArrayList<Model.Image> selectedCards = new ArrayList<>();
-
+    public GameMenu () {
+        super();
+        client = Client.getClient();
+    }
 
     @FXML
     public void initialize() {
@@ -104,7 +106,8 @@ public class GameMenu extends Application {
         soldiers.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observableValue, String s, String t1) {
-                if (ApplicationController.getCurrentUser().getNumberOfSoldiersInDeck() < 22) {
+                int numberOfSoldiers = (Integer) client.sendCommand(GameMenuRegex.GET_NUMBER_OF_SOLDIERS_IN_DECK.getRegex());
+                if (numberOfSoldiers < 22) {
                     soldiers.setTextFill(Paint.valueOf("red"));
                 } else {
                     soldiers.setTextFill(Paint.valueOf("dea543"));
@@ -123,15 +126,7 @@ public class GameMenu extends Application {
         Scene scene = new Scene(pane);
         stage.setScene(scene);
         stage.show();
-        SaveApplicationAsObject.getApplicationController().setPane(pane);
-    }
-
-    public GameMenuController getGameMenuController() {
-        return gameMenuController;
-    }
-
-    public void setGameMenuController(GameMenuController gameMenuController) {
-        this.gameMenuController = gameMenuController;
+        ApplicationRunningTimeData.setPane(pane);
     }
 
     private void createCards() {
@@ -143,15 +138,16 @@ public class GameMenu extends Application {
         gridPaneSelected.setVgap(12);
         selectedCards.clear();
         notSelectedCards.clear();
-        File directory = new File((GameMenu.class.getResource("/Images/Soldiers/" + ApplicationController.getCurrentUser().getFaction().getName())).getPath());
+        String factionName = (String) client.sendCommand(GameMenuRegex.GET_USER_FACTION_NAME.getRegex());
+        File directory = new File((GameMenu.class.getResource("/Images/Soldiers/" + factionName)).getPath());
         ArrayList<File> files = new ArrayList<>(Arrays.asList(Objects.requireNonNull(directory.listFiles())));
-        files.removeIf(f -> f.getName().equals("Berserker.jpg") || f.getName().equals("Young Berserker.jpg"));
+        files.removeIf(f -> f.getName().equals("Vidkaarl.jpg") || f.getName().equals("Young Vidkaarl.jpg"));
         main:
         for (int j = 0; j <= (int) (Objects.requireNonNull(files).size() / 3); j++) {
             for (int i = 0; i < 3; i++) {
                 if ((3 * j) + i == files.size()) break main;
                 File file = files.get((3 * j) + i);
-                Model.Image image = new Model.Image(file.toURI().toString(), 325, 172, getNameFromFile(file));
+                Image image = new Image(file.toURI().toString(), 325, 172, getNameFromFile(file));
                 image.setOnMouseClicked(event -> {
                     moveCard((Image) event.getSource());
                 });
@@ -159,7 +155,8 @@ public class GameMenu extends Application {
                 notSelectedCards.add(image);
             }
         }
-        javafx.scene.image.Image image = new javafx.scene.image.Image("/Images/Commander/" + ApplicationController.getCurrentUser().getFaction().getName() + "/" + ApplicationController.getCurrentUser().getCommander().getName() + ".jpg");
+        String commanderName = (String) client.sendCommand(GameMenuRegex.GET_USER_COMMANDER_NAME.getRegex());
+        javafx.scene.image.Image image = new javafx.scene.image.Image("/Images/Commander/" + factionName + "/" + commanderName + ".jpg");
         leader.setImage(image);
         scrollSelected.setContent(gridPaneSelected);
         scrollNotSelected.setContent(gridPaneNotSelected);
@@ -169,24 +166,22 @@ public class GameMenu extends Application {
     private void moveCard(Image image) {
         if (image.getParent().equals(gridPaneNotSelected)) {
             String toRegex = "add to deck -n " + image.getName();
-            Matcher matcher = Pattern.compile(GameMenuRegex.ADDTODECK.getRegex()).matcher(toRegex);
-            matcher.matches();
-            Result result = GameMenuController.addCardToDeck(matcher);
+            Result result = (Result) client.sendCommand(toRegex);
             if (result.isSuccessful()) {
                 Image img = new Image(image.getPath(), 325, 172, image.getName());
                 img.setOnMouseClicked(event -> {
                     moveCard((Image) event.getSource());
                 });
                 selectedCards.addFirst(img);
-                if (Card.getAllowedNumberByCardName(image.getName()) == howManyCardInList(image, selectedCards)) {
+                String query = "get allowed number by card name -c " + image.getName();
+                int allowedNumber = (Integer) client.sendCommand(query);
+                if (allowedNumber == howManyCardInList(image, selectedCards)) {
                     notSelectedCards.remove(image);
                 }
             }
         } else {
             String toRegex = "delete from deck -n " + image.getName();
-            Matcher matcher = Pattern.compile(GameMenuRegex.DELETEFROMDECK.getRegex()).matcher(toRegex);
-            matcher.matches();
-            Result result = GameMenuController.removeCardFromDeck(matcher);
+            Result result = (Result) client.sendCommand(toRegex);
             if (result.isSuccessful()) {
                 selectedCards.remove(image);
                 if (howManyCardInList(image, notSelectedCards) == 0) {
@@ -220,8 +215,8 @@ public class GameMenu extends Application {
     }
 
     public void changeTurn(MouseEvent mouseEvent) throws Exception {
+        Result result = (Result) client.sendCommand(GameMenuRegex.CHANGE_TURN.getRegex());
         if (!isChangeTurn) {
-            Result result = GameMenuController.changeTurn();
             if (result.isSuccessful()) {
                 changeTurn.setText("Start Game");
                 isChangeTurn = true;
@@ -229,10 +224,9 @@ public class GameMenu extends Application {
                 refresh();
             }
         } else {
-            Result result = GameMenuController.changeTurn();
             if (result.isSuccessful()) {
                 InGameMenu inGameMenu = new InGameMenu();
-                inGameMenu.start(SaveApplicationAsObject.getApplicationController().getStage());
+                inGameMenu.start(ApplicationRunningTimeData.getStage());
             }
         }
     }
@@ -256,9 +250,7 @@ public class GameMenu extends Application {
 
     public void save(MouseEvent mouseEvent) {
         String toRegex = "save deck -n " + saveName.getText() + (overwrite.isSelected() ? " -o" : "");
-        Matcher matcher = Pattern.compile(GameMenuRegex.SAVEDECK.getRegex()).matcher(toRegex);
-        matcher.matches();
-        Result result = GameMenuController.saveDeck(matcher);
+        Result result = (Result) client.sendCommand(toRegex);
         if (result.isSuccessful()) {
             cancel(null);
         } else {
@@ -270,16 +262,14 @@ public class GameMenu extends Application {
         String toRegex = "save deck -f ";
         FileChooser filechooser = new FileChooser();
         filechooser.setTitle("Select path");
-        File file = filechooser.showSaveDialog(SaveApplicationAsObject.getApplicationController().getStage());
+        File file = filechooser.showSaveDialog(ApplicationRunningTimeData.getStage());
         if (file != null) {
             try {
                 toRegex += file.getPath() + (overwrite.isSelected() ? " -o" : "");
             } catch (Exception ignored) {
             }
         }
-        Matcher matcher = Pattern.compile(GameMenuRegex.LOADDECK.getRegex()).matcher(toRegex);
-        matcher.matches();
-        Result result = GameMenuController.saveDeck(matcher);
+        Result result = (Result) client.sendCommand(toRegex);
         if (result.isSuccessful()) {
             cancel(null);
         } else {
@@ -298,9 +288,7 @@ public class GameMenu extends Application {
 
     public void load(MouseEvent mouseEvent) {
         String toRegex = "load deck -n " + loadName.getText();
-        Matcher matcher = Pattern.compile(GameMenuRegex.LOADDECK.getRegex()).matcher(toRegex);
-        matcher.matches();
-        Result result = GameMenuController.loadDeck(matcher);
+        Result result = (Result) client.sendCommand(toRegex);
         if (result.isSuccessful()) {
             moveCard();
             cancel(null);
@@ -313,16 +301,14 @@ public class GameMenu extends Application {
         String toRegex = "load deck -f ";
         FileChooser filechooser = new FileChooser();
         filechooser.setTitle("Select File");
-        File file = filechooser.showOpenDialog(SaveApplicationAsObject.getApplicationController().getStage());
+        File file = filechooser.showOpenDialog(ApplicationRunningTimeData.getStage());
         if (file != null) {
             try {
                 toRegex += file.getPath();
             } catch (Exception ignored) {
             }
         }
-        Matcher matcher = Pattern.compile(GameMenuRegex.LOADDECK.getRegex()).matcher(toRegex);
-        matcher.matches();
-        Result result = GameMenuController.loadDeck(matcher);
+        Result result = (Result) client.sendCommand(toRegex);
         if (result.isSuccessful()) {
             moveCard();
             cancel(null);
@@ -333,9 +319,10 @@ public class GameMenu extends Application {
 
     private void moveCard() {
         createCards();
-        for (Card card : ApplicationController.getCurrentUser().getDeck()) {
+        ArrayList<String> cardNames = (ArrayList<String>) client.sendCommand(GameMenuRegex.GET_CARDS_IN_DECK_NAMES.getRegex());
+        for (String name : cardNames) {
             for (Image i : new ArrayList<>(notSelectedCards)) {
-                if (card.getName().equals(i.getName())) {
+                if (name.equals(i.getName())) {
                     notSelectedCards.remove(i);
                     selectedCards.add(i);
                 }
@@ -356,7 +343,7 @@ public class GameMenu extends Application {
     }
 
     private void changeLabel() {
-        Result result = GameMenuController.showInfoCurrentUser();
+        Result result = (Result) client.sendCommand(GameMenuRegex.SHOW_INFO_CURRENT_USER.getRegex());
         deckSize.setText(result.getMessage().get(2));
         soldiers.setText(result.getMessage().get(3) + "/22");
         spells.setText(result.getMessage().get(4) + "/10");
@@ -374,12 +361,13 @@ public class GameMenu extends Application {
         changeArray = new ArrayList<>();
         String selected;
         File directory;
+        String factionName = (String) client.sendCommand(GameMenuRegex.GET_USER_FACTION_NAME.getRegex());
         if (isCommander) {
-            directory = new File((GameMenu.class.getResource("/Images/Commander/" + ApplicationController.getCurrentUser().getFaction().getName())).getPath());
-            selected = ApplicationController.getCurrentUser().getCommander().getName();
+            directory = new File((GameMenu.class.getResource("/Images/Commander/" + factionName)).getPath());
+            selected = (String) client.sendCommand(GameMenuRegex.GET_USER_COMMANDER_NAME.getRegex());
         } else {
             directory = new File((GameMenu.class.getResource("/Images/Factions")).getPath());
-            selected = ApplicationController.getCurrentUser().getFaction().getName();
+            selected = factionName;
         }
         File[] files = directory.listFiles();
         assert files != null;
@@ -419,16 +407,11 @@ public class GameMenu extends Application {
         image3.getParent().requestFocus();
         if (isCommander) {
             String toRegex = "select leader " + name.getText();
-            Matcher matcher = Pattern.compile(GameMenuRegex.SELECTLEADER.getRegex()).matcher(toRegex);
-            matcher.matches();
-            GameMenuController.selectLeader(matcher);
+            client.sendCommand(toRegex);
         } else {
             String toRegex = "select faction -f " + name.getText();
-            Matcher matcher = Pattern.compile(GameMenuRegex.SELECTFACTION.getRegex()).matcher(toRegex);
-            matcher.matches();
-            GameMenuController.selectFaction(matcher);
+            client.sendCommand(toRegex);
             createCards();
-
         }
         changeLabel();
     }
@@ -473,7 +456,7 @@ public class GameMenu extends Application {
     }
 
     private void deleteWarning() {
-        SaveApplicationAsObject.getApplicationController().getPane().getChildren().remove(this.warning);
+        ApplicationRunningTimeData.getPane().getChildren().remove(this.warning);
         darkbackLoad.setHeight(HEIGHT_OF_DARK_BACK);
         darkbackSave.setHeight(HEIGHT_OF_DARK_BACK);
     }
@@ -483,7 +466,7 @@ public class GameMenu extends Application {
         deleteWarning();
         darkBack.setHeight(darkBack.getHeight() + (n + 1) * HEIGHT_OF_TEXT_WARNING);
         this.warning = createWarningLabel(warning, n + 1, isRed, 602);
-        SaveApplicationAsObject.getApplicationController().getPane().getChildren().add(this.warning);
+        ApplicationRunningTimeData.getPane().getChildren().add(this.warning);
     }
 
     private Label createWarningLabel(String warning, int n, boolean isRed, int Y) {

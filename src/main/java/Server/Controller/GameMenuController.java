@@ -9,45 +9,50 @@ import Server.Model.Soldier;
 import Server.Model.*;
 import Server.Model.Commander;
 import Server.Model.SavedDeck;
-import Server.Model.GameHistory;
-import Server.Model.Cardin;
-import Server.Model.GameBoardin;
-import Server.Controller.ApplicationController;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.regex.Matcher;
 
 public class GameMenuController {
-    public static Result processRequest(ApplicationController applicationController, String inputCommand) {
-        if (inputCommand.matches(GameMenuRegex.CREATEGAME.getRegex())) {
-            return createGame(applicationController.getCurrentUser(), GameMenuRegex.CREATEGAME.getMatcher(inputCommand));
-        } else if (inputCommand.matches(GameMenuRegex.SHOWFACTIONS.getRegex())) {
+    public static Object processRequest(ApplicationController applicationController, String inputCommand) {
+        if (inputCommand.matches(GameMenuRegex.CREATE_GAME.getRegex())) {
+            return createGame(applicationController.getCurrentUser(), GameMenuRegex.CREATE_GAME.getMatcher(inputCommand));
+        } else if (inputCommand.matches(GameMenuRegex.SHOW_FACTIONS.getRegex())) {
             return showFactions();
-        } else if (inputCommand.matches(GameMenuRegex.SELECTFACTION.getRegex())) {
-            return selectFaction(applicationController.getCurrentUser(), GameMenuRegex.SELECTFACTION.getMatcher(inputCommand));
-        } else if (inputCommand.matches(GameMenuRegex.SHOWCARDS.getRegex())) {
+        } else if (inputCommand.matches(GameMenuRegex.SELECT_FACTION.getRegex())) {
+            return selectFaction(applicationController.getCurrentUser(), GameMenuRegex.SELECT_FACTION.getMatcher(inputCommand));
+        } else if (inputCommand.matches(GameMenuRegex.SHOW_CARDS.getRegex())) {
             return showCards(applicationController.getCurrentUser());
-        } else if (inputCommand.matches(GameMenuRegex.SHOWDECK.getRegex())) {
+        } else if (inputCommand.matches(GameMenuRegex.SHOW_DECK.getRegex())) {
             return showDeck(applicationController.getCurrentUser());
-        } else if (inputCommand.matches(GameMenuRegex.SHOWINFOCURRENTUSER.getRegex())) {
+        } else if (inputCommand.matches(GameMenuRegex.SHOW_INFO_CURRENT_USER.getRegex())) {
             return showInfoCurrentUser(applicationController.getCurrentUser());
-        } else if (inputCommand.matches(GameMenuRegex.SAVEDECK.getRegex())) {
-            return saveDeck(applicationController.getCurrentUser(), GameMenuRegex.SAVEDECK.getMatcher(inputCommand));
-        } else if (inputCommand.matches(GameMenuRegex.LOADDECK.getRegex())) {
-            return loadDeck(applicationController.getCurrentUser(), GameMenuRegex.LOADDECK.getMatcher(inputCommand));
+        } else if (inputCommand.matches(GameMenuRegex.SAVE_DECK.getRegex())) {
+            return saveDeck(applicationController.getCurrentUser(), GameMenuRegex.SAVE_DECK.getMatcher(inputCommand));
+        } else if (inputCommand.matches(GameMenuRegex.LOAD_DECK.getRegex())) {
+            return loadDeck(applicationController.getCurrentUser(), GameMenuRegex.LOAD_DECK.getMatcher(inputCommand));
         } else if (inputCommand.matches(GameMenuRegex.SHOW_LEADERS.getRegex())) {
             return showLeaders(applicationController.getCurrentUser());
         } else if (inputCommand.matches(GameMenuRegex.SELECT_LEADER.getRegex())) {
             return selectLeader(applicationController.getCurrentUser(), GameMenuRegex.SELECT_LEADER.getMatcher(inputCommand));
         } else if (inputCommand.matches(GameMenuRegex.ADD_TO_DECK.getRegex())) {
             return addCardToDeck(applicationController.getCurrentUser(), GameMenuRegex.ADD_TO_DECK.getMatcher(inputCommand));
-        } else if (inputCommand.matches(GameMenuRegex.DELETEFROMDECK.getRegex())) {
-            return removeCardFromDeck(applicationController.getCurrentUser(), GameMenuRegex.DELETEFROMDECK.getMatcher(inputCommand));
+        } else if (inputCommand.matches(GameMenuRegex.DELETE_FROM_DECK.getRegex())) {
+            return removeCardFromDeck(applicationController.getCurrentUser(), GameMenuRegex.DELETE_FROM_DECK.getMatcher(inputCommand));
         } else if (inputCommand.matches(GameMenuRegex.CHANGE_TURN.getRegex())) {
             return changeTurn(applicationController.getCurrentUser());
+        } else if (inputCommand.matches(GameMenuRegex.GET_NUMBER_OF_SOLDIERS_IN_DECK.getRegex())) {
+            return applicationController.getCurrentUser().getNumberOfSoldiersInDeck();
+        } else if (inputCommand.matches(GameMenuRegex.GET_USER_COMMANDER_NAME.getRegex())) {
+            return applicationController.getCurrentUser().getCommander().getName();
+        } else if (inputCommand.matches(GameMenuRegex.GET_ALLOWED_NUMBER_BY_CARD_NAME.getRegex())) {
+            return getAllowedNumberByCardName(GameMenuRegex.GET_ALLOWED_NUMBER_BY_CARD_NAME.getMatcher(inputCommand));
+        } else if (inputCommand.matches(GameMenuRegex.GET_CARDS_IN_DECK_NAMES.getRegex())) {
+            return getDeckCardsNames(applicationController.getCurrentUser());
         }
         return null;
     }
@@ -273,5 +278,19 @@ public class GameMenuController {
         gameBoard.changeTurn();
         ApplicationController.setCurrentUser(gameBoard.getPlayer(gameBoard.getCurrentPlayer()));
         return new Result(true, "Turn changed successfully.");
+    }
+
+    public static Integer getAllowedNumberByCardName (Matcher matcher) {
+        String name = matcher.group("cardName");
+        return Card.getAllowedNumberByCardName(name);
+    }
+
+    private static ArrayList<String> getDeckCardsNames(User user) {
+        ArrayList<Card> deck = user.getDeck();
+        ArrayList<String> cardNames = new ArrayList<>();
+        for (Card card : deck) {
+            cardNames.add(card.getName());
+        }
+        return cardNames;
     }
 }
