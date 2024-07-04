@@ -335,6 +335,17 @@ public class InGameMenu extends Application {
                 row[0][convertRowNumber(newRowNumber)].get(row[0][convertRowNumber(newRowNumber)].size() - 2).getLayoutX() + CARD_WIDTH + SPACING), Y, true, true, true)).play();
     }
 
+    public void moveSoldier(Matcher matcher){
+        try {
+            int rowNumber = Integer.parseInt(matcher.group("rowNumber"));
+            int cardNumber = Integer.parseInt(matcher.group("cardNumber"));
+            int newRowNumber = Integer.parseInt(matcher.group("newRowNumber"));
+            moveSoldier(rowNumber, cardNumber, newRowNumber);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void moveDiscardPileToDeckForBoth() {
         ArrayList<CardView> discard1Copy = new ArrayList<>(discard[0]);
         ArrayList<CardView> discard2Copy = new ArrayList<>(discard[1]);
@@ -428,15 +439,29 @@ public class InGameMenu extends Application {
         refresh();
     }
 
-    public void destroySoldier(int rowNumber, int cardNumber) {
-        CardView c = row[0][convertRowNumber(rowNumber)].get(cardNumber);
-        row[0][convertRowNumber(rowNumber)].remove(cardNumber);
-        discard[0].add(c);
+    public void changeThisCard(Matcher matcher){
+        int rowNumber = Integer.parseInt(matcher.group("rowNumber"));
+        int cardNumber = Integer.parseInt(matcher.group("cardNumber"));
+        Cardin cardin = (Cardin) Listener.deSerialize(matcher.group("cardinSerial"));
+        changeThisCard(rowNumber, cardNumber, cardin);
+    }
+
+    public void destroySoldier(int rowNumber, int cardNumber, int playerIndex) {
+        CardView c = row[playerIndex][convertRowNumber(rowNumber)].get(cardNumber);
+        row[playerIndex][convertRowNumber(rowNumber)].remove(cardNumber);
+        discard[playerIndex].add(c);
         (new BurningCardAnimation(c,X_POSITION_DISCARD,Y_POSITION_DISCARD_1)).play();
     }
 
-    private int convertRowNumber(int fatemehRowNumber) {
-        int ostadRowNumber = 2 - fatemehRowNumber; // :))
+    public void destroySoldier(Matcher matcher) {
+        int playerIndex = Integer.parseInt(matcher.group("playerIndex"));
+        int row = convertRowNumber(Integer.parseInt(matcher.group("row")));
+        int cardNumber = Integer.parseInt(matcher.group("cardNumber"));
+        destroySoldier(row, cardNumber, playerIndex);
+    }
+
+    private int convertRowNumber(int fatemeRowNumber) {
+        int ostadRowNumber = 2 - fatemeRowNumber; // :))
         return ostadRowNumber;
     }
 
@@ -738,6 +763,14 @@ public class InGameMenu extends Application {
         setImageChange(selectedImages.get(step));
     }
 
+    public void letUserChooseCard(Matcher matcher){
+        int choices = Integer.parseInt(matcher.group("choice"));
+        int type = Integer.parseInt(matcher.group("type"));
+        ArrayList<CardView> options = new ArrayList<>();
+        // TODO: make options (0: discard pile, 1: hand, 2: deck, 3: weathers in deck)
+        selectBetweenCards(options, choices);
+    }
+
     private void setImageChange(int number) {
         int n = 3 - number;
         image1.setImage(null);
@@ -787,6 +820,5 @@ public class InGameMenu extends Application {
     public ArrayList<Integer> getSelectedImages() {
         return selectedImages;
     }
-
 
 }

@@ -11,9 +11,18 @@ public class Sender {
     private Socket socket;
     private DataInputStream receiveBuffer;
     private DataOutputStream sendBuffer;
+    private User user;
 
     public Sender(String address, int port) {
         establishConnection(address, port);
+    }
+
+    public void setUser(User user){
+        this.user = user;
+    }
+
+    public User getUser(){
+        return user;
     }
 
     public boolean establishConnection(String address, int port) {
@@ -80,7 +89,6 @@ public class Sender {
         try {
             int endOfClassName = serializedObject.indexOf(":");
             Class<?> objectsClass = Class.forName(serializedObject.substring(0, endOfClassName));
-            // TODO: if it was command, call the assigned function
             com.google.gson.Gson gson = new GsonBuilder().setPrettyPrinting().create();
             return gson.fromJson(serializedObject.substring(endOfClassName + 1), objectsClass);
         } catch (Exception e) {

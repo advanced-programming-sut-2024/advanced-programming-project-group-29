@@ -149,7 +149,14 @@ public class InGameMenuController extends Thread {
         int rowNumber = Soldier.getPlacedRowNumber(soldier, gameBoard);
         gameBoard.getRows()[playerIndex][rowNumber].remove(soldier);
         gameBoard.setPlayerScore(playerIndex, gameBoard.getPlayerScore(playerIndex) - soldier.getShownHp());
+        playerIndex = getClientVersionOfPlayerIndex(sender.getUser(), gameBoard.getPlayer(playerIndex));
         sender.sendCommand("destroy soldier " + playerIndex + " " + rowNumber + " " + soldier.getPlacedNumber());
+    }
+
+    private static int getClientVersionOfPlayerIndex(User user, User player) {
+        if(user == player)
+            return 0;
+        return 1;
     }
 
     public static void removeAllWeatherInGraphic(Sender sender) {

@@ -80,7 +80,6 @@ public class Sender {
         try {
             int endOfClassName = serializedObject.indexOf(":");
             Class<?> objectsClass = Class.forName(serializedObject.substring(0, endOfClassName));
-            // TODO: if it was command, call the assigned function
             com.google.gson.Gson gson = new GsonBuilder().setPrettyPrinting().create();
             return gson.fromJson(serializedObject.substring(endOfClassName + 1), objectsClass);
         } catch (Exception e) {
