@@ -150,7 +150,7 @@ public class CardView extends Pane {
         super.setOnMouseClicked(e -> {
             if (isInHand) super.requestFocus();
             if (!isInHand && isInChangeSituation.get()){
-                inGameMenu.changeDecoy(card);
+                //inGameMenu.changeDecoy(card); TODO
             }
         });
         super.focusedProperty().addListener(new ChangeListener<Boolean>() {
