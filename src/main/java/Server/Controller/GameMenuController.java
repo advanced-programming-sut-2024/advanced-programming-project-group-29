@@ -9,6 +9,7 @@ import Server.Model.Soldier;
 import Server.Model.*;
 import Server.Model.Commander;
 import Server.Model.SavedDeck;
+import Server.Regex.InGameMenuRegex;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -50,9 +51,14 @@ public class GameMenuController {
         } else if (inputCommand.matches(GameMenuRegex.GET_USER_COMMANDER_NAME.getRegex())) {
             return applicationController.getCurrentUser().getCommander().getName();
         } else if (inputCommand.matches(GameMenuRegex.GET_ALLOWED_NUMBER_BY_CARD_NAME.getRegex())) {
+            System.out.println("ya I'm still here");
             return getAllowedNumberByCardName(GameMenuRegex.GET_ALLOWED_NUMBER_BY_CARD_NAME.getMatcher(inputCommand));
         } else if (inputCommand.matches(GameMenuRegex.GET_CARDS_IN_DECK_NAMES.getRegex())) {
             return getDeckCardsNames(applicationController.getCurrentUser());
+        } else if(inputCommand.matches(GameMenuRegex.GET_USER_FACTION_NAME.getRegex())){
+            return applicationController.getCurrentUser().getFaction().getName();
+        } else if(inputCommand.matches(InGameMenuRegex.GET_GAME_BOARDIN.getRegex())){
+            return InGameMenuController.getGameBoardin(applicationController.getCurrentUser());
         }
         return null;
     }
@@ -283,6 +289,7 @@ public class GameMenuController {
 
     public static Integer getAllowedNumberByCardName (Matcher matcher) {
         String name = matcher.group("cardName");
+        System.out.println("check it out " + name);
         return Card.getAllowedNumberByCardName(name);
     }
 

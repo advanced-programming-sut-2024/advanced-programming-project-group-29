@@ -488,7 +488,7 @@ public class InGameMenu extends Application {
     }
 
     private void firstRefresh() {
-        GameBoardin gameBoardin = new GameBoardin();
+        GameBoardin gameBoardin = (GameBoardin) Client.getClient().sendCommand("get game board");
         int player1Crystal = gameBoardin.getPlayer1Crystal();
         int player2Crystal = gameBoardin.getPlayer2Crystal();
         ArrayList<Cardin> player1Hand = gameBoardin.getPlayer1Hand();
@@ -580,7 +580,7 @@ public class InGameMenu extends Application {
         setPosition(row[1][2], true, false, Y_POSITION_ROW_23);
         setPosition(weather, true, true, Y_POSITION_WEATHER);
 
-        GameBoardin gameBoardin = new GameBoardin();
+        GameBoardin gameBoardin = (GameBoardin) Client.getClient().sendCommand("get game board");
         int player1Crystal = gameBoardin.getPlayer1Crystal();
         int player2Crystal = gameBoardin.getPlayer2Crystal();
         ArrayList<Cardin> player1Hand = gameBoardin.getPlayer1Hand();

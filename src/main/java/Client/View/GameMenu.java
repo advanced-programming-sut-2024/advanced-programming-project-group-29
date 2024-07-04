@@ -141,7 +141,7 @@ public class GameMenu extends Application {
         selectedCards.clear();
         notSelectedCards.clear();
         String factionName = (String) client.sendCommand(GameMenuRegex.GET_USER_FACTION_NAME.getRegex());
-        File directory = new File((GameMenu.class.getResource("/Images/Soldiers/" + factionName)).getPath());
+        File directory = new File((Client.class.getResource("/Images/Soldiers/" + factionName)).getPath());
         ArrayList<File> files = new ArrayList<>(Arrays.asList(Objects.requireNonNull(directory.listFiles())));
         files.removeIf(f -> f.getName().equals("Vidkaarl.jpg") || f.getName().equals("Young Vidkaarl.jpg"));
         main:

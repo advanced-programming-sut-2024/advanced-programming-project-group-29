@@ -33,6 +33,8 @@ public class InGameMenuController extends Thread {
             CheatMenuController.processRequest(applicationController, matcher.group("cheatCode"));
         } else if((matcher = InGameMenuRegex.START_GAME.getMatcher(inputCommand)).matches()){
             startGame(user, sender);
+        } else if((matcher = InGameMenuRegex.GET_GAME_BOARDIN.getMatcher(inputCommand)).matches()){
+            result = getGameBoardin(user);
         }
         return result;
     }

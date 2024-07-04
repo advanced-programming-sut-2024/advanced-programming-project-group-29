@@ -11,6 +11,7 @@ public enum InGameMenuRegex {
     COMMANDER_POWER_PLAY("commander power play"),
     APPLY_CHEAT_CODE("apply cheat code (?<cheatCode>.+)"),
     START_GAME("start game"),
+    GET_GAME_BOARDIN("get game board"),
     ;
 
     String regex;
