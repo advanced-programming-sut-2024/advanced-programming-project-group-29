@@ -1,16 +1,9 @@
 package Server.Controller;
 
-import Server.Enum.Faction;
 import Server.Enum.*;
-import Server.Regex.GameMenuRegex;
 import Server.Model.*;
 import Server.Model.Commander;
-import Server.Model.SavedDeck;
-import Server.Model.GameHistory;
-import Server.Model.Cardin;
 import Server.Model.GameBoardin;
-import Server.Controller.ApplicationController;
-import Server.Controller.ApplicationController;
 import Server.Regex.InGameMenuRegex;
 
 import java.util.ArrayList;
@@ -301,12 +294,13 @@ public class InGameMenuController extends Thread {
     }
 
 
-    public static void addWeather(Spell spell){
+    public static void addWeatherAndRemoveFromDeck (Spell spell){
         if(spell == null)
             return;
         GameBoard gameBoard = spell.getGameBoard();
         // TODO: add this weather to graphic
         gameBoard.addWeather(spell);
+        spell.getUser().getDeck().remove(spell);
     }
 
     public static void seeThreeRandomCardsFromOpponentsHand(Sender sender){

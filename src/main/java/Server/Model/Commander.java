@@ -63,14 +63,14 @@ public class Commander extends Card {
 
     private void theSiegemaster() {
         Card selectedCard = null;
-        ArrayList<Card> hand = this.user.getHand();
-        for (Card card : hand) {
+        ArrayList<Card> deck = this.user.getDeck();
+        for (Card card : deck) {
             if (card.getName().equals("Impenetrable Fog")) {
                 selectedCard = card;
                 break;
             }
         }
-        InGameMenuController.addWeather((Spell) selectedCard);
+        InGameMenuController.addWeatherAndRemoveFromDeck((Spell) selectedCard);
     }
 
     private void theSteelForged() {
@@ -132,14 +132,14 @@ public class Commander extends Card {
 
     private void purebloodElf() {
         Card selectedCard = null;
-        ArrayList<Card> hand = this.user.getHand();
-        for (Card card : hand) {
+        ArrayList<Card> deck = this.user.getDeck();
+        for (Card card : deck) {
             if (card.getName().equals("Biting Frost")) {
                 selectedCard = card;
                 break;
             }
         }
-        InGameMenuController.addWeather((Spell) selectedCard);
+        InGameMenuController.addWeatherAndRemoveFromDeck((Spell) selectedCard);
     }
 
     private void theBeautiful() {
@@ -179,8 +179,7 @@ public class Commander extends Card {
         Card selectedCard = InGameMenuController.getOneCardWeathersInDeck(sender, user);
         if(selectedCard == null)
             return;
-        InGameMenuController.addWeather((Spell) selectedCard);
-        user.getDeck().remove(selectedCard);
+        InGameMenuController.addWeatherAndRemoveFromDeck((Spell) selectedCard);
     }
 
     private void destroyerOfWorlds() {
@@ -225,7 +224,6 @@ public class Commander extends Card {
         Card card = InGameMenuController.getOneCardFromDiscardPile(sender, user);
         if (card == null)
             return;
-        int placedNumber = card.getPlacedNumberInDiscardPile();
         InGameMenuController.moveCardFromDiscardToHand(sender, card);
     }
 
@@ -242,14 +240,14 @@ public class Commander extends Card {
 
     private void theWhiteFlame() {
         Card selectedCard = null;
-        ArrayList<Card> hand = this.user.getHand();
-        for (Card card : hand) {
+        ArrayList<Card> deck = this.user.getDeck();
+        for (Card card : deck) {
             if (card.getName().equals("Torrential Rain")) {
                 selectedCard = card;
                 break;
             }
         }
-        InGameMenuController.addWeather((Spell) selectedCard);
+        InGameMenuController.addWeatherAndRemoveFromDeck((Spell) selectedCard);
     }
 
     private void sonOfMedell() {
