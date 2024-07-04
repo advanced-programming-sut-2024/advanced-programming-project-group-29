@@ -151,8 +151,6 @@ public class InGameMenu extends Application {
     private final ArrayList<CardView>[][] horn = new ArrayList[2][3];
     private final ArrayList<CardView> weather = new ArrayList<>();
 
-    private InGameMenu inGameMenu;
-
     public InGameMenu() {
         super();
     }
@@ -292,6 +290,7 @@ public class InGameMenu extends Application {
             }
         });
         firstRefresh();
+        Client.setInGameMenu(this);
     }
 
     @Override
@@ -307,14 +306,6 @@ public class InGameMenu extends Application {
 
     public void changeDecoy(Cardin card) {
         //TODO
-    }
-
-    public void setInGameMenu(InGameMenu inGameMenu) {
-        this.inGameMenu = inGameMenu;
-    }
-
-    public InGameMenu getInGameMenu(){
-        return inGameMenu;
     }
 
     public void removeCardFromHandAndKillIt(int cardNumber) {
@@ -389,13 +380,15 @@ public class InGameMenu extends Application {
         (new FlipCardAnimation(c, (hand[0].size() == 1 ? (X_POSITION_HAND_LEFT + X_POSITION_HAND_RIGHT - CARD_WIDTH) / 2 : (hand[0].get(hand[0].size() - 2)).getLayoutX() + SPACING + CARD_WIDTH), Y_POSITION_HAND, true, true, true)).play();
     }
 
-    public void addCardFromDiscardToHand(int cardNumber) {
-        CardView c = discard[0].get(cardNumber);
-        discard[0].remove(cardNumber);
-        hand[0].add(c);
+    public void addCardFromDiscardToHand(int cardNumber, int playerIndex) {
+        CardView c = discard[playerIndex].get(cardNumber);
+        discard[playerIndex].remove(cardNumber);
+        hand[playerIndex].add(c);
         pain.getChildren().remove(c);
-        pain.getChildren().add(c);
-        (new FlipCardAnimation(c, (hand[0].size() == 1 ? (X_POSITION_HAND_LEFT + X_POSITION_HAND_RIGHT - CARD_WIDTH) / 2 : (hand[0].get(hand[0].size() - 2)).getLayoutX() + SPACING + CARD_WIDTH), Y_POSITION_HAND, true, true, true)).play();
+        if (playerIndex == 0){
+            pain.getChildren().add(c);
+        }
+        (new FlipCardAnimation(c, (hand[playerIndex].size() == 1 ? (X_POSITION_HAND_LEFT + X_POSITION_HAND_RIGHT - CARD_WIDTH) / 2 : (hand[playerIndex].get(hand[playerIndex].size() - 2)).getLayoutX() + SPACING + CARD_WIDTH), Y_POSITION_HAND, true, true, true)).play();
     }
 
     public void showThreeCardOfOpponent() throws NoSuchFieldException, IllegalAccessException {
@@ -463,6 +456,12 @@ public class InGameMenu extends Application {
     private int convertRowNumber(int fatemeRowNumber) {
         int ostadRowNumber = 2 - fatemeRowNumber; // :))
         return ostadRowNumber;
+    }
+
+    public void clearWeather(){
+        setWeather(false, false, false);
+        weather.forEach(c -> pain.getChildren().remove(c));
+        weather.clear();
     }
 
     //////////////////////// refresh

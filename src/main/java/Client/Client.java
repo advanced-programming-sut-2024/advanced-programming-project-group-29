@@ -12,6 +12,7 @@ public class Client {
     private static Client client;
     private Listener listener;
     private Sender sender;
+    private static InGameMenu inGameMenu;
 
     public static void main(String[] args) throws Exception {
         client = new Client();
@@ -20,6 +21,14 @@ public class Client {
 
     public static Client getClient() {
         return client;
+    }
+
+    public static InGameMenu getInGameMenu() {
+        return inGameMenu;
+    }
+
+    public static void setInGameMenu(InGameMenu inGameMenu) {
+        Client.inGameMenu = inGameMenu;
     }
 
     public void start() throws Exception {

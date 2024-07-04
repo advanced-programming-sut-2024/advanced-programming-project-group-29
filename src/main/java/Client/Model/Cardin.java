@@ -1,7 +1,8 @@
 package  Client.Model;
 
 import Client.Enum.*;
-
+import org.json.JSONObject;
+import Server.Model.Card;
 import java.util.ArrayList;
 
 public class Cardin {
