@@ -11,6 +11,7 @@ import Server.Model.Cardin;
 import Server.Model.GameBoardin;
 import Server.Controller.ApplicationController;
 import Server.Controller.ApplicationController;
+import Server.Regex.InGameMenuRegex;
 
 import java.util.ArrayList;
 import java.util.regex.Matcher;
@@ -23,8 +24,71 @@ public class InGameMenuController extends Thread {
     public static Object processRequest(ApplicationController applicationController, String inputCommand) {
         Object result = null;
         Matcher matcher;
-        // TODO: do this
+        User user = applicationController.getCurrentUser();
+        Sender sender = applicationController.getSender();
+        if((matcher = InGameMenuRegex.PLACE_SOLDIER.getMatcher(inputCommand)).matches()){
+             placeSoldier(user, sender, matcher);
+        } else if((matcher = InGameMenuRegex.PLACE_DECOY.getMatcher(inputCommand)).matches()){
+            placeDecoy(user, matcher);
+        } else if((matcher = InGameMenuRegex.PLACE_WEATHER.getMatcher(inputCommand)).matches()){
+            placeWeather(user, sender, matcher);
+        } else if((matcher = InGameMenuRegex.PLACE_SPECIAL.getMatcher(inputCommand)).matches()){
+            placeSpecial(user, sender, matcher);
+        } else if((matcher = InGameMenuRegex.COMMANDER_POWER_PLAY.getMatcher(inputCommand)).matches()){
+            commanderPowerPlay(user);
+        } else if((matcher = InGameMenuRegex.APPLY_CHEAT_CODE.getMatcher(inputCommand)).matches()){
+            CheatMenuController.processRequest(applicationController, matcher.group("cheatCode"));
+        } else if((matcher = InGameMenuRegex.START_GAME.getMatcher(inputCommand)).matches()){
+            startGame(user, sender);
+        }
         return result;
+    }
+
+    private static void commanderPowerPlay(User user) {
+        Commander commander = user.getCommander();
+        if (!commander.hasAction() || commander.hasPassiveAbility())
+            return;
+        commander.executeAction();
+    }
+
+    private static void placeSpecial(User user, Sender sender, Matcher matcher) {
+        int cardNumber = Integer.parseInt(matcher.group("cardNumber"));
+        String rowNumberString = matcher.group("rowNumber");
+        int rowNumber = -1;
+        if(rowNumberString != null)
+            rowNumber = Integer.parseInt(rowNumberString);
+        int playerIndex = user.getCurrentGameBoard().getPlayerNumber(user);
+        GameBoard gameBoard = user.getCurrentGameBoard();
+        Spell spell = (Spell)user.getHand().get(cardNumber);
+        gameBoard.addSpecialCard(playerIndex, rowNumber, spell);
+        spell.executeAction();
+    }
+
+    private static void placeWeather(User user, Sender sender, Matcher matcher) {
+        int cardNumber = Integer.parseInt(matcher.group("cardNumber"));
+        String rowNumberString = matcher.group("rowNumber");
+        int rowNumber = -1;
+        if(rowNumberString != null)
+            rowNumber = Integer.parseInt(rowNumberString);
+        int playerIndex = user.getCurrentGameBoard().getPlayerNumber(user);
+        GameBoard gameBoard = user.getCurrentGameBoard();
+        Spell spell = (Spell)user.getHand().get(cardNumber);
+        spell.executeAction();
+    }
+
+    private static void placeSoldier(User user, Sender sender, Matcher matcher) {
+        int cardNumber = Integer.parseInt(matcher.group("cardNumber"));
+        String rowNumberString = matcher.group("rowNumber");
+        int rowNumber = -1;
+        if(rowNumberString != null)
+            rowNumber = Integer.parseInt(rowNumberString);
+        int playerIndex = user.getCurrentGameBoard().getPlayerNumber(user);
+        GameBoard gameBoard = user.getCurrentGameBoard();
+        Soldier soldier = (Soldier)user.getHand().get(cardNumber);
+        if(soldier.hasAttribute(Attribute.SPY))
+            playerIndex = 1 - playerIndex;
+        gameBoard.addSoldierToRow(playerIndex, rowNumber, soldier);
+        soldier.executeAction();
     }
 
     public static void startGame(User user, Sender sender){
@@ -32,7 +96,6 @@ public class InGameMenuController extends Thread {
         User opponent = user.getOpponent();
         user.createHand();
         opponent.createHand();
-        // TODO: let user veto card
     }
 
     public static Card getOneCardFromDiscardPile(Sender sender, User user){
@@ -232,8 +295,7 @@ public class InGameMenuController extends Thread {
         GameBoard gameBoard = user.getCurrentGameBoard();
         Soldier soldier = gameBoard.getRows()[playerIndex][rowNumber].get(cardNumber);
         Spell decoy = (Spell) user.getHand().get(thisCardNumber);
-        user.getHand().remove(thisCardNumber);
-        user.getHand().add(soldier);
+        user.getHand().set(thisCardNumber, soldier);
         user.getDiscardPile().add(decoy);
         return;
     }

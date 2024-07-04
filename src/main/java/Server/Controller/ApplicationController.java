@@ -77,8 +77,6 @@ public class ApplicationController extends Thread {
                             object = Server.Controller.LoginMenuController.processRequest(this, inputCommand);
                         case REGISTER_MENU:
                             object = Server.Controller.RegisterMenuController.processRequest(this, inputCommand);
-                        case CHEAT_MENU:
-                            object = Server.Controller.CheatMenuController.processRequest(this, inputCommand);
                         case PROFILE_MENU:
                             object = Server.Controller.ProfileMenuController.processRequest(this, inputCommand);
                         case GAME_MENU:

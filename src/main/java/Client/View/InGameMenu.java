@@ -1,6 +1,7 @@
 package Client.View;
 
 
+import Client.Client;
 import Client.Model.*;
 import Client.Enum.*;
 import Client.Regex.GameMenuRegex;
@@ -165,7 +166,7 @@ public class InGameMenu extends Application {
                 horn[i][j] = new ArrayList<>();
             }
         }
-        InGameMenuController.startGame();
+        Client.getClient().sendCommand("start game");
         mainPain.requestFocus();
         mainPain.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
@@ -197,10 +198,14 @@ public class InGameMenu extends Application {
                                 if (c.isSelected()) {
                                     int n = row[finalI - 1][finalJ - 1].size();
                                     (new FlipCardAnimation(c, (n == 0 ? (X_POSITION_ROW_LEFT + X_POSITION_ROW_RIGHT - CARD_WIDTH) / 2 : row[finalI - 1][finalJ - 1].get(n - 1).getLayoutX() + CARD_WIDTH + SPACING), Y, true, true, false)).play();
+                                    int placedNumber = -1;
+                                    for(int i = 0; i < hand[0].size(); i++)
+                                        if(hand[0].get(i).equals(c))
+                                            placedNumber = i;
                                     hand[0].remove(c);
                                     c.setInHand(false);
                                     row[finalI - 1][finalJ - 1].add(c);
-                                    //TODO move soldier
+                                    Client.getClient().sendCommand("place soldier " + placedNumber + " in row " + (3 - finalJ));
                                     refresh();
                                 }
                             }
@@ -223,11 +228,14 @@ public class InGameMenu extends Application {
                         for (CardView c : new ArrayList<>(hand[0])) {
                             if (c.isSelected()) {
                                 (new FlipCardAnimation(c, X_POSITION_SPELL, Y, true, true, false)).play();
+                                int placedNumber = -1;
+                                for(int i = 0; i < hand[0].size(); i++)
+                                    if(hand[0].get(i).equals(c))
+                                        placedNumber = i;
                                 hand[0].remove(c);
                                 c.setInHand(false);
                                 horn[0][finalJ - 1].add(c);
-                                //TODO spell
-
+                                Client.getClient().sendCommand("place special " + placedNumber + " in row " + (3 - finalJ));
                                 refresh();
                             }
                         }
@@ -243,11 +251,15 @@ public class InGameMenu extends Application {
                         if (c.isSelected()) {
                             int n = weather.size();
                             (new FlipCardAnimation(c, (n == 0 ? (X_POSITION_WEATHER_LEFT + X_POSITION_WEATHER_RIGHT - CARD_WIDTH) / 2 : weather.get(n - 1).getLayoutX() + CARD_WIDTH + SPACING), Y_POSITION_WEATHER, true, true, false)).play();
+                            int placedNumber = -1;
+                            for(int i = 0; i < hand[0].size(); i++)
+                                if(hand[0].get(i).equals(c))
+                                    placedNumber = i;
                             hand[0].remove(c);
                             c.setInHand(false);
                             weather.add(c);
+                            Client.getClient().sendCommand("place weather " + placedNumber);
                             //TODO refresh weather
-                            //TODO add weather
                             refresh();
                         }
                     }
@@ -259,7 +271,7 @@ public class InGameMenu extends Application {
             public void handle(MouseEvent mouseEvent) {
                 if (mouseEvent.getButton().equals(MouseButton.PRIMARY)) {
                     if (mouseEvent.getClickCount() == 3) {
-                        //TODO: show commander power
+                        Client.getClient().sendCommand("commander power play");
                     }
                 }
             }
@@ -670,7 +682,7 @@ public class InGameMenu extends Application {
             return;
         }
         showSuccessfulCheatCode();
-        CheatMenuController.applyCheatCode(cheatCode);
+        Client.getClient().sendCommand("apply cheat code " + cheatCodeString);
     }
 
     private void showSuccessfulCheatCode() {

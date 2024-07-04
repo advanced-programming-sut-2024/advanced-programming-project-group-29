@@ -1,5 +1,8 @@
 package Server.Regex;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public enum InGameMenuOutputCommand {
 
     ADD_CARD_TO_HAND("add card to hand (?<cardinSerial>.+)"), // add cardinSerial to hand of current player
@@ -27,6 +30,10 @@ public enum InGameMenuOutputCommand {
 
     public String getCommand() {
         return command;
+    }
+
+    public Matcher getMatcher(String input) {
+        return Pattern.compile(command).matcher(input);
     }
 
 }
