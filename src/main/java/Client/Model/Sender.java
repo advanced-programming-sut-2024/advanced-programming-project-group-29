@@ -56,7 +56,10 @@ public class Sender {
 
     public Object sendObject(Object object) {
         com.google.gson.Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        String outputCommand = gson.toJson(object);
+        String clazz = object.getClass().getName();
+        if(clazz.matches("Client.+"))
+            clazz = "Server" + clazz.substring(6);
+        String outputCommand = clazz + ":" + gson.toJson(object);
         try {
             return deSerialize(sendMessage(outputCommand));
         } catch (Exception e) {

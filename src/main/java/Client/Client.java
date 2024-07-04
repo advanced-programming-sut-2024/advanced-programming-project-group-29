@@ -35,7 +35,12 @@ public class Client {
         sender = new Sender(SERVER_IP, SERVER_PORT);
         listener = new Listener();
         listener.start();
+        while(listener.getPort() == 0) {
+            continue;
+        }
+        System.out.println(listener.getPort());
         sender.sendCommand("127.0.0.1 " + listener.getPort());
+        System.out.println("ha?");
         Main.main(new String[]{});
         sender.endConnection();
     }
@@ -49,6 +54,7 @@ public class Client {
     }
 
     public Object sendCommand(String message) {
+        System.out.println("hey a command is being sent to server: " + message);
         return sender.sendCommand(message);
     }
 }

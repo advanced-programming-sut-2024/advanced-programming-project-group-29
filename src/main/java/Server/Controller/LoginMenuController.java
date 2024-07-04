@@ -7,8 +7,12 @@ import java.util.regex.Matcher;
 
 public class LoginMenuController {
     public static Result processRequest(ApplicationController applicationController, String inputCommand) {
+        System.out.println("ya here");
         if (inputCommand.matches(LoginMenuRegex.LOGIN.getRegex())) {
-            return login(LoginMenuRegex.LOGIN.getMatcher(inputCommand));
+            System.out.println("pring");
+            Result result = login(applicationController, LoginMenuRegex.LOGIN.getMatcher(inputCommand));
+            System.out.println(result.getMessage());
+            return result;
         }
         if (inputCommand.matches(LoginMenuRegex.FORGET_PASSWORD.getRegex())) {
             return forgetPassword(LoginMenuRegex.FORGET_PASSWORD.getMatcher(inputCommand));
@@ -28,7 +32,7 @@ public class LoginMenuController {
         return null;
     }
 
-    public static Result login(Matcher matcher) {
+    public static Result login(ApplicationController applicationController, Matcher matcher) {
         String username = matcher.group("username");
         String password = matcher.group("password");
         User user = User.getUserByUsername(username);
@@ -38,7 +42,7 @@ public class LoginMenuController {
         if (!user.getPassword().equals(password)) {
             return new Result(false, "Password is incorrect.");
         }
-        ApplicationController.setCurrentUser(user);
+        applicationController.setCurrentUser(user);
         return new Result(true, "User logged in successfully.");
     }
 

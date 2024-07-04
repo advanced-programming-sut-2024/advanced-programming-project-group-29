@@ -1,9 +1,7 @@
 package Server.Controller;
 
-import Server.Model.Cardin;
-import Server.Model.User;
+import Server.Model.*;
 import Server.Enum.Menu;
-import Server.Model.Sender;
 import Server.Regex.ChangeMenuRegex;
 import com.google.gson.GsonBuilder;
 import javafx.application.Application;
@@ -56,7 +54,10 @@ public class ApplicationController extends Thread {
 
     public static String getSendableObject(Object object) {
         com.google.gson.Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        return object.getClass().getName() + ":" + gson.toJson(object);
+        String clazz = object.getClass().getName();
+        if(clazz.matches("Server.+"))
+            clazz = "Client" + clazz.substring(6);
+        return clazz + ":" + gson.toJson(object);
     }
 
     @Override
@@ -70,28 +71,36 @@ public class ApplicationController extends Thread {
             int ipEndIndex = inputCommand.indexOf(" ");
             sender = new Sender(inputCommand.substring(0, ipEndIndex),
                     Integer.parseInt(inputCommand.substring(ipEndIndex + 1)));
+            dataOutputStream.writeUTF("null");
             while(true) {
                     inputCommand = dataInputStream.readUTF();
+                    System.out.println("got that command " + inputCommand);
                     if (inputCommand.matches(ChangeMenuRegex.CHANGE_MENU.getRegex())) {
                         currentMenu = Menu.valueOf(ChangeMenuRegex.CHANGE_MENU.getMatcher(inputCommand).group("menuName"));
+                        dataOutputStream.writeUTF("null");
                         continue;
                     }
                     Object object = null;
                     switch(currentMenu){
                         case LOGIN_MENU:
                             object = Server.Controller.LoginMenuController.processRequest(this, inputCommand);
+                            break;
                         case REGISTER_MENU:
                             object = Server.Controller.RegisterMenuController.processRequest(this, inputCommand);
+                            break;
                         case PROFILE_MENU:
                             object = Server.Controller.ProfileMenuController.processRequest(this, inputCommand);
+                            break;
                         case GAME_MENU:
                             object = Server.Controller.GameMenuController.processRequest(this, inputCommand);
+                            break;
                         case IN_GAME_MENU:
                             object = Server.Controller.InGameMenuController.processRequest(this, inputCommand);
+                            break;
                         case RANKING_MENU:
                             object = Server.Controller.RankingMenuController.processRequest(this, inputCommand);
+                            break;
                     }
-                    // TODO: if user logged in, set current user
                     if(currentUser != null) {
                         currentUser.setAllCardsSenders(sender);
                         sender.setUser(currentUser);
@@ -112,10 +121,6 @@ public class ApplicationController extends Thread {
 
     public Sender getSender(){
         return sender;
-    }
-
-    public Object sendObject(Object object) {
-        return sender.sendObject(object);
     }
 
     public Object sendCommand(String command) {
@@ -150,8 +155,8 @@ public class ApplicationController extends Thread {
         return menu;
     }
 
-    public static void setCurrentUser(User givenCurrentUser) { // TODO: needed to be removed
-        return;
+    public void setCurrentUser(User givenCurrentUser) {
+        currentUser = givenCurrentUser;
     }
 
     public User getCurrentUser() {

@@ -276,7 +276,8 @@ public class GameMenuController {
         }
         GameBoard gameBoard = user.getCurrentGameBoard();
         gameBoard.changeTurn();
-        ApplicationController.setCurrentUser(gameBoard.getPlayer(gameBoard.getCurrentPlayer()));
+        // TODO: if game is offline change user
+        //ApplicationController.setCurrentUser(gameBoard.getPlayer(gameBoard.getCurrentPlayer()));
         return new Result(true, "Turn changed successfully.");
     }
 

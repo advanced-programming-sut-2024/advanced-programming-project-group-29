@@ -26,6 +26,7 @@ public class Sender {
     }
 
     public boolean establishConnection(String address, int port) {
+        System.out.println(address + " " + port);
         try {
             socket = new Socket(address, port);
             sendBuffer = new DataOutputStream(
@@ -59,17 +60,6 @@ public class Sender {
             sendBuffer.writeUTF(command);
             return receiveBuffer.readUTF();
         } catch (Exception e) {
-            return null;
-        }
-    }
-
-    public Object sendObject(Object object) {
-        com.google.gson.Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        String outputCommand = gson.toJson(object);
-        try {
-            return deSerialize(sendMessage(outputCommand));
-        } catch (Exception e) {
-            e.printStackTrace();
             return null;
         }
     }

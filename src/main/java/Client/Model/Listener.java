@@ -15,7 +15,7 @@ import com.google.gson.GsonBuilder;
 
 public class Listener extends Thread{
     private Socket socket;
-    private int port;
+    private int port = 0;
 
     private DataInputStream dataInputStream;
     private DataOutputStream dataOutputStream;
@@ -26,6 +26,7 @@ public class Listener extends Thread{
         try {
             ServerSocket server = getNewServerSocket();
             port = server.getLocalPort();
+            System.out.println("wtf? " + port);
             socket = server.accept();
             dataInputStream = new DataInputStream(socket.getInputStream());
             dataOutputStream = new DataOutputStream(socket.getOutputStream());
@@ -88,6 +89,7 @@ public class Listener extends Thread{
     }
 
     public int getPort(){
+        System.out.println("heyyy " + port);
         return port;
     }
 
@@ -118,4 +120,5 @@ public class Listener extends Thread{
         }
         return null;
     }
+
 }
