@@ -1,5 +1,6 @@
 package Client.Model;
 
+import Client.Client;
 import Client.Regex.InGameMenuOutputCommand;
 import Client.View.InGameMenu;
 
@@ -35,7 +36,7 @@ public class Listener extends Thread{
                     outputBuffer = null;
                     Matcher matcher;
                     waitForAnswer = false;
-                    InGameMenu inGameMenu = null; // TODO: set this
+                    InGameMenu inGameMenu = Client.getInGameMenu();
                     if ((matcher = InGameMenuOutputCommand.ADD_CARD_TO_HAND.getMatcher(input)).matches())
                         inGameMenu.addCardToHand((Cardin) deSerialize(matcher.group("cardinSerial")));
                     else if ((matcher = InGameMenuOutputCommand.DESTROY_SOLDIER.getMatcher(input)).matches())
@@ -48,17 +49,17 @@ public class Listener extends Thread{
                     else if ((matcher = InGameMenuOutputCommand.CHANGE_CARD.getMatcher(input)).matches())
                         inGameMenu.changeThisCard(matcher);
                     else if ((matcher = InGameMenuOutputCommand.CLEAR_WEATHER.getMatcher(input)).matches())
-                        InGameMenuOutputCommand.CLEAR_WEATHER.run(matcher); // TODO: implement this function
+                        inGameMenu.clearWeather();
                     else if ((matcher = InGameMenuOutputCommand.MOVE_DISCARD_TO_DECK.getMatcher(input)).matches())
                         inGameMenu.moveDiscardPileToDeckForBoth();
                     else if ((matcher = InGameMenuOutputCommand.MOVE_SOLDIER_TO_ROW.getMatcher(input)).matches())
                         inGameMenu.moveSoldier(matcher);
                     else if ((matcher = InGameMenuOutputCommand.MOVE_DECK_TO_HAND.getMatcher(input)).matches())
-                        InGameMenuOutputCommand.MOVE_DECK_TO_HAND.run(matcher); // TODO: implement this
+                        inGameMenu.addCardFromDeckToHand(Integer.parseInt(matcher.group("cardNumber")));
                     else if ((matcher = InGameMenuOutputCommand.MOVE_DISCARD_TO_HAND.getMatcher(input)).matches())
-                        InGameMenuOutputCommand.MOVE_DISCARD_TO_HAND.run(matcher); // TODO: implement this
+                        inGameMenu.addCardFromDiscardToHand(Integer.parseInt(matcher.group("cardNumber")), 0);
                     else if ((matcher = InGameMenuOutputCommand.MOVE_OPPONENT_DISCARD_TO_HAND.getMatcher(input)).matches())
-                        InGameMenuOutputCommand.MOVE_OPPONENT_DISCARD_TO_HAND.run(matcher); // TODO: implement this
+                        inGameMenu.addCardFromDiscardToHand(Integer.parseInt(matcher.group("cardNumber")), 1);
                     else if ((matcher = InGameMenuOutputCommand.SEE_THREE_CARD.getMatcher(input)).matches())
                         inGameMenu.showThreeCardOfOpponent();
                 } catch (Exception e) {

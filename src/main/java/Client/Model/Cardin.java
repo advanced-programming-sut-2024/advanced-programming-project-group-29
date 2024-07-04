@@ -1,9 +1,17 @@
 package  Client.Model;
 
 import Client.Enum.*;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import Server.Model.Card;
+
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class Cardin {
 
@@ -45,8 +53,41 @@ public class Cardin {
         return faction;
     }
 
+    private static JSONObject getCardByName(JSONArray jsonArray, String cardName) {
+        for (int i = 0; i < jsonArray.length(); i++) {
+            JSONObject card = jsonArray.getJSONObject(i);
+            if (card.getString("name").equals(cardName)) {
+                return card;
+            }
+        }
+        return null;
+    }
+
+    protected static JSONObject getCardByName(String cardName) {
+        try {
+            URI uri = Card.class.getResource("/JSON/allCards.json").toURI();
+            String content = new String(Files.readAllBytes(Paths.get(uri)));
+            JSONObject allCards = new JSONObject(content);
+            Iterator<String> keys = allCards.keys();
+            while (keys.hasNext()) {
+                String key = keys.next();
+                JSONArray jsonArray = allCards.getJSONArray(key);
+                JSONObject card = getCardByName(jsonArray, cardName);
+                if (card != null) {
+                    return card;
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println(e.getMessage());
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
+        return null;
+    }
+
     public static ArrayList<Space> getAllowedSpaces(String name) {
-        JSONObject card = Card.getCardByName(name);
+        JSONObject card = getCardByName(name);
         assert card != null;
         String cardName = card.getString("name");
         Type type = Type.getTypeFromString(card.getString("type"));

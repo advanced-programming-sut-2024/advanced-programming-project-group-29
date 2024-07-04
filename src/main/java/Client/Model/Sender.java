@@ -75,7 +75,7 @@ public class Sender {
     }
 
     private Object deSerialize(String serializedObject) {
-        if(serializedObject.equals("null"))
+        if(serializedObject == null || serializedObject.equals("null"))
             return null;
         try {
             int endOfClassName = serializedObject.indexOf(":");
