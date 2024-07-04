@@ -304,8 +304,15 @@ public class InGameMenu extends Application {
         ApplicationRunningTimeData.setPane(pane);
     }
 
-    public void changeDecoy(Cardin card) {
-        //TODO
+    public void changeDecoy(int rowNumber, int cardNumber,int cardNumberDecoy) {
+        CardView decoy = hand[0].get(cardNumber);
+        CardView soldier = row[0][convertRowNumber(rowNumber)].get(cardNumberDecoy);
+        double x = decoy.getLayoutX();
+        double y = decoy.getLayoutY();
+        hand[0].set(cardNumberDecoy, soldier);
+        discard[0].add(decoy);
+        (new FlipCardAnimation(decoy, X_POSITION_DISCARD, Y_POSITION_DISCARD_1, true, true, false)).play();
+        (new FlipCardAnimation(soldier,x,y,true,true,true)).play();
     }
 
     public void removeCardFromHandAndKillIt(int cardNumber) {
