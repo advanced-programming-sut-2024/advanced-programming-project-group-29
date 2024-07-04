@@ -4,6 +4,7 @@ import Server.Model.Cardin;
 import Server.Model.User;
 import Server.Enum.Menu;
 import Server.Model.Sender;
+import Server.Regex.ChangeMenuRegex;
 import com.google.gson.GsonBuilder;
 import javafx.application.Application;
 import javafx.scene.layout.Pane;
@@ -71,6 +72,10 @@ public class ApplicationController extends Thread {
                     Integer.parseInt(inputCommand.substring(ipEndIndex + 1)));
             while(true) {
                     inputCommand = dataInputStream.readUTF();
+                    if (inputCommand.matches(ChangeMenuRegex.CHANGE_MENU.getRegex())) {
+                        currentMenu = Menu.valueOf(ChangeMenuRegex.CHANGE_MENU.getMatcher(inputCommand).group("menuName"));
+                        continue;
+                    }
                     Object object = null;
                     switch(currentMenu){
                         case LOGIN_MENU:
@@ -87,8 +92,10 @@ public class ApplicationController extends Thread {
                             object = Server.Controller.RankingMenuController.processRequest(this, inputCommand);
                     }
                     // TODO: if user logged in, set current user
-                    if(currentUser != null)
+                    if(currentUser != null) {
                         currentUser.setAllCardsSenders(sender);
+                        sender.setUser(currentUser);
+                    }
                     if(object == null)
                         dataOutputStream.writeUTF("null");
                     else {
