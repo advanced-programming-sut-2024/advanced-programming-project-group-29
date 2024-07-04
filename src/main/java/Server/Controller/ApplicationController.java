@@ -73,43 +73,47 @@ public class ApplicationController extends Thread {
                     Integer.parseInt(inputCommand.substring(ipEndIndex + 1)));
             dataOutputStream.writeUTF("null");
             while(true) {
-                    inputCommand = dataInputStream.readUTF();
-                    System.out.println("got that command " + inputCommand);
-                    if (inputCommand.matches(ChangeMenuRegex.CHANGE_MENU.getRegex())) {
-                        currentMenu = Menu.valueOf(ChangeMenuRegex.CHANGE_MENU.getMatcher(inputCommand).group("menuName"));
-                        dataOutputStream.writeUTF("null");
-                        continue;
-                    }
-                    Object object = null;
-                    switch(currentMenu){
-                        case LOGIN_MENU:
-                            object = Server.Controller.LoginMenuController.processRequest(this, inputCommand);
-                            break;
-                        case REGISTER_MENU:
-                            object = Server.Controller.RegisterMenuController.processRequest(this, inputCommand);
-                            break;
-                        case PROFILE_MENU:
-                            object = Server.Controller.ProfileMenuController.processRequest(this, inputCommand);
-                            break;
-                        case GAME_MENU:
-                            object = Server.Controller.GameMenuController.processRequest(this, inputCommand);
-                            break;
-                        case IN_GAME_MENU:
-                            object = Server.Controller.InGameMenuController.processRequest(this, inputCommand);
-                            break;
-                        case RANKING_MENU:
-                            object = Server.Controller.RankingMenuController.processRequest(this, inputCommand);
-                            break;
-                    }
-                    if(currentUser != null) {
-                        currentUser.setAllCardsSenders(sender);
-                        sender.setUser(currentUser);
-                    }
-                    if(object == null)
-                        dataOutputStream.writeUTF("null");
-                    else {
-                        dataOutputStream.writeUTF(getSendableObject(object));
-                    }
+                inputCommand = dataInputStream.readUTF();
+                System.out.println("got that command " + inputCommand);
+                System.err.println(currentMenu);
+                if (inputCommand.matches(ChangeMenuRegex.CHANGE_MENU.getRegex())) {
+                    currentMenu = Menu.valueOf(ChangeMenuRegex.CHANGE_MENU.getMatcher(inputCommand).group("menuName"));
+                    dataOutputStream.writeUTF("null");
+                    continue;
+                }
+                Object object = null;
+                switch(currentMenu){
+                    case CHEAT_MENU:
+                        object = Server.Controller.CheatMenuController.processRequest(this, inputCommand);
+                        break;
+                    case CHOOSE_MENU, GAME_MENU:
+                        object = Server.Controller.GameMenuController.processRequest(this, inputCommand);
+                        break;
+                    case LOGIN_MENU:
+                        object = Server.Controller.LoginMenuController.processRequest(this, inputCommand);
+                        break;
+                    case REGISTER_MENU:
+                        object = Server.Controller.RegisterMenuController.processRequest(this, inputCommand);
+                        break;
+                    case PROFILE_MENU:
+                        object = Server.Controller.ProfileMenuController.processRequest(this, inputCommand);
+                        break;
+                    case IN_GAME_MENU:
+                        object = Server.Controller.InGameMenuController.processRequest(this, inputCommand);
+                        break;
+                    case RANKING_MENU:
+                        object = Server.Controller.RankingMenuController.processRequest(this, inputCommand);
+                        break;
+                }
+                if(currentUser != null) {
+                    currentUser.setAllCardsSenders(sender);
+                    sender.setUser(currentUser);
+                }
+                if(object == null)
+                    dataOutputStream.writeUTF("null");
+                else {
+                    dataOutputStream.writeUTF(getSendableObject(object));
+                }
             }
             //dataOutputStream.close();
             //dataInputStream.close();

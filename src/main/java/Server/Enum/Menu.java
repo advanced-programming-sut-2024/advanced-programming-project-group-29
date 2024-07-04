@@ -2,6 +2,7 @@ package Server.Enum;
 
 public enum Menu {
     CHEAT_MENU,
+    CHOOSE_MENU,
     IN_GAME_MENU,
     GAME_MENU,
     LOGIN_MENU,

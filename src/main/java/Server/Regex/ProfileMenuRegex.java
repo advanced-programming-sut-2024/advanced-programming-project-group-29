@@ -8,7 +8,7 @@ public enum ProfileMenuRegex {
     CHANGE_NICKNAME("change nickname -u (?<nickname>\\S+)"),
     CHANGE_EMAIL("change email -e (?<email>\\S+)"),
     CHANGE_PASSWORD("change password -p (?<password>\\S+) -o (?<oldPassword>\\S+)"),
-    SHOW_INFO("menu enter user info"),
+    SHOW_INFO("show user info"),
     GAME_HISTORY("game history( -n (?<numberOfGames>-?\\d+))?"),
     SEND_FRIEND_REQUEST("send friend request (?<username>\\S+)");
 

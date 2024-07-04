@@ -3,6 +3,7 @@ package Client.View;
 import Client.Client;
 import Client.Model.ApplicationRunningTimeData;
 import Client.Model.Result;
+import Client.Enum.*;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -33,6 +34,7 @@ public class ChooseGameModelMenu extends Application {
     public ChooseGameModelMenu() {
         super();
         client = Client.getClient();
+        client.sendCommand("menu enter " + Menu.CHOOSE_MENU.toString());
     }
 
     @Override
