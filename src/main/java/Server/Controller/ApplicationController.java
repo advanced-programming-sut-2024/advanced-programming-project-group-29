@@ -5,6 +5,8 @@ import Server.Enum.Menu;
 import Server.Regex.ChangeMenuRegex;
 import Server.Regex.LoginMenuRegex;
 import com.google.gson.GsonBuilder;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import javafx.application.Application;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
@@ -14,7 +16,9 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 
