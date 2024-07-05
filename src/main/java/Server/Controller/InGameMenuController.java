@@ -64,6 +64,7 @@ public class InGameMenuController extends Thread {
         int playerIndex = user.getCurrentGameBoard().getPlayerNumber(user);
         GameBoard gameBoard = user.getCurrentGameBoard();
         Spell spell = (Spell)user.getHand().get(cardNumber);
+        user.getHand().remove(cardNumber);
         gameBoard.addSpecialCard(playerIndex, rowNumber, spell);
         spell.executeAction();
     }
@@ -77,6 +78,7 @@ public class InGameMenuController extends Thread {
         int playerIndex = user.getCurrentGameBoard().getPlayerNumber(user);
         GameBoard gameBoard = user.getCurrentGameBoard();
         Spell spell = (Spell)user.getHand().get(cardNumber);
+        user.getHand().remove(cardNumber);
         spell.executeAction();
     }
 
@@ -89,6 +91,7 @@ public class InGameMenuController extends Thread {
         int playerIndex = user.getCurrentGameBoard().getPlayerNumber(user);
         GameBoard gameBoard = user.getCurrentGameBoard();
         Soldier soldier = (Soldier)user.getHand().get(cardNumber);
+        user.getHand().remove(cardNumber);
         if(soldier.hasAttribute(Attribute.SPY))
             playerIndex = 1 - playerIndex;
         gameBoard.addSoldierToRow(playerIndex, rowNumber, soldier);
