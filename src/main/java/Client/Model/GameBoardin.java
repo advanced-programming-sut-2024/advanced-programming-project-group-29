@@ -20,6 +20,12 @@ public class GameBoardin {
     ArrayList<Cardin> row21;
     ArrayList<Cardin> row22;
     ArrayList<Cardin> row23;
+    Cardin specialCard11;
+    Cardin specialCard12;
+    Cardin specialCard13;
+    Cardin specialCard21;
+    Cardin specialCard22;
+    Cardin specialCard23;
     String player1Username;
     String player2Username;
     String player1Faction;
@@ -166,5 +172,33 @@ public class GameBoardin {
         for(Cardin cardin : row13){
             System.out.println(cardin.getName() + " " + cardin.getHp());
         }
+    }
+
+    public int getCurrentPlayerIndex() {
+        return currentPlayerIndex;
+    }
+
+    public Cardin getSpecialCard11() {
+        return specialCard11;
+    }
+
+    public Cardin getSpecialCard12() {
+        return specialCard12;
+    }
+
+    public Cardin getSpecialCard13() {
+        return specialCard13;
+    }
+
+    public Cardin getSpecialCard21() {
+        return specialCard21;
+    }
+
+    public Cardin getSpecialCard22() {
+        return specialCard22;
+    }
+
+    public Cardin getSpecialCard23() {
+        return specialCard23;
     }
 }

@@ -1,6 +1,7 @@
 package Server.Model;
 
 import Server.Controller.ApplicationController;
+import Server.Model.*;
 
 import java.util.ArrayList;
 
@@ -20,6 +21,12 @@ public class GameBoardin {
     ArrayList<Cardin> row21;
     ArrayList<Cardin> row22;
     ArrayList<Cardin> row23;
+    Cardin specialCard11;
+    Cardin specialCard12;
+    Cardin specialCard13;
+    Cardin specialCard21;
+    Cardin specialCard22;
+    Cardin specialCard23;
     String player1Username;
     String player2Username;
     String player1Faction;
@@ -86,6 +93,12 @@ public class GameBoardin {
                 row22.add(new Cardin(card));
             for (Card card : gameBoard.getRows()[opponentIndex][0])
                 row23.add(new Cardin(card));
+            specialCard11 = new Server.Model.Cardin(gameBoard.getSpecialCard(playerIndex, 2));
+            specialCard12 = new Server.Model.Cardin(gameBoard.getSpecialCard(playerIndex, 1));
+            specialCard13 = new Server.Model.Cardin(gameBoard.getSpecialCard(playerIndex, 0));
+            specialCard21 = new Server.Model.Cardin(gameBoard.getSpecialCard(opponentIndex, 2));
+            specialCard22 = new Server.Model.Cardin(gameBoard.getSpecialCard(opponentIndex, 1));
+            specialCard23 = new Server.Model.Cardin(gameBoard.getSpecialCard(opponentIndex, 0));
             player1Username = user1.getUsername();
             player2Username = user2.getUsername();
             player1Faction = user1.getFaction().getName();
@@ -230,5 +243,33 @@ public class GameBoardin {
 
     public boolean isInProcess() {
         return inProcess;
+    }
+
+    public int getCurrentPlayerIndex() {
+        return currentPlayerIndex;
+    }
+
+    public Cardin getSpecialCard11() {
+        return specialCard11;
+    }
+
+    public Cardin getSpecialCard12() {
+        return specialCard12;
+    }
+
+    public Cardin getSpecialCard13() {
+        return specialCard13;
+    }
+
+    public Cardin getSpecialCard21() {
+        return specialCard21;
+    }
+
+    public Cardin getSpecialCard22() {
+        return specialCard22;
+    }
+
+    public Cardin getSpecialCard23() {
+        return specialCard23;
     }
 }
