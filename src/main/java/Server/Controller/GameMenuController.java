@@ -58,6 +58,8 @@ public class GameMenuController {
             return InGameMenuController.getGameBoardin(applicationController.getCurrentUser());
         } else if (inputCommand.matches(GameMenuRegex.GET_USER_SAVED_DECK.getRegex())) {
             return getUserSavedDeck(applicationController);
+        } else if(inputCommand.matches(InGameMenuRegex.START_GAME.getRegex())){
+            InGameMenuController.startGame(applicationController.getCurrentUser());
         }
         return null;
     }

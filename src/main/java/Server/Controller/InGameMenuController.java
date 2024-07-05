@@ -35,7 +35,7 @@ public class InGameMenuController extends Thread {
         } else if((matcher = InGameMenuRegex.APPLY_CHEAT_CODE.getMatcher(inputCommand)).matches()){
             CheatMenuController.processRequest(applicationController, matcher.group("cheatCode"));
         } else if((matcher = InGameMenuRegex.START_GAME.getMatcher(inputCommand)).matches()){
-            startGame(user, sender);
+            startGame(user);
         } else if((matcher = InGameMenuRegex.GET_GAME_BOARDIN.getMatcher(inputCommand)).matches()){
             result = getGameBoardin(user);
         } else if((matcher = InGameMenuRegex.SHOW_REACTION.getMatcher(inputCommand)).matches()){
@@ -95,8 +95,7 @@ public class InGameMenuController extends Thread {
         soldier.executeAction();
     }
 
-    public static void startGame(User user, Sender sender){
-        GameBoard gameBoard = user.getCurrentGameBoard();
+    public static void startGame(User user){
         User opponent = user.getOpponent();
         user.createHand();
         opponent.createHand();

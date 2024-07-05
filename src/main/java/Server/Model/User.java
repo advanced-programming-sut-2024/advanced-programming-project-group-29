@@ -47,6 +47,7 @@ public class User {
     private final ArrayList<User> friends = new ArrayList<>();
     private final ArrayList<User> friendRequests = new ArrayList<>();
     private final HashMap<String, SavedDeck> savedDecks = new HashMap<>();
+    private boolean inProcess = false;
 
     public User(String username, String password, String nickname, String email) {
         this.username = username;
@@ -323,11 +324,13 @@ public class User {
 
 
     public static void loadUser(){
+        System.out.println("haaaaaa");
         try {
             Gson gson = new Gson();
             String text = new String(Files.readAllBytes(Paths.get("src/main/resources/JSON/allUsers.json")));
             ArrayList<User> users = gson.fromJson(text, new TypeToken<List<User>>() {
             }.getType());
+            System.out.println(users.size());
             if (users == null)
                 users = new ArrayList<>();
             for (User user : users) {
@@ -345,8 +348,10 @@ public class User {
                 }
             }
             User.setAllUsers(users);
-        } catch (IOException e) {
+        } catch (Exception e) {
+            System.out.println("hey that wasnt' completed");
             e.printStackTrace();
+            System.out.println(e.getMessage());
         }
     }
 
@@ -458,8 +463,10 @@ public class User {
     }
 
     public void createHand() { // have all cards in deck, it will remove all in hand
+        System.out.println("creating hand for " + username);
         hand.clear();
         ArrayList<Card> keepDeck = new ArrayList<>(deck);
+        System.out.println("we have deck size: " + deck.size());
         Collections.shuffle(keepDeck);
         for (int i = 0; i < Math.min(10, keepDeck.size()); i++) {
             hand.add(keepDeck.get(i));
@@ -467,6 +474,7 @@ public class User {
         for (Card card : hand) {
             deck.remove(card);
         }
+        System.out.println("and finaly hand size" + hand.size());
     }
 
     public void setAllCardsSenders(Sender sender) {
@@ -518,5 +526,13 @@ public class User {
 
     public Sender getSender() {
         return sender;
+    }
+
+    public void setInProcess(boolean inProcess) {
+        this.inProcess = inProcess;
+    }
+
+    public boolean getInProcess() {
+        return inProcess;
     }
 }
