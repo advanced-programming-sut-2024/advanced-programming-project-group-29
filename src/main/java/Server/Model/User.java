@@ -1,32 +1,12 @@
 package Server.Model;
 
 import Server.Enum.Faction;
-import Server.Model.Card;
-import Server.Enum.Faction;
-import Server.Enum.Type;
-import Server.Regex.GameMenuRegex;
-import Server.Model.Result;
-import Server.Model.User;
-import Server.Model.Soldier;
-import Server.Model.Spell;
-import Server.Model.Card;
-import Server.Model.GameBoard;
-import Server.Model.Commander;
-import Server.Model.SavedDeck;
-import Server.Model.GameHistory;
-import Server.Model.Cardin;
-import Server.Model.GameBoardin;
-import Server.Controller.ApplicationController;
-import Server.Controller.ApplicationController;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
@@ -152,6 +132,12 @@ public class User {
         this.commander = commander;
     }
 
+    public ArrayList<String> getFriendRequests() {
+        ArrayList<String> friendRequestsNames = new ArrayList<>();
+        for (User user : friendRequests) friendRequestsNames.add(user.username);
+        return friendRequestsNames;
+    }
+
     public void addCardToHand(Card card) {
         this.hand.add(card);
     }
@@ -174,6 +160,13 @@ public class User {
 
     public ArrayList<Card> getDeck() {
         return deck;
+    }
+
+    public ArrayList<String> getDeckNames() {
+        ArrayList<String> names = new ArrayList<>();
+        for (Card card : deck)
+            names.add(card.getName());
+        return names;
     }
 
     public Card getCardFromDeckWithNumber(int number) {
@@ -377,31 +370,31 @@ public class User {
     }
 
     public void saveDeck(String name) {
-        SavedDeck savedDeck = new SavedDeck(deck, commander, faction);
+        ArrayList<String> cardNames = new ArrayList<>();
+        for (Card card : deck) {
+            cardNames.add(card.getName());
+        }
+        SavedDeck savedDeck = new SavedDeck(cardNames, commander.getName(), faction.getName());
         savedDecks.put(name, savedDeck);
     }
 
     public void loadDeck(String name) {
         SavedDeck savedDeck = savedDecks.get(name);
-        deck = savedDeck.getDeck();
-        commander = savedDeck.getCommander();
-        faction = savedDeck.getFaction();
+        extractDataFromSavedDeck(savedDeck);
     }
 
-    public boolean extractDeckFromString(String deck) {
-        Gson gson = new Gson();
-        SavedDeck savedDeck = gson.fromJson(deck, SavedDeck.class);
-        if (savedDeck == null)
-            return false;
-        if (!isDeckValid(savedDeck.getDeck()))
-            return false;
-        if (!Commander.checkIfValidCard(savedDeck.getCommander()))
-            return false;
-        if (savedDeck.getFaction() != savedDeck.getCommander().getFaction())
-            return false;
-        this.deck = savedDeck.getDeck();
-        this.commander = savedDeck.getCommander();
-        this.faction = savedDeck.getFaction();
+    public boolean extractDataFromSavedDeck(SavedDeck savedDeck) {
+        this.deck = new ArrayList<>();
+        for (String cardName : savedDeck.getDeck()) {
+            if (Soldier.isSoldier(cardName))
+                this.deck.add(new Soldier(cardName, this));
+            else if (Spell.isSpell(cardName))
+                this.deck.add(new Spell(cardName, this));
+            else
+                return false;
+        }
+        this.commander = new Commander(savedDeck.getCommander(), this);
+        this.faction = Faction.getFactionFromString(savedDeck.getFaction());
         return true;
     }
 
@@ -422,7 +415,7 @@ public class User {
         deck.clear();
     }
 
-    public User getOpponent(){
+    public User getOpponent() {
         return currentGameBoard.getPlayer(1 - currentGameBoard.getPlayerNumber(this));
     }
 
@@ -433,19 +426,20 @@ public class User {
     public void acceptFriendRequest(User user) {
         friendRequests.remove(user);
         friends.add(user);
+        user.addFriend(this);
     }
 
     public void rejectFriendRequest(User user) {
         friendRequests.remove(user);
     }
 
-    public void recieveFriendRequest(User user) {
+    public void receiveFriendRequest(User user) {
         if (!friends.contains(user) && !friendRequests.contains(user))
             friendRequests.add(user);
     }
 
     public void sendFriendRequest(User user) {
-        user.recieveFriendRequest(this);
+        user.receiveFriendRequest(this);
     }
 
     public String getStatusFriendRequest(User user) {
@@ -453,33 +447,33 @@ public class User {
             return "Friend";
         if (friendRequests.contains(user))
             return "Pending";
-        return "Not a Friend Yet";
+        return "Not Sent Yet";
     }
 
-    public void createHand(){ // have all cards in deck, it will remove all in hand
+    public void createHand() { // have all cards in deck, it will remove all in hand
         hand.clear();
         ArrayList<Card> keepDeck = new ArrayList<>(deck);
         Collections.shuffle(keepDeck);
-        for(int i = 0; i < Math.min(10, keepDeck.size()); i++){
+        for (int i = 0; i < Math.min(10, keepDeck.size()); i++) {
             hand.add(keepDeck.get(i));
         }
-        for(Card card : hand){
+        for (Card card : hand) {
             deck.remove(card);
         }
     }
 
     public void setAllCardsSenders(Sender sender) {
-        for(Card card : discardPile)
+        for (Card card : discardPile)
             card.setSender(sender);
-        for(Card card : hand)
+        for (Card card : hand)
             card.setSender(sender);
-        for(Card card : deck)
+        for (Card card : deck)
             card.setSender(sender);
-        if(currentGameBoard != null)
+        if (currentGameBoard != null)
             currentGameBoard.setAllCardsForUserSender(sender, this);
     }
 
-    public String getJWT(){
+    public String getJWT() {
         return "sampleJwt";
         /*
         System.out.println("oh all hre");
@@ -505,7 +499,7 @@ public class User {
          */
     }
 
-    public boolean checkJWT(String jwt){
+    public boolean checkJWT(String jwt) {
         return true;
         /*
         try {
