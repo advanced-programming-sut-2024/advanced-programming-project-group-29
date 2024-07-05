@@ -153,7 +153,7 @@ public class InGameMenu extends Application {
 
     public InGameMenu() {
         super();
-        Client.getClient().sendCommand("menu enter " + Menu.GAME_MENU.toString());
+        Client.getClient().sendCommand("menu enter " + Menu.IN_GAME_MENU.toString());
     }
 
     @FXML
@@ -507,9 +507,9 @@ public class InGameMenu extends Application {
 
     private GameBoardin getGameBoardin(){
         GameBoardin gameBoardin = (GameBoardin) Client.getClient().sendCommand("get game board");
-        while(gameBoardin.isInProcess())
-            gameBoardin = (GameBoardin) Client.getClient().sendCommand("get game board");
-        System.out.println(gameBoardin.getPlayer1Hand().size());
+        //while(gameBoardin.isInProcess())
+        //    gameBoardin = (GameBoardin) Client.getClient().sendCommand("get game board");
+        //System.out.println(gameBoardin.getPlayer1Hand().size());
         return gameBoardin;
     }
 
