@@ -271,8 +271,8 @@ public class CardView extends Pane {
         return inGameMenu;
     }
 
-    private void setHP(int hp) {
-        if (this.card.isSoldier) ((Label) items.getChildren().get(1)).setText("" + hp);
+    public void setHP() {
+        if (this.card.isSoldier) ((Label) items.getChildren().get(1)).setText("" + card.hp);
     }
 
     private void goUp() {

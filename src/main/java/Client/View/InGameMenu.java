@@ -200,8 +200,8 @@ public class InGameMenu extends Application {
                                     int n = row[finalI - 1][finalJ - 1].size();
                                     (new FlipCardAnimation(c, (n == 0 ? (X_POSITION_ROW_LEFT + X_POSITION_ROW_RIGHT - CARD_WIDTH) / 2 : row[finalI - 1][finalJ - 1].get(n - 1).getLayoutX() + CARD_WIDTH + SPACING), Y, true, true, false)).play();
                                     int placedNumber = -1;
-                                    for(int i = 0; i < hand[0].size(); i++)
-                                        if(hand[0].get(i).equals(c))
+                                    for (int i = 0; i < hand[0].size(); i++)
+                                        if (hand[0].get(i).equals(c))
                                             placedNumber = i;
                                     hand[0].remove(c);
                                     c.setInHand(false);
@@ -230,8 +230,8 @@ public class InGameMenu extends Application {
                             if (c.isSelected()) {
                                 (new FlipCardAnimation(c, X_POSITION_SPELL, Y, true, true, false)).play();
                                 int placedNumber = -1;
-                                for(int i = 0; i < hand[0].size(); i++)
-                                    if(hand[0].get(i).equals(c))
+                                for (int i = 0; i < hand[0].size(); i++)
+                                    if (hand[0].get(i).equals(c))
                                         placedNumber = i;
                                 hand[0].remove(c);
                                 c.setInHand(false);
@@ -253,14 +253,14 @@ public class InGameMenu extends Application {
                             int n = weather.size();
                             (new FlipCardAnimation(c, (n == 0 ? (X_POSITION_WEATHER_LEFT + X_POSITION_WEATHER_RIGHT - CARD_WIDTH) / 2 : weather.get(n - 1).getLayoutX() + CARD_WIDTH + SPACING), Y_POSITION_WEATHER, true, true, false)).play();
                             int placedNumber = -1;
-                            for(int i = 0; i < hand[0].size(); i++)
-                                if(hand[0].get(i).equals(c))
+                            for (int i = 0; i < hand[0].size(); i++)
+                                if (hand[0].get(i).equals(c))
                                     placedNumber = i;
                             hand[0].remove(c);
                             c.setInHand(false);
                             weather.add(c);
                             Client.getClient().sendCommand("place weather " + placedNumber);
-                            //TODO refresh weather
+                            refreshWeather();
                             refresh();
                         }
                     }
@@ -290,8 +290,8 @@ public class InGameMenu extends Application {
                     break;
             }
         });
-        firstRefresh();
         Client.setInGameMenu(this);
+        firstRefresh();
     }
 
     @Override
@@ -305,7 +305,7 @@ public class InGameMenu extends Application {
         ApplicationRunningTimeData.setPane(pane);
     }
 
-    public void changeDecoy(int rowNumber, int cardNumber,int cardNumberDecoy) {
+    public void changeDecoy(int rowNumber, int cardNumber, int cardNumberDecoy) {
         CardView decoy = hand[0].get(cardNumber);
         CardView soldier = row[0][convertRowNumber(rowNumber)].get(cardNumberDecoy);
         double x = decoy.getLayoutX();
@@ -313,7 +313,7 @@ public class InGameMenu extends Application {
         hand[0].set(cardNumberDecoy, soldier);
         discard[0].add(decoy);
         (new FlipCardAnimation(decoy, X_POSITION_DISCARD, Y_POSITION_DISCARD_1, true, true, false)).play();
-        (new FlipCardAnimation(soldier,x,y,true,true,true)).play();
+        (new FlipCardAnimation(soldier, x, y, true, true, true)).play();
     }
 
     public void removeCardFromHandAndKillIt(int cardNumber) {
@@ -334,7 +334,7 @@ public class InGameMenu extends Application {
                 row[0][convertRowNumber(newRowNumber)].get(row[0][convertRowNumber(newRowNumber)].size() - 2).getLayoutX() + CARD_WIDTH + SPACING), Y, true, true, true)).play();
     }
 
-    public void moveSoldier(Matcher matcher){
+    public void moveSoldier(Matcher matcher) {
         try {
             int rowNumber = Integer.parseInt(matcher.group("rowNumber"));
             int cardNumber = Integer.parseInt(matcher.group("cardNumber"));
@@ -393,7 +393,7 @@ public class InGameMenu extends Application {
         discard[playerIndex].remove(cardNumber);
         hand[playerIndex].add(c);
         pain.getChildren().remove(c);
-        if (playerIndex == 0){
+        if (playerIndex == 0) {
             pain.getChildren().add(c);
         }
         (new FlipCardAnimation(c, (hand[playerIndex].size() == 1 ? (X_POSITION_HAND_LEFT + X_POSITION_HAND_RIGHT - CARD_WIDTH) / 2 : (hand[playerIndex].get(hand[playerIndex].size() - 2)).getLayoutX() + SPACING + CARD_WIDTH), Y_POSITION_HAND, true, true, true)).play();
@@ -414,6 +414,9 @@ public class InGameMenu extends Application {
             show.add(copyHandOpponent.get(1));
             show.add(copyHandOpponent.get(2));
         }
+        showImage1.setImage(null);
+        showImage2.setImage(null);
+        showImage3.setImage(null);
         for (int i = 0; i < show.size(); i++) {
             Field field = this.getClass().getDeclaredField("showImage" + (i + 1));
             field.setAccessible(true);
@@ -440,7 +443,7 @@ public class InGameMenu extends Application {
         refresh();
     }
 
-    public void changeThisCard(Matcher matcher){
+    public void changeThisCard(Matcher matcher) {
         int rowNumber = Integer.parseInt(matcher.group("rowNumber"));
         int cardNumber = Integer.parseInt(matcher.group("cardNumber"));
         Cardin cardin = (Cardin) Listener.deSerialize(matcher.group("cardinSerial"));
@@ -451,7 +454,7 @@ public class InGameMenu extends Application {
         CardView c = row[playerIndex][convertRowNumber(rowNumber)].get(cardNumber);
         row[playerIndex][convertRowNumber(rowNumber)].remove(cardNumber);
         discard[playerIndex].add(c);
-        (new BurningCardAnimation(c,X_POSITION_DISCARD,Y_POSITION_DISCARD_1)).play();
+        (new BurningCardAnimation(c, X_POSITION_DISCARD, Y_POSITION_DISCARD_1)).play();
     }
 
     public void destroySoldier(Matcher matcher) {
@@ -466,13 +469,29 @@ public class InGameMenu extends Application {
         return ostadRowNumber;
     }
 
-    public void clearWeather(){
+    public void clearWeather() {
         setWeather(false, false, false);
         weather.forEach(c -> pain.getChildren().remove(c));
         weather.clear();
     }
 
     //////////////////////// refresh
+    private void refreshWeather() {
+        boolean rain = false;
+        boolean fog = false;
+        boolean frost = false;
+        boolean isClear = false;
+        for (CardView c : weather) {
+            if (c.getCard().name.matches(".*(R|r)ain.*")) rain = true;
+            else if (c.getCard().name.matches(".*(F|f)og.*")) fog = true;
+            else if (c.getCard().name.matches(".*(F|f)rost.*")) frost = true;
+            else if (c.getCard().name.matches(".*(C|c)lear.*")) isClear = true;
+        }
+        if (isClear) setWeather(false, false, false);
+        else setWeather(rain, fog, frost);
+        //TODO clear weather?
+    }
+
     private void setWeather(boolean rain, boolean fog, boolean frost) {
         rowWeather11.setVisible(rain);
         rowWeather21.setVisible(rain);
@@ -480,7 +499,6 @@ public class InGameMenu extends Application {
         rowWeather22.setVisible(fog);
         rowWeather13.setVisible(frost);
         rowWeather23.setVisible(frost);
-        // TODO
     }
 
     private void setCrystal(ImageView crystal, boolean on) {
@@ -526,8 +544,8 @@ public class InGameMenu extends Application {
             deck[1].add(c);
         }
         for (CardView c : hand[0]) pain.getChildren().add(c);
-        for (CardView c : discard[0]) pain.getChildren().add(c);
-        for (CardView c : discard[1]) pain.getChildren().add(c);
+        for (CardView c : deck[0]) pain.getChildren().add(c);
+        for (CardView c : deck[1]) pain.getChildren().add(c);
         leader1.setImage(new javafx.scene.image.Image("/Images/Raw/" + player1Faction + "/" + player1Commander + ".jpg"));
         leader2.setImage(new javafx.scene.image.Image("/Images/Raw/" + player2Faction + "/" + player2Commander + ".jpg"));
         leaderActive1.setImage(player1HasAction ? new javafx.scene.image.Image("/Images/icons/icon_leader_active.png") : null);
@@ -621,7 +639,39 @@ public class InGameMenu extends Application {
         remainsDeck2.setText(gameBoardin.getPlayer2Deck().size() + "");
         remainsHand1.setText(gameBoardin.getPlayer1Hand().size() + "");
         remainsHand2.setText(gameBoardin.getPlayer2Hand().size() + "");
-        // TODO show hp
+
+
+        for (int k = 0; k < 2; k++) {
+            for (int j = 0; j < 2; j++) {
+                ArrayList<Cardin> b = (k == 0 ? (j == 0 ? player1Hand : player2Hand) : (j == 0 ? player1Deck : player2Deck));
+                for (int i = 0; i < b.size(); i++) {
+                    if ((k == 0 ? hand : deck)[j].get(i).getCard().isSoldier) {
+                        (k == 0 ? hand : deck)[j].get(i).getCard().setHp(b.get(i).hp);
+                        (k == 0 ? hand : deck)[j].get(i).setHP();
+                    }
+                }
+            }
+        }
+        for (int j = 0; j < 2; j++) {
+            for (int k = 0; k < 3; k++) {
+                ArrayList<Cardin> rowFlag;
+                if (j == 0) {
+                    if (k == 0) rowFlag = gameBoardin.getRow13();
+                    else if (k == 1) rowFlag = gameBoardin.getRow12();
+                    else rowFlag = gameBoardin.getRow11();
+                } else {
+                    if (k == 0) rowFlag = gameBoardin.getRow23();
+                    else if (k == 1) rowFlag = gameBoardin.getRow22();
+                    else rowFlag = gameBoardin.getRow21();
+                }
+                for (int i = 0; i < rowFlag.size(); i++) {
+                    if (row[j][k].get(i).getCard().isSoldier) {
+                        row[j][k].get(i).getCard().setHp(rowFlag.get(i).hp);
+                        row[j][k].get(i).setHP();
+                    }
+                }
+            }
+        }
     }
 
     ////////////// select Card and Yellow
@@ -770,12 +820,22 @@ public class InGameMenu extends Application {
         setImageChange(selectedImages.get(step));
     }
 
-    public void letUserChooseCard(Matcher matcher){
+    public void letUserChooseCard(Matcher matcher) {
         int choices = Integer.parseInt(matcher.group("choice"));
         int type = Integer.parseInt(matcher.group("type"));
-        ArrayList<CardView> options = new ArrayList<>();
-        // TODO: make options (0: discard pile, 1: hand, 2: deck, 3: weathers in deck)
-        selectBetweenCards(options, choices);
+        ArrayList<CardView> options;
+        if (type == 0) options = discard[0];
+        else if (type == 1) options = hand[0];
+        else if (type == 2) options = deck[0];
+        else {
+            options = new ArrayList<>();
+            deck[0].forEach(c -> {
+                if (c.getCard().name.matches("(.*(R|r)ain.*|.*(F|f)og.*|.*(F|f)rost.*|.*(C|c)lear.*|.*(S|s)torm.*)")) {
+                    options.add(c);
+                }
+            });
+        }
+        selectBetweenCards(options,choices);
     }
 
     private void setImageChange(int number) {
@@ -828,6 +888,7 @@ public class InGameMenu extends Application {
         return selectedImages;
     }
 
+    ///////////////////////reactions
     public void showReaction(String reaction) {
         // TODO: implement this, show a reaction which was added by opponent
         // string reaction is just the format that you will send
