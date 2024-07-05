@@ -35,6 +35,7 @@ public class GameBoard {
     private final GameHistory gameHistory;
     private boolean isThereAnythingPlayed = false;
     private int notPlayingTurns = 0;
+    private boolean isGameOnline = false;
 
     public GameBoard(User player1, User player2) {
         playersCrystals[0] = 2;
@@ -55,8 +56,6 @@ public class GameBoard {
         }
         for (int i = 0; i < 2; i++) {
             playersScore[i] = 0;
-            playerCardsNumber[i] = 0;
-            playersCrystals[i] = 0;
         }
         for (int i = 0; i < 2; i++) {
             playersLeaders[i] = null;
@@ -277,10 +276,18 @@ public class GameBoard {
             notPlayingTurns = 0;
         if(notPlayingTurns == 2){
             notPlayingTurns = 0;
+            if(playersScore[0] <= playersScore[1])
+                playersCrystals[0]--;
+            if(playersScore[1] <= playersScore[0])
+                playersCrystals[1]--;
             return new Result(false);
         }
         currentPlayer = 1 - currentPlayer;
         isThereAnythingPlayed = false;
         return new Result(true);
+    }
+
+    public boolean isGameOnline() {
+        return isGameOnline;
     }
 }

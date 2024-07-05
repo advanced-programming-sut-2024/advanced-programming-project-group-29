@@ -158,7 +158,7 @@ public class InGameMenu extends Application {
         mainPain.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent event) {
-                if (event.getCode() == KeyCode.NUMPAD0)
+                if (event.getCode() == KeyCode.C)
                     showCheatMenu();
             }
         });
