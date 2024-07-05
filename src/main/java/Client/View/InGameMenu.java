@@ -933,4 +933,31 @@ public class InGameMenu extends Application {
     public void showReactionToCard(String reaction, int rowNumber, int cardNumber) {
         // TODO: implement this, show a reaction which was added by opponent to a card
     }
+
+
+
+    /////////////////////passTurn
+    public void passTurn(MouseEvent mouseEvent) {
+        //TODO pass TURn
+    }
+
+    public void buttonEntered(MouseEvent mouseEvent) {
+        if (mouseEvent.getSource() instanceof Rectangle){
+            Pane paneS = (Pane) ((Rectangle) mouseEvent.getSource()).getParent();
+            int n = paneS.getChildren().indexOf((Rectangle) mouseEvent.getSource()) + 1;
+            ((Label) paneS.getChildren().get(n)).setTextFill(Paint.valueOf("e47429"));
+        } else {
+            ((Label) mouseEvent.getSource()).setTextFill(Paint.valueOf("e47429"));
+        }
+    }
+
+    public void buttonExited(MouseEvent mouseEvent) {
+        if (mouseEvent.getSource() instanceof Rectangle){
+            Pane paneS = (Pane) ((Rectangle) mouseEvent.getSource()).getParent();
+            int n = paneS.getChildren().indexOf((Rectangle) mouseEvent.getSource()) + 1;
+            ((Label) paneS.getChildren().get(n)).setTextFill(Paint.valueOf("black"));
+        } else {
+            ((Label) mouseEvent.getSource()).setTextFill(Paint.valueOf("black"));
+        }
+    }
 }

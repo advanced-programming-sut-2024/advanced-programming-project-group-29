@@ -241,6 +241,20 @@
             <Pane fx:id="rowHorn11" layoutX="472.0" layoutY="587.0" opacity="0.15" prefHeight="100.0" prefWidth="110.0" />
             <Pane fx:id="rowHorn12" layoutX="472.0" layoutY="472.0" opacity="0.15" prefHeight="100.0" prefWidth="110.0" />
             <Pane fx:id="rowHorn13" layoutX="472.0" layoutY="361.0" opacity="0.15" prefHeight="100.0" prefWidth="110.0" />
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#bfbfbf" height="43.0" layoutX="256.0" layoutY="775.0" onMouseClicked="#passTurn" onMouseEntered="#buttonEntered" onMouseExited="#buttonExited" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="95.0">
+               <effect>
+                  <Shadow height="6.17" radius="1.1025" width="0.24">
+                     <color>
+                        <Color red="0.8799999952316284" green="0.8447999954223633" blue="0.8447999954223633" opacity="0.7241379022598267" />
+                     </color>
+                  </Shadow>
+               </effect>
+            </Rectangle>
+            <Label layoutX="265.0" layoutY="786.0" onMouseClicked="#passTurn" onMouseEntered="#buttonEntered" onMouseExited="#buttonExited" text="Pass Turn">
+               <font>
+                  <Font name="System Bold" size="16.0" />
+               </font>
+            </Label>
          </children>
       </Pane>
       <Pane fx:id="changePain" disable="true" layoutX="2.0" layoutY="11.0" prefHeight="886.0" prefWidth="1592.0" visible="false">
