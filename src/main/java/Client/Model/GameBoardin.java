@@ -1,7 +1,5 @@
 package Client.Model;
 
-import Server.Controller.ApplicationController;
-
 import java.util.ArrayList;
 
 public class GameBoardin {
@@ -20,6 +18,7 @@ public class GameBoardin {
     ArrayList<Cardin> row21;
     ArrayList<Cardin> row22;
     ArrayList<Cardin> row23;
+    ArrayList<Cardin> weather;
     Cardin specialCard11;
     Cardin specialCard12;
     Cardin specialCard13;
@@ -200,5 +199,9 @@ public class GameBoardin {
 
     public Cardin getSpecialCard23() {
         return specialCard23;
+    }
+
+    public ArrayList<Cardin> getWeather() {
+        return weather;
     }
 }

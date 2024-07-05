@@ -21,6 +21,7 @@ public class GameBoardin {
     ArrayList<Cardin> row21;
     ArrayList<Cardin> row22;
     ArrayList<Cardin> row23;
+    ArrayList<Cardin> weather;
     Cardin specialCard11;
     Cardin specialCard12;
     Cardin specialCard13;
@@ -59,6 +60,7 @@ public class GameBoardin {
             player2Deck = new ArrayList<>();
             player1Discard = new ArrayList<>();
             player2Discard = new ArrayList<>();
+            weather = new ArrayList<>();
             row11 = new ArrayList<>();
             row12 = new ArrayList<>();
             row13 = new ArrayList<>();
@@ -93,6 +95,8 @@ public class GameBoardin {
                 row22.add(new Cardin(card));
             for (Card card : gameBoard.getRows()[opponentIndex][0])
                 row23.add(new Cardin(card));
+            for (Card card : gameBoard.getWeather())
+                weather.add(new Cardin(card));
             specialCard11 = null;
             specialCard12 = null;
             specialCard13 = null;
@@ -283,5 +287,9 @@ public class GameBoardin {
 
     public Cardin getSpecialCard23() {
         return specialCard23;
+    }
+
+    public ArrayList<Cardin> getWeather() {
+        return weather;
     }
 }

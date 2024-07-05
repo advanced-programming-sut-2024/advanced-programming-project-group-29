@@ -191,6 +191,7 @@ public class InGameMenu extends Application {
                                     hand[0].remove(c);
                                     c.setInHand(false);
                                     row[finalI - 1][finalJ - 1].add(c);
+                                    System.out.println((finalI - 1) + " " + (finalJ - 1));
                                     Client.getClient().sendCommand("place soldier " + placedNumber + " in row " + (3 - finalJ));
                                     (new FlipCardAnimation(c, (n == 0 ? (X_POSITION_ROW_LEFT + X_POSITION_ROW_RIGHT - CARD_WIDTH) / 2 : row[finalI - 1][finalJ - 1].get(n - 1).getLayoutX() + CARD_WIDTH + SPACING), Y, true, true, true)).play();
 
@@ -220,9 +221,14 @@ public class InGameMenu extends Application {
                                         placedNumber = i;
                                 hand[0].remove(c);
                                 c.setInHand(false);
-                                horn[0][finalJ - 1] = c;
                                 Client.getClient().sendCommand("place special " + placedNumber + " in row " + (3 - finalJ));
-                                (new FlipCardAnimation(c, X_POSITION_SPELL, Y, true, true, true)).play();
+                                if (c.getCard().name.matches("(S|s)corch")){
+                                    discard[0].add(c);
+                                    (new FlipCardAnimation(c, X_POSITION_DISCARD, Y_POSITION_DISCARD_1, true, true, true)).play();
+                                } else {
+                                    horn[0][finalJ - 1] = c;
+                                    (new FlipCardAnimation(c, X_POSITION_SPELL, Y, true, true, true)).play();
+                                }
                             }
                         }
                     }
@@ -246,7 +252,7 @@ public class InGameMenu extends Application {
                             weather.add(c);
                             Client.getClient().sendCommand("place weather " + placedNumber);
                             refreshWeather();
-                            (new FlipCardAnimation(c, (n == 0 ? (X_POSITION_WEATHER_LEFT + X_POSITION_WEATHER_RIGHT - CARD_WIDTH) / 2 : weather.get(n - 1).getLayoutX() + CARD_WIDTH + SPACING), Y_POSITION_WEATHER, true, true, true)).play();
+                            (new FlipCardAnimation(c, (n == 0 ? (X_POSITION_WEATHER_LEFT + X_POSITION_WEATHER_RIGHT - CARD_WIDTH) / 2 : weather.get(n - 1).getLayoutX() + CARD_WIDTH + SPACING), Y_POSITION_WEATHER, true, true, false)).play();
                         }
                     }
                 }
@@ -376,6 +382,22 @@ public class InGameMenu extends Application {
         (new FlipCardAnimation(c, (hand[0].size() == 1 ? (X_POSITION_HAND_LEFT + X_POSITION_HAND_RIGHT - CARD_WIDTH) / 2 : (hand[0].get(hand[0].size() - 2)).getLayoutX() + SPACING + CARD_WIDTH), Y_POSITION_HAND, true, true, true)).play();
     }
 
+    public void addCardFromDeckToRow(int cardNumber,int rowNumber) {
+        CardView c = deck[0].get(cardNumber);
+        deck[0].remove(cardNumber);
+        row[0][convertRowNumber(rowNumber)].add(c);
+        pain.getChildren().remove(c);
+        pain.getChildren().add(c);
+        (new FlipCardAnimation(c, (row[0][convertRowNumber(rowNumber)].size() == 1 ? (X_POSITION_ROW_LEFT + X_POSITION_ROW_RIGHT - CARD_WIDTH) / 2 : (row[0][convertRowNumber(rowNumber)].get(row[0][convertRowNumber(rowNumber)].size() - 2)).getLayoutX() + SPACING + CARD_WIDTH), Y_POSITION_HAND, true, true, true)).play();
+    }
+
+    public void addCardFromHandToRow(int cardNumber,int rowNumber) {
+        CardView c = hand[0].get(cardNumber);
+        hand[0].remove(cardNumber);
+        row[0][convertRowNumber(rowNumber)].add(c);
+        (new FlipCardAnimation(c, (row[0][convertRowNumber(rowNumber)].size() == 1 ? (X_POSITION_ROW_LEFT + X_POSITION_ROW_RIGHT - CARD_WIDTH) / 2 : (row[0][convertRowNumber(rowNumber)].get(row[0][convertRowNumber(rowNumber)].size() - 2)).getLayoutX() + SPACING + CARD_WIDTH), Y_POSITION_HAND, true, true, true)).play();
+    }
+
     public void addCardFromDiscardToHand(int cardNumber, int playerIndex) {
         CardView c = discard[playerIndex].get(cardNumber);
         discard[playerIndex].remove(cardNumber);
@@ -473,10 +495,16 @@ public class InGameMenu extends Application {
             if (c.getCard().name.matches(".*(R|r)ain.*")) rain = true;
             else if (c.getCard().name.matches(".*(F|f)og.*")) fog = true;
             else if (c.getCard().name.matches(".*(F|f)rost.*")) frost = true;
-            else if (c.getCard().name.matches(".*(C|c)lear.*")) isClear = true;
+            else if (c.getCard().name.matches(".*(S|s)torm.*")) {
+                fog = true;
+                rain = true;
+            } else if (c.getCard().name.matches(".*(C|c)lear.*")) isClear = true;
         }
-        if (isClear) setWeather(false, false, false);
-        else setWeather(rain, fog, frost);
+        if (isClear) {
+            setWeather(false, false, false);
+            weather.forEach(c -> pain.getChildren().remove(c));
+            weather.clear();
+        } else setWeather(rain, fog, frost);
     }
 
     private void setWeather(boolean rain, boolean fog, boolean frost) {
@@ -570,7 +598,7 @@ public class InGameMenu extends Application {
             for (int j = 0; j < 3; j++) {
                 double Y = (i == 0 ? (j == 0 ? Y_POSITION_ROW_11 : (j == 1 ? Y_POSITION_ROW_12 : Y_POSITION_ROW_13)) : (j == 0 ? Y_POSITION_ROW_21 : (j == 1 ? Y_POSITION_ROW_22 : Y_POSITION_ROW_23)));
                 setPositionVar(row[i][j], true, false, Y);
-                if (horn[i][j] != null) horn[i][j].setPos(X_POSITION_SPELL,Y);
+                if (horn[i][j] != null) horn[i][j].setPos(X_POSITION_SPELL, Y);
             }
         }
         setPositionVar(weather, true, true, Y_POSITION_WEATHER);
@@ -883,7 +911,6 @@ public class InGameMenu extends Application {
         // TODO: implement this, show a reaction which was added by opponent to a card
     }
 
-
     /////////////////////passTurn
     public void passTurn(MouseEvent mouseEvent) {
         Result result = (Result) Client.getClient().getSender().sendCommand("pass turn");
@@ -908,12 +935,16 @@ public class InGameMenu extends Application {
         ArrayList<Cardin> row21 = gameBoardin.getRow21();
         ArrayList<Cardin> row22 = gameBoardin.getRow22();
         ArrayList<Cardin> row23 = gameBoardin.getRow23();
+        ArrayList<Cardin> weather = gameBoardin.getWeather();
         Cardin horn11 = gameBoardin.getSpecialCard11();
         Cardin horn12 = gameBoardin.getSpecialCard12();
         Cardin horn13 = gameBoardin.getSpecialCard13();
         Cardin horn21 = gameBoardin.getSpecialCard21();
         Cardin horn22 = gameBoardin.getSpecialCard22();
         Cardin horn23 = gameBoardin.getSpecialCard23();
+
+
+
         for (int i = 0; i < 2; i++) for (CardView c : hand[i]) pain.getChildren().remove(c);
         for (int i = 0; i < 2; i++) for (CardView c : deck[i]) pain.getChildren().remove(c);
         for (int i = 0; i < 2; i++) for (CardView c : discard[i]) pain.getChildren().remove(c);
@@ -921,8 +952,7 @@ public class InGameMenu extends Application {
             for (int i = 0; i < 3; i++) for (CardView c : row[j][i]) pain.getChildren().remove(c);
         for (int j = 0; j < 2; j++)
             for (int i = 0; i < 3; i++) pain.getChildren().remove(horn[j][i]);
-        for (CardView c : weather) pain.getChildren().remove(c);
-
+        for (CardView c : this.weather) pain.getChildren().remove(c);
         for (int i = 0; i < 2; i++) {
             hand[i].clear();
             deck[i].clear();
@@ -931,7 +961,7 @@ public class InGameMenu extends Application {
                 row[i][j].clear();
                 horn[i][j] = null;
             }
-            weather.clear();
+            this.weather.clear();
         }
         for (int k = 0; k < 3; k++) {
             for (int i = 0; i < 2; i++) {
@@ -952,10 +982,15 @@ public class InGameMenu extends Application {
                 }
             }
         }
+        for (Cardin c : weather) {
+            CardView cardView = new CardView(c, 0, 0, this, false);
+            this.weather.add(cardView);
+            pain.getChildren().add(cardView);
+        }
         for (int k = 0; k < 2; k++) {
             for (int i = 0; i < 3; i++) {
                 Cardin cardin = (k == 0 ? (i == 0 ? horn11 : (i == 1 ? horn12 : horn13)) : (i == 0 ? horn21 : (i == 1 ? horn22 : horn23)));
-                if (cardin != null){
+                if (cardin != null) {
                     CardView cardView = new CardView(cardin, 0, 0, this, false);
                     horn[k][i] = cardView;
                     pain.getChildren().add(cardView);
