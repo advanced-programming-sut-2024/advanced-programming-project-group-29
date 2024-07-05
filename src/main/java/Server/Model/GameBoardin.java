@@ -93,12 +93,24 @@ public class GameBoardin {
                 row22.add(new Cardin(card));
             for (Card card : gameBoard.getRows()[opponentIndex][0])
                 row23.add(new Cardin(card));
-            specialCard11 = new Server.Model.Cardin(gameBoard.getSpecialCard(playerIndex, 2));
-            specialCard12 = new Server.Model.Cardin(gameBoard.getSpecialCard(playerIndex, 1));
-            specialCard13 = new Server.Model.Cardin(gameBoard.getSpecialCard(playerIndex, 0));
-            specialCard21 = new Server.Model.Cardin(gameBoard.getSpecialCard(opponentIndex, 2));
-            specialCard22 = new Server.Model.Cardin(gameBoard.getSpecialCard(opponentIndex, 1));
-            specialCard23 = new Server.Model.Cardin(gameBoard.getSpecialCard(opponentIndex, 0));
+            specialCard11 = null;
+            specialCard12 = null;
+            specialCard13 = null;
+            specialCard21 = null;
+            specialCard22 = null;
+            specialCard23 = null;
+            if(gameBoard.getSpecialCard(playerIndex, 2) != null)
+                specialCard11 = new Server.Model.Cardin(gameBoard.getSpecialCard(playerIndex, 2));
+            if(gameBoard.getSpecialCard(playerIndex, 1) != null)
+                specialCard12 = new Server.Model.Cardin(gameBoard.getSpecialCard(playerIndex, 1));
+            if(gameBoard.getSpecialCard(playerIndex, 0) != null)
+                specialCard13 = new Server.Model.Cardin(gameBoard.getSpecialCard(playerIndex, 0));
+            if(gameBoard.getSpecialCard(opponentIndex, 2) != null)
+                specialCard21 = new Server.Model.Cardin(gameBoard.getSpecialCard(opponentIndex, 2));
+            if(gameBoard.getSpecialCard(opponentIndex, 1) != null)
+                specialCard22 = new Server.Model.Cardin(gameBoard.getSpecialCard(opponentIndex, 1));
+            if(gameBoard.getSpecialCard(opponentIndex, 0) != null)
+                specialCard23 = new Server.Model.Cardin(gameBoard.getSpecialCard(opponentIndex, 0));
             player1Username = user1.getUsername();
             player2Username = user2.getUsername();
             player1Faction = user1.getFaction().getName();
