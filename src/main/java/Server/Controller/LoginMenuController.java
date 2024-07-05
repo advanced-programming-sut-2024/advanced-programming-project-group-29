@@ -48,6 +48,7 @@ public class LoginMenuController {
         applicationController.setCurrentUser(user);
         Result result = new Result(true, "User logged in successfully.");
         result.setToken(user.getJWT());
+        System.out.println("wtffff");
         return result;
     }
 

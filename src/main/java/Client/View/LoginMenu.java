@@ -89,10 +89,12 @@ public class LoginMenu extends Application {
     public void signIn(MouseEvent mouseEvent) throws Exception {
         String toRegex = "login -u " + this.username.getText() + " -p " + this.password.getText() + (stayIn.isSelected() ? " -stay-logged-in" : " ");
         Result result = (Result) client.sendCommand(toRegex);
+        System.out.println("hey hre");
         if (!result.isSuccessful()) {
             sayAlert(result.getMessage().get(0), 516, true, dark1, 297);
         } else {
             ApplicationRunningTimeData.setLoggedInUserUsername(this.username.getText());
+            System.out.println(result.getToken());
             Client.getClient().getSender().setToken(result.getToken());
             new MainMenu().start(ApplicationRunningTimeData.getStage());
         }

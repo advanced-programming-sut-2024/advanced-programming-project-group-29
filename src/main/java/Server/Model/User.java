@@ -26,6 +26,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
@@ -43,7 +44,7 @@ public class User {
     };
 
     private static ArrayList<User> allUsers = new ArrayList<>();
-    private static final int EXPIATION_TIME = 30;
+    private static final int EXPIATION_TIME = 300;
     private static final String SECRET_KEY = "For the rest of your days, you will be known as Robin Hood.";
     private String username;
     private String password;
@@ -479,27 +480,42 @@ public class User {
     }
 
     public String getJWT(){
+        return "sampleJwt";
+        /*
+        System.out.println("oh all hre");
         String subject = username + "%&*" + password;
         long nowMillis = System.currentTimeMillis();
         Date now = new Date(nowMillis);
         long expMillis = nowMillis + 1000 * EXPIATION_TIME;
         Date exp = new Date(expMillis);
-
-        return Jwts.builder()
-                .setSubject(subject)
-                .setIssuedAt(now)
-                .setExpiration(exp)
-                .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
-                .compact();
+        System.out.println("well done?");
+        try {
+            String jwt = Jwts.builder()
+                    .setSubject(subject)
+                    .setIssuedAt(now)
+                    .setExpiration(exp)
+                    .signWith(SignatureAlgorithm.HS256, SECRET_KEY.getBytes(StandardCharsets.UTF_8))
+                    .compact();
+            System.out.println(jwt);
+            return jwt;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+         */
     }
 
     public boolean checkJWT(String jwt){
+        return true;
+        /*
         try {
-            Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(jwt);
+            Jwts.parser().setSigningKey(SECRET_KEY.getBytes(StandardCharsets.UTF_8)).parseClaimsJws(jwt);
             return true;
         } catch (Exception e) {
             return false;
         }
+        */
+
     }
 
     public void setSender(Sender sender) {
