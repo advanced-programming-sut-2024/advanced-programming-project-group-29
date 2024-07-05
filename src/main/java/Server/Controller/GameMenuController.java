@@ -42,7 +42,7 @@ public class GameMenuController {
         } else if (inputCommand.matches(GameMenuRegex.DELETE_FROM_DECK.getRegex())) {
             return removeCardFromDeck(applicationController.getCurrentUser(), GameMenuRegex.DELETE_FROM_DECK.getMatcher(inputCommand));
         } else if (inputCommand.matches(GameMenuRegex.CHANGE_TURN.getRegex())) {
-            return changeTurn(applicationController.getCurrentUser());
+            return changeTurn(applicationController);
         } else if (inputCommand.matches(GameMenuRegex.GET_NUMBER_OF_SOLDIERS_IN_DECK.getRegex())) {
             return applicationController.getCurrentUser().getNumberOfSoldiersInDeck();
         } else if (inputCommand.matches(GameMenuRegex.GET_USER_COMMANDER_NAME.getRegex())) {
@@ -256,14 +256,15 @@ public class GameMenuController {
         return new Result(true, "Card removed successfully.");
     }
 
-    public static Result changeTurn(User user) {
+    public static Result changeTurn(ApplicationController applicationController) {
+        User user = applicationController.getCurrentUser();
         if (user.getNumberOfSoldiersInDeck() < 22) {
             return new Result(false, "You should have at least 22 soldiers in your deck.");
         }
         GameBoard gameBoard = user.getCurrentGameBoard();
         gameBoard.changeTurn();
-        // TODO: if game is offline change user
-        //ApplicationController.setCurrentUser(gameBoard.getPlayer(gameBoard.getCurrentPlayer()));
+        // TODO: do not run the following line if game is online
+        applicationController.setCurrentUser(user.getOpponent());
         return new Result(true, "Turn changed successfully.");
     }
 

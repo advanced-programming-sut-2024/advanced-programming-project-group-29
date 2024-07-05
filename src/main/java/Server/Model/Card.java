@@ -30,6 +30,8 @@ public abstract class Card {
     public Card(String name, User user) {
         this.name = name;
         this.user = user;
+        if(user.getCurrentGameBoard() != null)
+            this.gameBoard = user.getCurrentGameBoard();
     }
 
     private static JSONObject getCardByName(JSONArray jsonArray, String cardName) {

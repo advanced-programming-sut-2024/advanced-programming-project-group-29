@@ -92,6 +92,7 @@ public class InGameMenuController extends Thread {
     }
 
     public static void startGame(User user, Sender sender){
+
         GameBoard gameBoard = user.getCurrentGameBoard();
         User opponent = user.getOpponent();
         user.createHand();
@@ -322,7 +323,13 @@ public class InGameMenuController extends Thread {
     }
 
     public static GameBoardin getGameBoardin(User user){
-        return new GameBoardin(user);
+        System.out.println("ya your all here");
+        System.out.println(user.getUsername());
+        GameBoardin gameBoardin = new GameBoardin(user);
+        System.out.println(gameBoardin == null);
+        System.out.println(gameBoardin.getPlayer1Commander());
+        System.out.println(gameBoardin.getPlayer1XP());
+        return gameBoardin;
     }
 
     public static void moveCardFromDeckToHand(Sender sender, Card card) {

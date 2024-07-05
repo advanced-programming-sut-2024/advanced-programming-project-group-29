@@ -37,67 +37,71 @@ public class GameBoardin {
     int player1XP;
     int player2XP;
 
-    public GameBoardin(User user){
-        GameBoard gameBoard = user.getCurrentGameBoard();
-        int playerIndex = gameBoard.getPlayerNumber(user);
-        int opponentIndex = 1 - playerIndex;
-        User user1 = gameBoard.getPlayer(playerIndex);
-        User user2 = gameBoard.getPlayer(opponentIndex);
-        player1Hand = new ArrayList<>();
-        player2Hand = new ArrayList<>();
-        player1Deck = new ArrayList<>();
-        player2Deck = new ArrayList<>();
-        player1Discard = new ArrayList<>();
-        player2Discard = new ArrayList<>();
-        row11 = new ArrayList<>();
-        row12 = new ArrayList<>();
-        row13 = new ArrayList<>();
-        row21 = new ArrayList<>();
-        row22 = new ArrayList<>();
-        row23 = new ArrayList<>();
-        player1Crystal = gameBoard.getPlayerCrystals(playerIndex);
-        player2Crystal = gameBoard.getPlayerCrystals(opponentIndex);
-        for(Card card : user1.getHand())
-            player1Hand.add(new Cardin(card));
-        for(Card card : user2.getHand())
-            player2Hand.add(new Cardin(card));
-        for(Card card : user1.getDeck())
-            player1Deck.add(new Cardin(card));
-        for(Card card : user2.getDeck())
-            player2Deck.add(new Cardin(card));
-        for(Card card : user1.getDiscardPile())
-            player1Discard.add(new Cardin(card));
-        for(Card card : user2.getDiscardPile())
-            player2Discard.add(new Cardin(card));
-        for(Card card : gameBoard.getRows()[playerIndex][2])
-            row11.add(new Cardin(card));
-        for(Card card : gameBoard.getRows()[playerIndex][1])
-            row12.add(new Cardin(card));
-        for(Card card : gameBoard.getRows()[playerIndex][0])
-            row13.add(new Cardin(card));
-        for(Card card : gameBoard.getRows()[opponentIndex][2])
-            row21.add(new Cardin(card));
-        for(Card card : gameBoard.getRows()[opponentIndex][1])
-            row22.add(new Cardin(card));
-        for(Card card : gameBoard.getRows()[opponentIndex][0])
-            row23.add(new Cardin(card));
-        player1Username = user1.getUsername();
-        player2Username = user2.getUsername();
-        player1Faction = user1.getFaction().getName();
-        player2Faction = user2.getFaction().getName();
-        player1Commander = user1.getCommander().getName();
-        player2Commander = user2.getCommander().getName();
-        player1CommanderHasAction = user1.getCommander().hasAction();
-        player2CommanderHasAction = user2.getCommander().hasAction();
-        row11XP = gameBoard.getRowShownScore(playerIndex, 2);
-        row12XP = gameBoard.getRowShownScore(playerIndex, 1);
-        row13XP = gameBoard.getRowShownScore(playerIndex, 0);
-        row21XP = gameBoard.getRowShownScore(opponentIndex, 2);
-        row22XP = gameBoard.getRowShownScore(opponentIndex, 1);
-        row23XP = gameBoard.getRowShownScore(opponentIndex, 0);
-        player1XP = gameBoard.getPlayerScore(playerIndex);
-        player2XP = gameBoard.getPlayerScore(opponentIndex);
-        currentPlayerIndex = gameBoard.getCurrentPlayerIndex() + 1;
+    public GameBoardin(User user) {
+        try {
+            GameBoard gameBoard = user.getCurrentGameBoard();
+            int playerIndex = gameBoard.getPlayerNumber(user);
+            int opponentIndex = 1 - playerIndex;
+            User user1 = gameBoard.getPlayer(playerIndex);
+            User user2 = gameBoard.getPlayer(opponentIndex);
+            player1Hand = new ArrayList<>();
+            player2Hand = new ArrayList<>();
+            player1Deck = new ArrayList<>();
+            player2Deck = new ArrayList<>();
+            player1Discard = new ArrayList<>();
+            player2Discard = new ArrayList<>();
+            row11 = new ArrayList<>();
+            row12 = new ArrayList<>();
+            row13 = new ArrayList<>();
+            row21 = new ArrayList<>();
+            row22 = new ArrayList<>();
+            row23 = new ArrayList<>();
+            player1Crystal = gameBoard.getPlayerCrystals(playerIndex);
+            player2Crystal = gameBoard.getPlayerCrystals(opponentIndex);
+            for (Card card : user1.getHand())
+                player1Hand.add(new Cardin(card));
+            for (Card card : user2.getHand())
+                player2Hand.add(new Cardin(card));
+            for (Card card : user1.getDeck())
+                player1Deck.add(new Cardin(card));
+            for (Card card : user2.getDeck())
+                player2Deck.add(new Cardin(card));
+            for (Card card : user1.getDiscardPile())
+                player1Discard.add(new Cardin(card));
+            for (Card card : user2.getDiscardPile())
+                player2Discard.add(new Cardin(card));
+            for (Card card : gameBoard.getRows()[playerIndex][2])
+                row11.add(new Cardin(card));
+            for (Card card : gameBoard.getRows()[playerIndex][1])
+                row12.add(new Cardin(card));
+            for (Card card : gameBoard.getRows()[playerIndex][0])
+                row13.add(new Cardin(card));
+            for (Card card : gameBoard.getRows()[opponentIndex][2])
+                row21.add(new Cardin(card));
+            for (Card card : gameBoard.getRows()[opponentIndex][1])
+                row22.add(new Cardin(card));
+            for (Card card : gameBoard.getRows()[opponentIndex][0])
+                row23.add(new Cardin(card));
+            player1Username = user1.getUsername();
+            player2Username = user2.getUsername();
+            player1Faction = user1.getFaction().getName();
+            player2Faction = user2.getFaction().getName();
+            player1Commander = user1.getCommander().getName();
+            player2Commander = user2.getCommander().getName();
+            player1CommanderHasAction = user1.getCommander().hasAction();
+            player2CommanderHasAction = user2.getCommander().hasAction();
+            row11XP = gameBoard.getRowShownScore(playerIndex, 2);
+            row12XP = gameBoard.getRowShownScore(playerIndex, 1);
+            row13XP = gameBoard.getRowShownScore(playerIndex, 0);
+            row21XP = gameBoard.getRowShownScore(opponentIndex, 2);
+            row22XP = gameBoard.getRowShownScore(opponentIndex, 1);
+            row23XP = gameBoard.getRowShownScore(opponentIndex, 0);
+            player1XP = gameBoard.getPlayerScore(playerIndex);
+            player2XP = gameBoard.getPlayerScore(opponentIndex);
+            currentPlayerIndex = gameBoard.getCurrentPlayerIndex() + 1;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public ArrayList<Cardin> getPlayer2Deck() {

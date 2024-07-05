@@ -58,6 +58,8 @@ public class GameBoard {
         }
         for (int i = 0; i < 2; i++) {
             playersLeaders[i] = null;
+            for(Card card : players[i].getDeck())
+                card.setGameBoard(this);
         }
     }
 
@@ -215,6 +217,8 @@ public class GameBoard {
 
 
     public boolean rowHasWeather(int rowNumber) {
+        if(rowNumber < 0 || rowNumber > 2)
+            return false;
         return rowHasWeather[rowNumber];
     }
 
