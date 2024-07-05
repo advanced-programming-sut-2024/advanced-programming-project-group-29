@@ -12,6 +12,8 @@ public enum InGameMenuRegex {
     APPLY_CHEAT_CODE("apply cheat code (?<cheatCode>.+)"),
     START_GAME("start game"),
     GET_GAME_BOARDIN("get game board"),
+    SHOW_REACTION("show my reaction (?<reaction>.+) to opponent"),
+    SHOW_REACTION_TO_CARD("show my reaction (?<reaction>.+) to card (?<rowNumber>\\d) (?<cardNumber>\\d+)")
     ;
 
     String regex;

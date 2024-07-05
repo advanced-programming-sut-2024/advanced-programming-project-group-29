@@ -57,6 +57,7 @@ public class User {
     private transient ArrayList<Card> discardPile = new ArrayList<>();
     private Faction faction;
     private Commander commander;
+    private Sender sender;
     private transient GameBoard currentGameBoard;
     private final ArrayList<GameHistory> gameHistory = new ArrayList<>();
     private final ArrayList<User> friends = new ArrayList<>();
@@ -499,5 +500,13 @@ public class User {
         } catch (Exception e) {
             return false;
         }
+    }
+
+    public void setSender(Sender sender) {
+        this.sender = sender;
+    }
+
+    public Sender getSender() {
+        return sender;
     }
 }

@@ -19,6 +19,7 @@ public class InGameMenuController extends Thread {
         Matcher matcher;
         User user = applicationController.getCurrentUser();
         Sender sender = applicationController.getSender();
+        Sender opponentSender = user.getOpponent().getSender();
         if((matcher = InGameMenuRegex.PLACE_SOLDIER.getMatcher(inputCommand)).matches()){
              placeSoldier(user, sender, matcher);
         } else if((matcher = InGameMenuRegex.PLACE_DECOY.getMatcher(inputCommand)).matches()){
@@ -35,6 +36,10 @@ public class InGameMenuController extends Thread {
             startGame(user, sender);
         } else if((matcher = InGameMenuRegex.GET_GAME_BOARDIN.getMatcher(inputCommand)).matches()){
             result = getGameBoardin(user);
+        } else if((matcher = InGameMenuRegex.SHOW_REACTION.getMatcher(inputCommand)).matches()){
+            opponentSender.sendCommand(inputCommand);
+        } else if((matcher = InGameMenuRegex.SHOW_REACTION_TO_CARD.getMatcher(inputCommand)).matches()){
+            opponentSender.sendCommand(inputCommand);
         }
         return result;
     }

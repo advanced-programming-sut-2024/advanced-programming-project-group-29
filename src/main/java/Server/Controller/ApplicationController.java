@@ -77,16 +77,20 @@ public class ApplicationController extends Thread {
                 inputCommand = dataInputStream.readUTF();
                 if(currentUser != null){
                     int endOfToken = inputCommand.indexOf(":");
-                    String token = inputCommand.substring(0, endOfToken);
-                    while(!currentUser.checkJWT(inputCommand.substring(0, endOfToken))) {
-                        token = (String)sender.sendCommand("authenticate");
-                    }
+                    if(!currentUser.checkJWT(inputCommand.substring(0, endOfToken)))
+                        sender.sendCommand("authenticate");
                     inputCommand = inputCommand.substring(endOfToken + 1);
                 }
                 System.out.println("got that command " + inputCommand);
                 System.err.println(currentMenu);
                 if (inputCommand.matches(ChangeMenuRegex.CHANGE_MENU.getRegex())) {
                     currentMenu = Menu.valueOf(ChangeMenuRegex.CHANGE_MENU.getMatcher(inputCommand).group("menuName"));
+                    sender.setUser(currentUser);
+                    if(currentUser != null) {
+                        currentUser.setAllCardsSenders(sender);
+                        if(currentMenu == Menu.IN_GAME_MENU || currentMenu == Menu.GAME_MENU)
+                            currentUser.setSender(sender);
+                    }
                     dataOutputStream.writeUTF("null");
                     continue;
                 }
@@ -118,9 +122,11 @@ public class ApplicationController extends Thread {
                         object = Server.Controller.RankingMenuController.processRequest(this, inputCommand);
                         break;
                 }
+                sender.setUser(currentUser);
                 if(currentUser != null) {
                     currentUser.setAllCardsSenders(sender);
-                    sender.setUser(currentUser);
+                    if(currentMenu == Menu.IN_GAME_MENU || currentMenu == Menu.GAME_MENU)
+                        currentUser.setSender(sender);
                 }
                 if(object == null)
                     dataOutputStream.writeUTF("null");

@@ -2,6 +2,7 @@ package Client.Model;
 
 import Client.Client;
 import Client.Regex.InGameMenuOutputCommand;
+import Client.Regex.InGameMenuRegex;
 import Client.Regex.LoginMenuRegex;
 import Client.View.InGameMenu;
 
@@ -64,17 +65,25 @@ public class Listener extends Thread{
                         inGameMenu.addCardFromDiscardToHand(Integer.parseInt(matcher.group("cardNumber")), 1);
                     else if ((matcher = InGameMenuOutputCommand.SEE_THREE_CARD.getMatcher(input)).matches())
                         inGameMenu.showThreeCardOfOpponent();
-                    else if((matcher = LoginMenuRegex.SET_TOKEN.getMatcher(input)).matches())
+                    else if ((matcher = LoginMenuRegex.SET_TOKEN.getMatcher(input)).matches())
                         Client.getClient().getSender().setToken(matcher.group("token"));
-                    //else if((matcher = LoginMenuRegex.AUTHENTICATE.getMatcher(input)).matches())
-                        // TODO: pop up an authentication window, asking for username and password
+                    else if((matcher = LoginMenuRegex.AUTHENTICATE.getMatcher(input)).matches()){
+                    // TODO: pop up an authentication window, asking for username and password, check it, when it was ok call setOutputStreamBuffer("null")
+                        waitForAnswer = true;
+                    } else if((matcher = InGameMenuRegex.SHOW_REACTION.getMatcher(input)).matches()){
+                        inGameMenu.showReaction(matcher.group("reaction"));
+                    } else if((matcher = InGameMenuRegex.SHOW_REACTION_TO_CARD.getMatcher(input)).matches()){
+                        inGameMenu.showReactionToCard(matcher.group("reaction"), Integer.parseInt(matcher.group("rowNumber")),
+                                Integer.parseInt(matcher.group("cardNumber")));
+                    }
 
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
 
-                if (!waitForAnswer)
-                    continue;
+                if (!waitForAnswer) {
+                    dataOutputStream.writeUTF("null");
+                }
                 while (outputBuffer == null) {
                     continue;
                 }

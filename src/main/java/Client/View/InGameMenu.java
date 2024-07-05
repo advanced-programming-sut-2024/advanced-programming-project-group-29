@@ -828,4 +828,12 @@ public class InGameMenu extends Application {
         return selectedImages;
     }
 
+    public void showReaction(String reaction) {
+        // TODO: implement this, show a reaction which was added by opponent
+        // string reaction is just the format that you will send
+    }
+
+    public void showReactionToCard(String reaction, int rowNumber, int cardNumber) {
+        // TODO: implement this, show a reaction which was added by opponent to a card
+    }
 }
