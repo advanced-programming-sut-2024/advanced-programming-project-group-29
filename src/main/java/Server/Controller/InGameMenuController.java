@@ -102,6 +102,7 @@ public class InGameMenuController extends Thread {
             if (soldier.hasAttribute(Attribute.SPY))
                 playerIndex = 1 - playerIndex;
             gameBoard.addSoldierToRow(playerIndex, rowNumber, soldier);
+            gameBoard.setPlayerScore(playerIndex, gameBoard.getPlayerScore(playerIndex) + soldier.getShownHp());
             soldier.executeAction();
         } catch (Exception e) {
             e.printStackTrace();

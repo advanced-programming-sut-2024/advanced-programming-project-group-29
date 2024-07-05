@@ -99,8 +99,11 @@ public class Cardin {
         assert card != null;
         String cardName = card.getString("name");
         Type type = Type.getTypeFromString(card.getString("type"));
+        Attribute attribute = null;
+        if(card.has("ability"))
+            attribute = Attribute.getAttributeFromString(card.getString("ability"));
         ArrayList<Space> spaces = new ArrayList<>();
-        boolean spy = cardName.matches("(S|s)py");
+        boolean spy = attribute != null && attribute.equals(Attribute.SPY);
         switch (type) {
             case CLOSE_COMBAT:
                 spaces.add(spy ? Space.OPPONENT_CLOSE_COMBAT : Space.CLOSE_COMBAT);
