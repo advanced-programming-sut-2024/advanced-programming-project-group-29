@@ -15,37 +15,42 @@ public class InGameMenuController extends Thread {
     private final User[] users = new User[2];
 
     public static Object processRequest(ApplicationController applicationController, String inputCommand) {
-        Object result = null;
-        Matcher matcher;
-        User user = applicationController.getCurrentUser();
-        Sender sender = applicationController.getSender();
-        Sender opponentSender = user.getOpponent().getSender();
-        user.setInProcess(true);
-        user.getOpponent().setInProcess(true);
-        if((matcher = InGameMenuRegex.PLACE_SOLDIER.getMatcher(inputCommand)).matches()){
-             placeSoldier(user, sender, matcher);
-        } else if((matcher = InGameMenuRegex.PLACE_DECOY.getMatcher(inputCommand)).matches()){
-            placeDecoy(user, matcher);
-        } else if((matcher = InGameMenuRegex.PLACE_WEATHER.getMatcher(inputCommand)).matches()){
-            placeWeather(user, sender, matcher);
-        } else if((matcher = InGameMenuRegex.PLACE_SPECIAL.getMatcher(inputCommand)).matches()){
-            placeSpecial(user, sender, matcher);
-        } else if((matcher = InGameMenuRegex.COMMANDER_POWER_PLAY.getMatcher(inputCommand)).matches()){
-            commanderPowerPlay(user);
-        } else if((matcher = InGameMenuRegex.APPLY_CHEAT_CODE.getMatcher(inputCommand)).matches()){
-            CheatMenuController.processRequest(applicationController, matcher.group("cheatCode"));
-        } else if((matcher = InGameMenuRegex.START_GAME.getMatcher(inputCommand)).matches()){
-            startGame(user);
-        } else if((matcher = InGameMenuRegex.GET_GAME_BOARDIN.getMatcher(inputCommand)).matches()){
-            result = getGameBoardin(user);
-        } else if((matcher = InGameMenuRegex.SHOW_REACTION.getMatcher(inputCommand)).matches()){
-            opponentSender.sendCommand(inputCommand);
-        } else if((matcher = InGameMenuRegex.SHOW_REACTION_TO_CARD.getMatcher(inputCommand)).matches()){
-            opponentSender.sendCommand(inputCommand);
+        try {
+            Object result = null;
+            Matcher matcher;
+            User user = applicationController.getCurrentUser();
+            Sender sender = applicationController.getSender();
+            Sender opponentSender = user.getOpponent().getSender();
+            user.setInProcess(true);
+            user.getOpponent().setInProcess(true);
+            if ((matcher = InGameMenuRegex.PLACE_SOLDIER.getMatcher(inputCommand)).matches()) {
+                placeSoldier(user, sender, matcher);
+            } else if ((matcher = InGameMenuRegex.PLACE_DECOY.getMatcher(inputCommand)).matches()) {
+                placeDecoy(user, matcher);
+            } else if ((matcher = InGameMenuRegex.PLACE_WEATHER.getMatcher(inputCommand)).matches()) {
+                placeWeather(user, sender, matcher);
+            } else if ((matcher = InGameMenuRegex.PLACE_SPECIAL.getMatcher(inputCommand)).matches()) {
+                placeSpecial(user, sender, matcher);
+            } else if ((matcher = InGameMenuRegex.COMMANDER_POWER_PLAY.getMatcher(inputCommand)).matches()) {
+                commanderPowerPlay(user);
+            } else if ((matcher = InGameMenuRegex.APPLY_CHEAT_CODE.getMatcher(inputCommand)).matches()) {
+                CheatMenuController.processRequest(applicationController, matcher.group("cheatCode"));
+            } else if ((matcher = InGameMenuRegex.START_GAME.getMatcher(inputCommand)).matches()) {
+                startGame(user);
+            } else if ((matcher = InGameMenuRegex.GET_GAME_BOARDIN.getMatcher(inputCommand)).matches()) {
+                result = getGameBoardin(user);
+            } else if ((matcher = InGameMenuRegex.SHOW_REACTION.getMatcher(inputCommand)).matches()) {
+                opponentSender.sendCommand(inputCommand);
+            } else if ((matcher = InGameMenuRegex.SHOW_REACTION_TO_CARD.getMatcher(inputCommand)).matches()) {
+                opponentSender.sendCommand(inputCommand);
+            }
+            user.setInProcess(false);
+            user.getOpponent().setInProcess(false);
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
         }
-        user.setInProcess(false);
-        user.getOpponent().setInProcess(false);
-        return result;
     }
 
     private static void commanderPowerPlay(User user) {
@@ -70,32 +75,37 @@ public class InGameMenuController extends Thread {
     }
 
     private static void placeWeather(User user, Sender sender, Matcher matcher) {
-        int cardNumber = Integer.parseInt(matcher.group("cardNumber"));
-        String rowNumberString = matcher.group("rowNumber");
-        int rowNumber = -1;
-        if(rowNumberString != null)
-            rowNumber = Integer.parseInt(rowNumberString);
-        int playerIndex = user.getCurrentGameBoard().getPlayerNumber(user);
-        GameBoard gameBoard = user.getCurrentGameBoard();
-        Spell spell = (Spell)user.getHand().get(cardNumber);
-        user.getHand().remove(cardNumber);
-        spell.executeAction();
+        try {
+            int cardNumber = Integer.parseInt(matcher.group("cardNumber"));
+            int playerIndex = user.getCurrentGameBoard().getPlayerNumber(user);
+            GameBoard gameBoard = user.getCurrentGameBoard();
+            Spell spell = (Spell) user.getHand().get(cardNumber);
+            user.getHand().remove(cardNumber);
+            System.out.println("all right here in place weather " + spell.getName());
+            spell.executeAction();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private static void placeSoldier(User user, Sender sender, Matcher matcher) {
-        int cardNumber = Integer.parseInt(matcher.group("cardNumber"));
-        String rowNumberString = matcher.group("rowNumber");
-        int rowNumber = -1;
-        if(rowNumberString != null)
-            rowNumber = Integer.parseInt(rowNumberString);
-        int playerIndex = user.getCurrentGameBoard().getPlayerNumber(user);
-        GameBoard gameBoard = user.getCurrentGameBoard();
-        Soldier soldier = (Soldier)user.getHand().get(cardNumber);
-        user.getHand().remove(cardNumber);
-        if(soldier.hasAttribute(Attribute.SPY))
-            playerIndex = 1 - playerIndex;
-        gameBoard.addSoldierToRow(playerIndex, rowNumber, soldier);
-        soldier.executeAction();
+        try {
+            int cardNumber = Integer.parseInt(matcher.group("cardNumber"));
+            String rowNumberString = matcher.group("rowNumber");
+            int rowNumber = -1;
+            if (rowNumberString != null)
+                rowNumber = Integer.parseInt(rowNumberString);
+            int playerIndex = user.getCurrentGameBoard().getPlayerNumber(user);
+            GameBoard gameBoard = user.getCurrentGameBoard();
+            Soldier soldier = (Soldier) user.getHand().get(cardNumber);
+            user.getHand().remove(cardNumber);
+            if (soldier.hasAttribute(Attribute.SPY))
+                playerIndex = 1 - playerIndex;
+            gameBoard.addSoldierToRow(playerIndex, rowNumber, soldier);
+            soldier.executeAction();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public static void startGame(User user){
@@ -200,7 +210,6 @@ public class InGameMenuController extends Thread {
 
     public static void changeHpForSoldier(GameBoard gameBoard, Soldier soldier, int hp){
         int playerIndex = gameBoard.getPlayerNumber(soldier.getUser());
-        int rowNumber = Soldier.getPlacedRowNumber(soldier, gameBoard);
         int previousHp = soldier.getShownHp();
         soldier.setHp(hp);
         gameBoard.setPlayerScore(playerIndex, gameBoard.getPlayerScore(playerIndex) - previousHp + soldier.getShownHp());

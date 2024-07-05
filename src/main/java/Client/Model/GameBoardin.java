@@ -161,4 +161,10 @@ public class GameBoardin {
     public boolean isInProcess() {
         return inProcess;
     }
+
+    public void showAllCardAndHp(){
+        for(Cardin cardin : row13){
+            System.out.println(cardin.getName() + " " + cardin.getHp());
+        }
+    }
 }

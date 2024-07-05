@@ -189,7 +189,7 @@ public class GameBoard {
                     continue;
                 }
                 for (Soldier soldier : rows[i][j]) {
-                    playersScore[i] += soldier.getHp();
+                    playersScore[i] += soldier.getShownHp();
                 }
             }
         }

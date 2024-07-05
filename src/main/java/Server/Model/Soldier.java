@@ -124,6 +124,8 @@ public class Soldier extends Card {
     }
 
     public void executeAction() {
+        if(attribute == null)
+            return;
         switch (attribute) {
             case COMMANDERS_HORN -> executeActionForCommandersHorn(this);
             case MORAL_BOOST -> executeActionForMoralBoost(this);

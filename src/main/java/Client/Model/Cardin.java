@@ -53,6 +53,14 @@ public class Cardin {
         return faction;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public int getHp() {
+        return hp;
+    }
+
     private static JSONObject getCardByName(JSONArray jsonArray, String cardName) {
         for (int i = 0; i < jsonArray.length(); i++) {
             JSONObject card = jsonArray.getJSONObject(i);

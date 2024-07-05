@@ -672,6 +672,7 @@ public class InGameMenu extends Application {
                     else if (k == 1) rowFlag = gameBoardin.getRow22();
                     else rowFlag = gameBoardin.getRow21();
                 }
+                gameBoardin.showAllCardAndHp();
                 for (int i = 0; i < rowFlag.size(); i++) {
                     if (row[j][k].get(i).getCard().isSoldier) {
                         row[j][k].get(i).getCard().setHp(rowFlag.get(i).hp);
