@@ -1,5 +1,6 @@
 package Client.Model;
 
+import Server.Controller.ApplicationController;
 
 import java.util.ArrayList;
 
@@ -35,6 +36,7 @@ public class GameBoardin {
     int row23XP;
     int player1XP;
     int player2XP;
+    boolean inProcess;
 
     public ArrayList<Cardin> getPlayer2Deck() {
         return player2Deck;
@@ -154,5 +156,9 @@ public class GameBoardin {
 
     public ArrayList<Cardin> getRow23() {
         return row23;
+    }
+
+    public boolean isInProcess() {
+        return inProcess;
     }
 }

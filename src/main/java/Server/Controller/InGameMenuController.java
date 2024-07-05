@@ -20,6 +20,8 @@ public class InGameMenuController extends Thread {
         User user = applicationController.getCurrentUser();
         Sender sender = applicationController.getSender();
         Sender opponentSender = user.getOpponent().getSender();
+        user.setInProcess(true);
+        user.getOpponent().setInProcess(true);
         if((matcher = InGameMenuRegex.PLACE_SOLDIER.getMatcher(inputCommand)).matches()){
              placeSoldier(user, sender, matcher);
         } else if((matcher = InGameMenuRegex.PLACE_DECOY.getMatcher(inputCommand)).matches()){
@@ -41,6 +43,8 @@ public class InGameMenuController extends Thread {
         } else if((matcher = InGameMenuRegex.SHOW_REACTION_TO_CARD.getMatcher(inputCommand)).matches()){
             opponentSender.sendCommand(inputCommand);
         }
+        user.setInProcess(false);
+        user.getOpponent().setInProcess(false);
         return result;
     }
 
@@ -92,7 +96,6 @@ public class InGameMenuController extends Thread {
     }
 
     public static void startGame(User user, Sender sender){
-
         GameBoard gameBoard = user.getCurrentGameBoard();
         User opponent = user.getOpponent();
         user.createHand();

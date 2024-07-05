@@ -36,6 +36,7 @@ public class GameBoardin {
     int row23XP;
     int player1XP;
     int player2XP;
+    boolean inProcess;
 
     public GameBoardin(User user) {
         try {
@@ -44,6 +45,7 @@ public class GameBoardin {
             int opponentIndex = 1 - playerIndex;
             User user1 = gameBoard.getPlayer(playerIndex);
             User user2 = gameBoard.getPlayer(opponentIndex);
+            inProcess = user1.getInProcess() && user2.getInProcess();
             player1Hand = new ArrayList<>();
             player2Hand = new ArrayList<>();
             player1Deck = new ArrayList<>();
@@ -222,5 +224,9 @@ public class GameBoardin {
 
     public ArrayList<Cardin> getRow23() {
         return row23;
+    }
+
+    public boolean isInProcess() {
+        return inProcess;
     }
 }
