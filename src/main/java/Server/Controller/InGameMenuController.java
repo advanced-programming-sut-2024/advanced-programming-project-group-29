@@ -317,6 +317,7 @@ public class InGameMenuController extends Thread {
         int playerIndex = user.getCurrentGameBoard().getPlayerNumber(user);
         GameBoard gameBoard = user.getCurrentGameBoard();
         Soldier soldier = gameBoard.getRows()[playerIndex][rowNumber].get(cardNumber);
+        gameBoard.getRows()[playerIndex][rowNumber].remove(cardNumber);
         Spell decoy = (Spell) user.getHand().get(thisCardNumber);
         user.getHand().set(thisCardNumber, soldier);
         user.getDiscardPile().add(decoy);
