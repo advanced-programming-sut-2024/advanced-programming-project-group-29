@@ -40,7 +40,8 @@ public class RankingMenu extends Application {
         ArrayList<String> ranks = (ArrayList<String>) client.sendCommand(RankingMenuRegex.GET_RANKING.getRegex());
         ArrayList<ArrayList<String>> result = new ArrayList<>();
         for (String line : ranks) {
-            result.add((ArrayList<String>) Arrays.asList(line.split("\t")));
+            ArrayList<String> splitLine = new ArrayList<>(Arrays.asList(line.split("\t")));
+            result.add(splitLine);
         }
         ArrayList<String> names = new ArrayList<>() {{
             add("Rank");
@@ -88,10 +89,14 @@ public class RankingMenu extends Application {
         stage.setResizable(false);
         stage.centerOnScreen();
         Pane pane = FXMLLoader.load(Objects.requireNonNull(RegisterMenu.class.getResource("/FXML/RankingMenu.fxml")));
-        Scene scene = new Scene(pane);
-        stage.setScene(scene);
-        stage.show();
-        ApplicationRunningTimeData.setPane(pane);
+        try {
+            Scene scene = new Scene(pane);
+            stage.setScene(scene);
+            stage.show();
+            ApplicationRunningTimeData.setPane(pane);
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
     }
 
     public void back(MouseEvent mouseEvent) throws Exception {

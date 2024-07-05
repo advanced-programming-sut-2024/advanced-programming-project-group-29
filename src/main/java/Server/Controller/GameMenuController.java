@@ -1,5 +1,6 @@
 package Server.Controller;
 
+import Client.Model.Listener;
 import Server.Enum.Faction;
 import Server.Enum.Type;
 import Server.Regex.GameMenuRegex;
@@ -11,11 +12,7 @@ import Server.Model.Commander;
 import Server.Model.SavedDeck;
 import Server.Regex.InGameMenuRegex;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Objects;
 import java.util.regex.Matcher;
 
 public class GameMenuController {
@@ -55,10 +52,12 @@ public class GameMenuController {
             return getAllowedNumberByCardName(GameMenuRegex.GET_ALLOWED_NUMBER_BY_CARD_NAME.getMatcher(inputCommand));
         } else if (inputCommand.matches(GameMenuRegex.GET_CARDS_IN_DECK_NAMES.getRegex())) {
             return getDeckCardsNames(applicationController.getCurrentUser());
-        } else if(inputCommand.matches(GameMenuRegex.GET_USER_FACTION_NAME.getRegex())){
+        } else if (inputCommand.matches(GameMenuRegex.GET_USER_FACTION_NAME.getRegex())) {
             return applicationController.getCurrentUser().getFaction().getName();
-        } else if(inputCommand.matches(InGameMenuRegex.GET_GAME_BOARDIN.getRegex())){
+        } else if (inputCommand.matches(InGameMenuRegex.GET_GAME_BOARDIN.getRegex())) {
             return InGameMenuController.getGameBoardin(applicationController.getCurrentUser());
+        } else if (inputCommand.matches(GameMenuRegex.GET_USER_SAVED_DECK.getRegex())) {
+            return getUserSavedDeck(applicationController);
         }
         return null;
     }
@@ -167,21 +166,7 @@ public class GameMenuController {
     }
 
     public static Result saveDeck(User user, Matcher matcher) {
-        String type = matcher.group("type");
         boolean overwrite = matcher.group("overwrite") != null;
-        if (type.equals("-f")) {
-            SavedDeck savedDeck = new SavedDeck(user.getDeck(), user.getCommander(), user.getFaction());
-            Path path = Paths.get(matcher.group("name"));
-            if (Files.exists(path) && !overwrite) {
-                return new Result(false, "File already exists. Use -o to overwrite.");
-            }
-            try {
-                Files.write(path, savedDeck.toString().getBytes());
-                return new Result(true, "Deck saved successfully.");
-            } catch (Exception e) {
-                return new Result(false, "Error saving deck.");
-            }
-        }
         String name = matcher.group("name");
         if (user.getDeckByName(name) != null && !overwrite) {
             return new Result(false, "Deck with this name already exists. Use -o to overwrite.");
@@ -193,15 +178,10 @@ public class GameMenuController {
     public static Result loadDeck(User user, Matcher matcher) {
         String type = matcher.group("type");
         if (type.equals("-f")) {
-            Path path = Paths.get(matcher.group("name"));
-            if (!Files.exists(path)) {
-                return new Result(false, "File doesn't exist.");
-            }
             try {
-                String deck = Files.readString(path);
-                if (user.extractDeckFromString(deck)) {
+                SavedDeck savedDeck = (SavedDeck) Listener.deSerialize(matcher.group("name"));
+                if (user.extractDataFromSavedDeck(savedDeck))
                     return new Result(true, "Deck loaded successfully.");
-                }
                 return new Result(false, "Error loading deck.");
             } catch (Exception e) {
                 return new Result(false, "Error loading deck.");
@@ -300,5 +280,10 @@ public class GameMenuController {
             cardNames.add(card.getName());
         }
         return cardNames;
+    }
+
+    private static SavedDeck getUserSavedDeck(ApplicationController applicationController) {
+        User user = applicationController.getCurrentUser();
+        return new SavedDeck(user.getDeckNames(), user.getCommander().getName(), user.getFaction().getName());
     }
 }

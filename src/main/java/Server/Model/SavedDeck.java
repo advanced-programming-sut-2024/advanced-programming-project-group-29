@@ -1,29 +1,31 @@
 package Server.Model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import Server.Enum.Faction;
 
-public class SavedDeck {
-    private final ArrayList<Card> deck;
-    private final Commander commander;
-    private final Faction faction;
+public class SavedDeck implements Serializable {
+    private static final long serialVersionUID = 1L;
+    private final ArrayList<String> deck;
+    private final String commander;
+    private final String faction;
 
-    public SavedDeck(ArrayList<Card> deck, Commander commander, Faction faction) {
+    public SavedDeck(ArrayList<String> deck, String commander, String faction) {
         this.deck = deck;
         this.commander = commander;
         this.faction = faction;
     }
 
-    public ArrayList<Card> getDeck() {
+    public ArrayList<String> getDeck() {
         return deck;
     }
 
-    public Commander getCommander() {
+    public String getCommander() {
         return commander;
     }
 
-    public Faction getFaction() {
+    public String getFaction() {
         return faction;
     }
 }

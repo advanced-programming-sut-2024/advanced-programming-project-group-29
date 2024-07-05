@@ -7,10 +7,9 @@ import Server.Regex.RankingMenuRegex;
 import java.util.ArrayList;
 
 public class RankingMenuController {
-    public static Result processRequest(ApplicationController applicationController, String inputCommand) {
+    public static Object processRequest(ApplicationController applicationController, String inputCommand) {
         if (inputCommand.matches(RankingMenuRegex.GET_RANKING.getRegex())) {
-            ArrayList<String> ranking = getRanking();
-            return new Result(true, ranking);
+            return getRanking();
         }
         return (new Result(false, "invalid command"));
     }

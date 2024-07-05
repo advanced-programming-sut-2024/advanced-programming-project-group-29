@@ -2,9 +2,7 @@ package Client.View;
 
 import Client.Client;
 import Client.Enum.Menu;
-import Client.Model.ApplicationRunningTimeData;
-import Client.Model.Image;
-import Client.Model.Result;
+import Client.Model.*;
 import Client.Regex.GameMenuRegex;
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
@@ -261,21 +259,22 @@ public class GameMenu extends Application {
     }
 
     public void saveToPath(MouseEvent mouseEvent) {
-        String toRegex = "save deck -f ";
         FileChooser filechooser = new FileChooser();
         filechooser.setTitle("Select path");
         File file = filechooser.showSaveDialog(ApplicationRunningTimeData.getStage());
+        boolean successful = true;
         if (file != null) {
             try {
-                toRegex += file.getPath() + (overwrite.isSelected() ? " -o" : "");
+                SavedDeck savedDeck = (SavedDeck) client.sendCommand(GameMenuRegex.GET_USER_SAVED_DECK.getRegex());
+                LocalDeckSaver.saveDeck(savedDeck, file.getPath(), overwrite.isSelected());
             } catch (Exception ignored) {
+                successful = false;
             }
-        }
-        Result result = (Result) client.sendCommand(toRegex);
-        if (result.isSuccessful()) {
+        } else successful = false;
+        if (successful) {
             cancel(null);
         } else {
-            sayAlert(result.getMessage().getFirst(), true, darkbackSave);
+            sayAlert("Error While Saving!", true, darkbackSave);
         }
     }
 
@@ -304,11 +303,21 @@ public class GameMenu extends Application {
         FileChooser filechooser = new FileChooser();
         filechooser.setTitle("Select File");
         File file = filechooser.showOpenDialog(ApplicationRunningTimeData.getStage());
+        SavedDeck savedDeck;
+        boolean success = true;
         if (file != null) {
             try {
-                toRegex += file.getPath();
+                savedDeck = LocalDeckSaver.loadDeck(file.getPath());
+                toRegex += Sender.getSendableObject(savedDeck);
             } catch (Exception ignored) {
+                success = false;
             }
+        } else {
+            success = false;
+        }
+        if (!success) {
+            sayAlert("Error Loading Deck!", true, darkbackLoad);
+            return;
         }
         Result result = (Result) client.sendCommand(toRegex);
         if (result.isSuccessful()) {
