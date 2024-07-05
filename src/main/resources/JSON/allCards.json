@@ -236,7 +236,7 @@
       "name": "Dwarven Skirmisher",
       "power": 3,
       "numberOfCards": 3,
-      "type": "Close Comabt Unit",
+      "type": "Close Combat Unit",
       "ability": "Muster",
       "description": "-"
     },

@@ -25,7 +25,8 @@ public class RankingMenuController {
             User user = User.getUserByUsername(users.get(i));
             if (user.getNumberOfWins() != currentWins)
                 currentRank = i + 1;
-            result.add(currentRank + "\t" + user.getUsername() + "\t" + user.getNumberOfWins());
+            result.add((ApplicationController.checkIfUserIsOnline(user.getUsername()) ? "online" : "offline") +
+                    "\t" + currentRank + "\t" + user.getUsername() + "\t" + user.getNumberOfWins());
         }
         return result;
     }

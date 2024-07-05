@@ -23,7 +23,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 
 public class ApplicationController extends Thread {
-
+    private static final ArrayList<ApplicationController> allApplicationControllers = new ArrayList<>();
     private static String IP = "127.0.0.1";
     private static int PORT = 4000;
 
@@ -55,6 +55,15 @@ public class ApplicationController extends Thread {
     public ApplicationController(Socket socket) {
         currentUser = null;
         this.listenerSocket = socket;
+        allApplicationControllers.add(this);
+    }
+
+    public static boolean checkIfUserIsOnline(String username){
+        for(ApplicationController applicationController : allApplicationControllers){
+            if(applicationController.getCurrentUser() != null && applicationController.getCurrentUser().getUsername().equals(username))
+                return true;
+        }
+        return false;
     }
 
     public static String getSendableObject(Object object) {
