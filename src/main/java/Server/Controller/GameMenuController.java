@@ -3,13 +3,8 @@ package Server.Controller;
 import Client.Model.Listener;
 import Server.Enum.Faction;
 import Server.Enum.Type;
-import Server.Regex.GameMenuRegex;
-import Server.Model.Result;
-import Server.Model.User;
-import Server.Model.Soldier;
 import Server.Model.*;
-import Server.Model.Commander;
-import Server.Model.SavedDeck;
+import Server.Regex.GameMenuRegex;
 import Server.Regex.InGameMenuRegex;
 
 import java.util.ArrayList;
@@ -58,10 +53,21 @@ public class GameMenuController {
             return InGameMenuController.getGameBoardin(applicationController.getCurrentUser());
         } else if (inputCommand.matches(GameMenuRegex.GET_USER_SAVED_DECK.getRegex())) {
             return getUserSavedDeck(applicationController);
-        } else if(inputCommand.matches(InGameMenuRegex.START_GAME.getRegex())){
+        } else if (inputCommand.matches(InGameMenuRegex.START_GAME.getRegex())) {
             InGameMenuController.startGame(applicationController.getCurrentUser());
+        } else if (inputCommand.matches(GameMenuRegex.INITIATE_DECK.getRegex())) {
+            return initiateDeck(applicationController.getCurrentUser());
         }
         return null;
+    }
+
+    private static ArrayList<String> initiateDeck(User currentUser) {
+        ArrayList<String> deckNames = currentUser.getDeckNames();
+        ArrayList<Card> deck = currentUser.getDeck();
+        while (!deck.isEmpty()) {
+            deck.removeFirst();
+        }
+        return deckNames;
     }
 
     public static Result createGame(User user1, Matcher matcher) {
@@ -103,7 +109,7 @@ public class GameMenuController {
             return new Result(false, "Invalid faction name.");
         }
         user.setFaction(faction);
-        user.setCommander(new Commander(faction.getCommanders().getFirst(),user));
+        user.setCommander(new Commander(faction.getCommanders().getFirst(), user));
         user.resetDeck();
         return new Result(true, "Faction selected successfully.");
     }
@@ -271,7 +277,7 @@ public class GameMenuController {
         return new Result(true, "Turn changed successfully.");
     }
 
-    public static Integer getAllowedNumberByCardName (Matcher matcher) {
+    public static Integer getAllowedNumberByCardName(Matcher matcher) {
         String name = matcher.group("cardName");
         System.out.println("check it out " + name);
         return Card.getAllowedNumberByCardName(name);

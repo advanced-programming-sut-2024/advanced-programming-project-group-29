@@ -3,8 +3,6 @@ package Server.Model;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-import Server.Enum.Faction;
-
 public class SavedDeck implements Serializable {
     private static final long serialVersionUID = 1L;
     private final ArrayList<String> deck;
@@ -28,7 +26,6 @@ public class SavedDeck implements Serializable {
         stringBuilder.append(savedDeck.getCommander());
         stringBuilder.append("-");
         stringBuilder.append(savedDeck.getFaction());
-        System.err.println("Im in Saved deck     :       " + stringBuilder);
         return stringBuilder.toString();
     }
 
