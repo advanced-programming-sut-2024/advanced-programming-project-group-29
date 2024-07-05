@@ -59,40 +59,12 @@
             <Pane fx:id="row23" layoutX="589.0" layoutY="237.0" opacity="0.15" prefHeight="100.0" prefWidth="675.0" />
             <Pane fx:id="row22" layoutX="589.0" layoutY="124.0" opacity="0.15" prefHeight="100.0" prefWidth="675.0" />
             <Pane fx:id="row21" layoutX="589.0" layoutY="14.0" opacity="0.15" prefHeight="100.0" prefWidth="675.0" />
-            <ImageView fitHeight="100.0" fitWidth="70.0" layoutX="1446.0" layoutY="698.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../Images/icons/deck_back_scoiatael.jpg" />
-               </image>
-            </ImageView>
-            <ImageView fitHeight="100.0" fitWidth="70.0" layoutX="1446.0" layoutY="66.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../Images/icons/deck_back_scoiatael.jpg" />
-               </image>
-            </ImageView>
-            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#eed092" height="41.0" layoutX="1438.0" layoutY="146.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="0.0" width="82.0">
-               <effect>
-                  <Shadow height="60.0" radius="29.5" width="60.0">
-                     <color>
-                        <Color red="0.07000000029802322" green="0.048661667853593826" blue="0.028699999675154686" />
-                     </color>
-                  </Shadow>
-               </effect>
-            </Rectangle>
-            <Label fx:id="remainsDeck2" alignment="CENTER" layoutX="1438.0" layoutY="155.0" prefHeight="39.0" prefWidth="82.0" text="15" textFill="#dea543">
+            <Label fx:id="remainsDeck2" alignment="CENTER" layoutX="1438.0" layoutY="194.0" prefHeight="39.0" prefWidth="82.0" text="15" textFill="#dea543">
                <font>
                   <Font name="System Bold" size="25.0" />
                </font>
             </Label>
-            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#eed092" height="41.0" layoutX="1438.0" layoutY="778.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="0.0" width="82.0">
-               <effect>
-                  <Shadow height="60.0" radius="29.5" width="60.0">
-                     <color>
-                        <Color red="0.07000000029802322" green="0.048661667853593826" blue="0.028699999675154686" />
-                     </color>
-                  </Shadow>
-               </effect>
-            </Rectangle>
-            <Label fx:id="remainsDeck1" alignment="CENTER" layoutX="1438.0" layoutY="779.0" prefHeight="39.0" prefWidth="82.0" text="15" textFill="#dea543">
+            <Label fx:id="remainsDeck1" alignment="CENTER" layoutX="1438.0" layoutY="818.0" prefHeight="39.0" prefWidth="82.0" text="15" textFill="#dea543">
                <font>
                   <Font name="System Bold" size="25.0" />
                </font>
@@ -185,12 +157,12 @@
                   <Image url="@../Images/icons/icon_gem_on.png" />
                </image>
             </ImageView>
-            <Label layoutX="204.0" layoutY="278.0" prefHeight="39.0" prefWidth="38.0" text="15" textFill="#dea543">
+            <Label fx:id="remainsHand2" layoutX="204.0" layoutY="278.0" prefHeight="39.0" prefWidth="38.0" text="15" textFill="#dea543">
                <font>
                   <Font name="System Bold" size="25.0" />
                </font>
             </Label>
-            <Label layoutX="204.0" layoutY="616.0" prefHeight="39.0" prefWidth="38.0" text="15" textFill="#dea543">
+            <Label fx:id="remainsHand1" layoutX="204.0" layoutY="616.0" prefHeight="39.0" prefWidth="38.0" text="15" textFill="#dea543">
                <font>
                   <Font name="System Bold" size="25.0" />
                </font>
@@ -269,9 +241,6 @@
             <Pane fx:id="rowHorn11" layoutX="472.0" layoutY="587.0" opacity="0.15" prefHeight="100.0" prefWidth="110.0" />
             <Pane fx:id="rowHorn12" layoutX="472.0" layoutY="472.0" opacity="0.15" prefHeight="100.0" prefWidth="110.0" />
             <Pane fx:id="rowHorn13" layoutX="472.0" layoutY="361.0" opacity="0.15" prefHeight="100.0" prefWidth="110.0" />
-            <Pane fx:id="rowHorn23" layoutX="472.0" layoutY="237.0" opacity="0.15" prefHeight="100.0" prefWidth="110.0" />
-            <Pane fx:id="rowHorn22" layoutX="472.0" layoutY="123.0" opacity="0.15" prefHeight="100.0" prefWidth="110.0" />
-            <Pane fx:id="rowHorn21" layoutX="472.0" layoutY="13.0" opacity="0.15" prefHeight="100.0" prefWidth="110.0" />
          </children>
       </Pane>
       <Pane fx:id="changePain" disable="true" layoutX="2.0" layoutY="11.0" prefHeight="886.0" prefWidth="1592.0" visible="false">
@@ -376,6 +345,34 @@
                <font>
                   <Font size="16.0" />
                </font></Text>
+         </children>
+      </Pane>
+      <Pane fx:id="showPain" disable="true" layoutX="4.0" layoutY="2.0" prefHeight="893.0" prefWidth="1592.0" visible="false">
+         <children>
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#eed092" height="363.0" layoutX="448.0" layoutY="265.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="0.0" width="696.0">
+               <effect>
+                  <Shadow height="60.0" radius="29.5" width="60.0">
+                     <color>
+                        <Color red="0.0784313753247261" green="0.054901961237192154" blue="0.0313725508749485" opacity="0.7799999713897705" />
+                     </color>
+                  </Shadow>
+               </effect>
+            </Rectangle>
+            <ImageView fx:id="showImage1" fitHeight="293.0" fitWidth="175.0" layoutX="718.0" layoutY="301.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../Images/Soldiers/Realms/Commanders%20horn.jpg" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="showImage2" fitHeight="293.0" fitWidth="175.0" layoutX="904.0" layoutY="301.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../Images/Soldiers/Realms/Commanders%20horn.jpg" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="showImage3" fitHeight="293.0" fitWidth="175.0" layoutX="531.0" layoutY="301.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../Images/Soldiers/Realms/Commanders%20horn.jpg" />
+               </image>
+            </ImageView>
          </children>
       </Pane>
    </children>
