@@ -66,7 +66,10 @@ public class FlipCardAnimation extends Transition {
                 pane.setLayoutX(xDestination);
                 pane.setLayoutY(yDestination);
                 if (refreshInEnd) ((CardView) pane).getInGameMenu().refresh();
-                for (CardView c : CardView.getAllCardViews()) c.setHandler();
+                for (CardView c : CardView.getAllCardViews()) {
+                    c.setHandler();
+                    c.setInChangeSituation(false);
+                }
             }
         });
     }

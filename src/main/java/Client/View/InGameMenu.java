@@ -206,7 +206,6 @@ public class InGameMenu extends Application {
                                     c.setInHand(false);
                                     row[finalI - 1][finalJ - 1].add(c);
                                     Client.getClient().sendCommand("place soldier " + placedNumber + " in row " + (3 - finalJ));
-//                                    refresh();
                                     (new FlipCardAnimation(c, (n == 0 ? (X_POSITION_ROW_LEFT + X_POSITION_ROW_RIGHT - CARD_WIDTH) / 2 : row[finalI - 1][finalJ - 1].get(n - 1).getLayoutX() + CARD_WIDTH + SPACING), Y, true, true, true)).play();
 
                                 }
@@ -238,7 +237,6 @@ public class InGameMenu extends Application {
                                 horn[0][finalJ - 1].add(c);
                                 Client.getClient().sendCommand("place special " + placedNumber + " in row " + (3 - finalJ));
                                 (new FlipCardAnimation(c, X_POSITION_SPELL, Y, true, true, true)).play();
-//                                refresh();
                             }
                         }
                     }
@@ -262,9 +260,7 @@ public class InGameMenu extends Application {
                             weather.add(c);
                             Client.getClient().sendCommand("place weather " + placedNumber);
                             refreshWeather();
-//                            refresh();
                             (new FlipCardAnimation(c, (n == 0 ? (X_POSITION_WEATHER_LEFT + X_POSITION_WEATHER_RIGHT - CARD_WIDTH) / 2 : weather.get(n - 1).getLayoutX() + CARD_WIDTH + SPACING), Y_POSITION_WEATHER, true, true, true)).play();
-
                         }
                     }
                 }
@@ -309,12 +305,14 @@ public class InGameMenu extends Application {
     }
 
     public void changeDecoy(int rowNumber, int cardNumber, int cardNumberDecoy) {
-        CardView decoy = hand[0].get(cardNumber);
-        CardView soldier = row[0][convertRowNumber(rowNumber)].get(cardNumberDecoy);
+        CardView decoy = hand[0].get(cardNumberDecoy);
+        CardView soldier = row[0][rowNumber].get(cardNumber);
         double x = decoy.getLayoutX();
         double y = decoy.getLayoutY();
-        hand[0].set(cardNumberDecoy, soldier);
         discard[0].add(decoy);
+        row[0][rowNumber].remove(soldier);
+        hand[0].set(cardNumberDecoy, soldier);
+        Client.getClient().sendCommand("place decoy " + cardNumberDecoy + " on card " + cardNumber + " in row " + convertRowNumber(rowNumber));
         (new FlipCardAnimation(decoy, X_POSITION_DISCARD, Y_POSITION_DISCARD_1, true, true, false)).play();
         (new FlipCardAnimation(soldier, x, y, true, true, true)).play();
     }
@@ -807,6 +805,32 @@ public class InGameMenu extends Application {
             cheatPane.setDisable(true);
             mainPain.requestFocus();
         }
+    }
+
+    /////////////////////////get index
+    public int getIndexInHand(CardView c) {
+        for (int i = 0; i < hand[0].size(); i++) {
+            if (hand[0].get(i).equals(c)) return i;
+        }
+        return -1;
+    }
+
+    public int getIndexOfRow(CardView c) {
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < row[0][i].size(); j++) {
+                if (row[0][i].get(j).equals(c)) return i;
+            }
+        }
+        return -1;
+    }
+
+    public int getIndexInRow(CardView c) {
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < row[0][i].size(); j++) {
+                if (row[0][i].get(j).equals(c)) return j;
+            }
+        }
+        return -1;
     }
 
     /////////////////////////choice card

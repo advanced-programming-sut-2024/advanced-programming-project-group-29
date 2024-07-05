@@ -160,8 +160,16 @@ public class GameMenu extends Application {
         leader.setImage(image);
         scrollSelected.setContent(gridPaneSelected);
         scrollNotSelected.setContent(gridPaneNotSelected);
-
     }
+
+
+    private void moveFromPreviousDeck(){
+        ArrayList<String> previousDeck = new ArrayList<>();
+        for (String name : previousDeck){
+
+        }
+    }
+
 
     private void moveCard(Image image) {
         if (image.getParent().equals(gridPaneNotSelected)) {
@@ -436,7 +444,6 @@ public class GameMenu extends Application {
         if (selectedImage != 0) selectedImage--;
         setImageChange(selectedImage);
     }
-
 
     public void buttonEntered(MouseEvent mouseEvent) {
         if (mouseEvent.getSource() instanceof Rectangle) {
