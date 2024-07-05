@@ -41,11 +41,11 @@ public class User {
     private transient ArrayList<Card> discardPile = new ArrayList<>();
     private Faction faction;
     private Commander commander;
-    private Sender sender;
+    private transient Sender sender;
     private transient GameBoard currentGameBoard;
     private final ArrayList<GameHistory> gameHistory = new ArrayList<>();
-    private final ArrayList<User> friends = new ArrayList<>();
-    private final ArrayList<User> friendRequests = new ArrayList<>();
+    private final ArrayList<String> friends = new ArrayList<>();
+    private final ArrayList<String> friendRequests = new ArrayList<>();
     private final HashMap<String, SavedDeck> savedDecks = new HashMap<>();
     private boolean inProcess = false;
 
@@ -137,9 +137,7 @@ public class User {
     }
 
     public ArrayList<String> getFriendRequests() {
-        ArrayList<String> friendRequestsNames = new ArrayList<>();
-        for (User user : friendRequests) friendRequestsNames.add(user.username);
-        return friendRequestsNames;
+        return friendRequests;
     }
 
     public void addCardToHand(Card card) {
@@ -314,40 +312,18 @@ public class User {
         }
     }
 
-    public static <Gson> void saveUser() throws IOException {
-        FileWriter fileWriter = new FileWriter("src/main/resources/JSON/allUsers.json");
-        com.google.gson.Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        String json = gson.toJson(allUsers);
-        fileWriter.write(json);
-        fileWriter.close();
+    public static void saveUser() throws IOException {
+        extractAllUsersToFileManually();
     }
 
 
     public static void loadUser(){
         System.out.println("haaaaaa");
         try {
-            Gson gson = new Gson();
             String text = new String(Files.readAllBytes(Paths.get("src/main/resources/JSON/allUsers.json")));
-            ArrayList<User> users = gson.fromJson(text, new TypeToken<List<User>>() {
-            }.getType());
-            System.out.println(users.size());
-            if (users == null)
-                users = new ArrayList<>();
-            for (User user : users) {
-                user.hand = new ArrayList<>();
-                user.deck = new ArrayList<>();
-                user.discardPile = new ArrayList<>();
-                user.commander.setUser(user);
-                user.commander.setGameBoard(null);
-                user.currentGameBoard = null;
-                if (user.preDeck != null) {
-                    for (Card card : user.preDeck) {
-                        card.setUser(user);
-                        user.deck.add(card);
-                    }
-                }
-            }
-            User.setAllUsers(users);
+            String[] lines = text.split("\n");
+            for (String line : lines)
+                makeUserFromJson(line);
         } catch (Exception e) {
             System.out.println("hey that wasnt' completed");
             e.printStackTrace();
@@ -431,14 +407,14 @@ public class User {
         return currentGameBoard.getPlayer(1 - currentGameBoard.getPlayerNumber(this));
     }
 
-    public void addFriend(User user) {
-        friends.add(user);
+    public void addFriend(String username) {
+        friends.add(username);
     }
 
     public void acceptFriendRequest(User user) {
         friendRequests.remove(user);
-        friends.add(user);
-        user.addFriend(this);
+        friends.add(user.getUsername());
+        user.addFriend(this.username);
     }
 
     public void rejectFriendRequest(User user) {
@@ -446,8 +422,8 @@ public class User {
     }
 
     public void receiveFriendRequest(User user) {
-        if (!friends.contains(user) && !friendRequests.contains(user))
-            friendRequests.add(user);
+        if (!friends.contains(user.getUsername()) && !friendRequests.contains(user.username))
+            friendRequests.add(user.getUsername());
     }
 
     public void sendFriendRequest(User user) {
@@ -534,5 +510,106 @@ public class User {
 
     public boolean getInProcess() {
         return inProcess;
+    }
+
+    public static void extractAllUsersToFileManually() {
+        try {
+            System.err.println("extracting all users to file");
+            System.err.println(allUsers.size());
+            FileWriter fileWriter = new FileWriter("src/main/resources/JSON/allUsers.json");
+            for (User user : allUsers) {
+                fileWriter.write(user.toJson() + "\n");
+            }
+            fileWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private String toJson() {
+        StringBuilder jsonBuilder = new StringBuilder();
+        jsonBuilder.append(username).append("|");
+        jsonBuilder.append(password).append("|");
+        jsonBuilder.append(nickname).append("|");
+        jsonBuilder.append(email).append("|");
+        jsonBuilder.append(questionNumber).append("|");
+        jsonBuilder.append(answer).append("|");
+        SavedDeck savedDeck = new SavedDeck(this.getDeckNames(), commander.getName(), faction.getName());
+        jsonBuilder.append(SavedDeck.savedDeckToString(savedDeck)).append("|");
+        System.err.println(jsonBuilder);
+        for (GameHistory gameHistory : this.gameHistory) {
+            jsonBuilder.append(gameHistory.toJson()).append("-");
+        }
+        if (!gameHistory.isEmpty())
+            jsonBuilder.deleteCharAt(jsonBuilder.length() - 1);
+        jsonBuilder.append("|");
+        for (String friend : friends)
+            jsonBuilder.append(friend).append(",");
+        if (!friends.isEmpty())
+            jsonBuilder.deleteCharAt(jsonBuilder.length() - 1);
+        jsonBuilder.append("|");
+        for (String friendRequest : friendRequests)
+            jsonBuilder.append(friendRequest).append(",");
+        if (!friendRequests.isEmpty())
+            jsonBuilder.deleteCharAt(jsonBuilder.length() - 1);
+        jsonBuilder.append("|");
+        jsonBuilder.append("[");
+        for (String deckName : savedDecks.keySet()) {
+            jsonBuilder.append(deckName).append("|");
+            jsonBuilder.append(SavedDeck.savedDeckToString(savedDecks.get(deckName))).append("|");
+        }
+        if (!savedDecks.isEmpty())
+            jsonBuilder.deleteCharAt(jsonBuilder.length() - 1);
+        jsonBuilder.append("]");
+        return jsonBuilder.toString();
+    }
+
+    public static void makeUserFromJson(String jsonLine) {
+        if (jsonLine.isEmpty()) return;
+        int beginIndexOfHashMaps = jsonLine.indexOf("[");
+        String hashMapString = jsonLine.substring(beginIndexOfHashMaps + 1, jsonLine.length() - 1);
+        String[] hashMaps = splitStringWithEmptyStrings(hashMapString , '|');
+        HashMap<String, SavedDeck> savedDecks = new HashMap<>();
+        for (int i = 0; i < hashMaps.length; i += 2) {
+            if (hashMaps.length == 1) break;
+            String deckName = hashMaps[i];
+            String deckString = hashMaps[i + 1];
+            savedDecks.put(deckName, SavedDeck.stringToSavedDeck(deckString));
+        }
+        String[] parts = splitStringWithEmptyStrings(jsonLine.substring(0, beginIndexOfHashMaps), '|');
+        User user = new User(parts[0], parts[1], parts[2], parts[3]);
+        user.setQuestion(Integer.parseInt(parts[4]), parts[5]);
+        user.extractDataFromSavedDeck(SavedDeck.stringToSavedDeck(parts[6]));
+        String[] gameHistories = parts[7].split("-");
+        for (String gameHistory : gameHistories) {
+            if (gameHistory.length() > 1)
+                user.addGameHistory(GameHistory.fromJson(gameHistory));
+        }
+        String[] friends = parts[8].split(",");
+        for (String friend : friends)
+            if (!friend.isEmpty())
+                user.friends.add(friend);
+        String[] friendRequests = parts[9].split(",");
+        for (String friendRequest : friendRequests) {
+            if (!friendRequest.isEmpty())
+                user.friendRequests.add(friendRequest);
+        }
+        user.savedDecks.putAll(savedDecks);
+        return;
+    }
+
+    private static String[] splitStringWithEmptyStrings (String string, char c) {
+        ArrayList<String> strings = new ArrayList<>();
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int i = 0; i < string.length(); i++) {
+            if (string.charAt(i) == c) {
+                strings.add(stringBuilder.toString());
+                stringBuilder = new StringBuilder();
+            } else {
+                stringBuilder.append(string.charAt(i));
+            }
+        }
+        strings.add(stringBuilder.toString());
+        return strings.toArray(new String[0]);
     }
 }

@@ -60,7 +60,7 @@ public class LoginMenu extends Application {
         Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
             public void run() {
                 try {
-                    client.sendCommand(LoginMenuRegex.SAVE_USER.getRegex());
+                    //client.sendCommand(LoginMenuRegex.SAVE_USER.getRegex());
                 } catch (Exception e) {
                     System.out.println(e.toString());
                 }

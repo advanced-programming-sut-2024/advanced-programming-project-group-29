@@ -111,6 +111,11 @@ public class ApplicationController extends Thread {
                     dataOutputStream.writeUTF(this.getCurrentUser().getJWT());
                     continue;
                 }
+                if (inputCommand.matches(LoginMenuRegex.SAVE_USER.getRegex())) {
+                    LoginMenuController.saveUsers();
+                    dataOutputStream.writeUTF("null");
+                    continue;
+                }
                 Object object = null;
                 switch(currentMenu){
                     case CHEAT_MENU:

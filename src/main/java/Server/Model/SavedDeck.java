@@ -17,6 +17,31 @@ public class SavedDeck implements Serializable {
         this.faction = faction;
     }
 
+    public static String savedDeckToString(SavedDeck savedDeck) {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (String card : savedDeck.getDeck()) {
+            stringBuilder.append(card).append(",");
+        }
+        if (!stringBuilder.isEmpty())
+            stringBuilder.deleteCharAt(stringBuilder.length() - 1);
+        stringBuilder.append("-");
+        stringBuilder.append(savedDeck.getCommander());
+        stringBuilder.append("-");
+        stringBuilder.append(savedDeck.getFaction());
+        System.err.println("Im in Saved deck     :       " + stringBuilder);
+        return stringBuilder.toString();
+    }
+
+    public static SavedDeck stringToSavedDeck(String string) {
+        String[] parts = string.split("-");
+        String[] deck = parts[0].split(",");
+        ArrayList<String> deckList = new ArrayList<>();
+        for (String card : deck) {
+            deckList.add(card);
+        }
+        return new SavedDeck(deckList, parts[1], parts[2]);
+    }
+
     public ArrayList<String> getDeck() {
         return deck;
     }

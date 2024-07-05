@@ -58,4 +58,35 @@ public class GameHistory {
     public void setWinner(int winner) {
         this.winner = winner;
     }
+
+    public String toJson() {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(players[0].getUsername()).append(",");
+        stringBuilder.append(players[1].getUsername()).append(",");
+        stringBuilder.append(gameDate.getTime()).append(",");
+        stringBuilder.append(winner).append(",");
+        for (int i = 0; i < 2; i++) {
+            for (int score : scorePerRound[i]) {
+                stringBuilder.append(score).append(",");
+            }
+        }
+        return stringBuilder.toString();
+    }
+
+    public static GameHistory fromJson(String json) {
+        String[] parts = json.split(",");
+        User player1 = User.getUserByUsername(parts[0]);
+        User player2 = User.getUserByUsername(parts[1]);
+        Date gameDate = new Date(Long.parseLong(parts[2]));
+        GameHistory gameHistory = new GameHistory(player1, player2, gameDate);
+        gameHistory.setWinner(Integer.parseInt(parts[3]));
+        int numberOfRounds = (parts.length - 4) / 2;
+        int pointer = 4;
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < numberOfRounds; j++) {
+                gameHistory.setScorePerRound(Integer.parseInt(parts[pointer]), j, i);
+            }
+        }
+        return gameHistory;
+    }
 }

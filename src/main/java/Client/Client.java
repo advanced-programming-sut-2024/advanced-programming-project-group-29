@@ -1,5 +1,6 @@
 package Client;
 
+import Client.Regex.LoginMenuRegex;
 import com.google.gson.GsonBuilder;
 
 import Client.Model.*;
@@ -11,12 +12,14 @@ public class Client {
     private static int SERVER_PORT = 4000;
     private static Client client;
     private Listener listener;
-    private Sender sender;
+    private static Sender sender;
     private static InGameMenu inGameMenu;
 
     public static void main(String[] args) throws Exception {
         client = new Client();
         client.start();
+        client.sendCommand(LoginMenuRegex.SAVE_USER.getRegex());
+        sender.endConnection();
     }
 
     public static Client getClient() {
@@ -42,7 +45,6 @@ public class Client {
         sender.sendCommand("127.0.0.1 " + listener.getPort());
         System.out.println("ha?");
         Main.main(new String[]{});
-        sender.endConnection();
     }
 
     public Listener getListener() {
