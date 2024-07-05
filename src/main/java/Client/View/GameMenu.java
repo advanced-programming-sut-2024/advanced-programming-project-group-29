@@ -79,7 +79,7 @@ public class GameMenu extends Application {
     private final ArrayList<Image> notSelectedCards = new ArrayList<>();
     private final ArrayList<Image> selectedCards = new ArrayList<>();
 
-    public GameMenu () {
+    public GameMenu() {
         super();
         client = Client.getClient();
         client.sendCommand("menu enter " + Menu.GAME_MENU.toString());
@@ -101,6 +101,7 @@ public class GameMenu extends Application {
             }
         });
         createCards();
+        moveFromPreviousDeck();
         changeLabel();
         soldiers.setTextFill(Paint.valueOf("red"));
         soldiers.textProperty().addListener(new ChangeListener<String>() {
@@ -114,7 +115,6 @@ public class GameMenu extends Application {
                 }
             }
         });
-
     }
 
 
@@ -163,13 +163,46 @@ public class GameMenu extends Application {
     }
 
 
-    private void moveFromPreviousDeck(){
-        ArrayList<String> previousDeck = new ArrayList<>();
-        for (String name : previousDeck){
+    private void moveFromPreviousDeck() {
+        ArrayList<String> previousDeck = (ArrayList<String>) client.sendCommand("initiate deck");
+        for (String name : previousDeck) moveCardInit(name);
+        refresh();
+    }
 
+    private void moveCardInit(String name) {
+        String toRegex = "add to deck -n " + name;
+        Result result = (Result) client.sendCommand(toRegex);
+        if (result.isSuccessful()) {
+            Image img = new Image(getPathFromName(name), 325, 172, name);
+            img.setOnMouseClicked(event -> {
+                moveCard((Image) event.getSource());
+            });
+            selectedCards.addFirst(img);
+            String query = "get allowed number by card name -c " + name;
+            int allowedNumber = (Integer) client.sendCommand(query);
+            if (allowedNumber == howManyCardInList(getImageFromName(name), selectedCards)) {
+                notSelectedCards.remove(getImageFromName(name));
+            }
         }
     }
 
+    private String getPathFromName(String name) {
+        for (Image image : notSelectedCards) {
+            if (image.getName().equals(name)) {
+                return image.getPath();
+            }
+        }
+        return "";
+    }
+
+    private Image getImageFromName(String name) {
+        for (Image image : notSelectedCards) {
+            if (image.getName().equals(name)) {
+                return image;
+            }
+        }
+        return null;
+    }
 
     private void moveCard(Image image) {
         if (image.getParent().equals(gridPaneNotSelected)) {
@@ -229,7 +262,7 @@ public class GameMenu extends Application {
                 changeTurn.setText("Start Game");
                 isChangeTurn = true;
                 createCards();
-                refresh();
+                moveFromPreviousDeck();
             }
         } else {
             if (result.isSuccessful()) {
@@ -299,7 +332,8 @@ public class GameMenu extends Application {
         String toRegex = "load deck -n " + loadName.getText();
         Result result = (Result) client.sendCommand(toRegex);
         if (result.isSuccessful()) {
-            moveCard();
+            createCards();
+            moveFromPreviousDeck();
             cancel(null);
         } else {
             sayAlert(result.getMessage().getFirst(), true, darkbackLoad);
@@ -329,26 +363,12 @@ public class GameMenu extends Application {
         }
         Result result = (Result) client.sendCommand(toRegex);
         if (result.isSuccessful()) {
-            moveCard();
+            createCards();
+            moveFromPreviousDeck();
             cancel(null);
         } else {
             sayAlert(result.getMessage().getFirst(), true, darkbackLoad);
         }
-    }
-
-    private void moveCard() {
-        createCards();
-        ArrayList<String> cardNames = (ArrayList<String>) client.sendCommand(GameMenuRegex.GET_CARDS_IN_DECK_NAMES.getRegex());
-        for (String name : cardNames) {
-            for (Image i : new ArrayList<>(notSelectedCards)) {
-                if (name.equals(i.getName())) {
-                    notSelectedCards.remove(i);
-                    selectedCards.add(i);
-                }
-                break;
-            }
-        }
-        refresh();
     }
 
     public void changeFaction(MouseEvent mouseEvent) {

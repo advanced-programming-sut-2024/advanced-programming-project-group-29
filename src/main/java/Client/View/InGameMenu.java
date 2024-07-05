@@ -312,6 +312,7 @@ public class InGameMenu extends Application {
         discard[0].add(decoy);
         row[0][rowNumber].remove(soldier);
         hand[0].set(cardNumberDecoy, soldier);
+        soldier.setInHand(true);
         Client.getClient().sendCommand("place decoy " + cardNumberDecoy + " on card " + cardNumber + " in row " + convertRowNumber(rowNumber));
         (new FlipCardAnimation(decoy, X_POSITION_DISCARD, Y_POSITION_DISCARD_1, true, true, false)).play();
         (new FlipCardAnimation(soldier, x, y, true, true, true)).play();
