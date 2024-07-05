@@ -4,9 +4,12 @@ import Server.Enum.Faction;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
@@ -24,7 +27,7 @@ public class User {
     };
 
     private static ArrayList<User> allUsers = new ArrayList<>();
-    private static final int EXPIATION_TIME = 300;
+    private static final int EXPIATION_TIME = 30;
     private static final String SECRET_KEY = "For the rest of your days, you will be known as Robin Hood.";
     private String username;
     private String password;
@@ -319,28 +322,32 @@ public class User {
     }
 
 
-    public static void loadUser() throws IOException {
-        Gson gson = new Gson();
-        String text = new String(Files.readAllBytes(Paths.get("src/main/resources/JSON/allUsers.json")));
-        ArrayList<User> users = gson.fromJson(text, new TypeToken<List<User>>() {
-        }.getType());
-        if (users == null)
-            users = new ArrayList<>();
-        for (User user : users) {
-            user.hand = new ArrayList<>();
-            user.deck = new ArrayList<>();
-            user.discardPile = new ArrayList<>();
-            user.commander.setUser(user);
-            user.commander.setGameBoard(null);
-            user.currentGameBoard = null;
-            if (user.preDeck != null) {
-                for (Card card : user.preDeck) {
-                    card.setUser(user);
-                    user.deck.add(card);
+    public static void loadUser(){
+        try {
+            Gson gson = new Gson();
+            String text = new String(Files.readAllBytes(Paths.get("src/main/resources/JSON/allUsers.json")));
+            ArrayList<User> users = gson.fromJson(text, new TypeToken<List<User>>() {
+            }.getType());
+            if (users == null)
+                users = new ArrayList<>();
+            for (User user : users) {
+                user.hand = new ArrayList<>();
+                user.deck = new ArrayList<>();
+                user.discardPile = new ArrayList<>();
+                user.commander.setUser(user);
+                user.commander.setGameBoard(null);
+                user.currentGameBoard = null;
+                if (user.preDeck != null) {
+                    for (Card card : user.preDeck) {
+                        card.setUser(user);
+                        user.deck.add(card);
+                    }
                 }
             }
+            User.setAllUsers(users);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        User.setAllUsers(users);
     }
 
     public static void setAllUsers(ArrayList<User> allUsers) {
@@ -474,8 +481,6 @@ public class User {
     }
 
     public String getJWT() {
-        return "sampleJwt";
-        /*
         System.out.println("oh all hre");
         String subject = username + "%&*" + password;
         long nowMillis = System.currentTimeMillis();
@@ -487,7 +492,7 @@ public class User {
             String jwt = Jwts.builder()
                     .setSubject(subject)
                     .setIssuedAt(now)
-                    .setExpiration(exp)
+                    //.setExpiration(exp) // TODO: set this line when pop up menu completed
                     .signWith(SignatureAlgorithm.HS256, SECRET_KEY.getBytes(StandardCharsets.UTF_8))
                     .compact();
             System.out.println(jwt);
@@ -496,20 +501,15 @@ public class User {
             e.printStackTrace();
         }
         return null;
-         */
     }
 
     public boolean checkJWT(String jwt) {
-        return true;
-        /*
         try {
             Jwts.parser().setSigningKey(SECRET_KEY.getBytes(StandardCharsets.UTF_8)).parseClaimsJws(jwt);
             return true;
         } catch (Exception e) {
             return false;
         }
-        */
-
     }
 
     public void setSender(Sender sender) {
