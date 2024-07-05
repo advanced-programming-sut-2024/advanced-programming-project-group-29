@@ -261,7 +261,8 @@ public class GameMenuController {
     public static Result changeTurn(ApplicationController applicationController) {
         User user = applicationController.getCurrentUser();
         if (user.getNumberOfSoldiersInDeck() < 22) {
-            return new Result(false, "You should have at least 22 soldiers in your deck.");
+            //TODO : change return to false
+            return new Result(true, "You should have at least 22 soldiers in your deck.");
         }
         GameBoard gameBoard = user.getCurrentGameBoard();
         gameBoard.changeTurn();

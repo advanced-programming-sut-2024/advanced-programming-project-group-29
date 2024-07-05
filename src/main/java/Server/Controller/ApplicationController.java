@@ -77,6 +77,7 @@ public class ApplicationController extends Thread {
     @Override
     public void run() {
         try{
+            Server.Controller.LoginMenuController.processRequest(this, LoginMenuRegex.LOAD_USER.getRegex());
             currentMenu = Menu.LOGIN_MENU;
             DataInputStream dataInputStream = new DataInputStream(listenerSocket.getInputStream());
             DataOutputStream dataOutputStream = new DataOutputStream(listenerSocket.getOutputStream());

@@ -59,14 +59,9 @@ public class LoginMenu extends Application {
     public void run(String[] args) throws IOException {
         Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
             public void run() {
-                try {
-                    //client.sendCommand(LoginMenuRegex.SAVE_USER.getRegex());
-                } catch (Exception e) {
-                    System.out.println(e.toString());
-                }
             }
         }, "Program existing..."));
-        client.sendCommand(LoginMenuRegex.LOAD_USER.getRegex());
+        //client.sendCommand(LoginMenuRegex.LOAD_USER.getRegex());
         launch(args);
     }
 

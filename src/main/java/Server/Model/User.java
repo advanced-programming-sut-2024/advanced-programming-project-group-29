@@ -318,7 +318,6 @@ public class User {
 
 
     public static void loadUser(){
-        System.out.println("haaaaaa");
         try {
             String text = new String(Files.readAllBytes(Paths.get("src/main/resources/JSON/allUsers.json")));
             String[] lines = text.split("\n");
@@ -514,8 +513,6 @@ public class User {
 
     public static void extractAllUsersToFileManually() {
         try {
-            System.err.println("extracting all users to file");
-            System.err.println(allUsers.size());
             FileWriter fileWriter = new FileWriter("src/main/resources/JSON/allUsers.json");
             for (User user : allUsers) {
                 fileWriter.write(user.toJson() + "\n");
@@ -536,7 +533,6 @@ public class User {
         jsonBuilder.append(answer).append("|");
         SavedDeck savedDeck = new SavedDeck(this.getDeckNames(), commander.getName(), faction.getName());
         jsonBuilder.append(SavedDeck.savedDeckToString(savedDeck)).append("|");
-        System.err.println(jsonBuilder);
         for (GameHistory gameHistory : this.gameHistory) {
             jsonBuilder.append(gameHistory.toJson()).append("-");
         }
