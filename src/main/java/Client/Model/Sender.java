@@ -55,20 +55,6 @@ public class Sender {
         }
     }
 
-    public Object sendObject(Object object) {
-        com.google.gson.Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        String clazz = object.getClass().getName();
-        if(clazz.matches("Client.+"))
-            clazz = "Server" + clazz.substring(6);
-        String outputCommand = clazz + ":" + gson.toJson(object);
-        try {
-            return deSerialize(sendMessage(outputCommand));
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
     public Object sendCommand(String command) {
         try {
             return deSerialize(sendMessage(command));
@@ -95,5 +81,13 @@ public class Sender {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public static String getSendableObject(Object object) {
+        com.google.gson.Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        String clazz = object.getClass().getName();
+        if(clazz.matches("Client.+"))
+            clazz = "Server" + clazz.substring(6);
+        return clazz + ":" + gson.toJson(object);
     }
 }
