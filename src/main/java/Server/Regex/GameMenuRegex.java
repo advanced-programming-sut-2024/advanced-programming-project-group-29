@@ -22,7 +22,9 @@ public enum GameMenuRegex {
     GET_USER_COMMANDER_NAME("get user commander name"),
     GET_ALLOWED_NUMBER_BY_CARD_NAME("get allowed number by card name -c (?<cardName>.+)"),
     GET_CARDS_IN_DECK_NAMES("get cards in deck names"),
-    GET_USER_SAVED_DECK("get user saved deck");
+    GET_USER_SAVED_DECK("get user saved deck"),
+    INITIATE_DECK("initiate deck"),
+    ;
 
     private final String regex;
 
