@@ -32,7 +32,7 @@ import java.util.Random;
 public class CardView extends Pane {
     private static final ArrayList<CardView> allCardViews = new ArrayList<>();
     private final InGameMenu inGameMenu;
-    private final Cardin card;
+    private Cardin card;
     private final double WIDTH = 70;
     private final double HEIGHT = 100;
     private final String path;

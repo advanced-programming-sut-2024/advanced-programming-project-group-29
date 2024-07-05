@@ -4,10 +4,14 @@ import Client.Client;
 import Client.Enum.Menu;
 import Client.Regex.RankingMenuRegex;
 import Client.Model.ApplicationRunningTimeData;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -18,6 +22,7 @@ import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.util.Callback;
+import javafx.util.Duration;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -35,8 +40,8 @@ public class RankingMenu extends Application {
         client.sendCommand("menu enter " + Menu.RANKING_MENU.toString());
     }
 
-    @FXML
-    public void initialize() {
+
+    private ObservableList<ArrayList<String>> getData(){
         ArrayList<String> ranks = (ArrayList<String>) client.sendCommand(RankingMenuRegex.GET_RANKING.getRegex());
         ArrayList<ArrayList<String>> result = new ArrayList<>();
         for (String line : ranks) {
@@ -47,12 +52,15 @@ public class RankingMenu extends Application {
             add("Rank");
             add("Username");
             add("Count of Wins");
+            add("Status");
+            add("Last Game");
         }};
         tableView.getColumns().clear();
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 5; i++) {
             final int index = i;
             TableColumn<ArrayList<String>, String> column = new TableColumn<>(names.get(i));
             column.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().get(index)));
+            column.setStyle("-fx-alignment: CENTER;");
             tableView.getColumns().add(column);
         }
         ObservableList<ArrayList<String>> data = FXCollections.observableArrayList(result);
@@ -80,8 +88,34 @@ public class RankingMenu extends Application {
                 ((TableColumn) column).prefWidthProperty().bind(
                         tableView.widthProperty().divide(numColumns)
                 )
-        ); //CHECK
+        );
+        return data;
+    }
+
+
+    @FXML
+    public void initialize() {
+//        tableView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+//            @Override
+//            public void handle(MouseEvent mouseEvent) {
+//                tableView.getSelectionModel().getSelectedCells().get(0)
+//            }
+//        });
+
+
+        ObservableList<ArrayList<String>> data = getData();
         tableView.setItems(data);
+        Timeline t = new Timeline(new KeyFrame(Duration.seconds(5), new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                ObservableList<ArrayList<String>> newData = getData();
+                if (!data.equals(newData)){
+                    tableView.setItems(newData);
+                }
+            }
+        }));
+        t.setCycleCount(-1);
+        t.play();
     }
 
     @Override

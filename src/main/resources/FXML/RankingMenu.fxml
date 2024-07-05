@@ -54,6 +54,6 @@
             </Blend>
          </effect>
       </Label>
-      <TableView fx:id="tableView" layoutX="379.0" layoutY="281.0" prefHeight="284.0" prefWidth="475.0" />
+      <TableView fx:id="tableView" layoutX="379.0" layoutY="281.0" onMouseClicked="#clickInTable" prefHeight="284.0" prefWidth="475.0" />
    </children>
 </AnchorPane>

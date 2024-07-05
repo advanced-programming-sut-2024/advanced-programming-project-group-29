@@ -198,7 +198,6 @@ public class InGameMenu extends Application {
                             for (CardView c : new ArrayList<>(hand[0])) {
                                 if (c.isSelected()) {
                                     int n = row[finalI - 1][finalJ - 1].size();
-                                    (new FlipCardAnimation(c, (n == 0 ? (X_POSITION_ROW_LEFT + X_POSITION_ROW_RIGHT - CARD_WIDTH) / 2 : row[finalI - 1][finalJ - 1].get(n - 1).getLayoutX() + CARD_WIDTH + SPACING), Y, true, true, false)).play();
                                     int placedNumber = -1;
                                     for (int i = 0; i < hand[0].size(); i++)
                                         if (hand[0].get(i).equals(c))
@@ -207,7 +206,9 @@ public class InGameMenu extends Application {
                                     c.setInHand(false);
                                     row[finalI - 1][finalJ - 1].add(c);
                                     Client.getClient().sendCommand("place soldier " + placedNumber + " in row " + (3 - finalJ));
-                                    refresh();
+//                                    refresh();
+                                    (new FlipCardAnimation(c, (n == 0 ? (X_POSITION_ROW_LEFT + X_POSITION_ROW_RIGHT - CARD_WIDTH) / 2 : row[finalI - 1][finalJ - 1].get(n - 1).getLayoutX() + CARD_WIDTH + SPACING), Y, true, true, true)).play();
+
                                 }
                             }
                         }
@@ -228,7 +229,6 @@ public class InGameMenu extends Application {
                     if (!((Pane) mouseEvent.getSource()).getChildren().isEmpty()) {
                         for (CardView c : new ArrayList<>(hand[0])) {
                             if (c.isSelected()) {
-                                (new FlipCardAnimation(c, X_POSITION_SPELL, Y, true, true, false)).play();
                                 int placedNumber = -1;
                                 for (int i = 0; i < hand[0].size(); i++)
                                     if (hand[0].get(i).equals(c))
@@ -237,7 +237,8 @@ public class InGameMenu extends Application {
                                 c.setInHand(false);
                                 horn[0][finalJ - 1].add(c);
                                 Client.getClient().sendCommand("place special " + placedNumber + " in row " + (3 - finalJ));
-                                refresh();
+                                (new FlipCardAnimation(c, X_POSITION_SPELL, Y, true, true, true)).play();
+//                                refresh();
                             }
                         }
                     }
@@ -251,7 +252,7 @@ public class InGameMenu extends Application {
                     for (CardView c : new ArrayList<>(hand[0])) {
                         if (c.isSelected()) {
                             int n = weather.size();
-                            (new FlipCardAnimation(c, (n == 0 ? (X_POSITION_WEATHER_LEFT + X_POSITION_WEATHER_RIGHT - CARD_WIDTH) / 2 : weather.get(n - 1).getLayoutX() + CARD_WIDTH + SPACING), Y_POSITION_WEATHER, true, true, false)).play();
+                            (new FlipCardAnimation(c, (n == 0 ? (X_POSITION_WEATHER_LEFT + X_POSITION_WEATHER_RIGHT - CARD_WIDTH) / 2 : weather.get(n - 1).getLayoutX() + CARD_WIDTH + SPACING), Y_POSITION_WEATHER, true, true, true)).play();
                             int placedNumber = -1;
                             for (int i = 0; i < hand[0].size(); i++)
                                 if (hand[0].get(i).equals(c))
@@ -261,7 +262,9 @@ public class InGameMenu extends Application {
                             weather.add(c);
                             Client.getClient().sendCommand("place weather " + placedNumber);
                             refreshWeather();
-                            refresh();
+//                            refresh();
+                            (new FlipCardAnimation(c, (n == 0 ? (X_POSITION_WEATHER_LEFT + X_POSITION_WEATHER_RIGHT - CARD_WIDTH) / 2 : weather.get(n - 1).getLayoutX() + CARD_WIDTH + SPACING), Y_POSITION_WEATHER, true, true, true)).play();
+
                         }
                     }
                 }
@@ -489,7 +492,6 @@ public class InGameMenu extends Application {
         }
         if (isClear) setWeather(false, false, false);
         else setWeather(rain, fog, frost);
-        //TODO clear weather?
     }
 
     private void setWeather(boolean rain, boolean fog, boolean frost) {
@@ -499,13 +501,14 @@ public class InGameMenu extends Application {
         rowWeather22.setVisible(fog);
         rowWeather13.setVisible(frost);
         rowWeather23.setVisible(frost);
+        refresh();
     }
 
     private void setCrystal(ImageView crystal, boolean on) {
         crystal.setImage(new javafx.scene.image.Image(on ? "/Images/icons/icon_gem_on.png" : "/Images/icons/icon_gem_off.png"));
     }
 
-    private GameBoardin getGameBoardin(){
+    private GameBoardin getGameBoardin() {
         GameBoardin gameBoardin = (GameBoardin) Client.getClient().sendCommand("get game board");
         //while(gameBoardin.isInProcess())
         //    gameBoardin = (GameBoardin) Client.getClient().sendCommand("get game board");
@@ -521,7 +524,6 @@ public class InGameMenu extends Application {
         ArrayList<Cardin> player2Hand = gameBoardin.getPlayer2Hand();
         ArrayList<Cardin> player1Deck = gameBoardin.getPlayer1Deck();
         ArrayList<Cardin> player2Deck = gameBoardin.getPlayer2Deck();
-        System.err.println(player2Deck.get(0).faction);
         ArrayList<Cardin> player1Discard = gameBoardin.getPlayer1Discard();
         ArrayList<Cardin> player2Discard = gameBoardin.getPlayer2Discard();
         String player1Username = gameBoardin.getPlayer1Username();
@@ -664,13 +666,13 @@ public class InGameMenu extends Application {
             for (int k = 0; k < 3; k++) {
                 ArrayList<Cardin> rowFlag;
                 if (j == 0) {
-                    if (k == 0) rowFlag = gameBoardin.getRow13();
+                    if (k == 0) rowFlag = gameBoardin.getRow11();
                     else if (k == 1) rowFlag = gameBoardin.getRow12();
-                    else rowFlag = gameBoardin.getRow11();
+                    else rowFlag = gameBoardin.getRow13();
                 } else {
-                    if (k == 0) rowFlag = gameBoardin.getRow23();
+                    if (k == 0) rowFlag = gameBoardin.getRow21();
                     else if (k == 1) rowFlag = gameBoardin.getRow22();
-                    else rowFlag = gameBoardin.getRow21();
+                    else rowFlag = gameBoardin.getRow23();
                 }
                 gameBoardin.showAllCardAndHp();
                 for (int i = 0; i < rowFlag.size(); i++) {
@@ -844,7 +846,7 @@ public class InGameMenu extends Application {
                 }
             });
         }
-        selectBetweenCards(options,choices);
+        selectBetweenCards(options, choices);
     }
 
     private void setImageChange(int number) {
