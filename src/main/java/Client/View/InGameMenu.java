@@ -4,24 +4,17 @@ package Client.View;
 import Client.Client;
 import Client.Model.*;
 import Client.Enum.*;
-import Client.Regex.GameMenuRegex;
-import Client.Regex.InGameMenuRegex;
 import Client.View.Animations.BurningCardAnimation;
 import Client.View.Animations.FlipCardAnimation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
-import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
@@ -36,18 +29,12 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import Client.Enum.Attribute;
 
-import java.io.File;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Objects;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.FutureTask;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class InGameMenu extends Application {
     private final double X_POSITION_HAND_LEFT = 481;
@@ -148,7 +135,7 @@ public class InGameMenu extends Application {
     private final ArrayList<CardView>[] deck = new ArrayList[2];
     private final ArrayList<CardView>[] discard = new ArrayList[2];
     private final ArrayList<CardView>[][] row = new ArrayList[2][3];
-    private final ArrayList<CardView>[][] horn = new ArrayList[2][3];
+    private final CardView[][] horn = new CardView[2][3];
     private final ArrayList<CardView> weather = new ArrayList<>();
 
     public InGameMenu() {
@@ -164,7 +151,6 @@ public class InGameMenu extends Application {
             discard[i] = new ArrayList<>();
             for (int j = 0; j < 3; j++) {
                 row[i][j] = new ArrayList<>();
-                horn[i][j] = new ArrayList<>();
             }
         }
         Client.getClient().sendCommand("start game");
@@ -234,7 +220,7 @@ public class InGameMenu extends Application {
                                         placedNumber = i;
                                 hand[0].remove(c);
                                 c.setInHand(false);
-                                horn[0][finalJ - 1].add(c);
+                                horn[0][finalJ - 1] = c;
                                 Client.getClient().sendCommand("place special " + placedNumber + " in row " + (3 - finalJ));
                                 (new FlipCardAnimation(c, X_POSITION_SPELL, Y, true, true, true)).play();
                             }
@@ -509,64 +495,40 @@ public class InGameMenu extends Application {
 
     private GameBoardin getGameBoardin() {
         GameBoardin gameBoardin = (GameBoardin) Client.getClient().sendCommand("get game board");
-        //while(gameBoardin.isInProcess())
-        //    gameBoardin = (GameBoardin) Client.getClient().sendCommand("get game board");
-        //System.out.println(gameBoardin.getPlayer1Hand().size());
         return gameBoardin;
     }
 
     private void firstRefresh() {
         GameBoardin gameBoardin = getGameBoardin();
-        int player1Crystal = gameBoardin.getPlayer1Crystal();
-        int player2Crystal = gameBoardin.getPlayer2Crystal();
-        ArrayList<Cardin> player1Hand = gameBoardin.getPlayer1Hand();
-        ArrayList<Cardin> player2Hand = gameBoardin.getPlayer2Hand();
-        ArrayList<Cardin> player1Deck = gameBoardin.getPlayer1Deck();
-        ArrayList<Cardin> player2Deck = gameBoardin.getPlayer2Deck();
-        ArrayList<Cardin> player1Discard = gameBoardin.getPlayer1Discard();
-        ArrayList<Cardin> player2Discard = gameBoardin.getPlayer2Discard();
-        String player1Username = gameBoardin.getPlayer1Username();
-        String player2Username = gameBoardin.getPlayer2Username();
-        String player1Faction = gameBoardin.getPlayer1Faction();
-        String player2Faction = gameBoardin.getPlayer2Faction();
-        String player1Commander = gameBoardin.getPlayer1Commander();
-        String player2Commander = gameBoardin.getPlayer2Commander();
-        boolean player1HasAction = gameBoardin.isPlayer1CommanderHasAction();
-        boolean player2HasAction = gameBoardin.isPlayer2CommanderHasAction();
-        ////////////////////////////
-        for (int i = 0; i < player1Hand.size(); i++) {
-            CardView c = new CardView(player1Hand.get(i), getXPosition(i, player1Hand.size(), false, false), Y_POSITION_HAND, this, false);
-            hand[0].add(c);
-            c.setInHand(true);
-        }
-        for (int i = 0; i < player2Hand.size(); i++) {
-            CardView c = new CardView(player2Hand.get(i), getXPosition(i, player2Hand.size(), false, false), Y_POSITION_HAND, this, false);
-            hand[1].add(c);
-            c.setInHand(true);
-        }
-        for (Cardin cardin : player1Deck) {
-            CardView c = new CardView(cardin, X_POSITION_Deck, Y_POSITION_DISCARD_1, this, true);
-            deck[0].add(c);
-        }
-        for (Cardin cardin : player2Deck) {
-            CardView c = new CardView(cardin, X_POSITION_Deck, Y_POSITION_DISCARD_2, this, true);
-            deck[1].add(c);
+        System.out.println(gameBoardin == null);
+        for (int k = 0; k < 2; k++) {
+            ArrayList<Cardin> playerHand = (k == 0 ? gameBoardin.getPlayer1Hand() : gameBoardin.getPlayer2Hand());
+            for (int i = 0; i < playerHand.size(); i++) {
+                CardView c = new CardView(playerHand.get(i), getXPosition(i, playerHand.size(), false, false), Y_POSITION_HAND, this, false);
+                hand[k].add(c);
+                c.setInHand(true);
+            }
+            for (Cardin cardin : (k == 0 ? gameBoardin.getPlayer1Deck() : gameBoardin.getPlayer2Deck())) {
+                CardView c = new CardView(cardin, X_POSITION_Deck, (k == 0 ? Y_POSITION_DISCARD_1 : Y_POSITION_DISCARD_2), this, true);
+                deck[k].add(c);
+            }
         }
         for (CardView c : hand[0]) pain.getChildren().add(c);
         for (CardView c : deck[0]) pain.getChildren().add(c);
         for (CardView c : deck[1]) pain.getChildren().add(c);
-        leader1.setImage(new javafx.scene.image.Image("/Images/Raw/" + player1Faction + "/" + player1Commander + ".jpg"));
-        leader2.setImage(new javafx.scene.image.Image("/Images/Raw/" + player2Faction + "/" + player2Commander + ".jpg"));
-        leaderActive1.setImage(player1HasAction ? new javafx.scene.image.Image("/Images/icons/icon_leader_active.png") : null);
-        leaderActive2.setImage(player2HasAction ? new javafx.scene.image.Image("/Images/icons/icon_leader_active.png") : null);
-        factionIcon1.setImage(new javafx.scene.image.Image("/Images/icons/deck_shield_" + player1Faction.toLowerCase() + ".png"));
-        factionIcon2.setImage(new javafx.scene.image.Image("/Images/icons/deck_shield_" + player2Faction.toLowerCase() + ".png"));
-        username1.setText(player1Username);
-        username2.setText(player2Username);
-        setCrystal(crystal11, (player1Crystal >= 1));
-        setCrystal(crystal12, (player1Crystal == 2));
-        setCrystal(crystal21, (player2Crystal >= 1));
-        setCrystal(crystal22, (player2Crystal == 2));
+        System.out.println(gameBoardin.getPlayer1Faction() + "   " + gameBoardin.getPlayer1Commander());
+        leader1.setImage(new javafx.scene.image.Image("/Images/Raw/" + gameBoardin.getPlayer1Faction() + "/" + gameBoardin.getPlayer1Commander() + ".jpg"));
+        leader2.setImage(new javafx.scene.image.Image("/Images/Raw/" + gameBoardin.getPlayer2Faction() + "/" + gameBoardin.getPlayer2Commander() + ".jpg"));
+        leaderActive1.setImage(gameBoardin.isPlayer1CommanderHasAction() ? new javafx.scene.image.Image("/Images/icons/icon_leader_active.png") : null);
+        leaderActive2.setImage(gameBoardin.isPlayer2CommanderHasAction() ? new javafx.scene.image.Image("/Images/icons/icon_leader_active.png") : null);
+        factionIcon1.setImage(new javafx.scene.image.Image("/Images/icons/deck_shield_" + gameBoardin.getPlayer1Faction().toLowerCase() + ".png"));
+        factionIcon2.setImage(new javafx.scene.image.Image("/Images/icons/deck_shield_" + gameBoardin.getPlayer2Faction().toLowerCase() + ".png"));
+        username1.setText(gameBoardin.getPlayer1Username());
+        username2.setText(gameBoardin.getPlayer2Username());
+        setCrystal(crystal11, (gameBoardin.getPlayer1Crystal() >= 1));
+        setCrystal(crystal12, (gameBoardin.getPlayer1Crystal() == 2));
+        setCrystal(crystal21, (gameBoardin.getPlayer2Crystal() >= 1));
+        setCrystal(crystal22, (gameBoardin.getPlayer2Crystal() == 2));
         remainsDeck1.setText(gameBoardin.getPlayer1Deck().size() + "");
         remainsDeck2.setText(gameBoardin.getPlayer2Deck().size() + "");
         remainsHand1.setText(gameBoardin.getPlayer1Hand().size() + "");
@@ -592,50 +554,39 @@ public class InGameMenu extends Application {
         return xFirst;
     }
 
-    private void setPosition(ArrayList<CardView> array, boolean row, boolean weather, double Y) {
+    private void setPositionVar(ArrayList<CardView> array, boolean row, boolean weather, double Y) {
         for (int i = 0; i < array.size(); i++) array.get(i).setPos(getXPosition(i, array.size(), row, weather), Y);
     }
 
-    public void refresh() {
-        setPosition(hand[0], false, false, Y_POSITION_HAND);
-        setPosition(hand[1], false, false, Y_POSITION_HAND);
-        setPosition(row[0][0], true, false, Y_POSITION_ROW_11);
-        setPosition(row[0][1], true, false, Y_POSITION_ROW_12);
-        setPosition(row[0][2], true, false, Y_POSITION_ROW_13);
-        setPosition(row[1][0], true, false, Y_POSITION_ROW_21);
-        setPosition(row[1][1], true, false, Y_POSITION_ROW_22);
-        setPosition(row[1][2], true, false, Y_POSITION_ROW_23);
-        setPosition(weather, true, true, Y_POSITION_WEATHER);
+    private void setPositionCte(ArrayList<CardView> array, double X, double Y) {
+        for (CardView cardView : array) cardView.setPos(X, Y);
+    }
 
+    public void refresh() {
+        for (int i = 0; i < 2; i++) {
+            setPositionVar(hand[i], false, false, Y_POSITION_HAND);
+            setPositionCte(deck[i], X_POSITION_Deck, (i == 0 ? Y_POSITION_DISCARD_1 : Y_POSITION_DISCARD_2));
+            setPositionCte(discard[i], X_POSITION_DISCARD, (i == 0 ? Y_POSITION_DISCARD_1 : Y_POSITION_DISCARD_2));
+            for (int j = 0; j < 3; j++) {
+                double Y = (i == 0 ? (j == 0 ? Y_POSITION_ROW_11 : (j == 1 ? Y_POSITION_ROW_12 : Y_POSITION_ROW_13)) : (j == 0 ? Y_POSITION_ROW_21 : (j == 1 ? Y_POSITION_ROW_22 : Y_POSITION_ROW_23)));
+                setPositionVar(row[i][j], true, false, Y);
+                if (horn[i][j] != null) horn[i][j].setPos(X_POSITION_SPELL,Y);
+            }
+        }
+        setPositionVar(weather, true, true, Y_POSITION_WEATHER);
         GameBoardin gameBoardin = getGameBoardin();
-        int player1Crystal = gameBoardin.getPlayer1Crystal();
-        int player2Crystal = gameBoardin.getPlayer2Crystal();
-        ArrayList<Cardin> player1Hand = gameBoardin.getPlayer1Hand();
-        ArrayList<Cardin> player2Hand = gameBoardin.getPlayer2Hand();
-        ArrayList<Cardin> player1Deck = gameBoardin.getPlayer1Deck();
-        ArrayList<Cardin> player2Deck = gameBoardin.getPlayer2Deck();
-        ArrayList<Cardin> player1Discard = gameBoardin.getPlayer1Discard();
-        ArrayList<Cardin> player2Discard = gameBoardin.getPlayer2Discard();
-        String player1Username = gameBoardin.getPlayer1Username();
-        String player2Username = gameBoardin.getPlayer2Username();
-        String player1Faction = gameBoardin.getPlayer1Faction();
-        String player2Faction = gameBoardin.getPlayer2Faction();
-        String player1Commander = gameBoardin.getPlayer1Commander();
-        String player2Commander = gameBoardin.getPlayer2Commander();
-        boolean player1HasAction = gameBoardin.isPlayer1CommanderHasAction();
-        boolean player2HasAction = gameBoardin.isPlayer2CommanderHasAction();
-        leader1.setImage(new javafx.scene.image.Image("/Images/Raw/" + player1Faction + "/" + player1Commander + ".jpg"));
-        leader2.setImage(new javafx.scene.image.Image("/Images/Raw/" + player2Faction + "/" + player2Commander + ".jpg"));
-        leaderActive1.setImage(player1HasAction ? new javafx.scene.image.Image("/Images/icons/icon_leader_active.png") : null);
-        leaderActive2.setImage(player2HasAction ? new javafx.scene.image.Image("/Images/icons/icon_leader_active.png") : null);
-        factionIcon1.setImage(new javafx.scene.image.Image("/Images/icons/deck_shield_" + player1Faction.toLowerCase() + ".png"));
-        factionIcon2.setImage(new javafx.scene.image.Image("/Images/icons/deck_shield_" + player2Faction.toLowerCase() + ".png"));
-        username1.setText(player1Username);
-        username2.setText(player2Username);
-        setCrystal(crystal11, (player1Crystal >= 1));
-        setCrystal(crystal12, (player1Crystal == 2));
-        setCrystal(crystal21, (player2Crystal >= 1));
-        setCrystal(crystal22, (player2Crystal == 2));
+        leader1.setImage(new javafx.scene.image.Image("/Images/Raw/" + gameBoardin.getPlayer1Faction() + "/" + gameBoardin.getPlayer1Commander() + ".jpg"));
+        leader2.setImage(new javafx.scene.image.Image("/Images/Raw/" + gameBoardin.getPlayer2Faction() + "/" + gameBoardin.getPlayer2Commander() + ".jpg"));
+        leaderActive1.setImage(gameBoardin.isPlayer1CommanderHasAction() ? new javafx.scene.image.Image("/Images/icons/icon_leader_active.png") : null);
+        leaderActive2.setImage(gameBoardin.isPlayer2CommanderHasAction() ? new javafx.scene.image.Image("/Images/icons/icon_leader_active.png") : null);
+        factionIcon1.setImage(new javafx.scene.image.Image("/Images/icons/deck_shield_" + gameBoardin.getPlayer1Faction().toLowerCase() + ".png"));
+        factionIcon2.setImage(new javafx.scene.image.Image("/Images/icons/deck_shield_" + gameBoardin.getPlayer2Faction().toLowerCase() + ".png"));
+        username1.setText(gameBoardin.getPlayer1Username());
+        username2.setText(gameBoardin.getPlayer2Username());
+        setCrystal(crystal11, (gameBoardin.getPlayer1Crystal() >= 1));
+        setCrystal(crystal12, (gameBoardin.getPlayer1Crystal() == 2));
+        setCrystal(crystal21, (gameBoardin.getPlayer2Crystal() >= 1));
+        setCrystal(crystal22, (gameBoardin.getPlayer2Crystal() == 2));
         score11.setText(gameBoardin.getRow11XP() + "");
         score12.setText(gameBoardin.getRow12XP() + "");
         score13.setText(gameBoardin.getRow13XP() + "");
@@ -648,15 +599,14 @@ public class InGameMenu extends Application {
         remainsDeck2.setText(gameBoardin.getPlayer2Deck().size() + "");
         remainsHand1.setText(gameBoardin.getPlayer1Hand().size() + "");
         remainsHand2.setText(gameBoardin.getPlayer2Hand().size() + "");
-
-
-        for (int k = 0; k < 2; k++) {
+        for (int k = 0; k < 3; k++) {
             for (int j = 0; j < 2; j++) {
-                ArrayList<Cardin> b = (k == 0 ? (j == 0 ? player1Hand : player2Hand) : (j == 0 ? player1Deck : player2Deck));
+                ArrayList<Cardin> b = (k == 0 ? (j == 0 ? gameBoardin.getPlayer1Hand() : gameBoardin.getPlayer2Hand()) : (k == 1 ? (j == 0 ? gameBoardin.getPlayer1Deck() : gameBoardin.getPlayer2Deck()) : (j == 0 ? gameBoardin.getPlayer1Discard() : gameBoardin.getPlayer2Discard())));
                 for (int i = 0; i < b.size(); i++) {
-                    if ((k == 0 ? hand : deck)[j].get(i).getCard().isSoldier) {
-                        (k == 0 ? hand : deck)[j].get(i).getCard().setHp(b.get(i).hp);
-                        (k == 0 ? hand : deck)[j].get(i).setHP();
+                    ArrayList<CardView>[] z = (k == 0 ? hand : (k == 1 ? deck : discard));
+                    if (z[j].get(i).getCard().isSoldier) {
+                        z[j].get(i).getCard().setHp(b.get(i).hp);
+                        z[j].get(i).setHP();
                     }
                 }
             }
@@ -673,7 +623,6 @@ public class InGameMenu extends Application {
                     else if (k == 1) rowFlag = gameBoardin.getRow22();
                     else rowFlag = gameBoardin.getRow23();
                 }
-                gameBoardin.showAllCardAndHp();
                 for (int i = 0; i < rowFlag.size(); i++) {
                     if (row[j][k].get(i).getCard().isSoldier) {
                         row[j][k].get(i).getCard().setHp(rowFlag.get(i).hp);
@@ -736,9 +685,9 @@ public class InGameMenu extends Application {
                 case OPPONENT_CLOSE_COMBAT -> row23.getChildren().add(imageYellowRow());
                 case WEATHER -> rowWeather.getChildren().add(imageYellowWeather());
                 case SPELL -> {
-                    if (horn[0][0].isEmpty()) rowHorn11.getChildren().add(imageYellowHorn());
-                    if (horn[0][1].isEmpty()) rowHorn12.getChildren().add(imageYellowHorn());
-                    if (horn[0][2].isEmpty()) rowHorn13.getChildren().add(imageYellowHorn());
+                    if (horn[0][0] == null) rowHorn11.getChildren().add(imageYellowHorn());
+                    if (horn[0][1] == null) rowHorn12.getChildren().add(imageYellowHorn());
+                    if (horn[0][2] == null) rowHorn13.getChildren().add(imageYellowHorn());
                 }
                 case CARD -> {
                     for (CardView cardView : row[0][0]) cardView.setInChangeSituation(true);
@@ -935,12 +884,83 @@ public class InGameMenu extends Application {
     }
 
 
-
     /////////////////////passTurn
     public void passTurn(MouseEvent mouseEvent) {
-        Result result = (Result)Client.getClient().getSender().sendCommand("pass turn");
-        if(!result.isSuccessful()){
+        Result result = (Result) Client.getClient().getSender().sendCommand("pass turn");
+        swapAllThings();
+        refresh();
+        if (!result.isSuccessful()) {
             endRound();
+        }
+    }
+
+    private void swapAllThings() {
+        GameBoardin gameBoardin = getGameBoardin();
+        ArrayList<Cardin> player1Hand = gameBoardin.getPlayer1Hand();
+        ArrayList<Cardin> player2Hand = gameBoardin.getPlayer2Hand();
+        ArrayList<Cardin> player1Deck = gameBoardin.getPlayer1Deck();
+        ArrayList<Cardin> player2Deck = gameBoardin.getPlayer2Deck();
+        ArrayList<Cardin> player1Discard = gameBoardin.getPlayer1Discard();
+        ArrayList<Cardin> player2Discard = gameBoardin.getPlayer2Discard();
+        ArrayList<Cardin> row11 = gameBoardin.getRow11();
+        ArrayList<Cardin> row12 = gameBoardin.getRow12();
+        ArrayList<Cardin> row13 = gameBoardin.getRow13();
+        ArrayList<Cardin> row21 = gameBoardin.getRow21();
+        ArrayList<Cardin> row22 = gameBoardin.getRow22();
+        ArrayList<Cardin> row23 = gameBoardin.getRow23();
+        Cardin horn11 = gameBoardin.getSpecialCard11();
+        Cardin horn12 = gameBoardin.getSpecialCard12();
+        Cardin horn13 = gameBoardin.getSpecialCard13();
+        Cardin horn21 = gameBoardin.getSpecialCard21();
+        Cardin horn22 = gameBoardin.getSpecialCard22();
+        Cardin horn23 = gameBoardin.getSpecialCard23();
+        for (int i = 0; i < 2; i++) for (CardView c : hand[i]) pain.getChildren().remove(c);
+        for (int i = 0; i < 2; i++) for (CardView c : deck[i]) pain.getChildren().remove(c);
+        for (int i = 0; i < 2; i++) for (CardView c : discard[i]) pain.getChildren().remove(c);
+        for (int j = 0; j < 2; j++)
+            for (int i = 0; i < 3; i++) for (CardView c : row[j][i]) pain.getChildren().remove(c);
+        for (int j = 0; j < 2; j++)
+            for (int i = 0; i < 3; i++) pain.getChildren().remove(horn[j][i]);
+        for (CardView c : weather) pain.getChildren().remove(c);
+
+        for (int i = 0; i < 2; i++) {
+            hand[i].clear();
+            deck[i].clear();
+            discard[i].clear();
+            for (int j = 0; j < 3; j++) {
+                row[i][j].clear();
+                horn[i][j] = null;
+            }
+            weather.clear();
+        }
+        for (int k = 0; k < 3; k++) {
+            for (int i = 0; i < 2; i++) {
+                for (Cardin c : (i == 0 ? (k == 0 ? player1Hand : (k == 1 ? player1Deck : player1Discard)) : (k == 0 ? player2Hand : (k == 1 ? player2Deck : player2Discard)))) {
+                    CardView cardView = new CardView(c, 0, 0, this, (k == 1));
+                    (k == 0 ? hand[i] : (k == 1 ? deck[i] : discard[i])).add(cardView);
+                    if (k == 0) cardView.setInHand(true);
+                    if (!(k == 0 && i == 1)) pain.getChildren().add(cardView);
+                }
+            }
+        }
+        for (int k = 0; k < 2; k++) {
+            for (int i = 0; i < 3; i++) {
+                for (Cardin c : (k == 0 ? (i == 0 ? row11 : (i == 1 ? row12 : row13)) : (i == 0 ? row21 : (i == 1 ? row22 : row23)))) {
+                    CardView cardView = new CardView(c, 0, 0, this, false);
+                    row[k][i].add(cardView);
+                    pain.getChildren().add(cardView);
+                }
+            }
+        }
+        for (int k = 0; k < 2; k++) {
+            for (int i = 0; i < 3; i++) {
+                Cardin cardin = (k == 0 ? (i == 0 ? horn11 : (i == 1 ? horn12 : horn13)) : (i == 0 ? horn21 : (i == 1 ? horn22 : horn23)));
+                if (cardin != null){
+                    CardView cardView = new CardView(cardin, 0, 0, this, false);
+                    horn[k][i] = cardView;
+                    pain.getChildren().add(cardView);
+                }
+            }
         }
     }
 
@@ -949,7 +969,7 @@ public class InGameMenu extends Application {
     }
 
     public void buttonEntered(MouseEvent mouseEvent) {
-        if (mouseEvent.getSource() instanceof Rectangle){
+        if (mouseEvent.getSource() instanceof Rectangle) {
             Pane paneS = (Pane) ((Rectangle) mouseEvent.getSource()).getParent();
             int n = paneS.getChildren().indexOf((Rectangle) mouseEvent.getSource()) + 1;
             ((Label) paneS.getChildren().get(n)).setTextFill(Paint.valueOf("e47429"));
@@ -959,7 +979,7 @@ public class InGameMenu extends Application {
     }
 
     public void buttonExited(MouseEvent mouseEvent) {
-        if (mouseEvent.getSource() instanceof Rectangle){
+        if (mouseEvent.getSource() instanceof Rectangle) {
             Pane paneS = (Pane) ((Rectangle) mouseEvent.getSource()).getParent();
             int n = paneS.getChildren().indexOf((Rectangle) mouseEvent.getSource()) + 1;
             ((Label) paneS.getChildren().get(n)).setTextFill(Paint.valueOf("black"));
