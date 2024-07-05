@@ -62,8 +62,10 @@ public class GameMenuController {
     }
 
     private static ArrayList<String> initiateDeck(User currentUser) {
-        ArrayList<String> deckNames = currentUser.getDeckNames();
-        ArrayList<Card> deck = currentUser.getDeck();
+        int currentPlayerNumber = currentUser.getCurrentGameBoard().getCurrentPlayer();
+        User user = currentUser.getCurrentGameBoard().getPlayer(currentPlayerNumber);
+        ArrayList<String> deckNames = user.getDeckNames();
+        ArrayList<Card> deck = user.getDeck();
         while (!deck.isEmpty()) {
             deck.removeFirst();
         }
@@ -267,8 +269,8 @@ public class GameMenuController {
     public static Result changeTurn(ApplicationController applicationController) {
         User user = applicationController.getCurrentUser();
         if (user.getNumberOfSoldiersInDeck() < 22) {
-            //TODO : change return to false
-            return new Result(true, "You should have at least 22 soldiers in your deck.");
+            //TODO : uncomment following line
+            //return new Result(false, "You should have at least 22 soldiers in your deck.");
         }
         GameBoard gameBoard = user.getCurrentGameBoard();
         gameBoard.changeTurn();
