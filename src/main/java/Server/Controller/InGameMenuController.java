@@ -56,9 +56,11 @@ public class InGameMenuController extends Thread {
     }
 
     private static Result passTurn(ApplicationController applicationController) {
-        // TODO: assumed it's in offline mode
         User user = applicationController.getCurrentUser();
-        applicationController.setCurrentUser(user.getOpponent());
+        if(user.getCurrentGameBoard().isGameOnline())
+            user.getOpponent().getSender().sendCommand("pass turn");
+        else
+            applicationController.setCurrentUser(user.getOpponent());
         return user.getCurrentGameBoard().passTurn();
     }
 
@@ -75,6 +77,12 @@ public class InGameMenuController extends Thread {
         int rowNumber = -1;
         if(rowNumberString != null)
             rowNumber = Integer.parseInt(rowNumberString);
+        if(user.getCurrentGameBoard().isGameOnline()) {
+            if(rowNumber == -1)
+                user.getOpponent().getSender().sendCommand("place weather for opponent " + cardNumber);
+            else
+                user.getOpponent().getSender().sendCommand("place special for opponent " + cardNumber + " in row " + (2 - rowNumber));
+        }
         int playerIndex = user.getCurrentGameBoard().getPlayerNumber(user);
         GameBoard gameBoard = user.getCurrentGameBoard();
         Spell spell = (Spell)user.getHand().get(cardNumber);
@@ -172,6 +180,7 @@ public class InGameMenuController extends Thread {
     }
 
     public static void changeCardPlaceInGraphic(Sender sender, int rowNumber, int cardNumber, Soldier soldier) {
+        System.out.println("all right in change card place in graphic");
         sender.sendCommand("change card in " + rowNumber + " " + cardNumber + " to " + soldier.getSendableCardin());
     }
 
@@ -358,6 +367,7 @@ public class InGameMenuController extends Thread {
     }
 
     public static void moveCardFromDeckToHand(Sender sender, Card card) {
+        System.out.println("all right in spy " + card.getName());
         int placedNumber = card.getPlacedNumberInDeck();
         card.getUser().getDeck().remove(placedNumber);
         card.getUser().getHand().add(card);
@@ -376,5 +386,23 @@ public class InGameMenuController extends Thread {
         card.getUser().getOpponent().getDiscardPile().remove(placedNumber);
         card.getUser().getHand().add(card);
         sender.sendCommand("move soldier " + placedNumber + " from opponent's discard pile to hand");
+    }
+
+    public static void moveCardFromDeckToRow(Sender sender, Card card, int rowNumber) {
+        User user = card.getUser();
+        GameBoard gameBoard = user.getCurrentGameBoard();
+        int placedNumber = card.getPlacedNumberInDeck();
+        user.getDeck().remove(placedNumber);
+        gameBoard.addSoldierToRow(gameBoard.getPlayerNumber(user), rowNumber, (Soldier) card);
+        sender.sendCommand("move soldier " + placedNumber + " from deck to row " + rowNumber);
+    }
+
+    public static void moveCardFromHandToRow(Sender sender, Card card, int rowNumber) {
+        User user = card.getUser();
+        GameBoard gameBoard = user.getCurrentGameBoard();
+        int placedNumber = user.getHand().indexOf(card);
+        user.getHand().remove(placedNumber);
+        gameBoard.addSoldierToRow(gameBoard.getPlayerNumber(user), rowNumber, (Soldier) card);
+        sender.sendCommand("move soldier " + placedNumber + " from hand to row " + rowNumber);
     }
 }

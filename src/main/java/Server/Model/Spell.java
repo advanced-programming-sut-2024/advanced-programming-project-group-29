@@ -23,7 +23,7 @@ public class Spell extends Card {
     }
 
     private static int getPlacedRowNumber(GameBoard gameBoard, Spell spell) {
-        for (int i = 1; i <= 3; i++) {
+        for (int i = 0; i <= 2; i++) {
             if (gameBoard.getSpecialCard(0, i) == spell ||
                     gameBoard.getSpecialCard(1, i) == spell)
                 return i;
@@ -77,7 +77,7 @@ public class Spell extends Card {
     @Override
     public void executeAction() {
         String name = this.getName().toLowerCase();
-        if (name.matches(".*mardoeme.*"))
+        if (name.matches(".*mardroeme.*"))
             executeActionForMardoeme(this);
         else if (name.matches(".*scorch.*"))
             executeActionForScorch(this);
@@ -111,7 +111,7 @@ public class Spell extends Card {
         ArrayList<Soldier> maxPowerSoldiers = new ArrayList<>();
         GameBoard gameBoard = spell.getGameBoard();
         for (int i = 0; i < 2; i++) {
-            for (int j = 1; j <= 3; j++) {
+            for (int j = 0; j <= 2; j++) {
                 for (Soldier soldier : gameBoard.getRows()[i][j]) {
                     if (soldier.getShownHp() > maxPower) {
                         maxPower = soldier.getShownHp();
@@ -130,6 +130,7 @@ public class Spell extends Card {
 
 
     private static void executeActionForMardoeme(Spell spell) {
+        System.out.println("not even here????");
         GameBoard gameBoard = spell.getGameBoard();
         int playerIndex = gameBoard.getPlayerNumber(spell.getUser());
         int rowNumber = getPlacedRowNumber(gameBoard, spell);

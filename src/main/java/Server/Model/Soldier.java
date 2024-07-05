@@ -134,6 +134,7 @@ public class Soldier extends Card {
             case MEDIC -> executeActionForMedic(this);
             case SPY -> executeActionForSpy(this);
             case MARDROEME -> executeActionForMardroeme(this);
+            case MUSTER -> executeActionForMuster(this);
         }
     }
 
@@ -147,6 +148,16 @@ public class Soldier extends Card {
             }
         }
         return -1;
+    }
+
+    private void executeActionForMuster(Soldier soldier) {
+        int rowNumber = getPlacedRowNumber(this, soldier.getGameBoard());
+        for(Card card : soldier.getUser().getDeck())
+            if(card.getName().equals(soldier.getName()))
+                InGameMenuController.moveCardFromDeckToRow(sender, card, rowNumber);
+        for(Card card : soldier.getUser().getHand())
+            if(card.getName().equals(soldier.getName()))
+                InGameMenuController.moveCardFromHandToRow(sender, card, rowNumber);
     }
 
     private void executeActionForTransformers(Soldier soldier) { // TODO passive action!

@@ -17,6 +17,8 @@ import java.util.Iterator;
 import java.util.Objects;
 import Server.Enum.*;
 
+import javax.xml.bind.SchemaOutputResolver;
+
 public abstract class Card {
     protected String description;
     private final String name;
@@ -118,8 +120,9 @@ public abstract class Card {
 
     protected static void executeMardoemeForRowNumber(GameBoard gameBoard, int playerIndex, int rowNumber) {
         for (Soldier otherSoldier : gameBoard.getRows()[playerIndex][rowNumber]) {
-            if (otherSoldier.getAttribute() == Attribute.BERSERKER)
+            if (otherSoldier.getAttribute() == Attribute.BERSERKER) {
                 otherSoldier.transformItToVidkaarl(!otherSoldier.getName().matches("Berserker"));
+            }
         }
     }
 

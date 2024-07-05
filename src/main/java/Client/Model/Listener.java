@@ -35,9 +35,11 @@ public class Listener extends Thread{
             while(true) {
                 boolean waitForAnswer = false;
                 try {
-                    String input = dataInputStream.readUTF();
-                    outputBuffer = null;
                     Matcher matcher;
+                    String input = dataInputStream.readUTF();
+                    System.out.println("got that command " + input);
+                    System.out.println((matcher = InGameMenuOutputCommand.CHANGE_CARD.getMatcher(input)).matches());
+                    outputBuffer = null;
                     waitForAnswer = false;
                     InGameMenu inGameMenu = Client.getInGameMenu();
                     if ((matcher = InGameMenuOutputCommand.ADD_CARD_TO_HAND.getMatcher(input)).matches())
