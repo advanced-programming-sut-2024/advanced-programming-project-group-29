@@ -132,6 +132,7 @@ public class GameBoardin {
             player1XP = gameBoard.getPlayerScore(playerIndex);
             player2XP = gameBoard.getPlayerScore(opponentIndex);
             currentPlayerIndex = gameBoard.getCurrentPlayerIndex() + 1;
+            System.out.println("crystals check " + player1Crystal + " " + player2Crystal);
         } catch (Exception e) {
             e.printStackTrace();
         }
