@@ -43,6 +43,8 @@ public class InGameMenuController extends Thread {
                 opponentSender.sendCommand(inputCommand);
             } else if ((matcher = InGameMenuRegex.SHOW_REACTION_TO_CARD.getMatcher(inputCommand)).matches()) {
                 opponentSender.sendCommand(inputCommand);
+            } else if((matcher = InGameMenuRegex.PASS_TURN.getMatcher(inputCommand)).matches()){
+                result = passTurn(applicationController);
             }
             user.setInProcess(false);
             user.getOpponent().setInProcess(false);
@@ -51,6 +53,13 @@ public class InGameMenuController extends Thread {
             e.printStackTrace();
             return null;
         }
+    }
+
+    private static Result passTurn(ApplicationController applicationController) {
+        // TODO: assumed it's in offline mode
+        User user = applicationController.getCurrentUser();
+        applicationController.setCurrentUser(user.getOpponent());
+        return user.getCurrentGameBoard().passTurn();
     }
 
     private static void commanderPowerPlay(User user) {

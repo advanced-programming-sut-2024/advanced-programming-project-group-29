@@ -13,7 +13,8 @@ public enum InGameMenuRegex {
     START_GAME("start game"),
     GET_GAME_BOARDIN("get game board"),
     SHOW_REACTION("show my reaction (?<reaction>.+) to opponent"),
-    SHOW_REACTION_TO_CARD("show my reaction (?<reaction>.+) to card (?<rowNumber>\\d) (?<cardNumber>\\d+)")
+    SHOW_REACTION_TO_CARD("show my reaction (?<reaction>.+) to card (?<rowNumber>\\d) (?<cardNumber>\\d+)"),
+    PASS_TURN("pass turn")
     ;
 
     String regex;

@@ -33,6 +33,8 @@ public class GameBoard {
     private final ArrayList<Spell> weather = new ArrayList<>();
     private final Commander[] playersLeaders = new Commander[2];
     private final GameHistory gameHistory;
+    private boolean isThereAnythingPlayed = false;
+    private int notPlayingTurns = 0;
 
     public GameBoard(User player1, User player2) {
         playersCrystals[0] = 2;
@@ -266,5 +268,19 @@ public class GameBoard {
         }
         if(playersLeaders[playerIndex] != null)
             playersLeaders[playerIndex].setSender(sender);
+    }
+
+    public Result passTurn() {
+        if(!isThereAnythingPlayed)
+            notPlayingTurns++;
+        else
+            notPlayingTurns = 0;
+        if(notPlayingTurns == 2){
+            notPlayingTurns = 0;
+            return new Result(false);
+        }
+        currentPlayer = 1 - currentPlayer;
+        isThereAnythingPlayed = false;
+        return new Result(true);
     }
 }
