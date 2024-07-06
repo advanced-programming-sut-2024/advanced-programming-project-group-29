@@ -258,7 +258,7 @@ public class Soldier extends Card {
     }
 
     public int getShownHp() {
-        if(isHero)
+        if(isHero || hp == 0)
             return hp;
         GameBoard gameBoard = this.getGameBoard();
         int rowNumber = getPlacedRowNumber(this, gameBoard);
@@ -278,7 +278,7 @@ public class Soldier extends Card {
         int playerIndex = gameBoard.getPlayerNumber(this.getUser());
         int cardNumber = getPlacedNumber();
         gameBoard.getRows()[playerIndex][rowNumber].set(cardNumber, bear);
-        InGameMenuController.changeCardPlaceInGraphic(sender, rowNumber, cardNumber, bear);
+        InGameMenuController.changeCardInGraphic(sender, rowNumber, cardNumber, bear);
     }
 
     @Override
@@ -289,6 +289,8 @@ public class Soldier extends Card {
     public int getPlacedNumber() {
         GameBoard gameBoard = this.getGameBoard();
         int rowNumber = getPlacedRowNumber(this, gameBoard);
+        System.out.println("name " + getName());
+        System.out.println("row number: " + rowNumber);
         int playerIndex = gameBoard.getPlayerNumber(this.getUser());
         for(int i = 0; i < gameBoard.getRows()[playerIndex][rowNumber].size(); i++)
             if(gameBoard.getRows()[playerIndex][rowNumber].get(i) == this)

@@ -25,6 +25,8 @@ public enum InGameMenuOutputCommand {
     PASS_TURN("pass turn"),
     PLACE_SPECIAL_FOR_OPPONENT("place special for opponent (?<cardNumber>\\d+) in row (?<rowNumber>\\d+)"),
     PLACE_WEATHER_FOR_OPPONENT("place weather for opponent (?<cardNumber>\\d+)"),
+    PLACE_SOLDIER_FOR_OPPONENT("place soldier for opponent (?<cardNumber>\\d+) in row (?<rowNumber>\\d+)"),
+    CHANGE_CARD_FOR_OPPONENT("change card for opponent in (?<rowNumber>\\d) (?<cardNumber>\\d+) to (?<cardinSerial>(\\n|.)+)"),
     ;
     private String command;
 

@@ -81,8 +81,6 @@ public class InGameMenuController extends Thread {
 
     private static void commanderPowerPlay(User user) {
         Commander commander = user.getCommander();
-        if (!commander.hasAction() || commander.hasPassiveAbility())
-            return;
         commander.executeAction();
     }
 
@@ -92,12 +90,7 @@ public class InGameMenuController extends Thread {
         int rowNumber = -1;
         if(rowNumberString != null)
             rowNumber = Integer.parseInt(rowNumberString);
-        if(user.getCurrentGameBoard().isGameOnline()) {
-            if(rowNumber == -1)
-                user.getOpponent().getSender().sendCommand("place weather for opponent " + cardNumber);
-            else
-                user.getOpponent().getSender().sendCommand("place special for opponent " + cardNumber + " in row " + (2 - rowNumber));
-        }
+        user.getOpponent().getSender().sendCommand("place special for opponent " + cardNumber + " in row " + rowNumber);
         int playerIndex = user.getCurrentGameBoard().getPlayerNumber(user);
         GameBoard gameBoard = user.getCurrentGameBoard();
         Spell spell = (Spell)user.getHand().get(cardNumber);
@@ -109,11 +102,12 @@ public class InGameMenuController extends Thread {
     private static void placeWeather(User user, Sender sender, Matcher matcher) {
         try {
             int cardNumber = Integer.parseInt(matcher.group("cardNumber"));
+            if(user.getCurrentGameBoard().isGameOnline())
+                user.getOpponent().getSender().sendCommand("place weather for opponent " + cardNumber);
             int playerIndex = user.getCurrentGameBoard().getPlayerNumber(user);
             GameBoard gameBoard = user.getCurrentGameBoard();
             Spell spell = (Spell) user.getHand().get(cardNumber);
             user.getHand().remove(cardNumber);
-            System.out.println("all right here in place weather " + spell.getName());
             spell.executeAction();
         } catch (Exception e) {
             e.printStackTrace();
@@ -127,6 +121,8 @@ public class InGameMenuController extends Thread {
             int rowNumber = -1;
             if (rowNumberString != null)
                 rowNumber = Integer.parseInt(rowNumberString);
+            if(user.getCurrentGameBoard().isGameOnline())
+                user.getOpponent().getSender().sendCommand("place soldier for opponent " + cardNumber + " in row " + rowNumber);
             int playerIndex = user.getCurrentGameBoard().getPlayerNumber(user);
             GameBoard gameBoard = user.getCurrentGameBoard();
             Soldier soldier = (Soldier) user.getHand().get(cardNumber);
@@ -194,8 +190,8 @@ public class InGameMenuController extends Thread {
         sender.sendCommand("remove card from hand " + cardNumber);
     }
 
-    public static void changeCardPlaceInGraphic(Sender sender, int rowNumber, int cardNumber, Soldier soldier) {
-        System.out.println("all right in change card place in graphic");
+    public static void changeCardInGraphic(Sender sender, int rowNumber, int cardNumber, Soldier soldier) {
+        sender.getUser().getOpponent().getSender().sendCommand("change card for opponent in " + rowNumber + " " + cardNumber + " to " + soldier.getSendableCardin());
         sender.sendCommand("change card in " + rowNumber + " " + cardNumber + " to " + soldier.getSendableCardin());
     }
 
@@ -204,10 +200,11 @@ public class InGameMenuController extends Thread {
             return;
         int playerIndex = gameBoard.getPlayerNumber(soldier.getUser());
         int rowNumber = Soldier.getPlacedRowNumber(soldier, gameBoard);
+        int placedNumber = soldier.getPlacedNumber();
         gameBoard.getRows()[playerIndex][rowNumber].remove(soldier);
         gameBoard.setPlayerScore(playerIndex, gameBoard.getPlayerScore(playerIndex) - soldier.getShownHp());
         playerIndex = getClientVersionOfPlayerIndex(sender.getUser(), gameBoard.getPlayer(playerIndex));
-        sender.sendCommand("destroy soldier " + playerIndex + " " + rowNumber + " " + soldier.getPlacedNumber());
+        sender.sendCommand("destroy soldier " + playerIndex + " " + rowNumber + " " + placedNumber);
     }
 
     private static int getClientVersionOfPlayerIndex(User user, User player) {
