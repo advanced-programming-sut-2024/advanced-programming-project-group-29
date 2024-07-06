@@ -43,8 +43,12 @@ public class InGameMenuController extends Thread {
                 opponentSender.sendCommand(inputCommand);
             } else if ((matcher = InGameMenuRegex.SHOW_REACTION_TO_CARD.getMatcher(inputCommand)).matches()) {
                 opponentSender.sendCommand(inputCommand);
-            } else if((matcher = InGameMenuRegex.PASS_TURN.getMatcher(inputCommand)).matches()){
+            } else if ((matcher = InGameMenuRegex.PASS_TURN.getMatcher(inputCommand)).matches()) {
                 result = passTurn(applicationController);
+            } else if ((matcher = InGameMenuRegex.SEND_MESSAGE.getMatcher(inputCommand)).matches()) {
+                saveMessage(applicationController, matcher.group("message"));
+            } else if ((matcher = InGameMenuRegex.GET_CHAT_BOX.getMatcher(inputCommand)).matches()){
+                result = getChatBox(applicationController);
             }
             user.setInProcess(false);
             user.getOpponent().setInProcess(false);
@@ -53,6 +57,17 @@ public class InGameMenuController extends Thread {
             e.printStackTrace();
             return null;
         }
+    }
+
+    private static Object getChatBox(ApplicationController applicationController) {
+        ChatBox chatBox = applicationController.getCurrentUser().getCurrentGameBoard().getChatBox();
+        chatBox.setCurrentUsername(applicationController.getCurrentUser().getUsername());
+        return chatBox;
+    }
+
+    private static void saveMessage(ApplicationController applicationController, String message) {
+        GameBoard gameBoard = applicationController.getCurrentUser().getCurrentGameBoard();
+        gameBoard.addMessage(new Message(applicationController.getCurrentUser().getUsername(), message));
     }
 
     private static Result passTurn(ApplicationController applicationController) {

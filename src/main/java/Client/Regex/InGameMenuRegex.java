@@ -14,7 +14,9 @@ public enum InGameMenuRegex {
     GET_GAME_BOARDIN("get game board"),
     SHOW_REACTION("show my reaction (?<reaction>.+) to opponent"),
     SHOW_REACTION_TO_CARD("show my reaction (?<reaction>.+) to card (?<rowNumber>\\d) (?<cardNumber>\\d+)"),
-    PASS_TURN("pass turn")
+    PASS_TURN("pass turn"),
+    SEND_MESSAGE("send message (?<message>.+)"),
+    GET_CHAT_BOX("get chat box"),
     ;
 
     String regex;

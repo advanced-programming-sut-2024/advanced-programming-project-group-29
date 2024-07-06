@@ -36,6 +36,7 @@ public class GameBoard {
     private boolean isThereAnythingPlayed = false;
     private int notPlayingTurns = 0;
     private boolean isGameOnline = false;
+    ChatBox chatBox = new ChatBox();
 
     public GameBoard(User player1, User player2) {
         playersCrystals[0] = 2;
@@ -306,5 +307,13 @@ public class GameBoard {
 
     public boolean isGameOnline() {
         return isGameOnline;
+    }
+
+    public void addMessage(Message message) {
+        chatBox.addMessage(message);
+    }
+
+    public ChatBox getChatBox() {
+        return chatBox;
     }
 }
