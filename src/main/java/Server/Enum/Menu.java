@@ -9,5 +9,6 @@ public enum Menu {
     MAIN_MENU,
     REGISTER_MENU,
     PROFILE_MENU,
+    FRIENDS_MENU,
     RANKING_MENU;
 }

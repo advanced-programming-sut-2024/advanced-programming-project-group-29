@@ -24,12 +24,12 @@
             </Shadow>
          </effect>
       </Rectangle>
-      <TextField fx:id="searchedUsername" alignment="CENTER" layoutX="438.0" layoutY="127.0" prefHeight="35.0" prefWidth="310.0" promptText="Username">
+      <TextField fx:id="searchedField" alignment="CENTER" layoutX="438.0" layoutY="127.0" prefHeight="35.0" prefWidth="310.0" promptText="Username">
          <font>
             <Font size="17.0" />
          </font>
       </TextField>
-      <Label layoutX="225.0" layoutY="200.0" prefHeight="28.0" text="Username" textAlignment="CENTER" textFill="WHITE" visible="false">
+      <Label layoutX="225.0" layoutY="200.0" prefHeight="28.0" text="Username" textAlignment="CENTER" textFill="WHITE">
          <font>
             <Font size="15.0" />
          </font>
@@ -39,7 +39,7 @@
             <Font size="15.0" />
          </font>
       </Label>
-      <Label layoutX="225.0" layoutY="250.0" prefHeight="28.0" text="Nickname" textAlignment="CENTER" textFill="WHITE" visible="false">
+      <Label layoutX="225.0" layoutY="250.0" prefHeight="28.0" text="Nickname" textAlignment="CENTER" textFill="WHITE">
          <font>
             <Font size="15.0" />
          </font>
@@ -49,7 +49,7 @@
             <Font size="15.0" />
          </font>
       </Label>
-      <Label layoutX="225.0" layoutY="300.0" prefHeight="28.0" text="Rank" textAlignment="CENTER" textFill="WHITE" visible="false">
+      <Label layoutX="225.0" layoutY="300.0" prefHeight="28.0" text="Rank" textAlignment="CENTER" textFill="WHITE">
          <font>
             <Font size="15.0" />
          </font>
@@ -59,17 +59,17 @@
             <Font size="15.0" />
          </font>
       </Label>
-      <Label layoutX="225.0" layoutY="350.0" prefHeight="28.0" text="HighScore" textAlignment="CENTER" textFill="WHITE" visible="false">
+      <Label layoutX="225.0" layoutY="350.0" prefHeight="28.0" text="HighScore" textAlignment="CENTER" textFill="WHITE">
          <font>
             <Font size="15.0" />
          </font>
       </Label>
-      <Label fx:id="HighScore" layoutX="320.0" layoutY="350.0" prefHeight="28.0" text="HighScore" textAlignment="CENTER" textFill="WHITE" visible="false">
+      <Label fx:id="highScore" layoutX="320.0" layoutY="350.0" prefHeight="28.0" text="HighScore" textAlignment="CENTER" textFill="WHITE" visible="false">
          <font>
             <Font size="15.0" />
          </font>
       </Label>
-      <Label layoutX="225.0" layoutY="450.0" prefHeight="28.0" text="Games Played" textAlignment="CENTER" textFill="WHITE" visible="false">
+      <Label layoutX="225.0" layoutY="450.0" prefHeight="28.0" text="Games Played" textAlignment="CENTER" textFill="WHITE">
          <font>
             <Font size="15.0" />
          </font>
@@ -79,7 +79,7 @@
             <Font size="15.0" />
          </font>
       </Label>
-      <Label layoutX="225.0" layoutY="500.0" prefHeight="28.0" text="Win" textAlignment="CENTER" textFill="WHITE" visible="false">
+      <Label layoutX="225.0" layoutY="500.0" prefHeight="28.0" text="Win" textAlignment="CENTER" textFill="WHITE">
          <font>
             <Font size="15.0" />
          </font>
@@ -89,7 +89,7 @@
             <Font size="15.0" />
          </font>
       </Label>
-      <Label layoutX="425.0" layoutY="500.0" prefHeight="28.0" text="Draw" textAlignment="CENTER" textFill="WHITE" visible="false">
+      <Label layoutX="425.0" layoutY="500.0" prefHeight="28.0" text="Draw" textAlignment="CENTER" textFill="WHITE">
          <font>
             <Font size="15.0" />
          </font>
@@ -99,7 +99,7 @@
             <Font size="15.0" />
          </font>
       </Label>
-      <Label layoutX="625.0" layoutY="500.0" prefHeight="28.0" text="Lose" textAlignment="CENTER" textFill="WHITE" visible="false">
+      <Label layoutX="625.0" layoutY="500.0" prefHeight="28.0" text="Lose" textAlignment="CENTER" textFill="WHITE">
          <font>
             <Font size="15.0" />
          </font>
@@ -109,10 +109,16 @@
             <Font size="15.0" />
          </font>
       </Label>
-      <Rectangle arcHeight="5.0" arcWidth="8.0" fill="#f5ed0055" height="45.0" layoutX="214.0" layoutY="563.0" stroke="WHITE" strokeType="INSIDE" visible="false" width="200.0" />
-      <Label fx:id="status" layoutX="234.0" layoutY="572.0" prefHeight="28" text="Send Friend Request" textAlignment="CENTER" textFill="WHITE" visible="false">
+      <Rectangle fx:id="rectangle" arcHeight="5.0" arcWidth="8.0" fill="#b6f59654" height="45.0" layoutX="214.0" layoutY="563.0" stroke="WHITE" strokeType="INSIDE" visible="false" width="200.0" onMouseClicked="#sendFriendRequest"/>
+      <Label fx:id="status" alignment="CENTER" layoutX="214.0" layoutY="564.0" prefHeight="45" prefWidth="200.0" text="Send Friend Request" textAlignment="CENTER" textFill="WHITE" visible="false" onMouseClicked="#sendFriendRequest">
          <font>
             <Font size="16.0" />
-         </font></Label>
+         </font>
+      </Label>
+      <Label fx:id="userNotFound" layoutX="540.0" layoutY="160.0" opacity="0.8" prefHeight="28" text="No Such User!" textAlignment="CENTER" textFill="RED" visible="false">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
    </children>
 </AnchorPane>

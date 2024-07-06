@@ -39,7 +39,7 @@ public class FriendMenuController {
     private static Result sendFriendRequest(ApplicationController applicationController, Matcher matcher) {
         String username = matcher.group("username");
         User user = User.getUserByUsername(username);
-        if (!getStatus(applicationController, user).equals("Not Sent Yet")) {
+        if (getStatus(applicationController, user).equals("Not Sent Yet")) {
             applicationController.getCurrentUser().sendFriendRequest(User.getUserByUsername(username));
             return new Result(true, "Friend Request Sent");
         }
@@ -52,6 +52,8 @@ public class FriendMenuController {
     }
 
     private static String getStatus(ApplicationController applicationController, User user) {
+        if (user.equals(applicationController.getCurrentUser()))
+            return "You";
         return user.getStatusFriendRequest(applicationController.getCurrentUser());
     }
 

@@ -301,4 +301,8 @@ public class ProfileMenu extends Application {
     public void back(MouseEvent mouseEvent) throws Exception {
         new MainMenu().start(ApplicationRunningTimeData.getStage());
     }
+
+    public void goToFriendMenu() throws Exception {
+        new FriendsMenu().start(ApplicationRunningTimeData.getStage());
+    }
 }
