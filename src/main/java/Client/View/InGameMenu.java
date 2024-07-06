@@ -264,6 +264,10 @@ public class InGameMenu extends Application {
                 if (mouseEvent.getButton().equals(MouseButton.PRIMARY)) {
                     if (mouseEvent.getClickCount() == 3) {
                         Client.getClient().sendCommand("commander power play");
+                        for (int i = 0; i < 10000000; i++) {
+                            int b = i+i;
+                        }
+                        refresh();
                     }
                 }
             }
@@ -395,7 +399,21 @@ public class InGameMenu extends Application {
         CardView c = hand[0].get(cardNumber);
         hand[0].remove(cardNumber);
         row[0][convertRowNumber(rowNumber)].add(c);
+        c.setInHand(false);
         (new FlipCardAnimation(c, (row[0][convertRowNumber(rowNumber)].size() == 1 ? (X_POSITION_ROW_LEFT + X_POSITION_ROW_RIGHT - CARD_WIDTH) / 2 : (row[0][convertRowNumber(rowNumber)].get(row[0][convertRowNumber(rowNumber)].size() - 2)).getLayoutX() + SPACING + CARD_WIDTH), Y_POSITION_HAND, true, true, true)).play();
+    }
+
+
+    public void addCardFromDeckToRow(Matcher matcher) {
+        int cardNumber = Integer.parseInt(matcher.group("cardNumber"));
+        int rowNumber = Integer.parseInt(matcher.group("rowNumber"));
+        addCardFromDeckToRow(cardNumber,rowNumber);
+    }
+
+    public void addCardFromHandToRow(Matcher matcher) {
+        int cardNumber = Integer.parseInt(matcher.group("cardNumber"));
+        int rowNumber = Integer.parseInt(matcher.group("rowNumber"));
+        addCardFromHandToRow(cardNumber,rowNumber);
     }
 
     public void addCardFromDiscardToHand(int cardNumber, int playerIndex) {

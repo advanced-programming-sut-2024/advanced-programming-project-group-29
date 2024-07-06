@@ -59,6 +59,10 @@ public class Listener extends Thread{
                         inGameMenu.moveDiscardPileToDeckForBoth();
                     else if ((matcher = InGameMenuOutputCommand.MOVE_SOLDIER_TO_ROW.getMatcher(input)).matches())
                         inGameMenu.moveSoldier(matcher);
+                    else if ((matcher = InGameMenuOutputCommand.MOVE_HAND_TO_ROW.getMatcher(input)).matches())
+                        inGameMenu.addCardFromHandToRow(matcher);
+                    else if ((matcher = InGameMenuOutputCommand.MOVE_DECK_TO_ROW.getMatcher(input)).matches())
+                        inGameMenu.addCardFromDeckToRow(matcher);
                     else if ((matcher = InGameMenuOutputCommand.MOVE_DECK_TO_HAND.getMatcher(input)).matches())
                         inGameMenu.addCardFromDeckToHand(Integer.parseInt(matcher.group("cardNumber")));
                     else if ((matcher = InGameMenuOutputCommand.MOVE_DISCARD_TO_HAND.getMatcher(input)).matches())
