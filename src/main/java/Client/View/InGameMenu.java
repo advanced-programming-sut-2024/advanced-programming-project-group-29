@@ -30,6 +30,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import javax.xml.bind.SchemaOutputResolver;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -116,6 +117,8 @@ public class InGameMenu extends Application {
     public Pane mainPain;
     public Pane changePain;
     public Pane descriptionPain;
+    public Pane messageBoxPane;
+    public Pane showPain;
 
     public ImageView image3;
     public ImageView image4;
@@ -124,12 +127,14 @@ public class InGameMenu extends Application {
     public ImageView image1;
     private final ArrayList<Image> changeArray = new ArrayList<>();
     private final ArrayList<Integer> selectedImages = new ArrayList<>();
-    public Pane showPain;
     public ImageView showImage1;
     public ImageView showImage2;
     public ImageView showImage3;
+
     private int howManyChoice;
     private int step;
+
+    public TextField message;
 
     private final ArrayList<CardView>[] hand = new ArrayList[2];
     private final ArrayList<CardView>[] deck = new ArrayList[2];
@@ -264,6 +269,7 @@ public class InGameMenu extends Application {
                 if (mouseEvent.getButton().equals(MouseButton.PRIMARY)) {
                     if (mouseEvent.getClickCount() == 3) {
                         Client.getClient().sendCommand("commander power play");
+                        refresh();
                     }
                 }
             }
@@ -388,14 +394,38 @@ public class InGameMenu extends Application {
         row[0][convertRowNumber(rowNumber)].add(c);
         pain.getChildren().remove(c);
         pain.getChildren().add(c);
+        //refresh();
         (new FlipCardAnimation(c, (row[0][convertRowNumber(rowNumber)].size() == 1 ? (X_POSITION_ROW_LEFT + X_POSITION_ROW_RIGHT - CARD_WIDTH) / 2 : (row[0][convertRowNumber(rowNumber)].get(row[0][convertRowNumber(rowNumber)].size() - 2)).getLayoutX() + SPACING + CARD_WIDTH), Y_POSITION_HAND, true, true, true)).play();
     }
 
     public void addCardFromHandToRow(int cardNumber,int rowNumber) {
-        CardView c = hand[0].get(cardNumber);
-        hand[0].remove(cardNumber);
-        row[0][convertRowNumber(rowNumber)].add(c);
-        (new FlipCardAnimation(c, (row[0][convertRowNumber(rowNumber)].size() == 1 ? (X_POSITION_ROW_LEFT + X_POSITION_ROW_RIGHT - CARD_WIDTH) / 2 : (row[0][convertRowNumber(rowNumber)].get(row[0][convertRowNumber(rowNumber)].size() - 2)).getLayoutX() + SPACING + CARD_WIDTH), Y_POSITION_HAND, true, true, true)).play();
+        System.out.println("calling this function " + cardNumber + " " + rowNumber);
+        try {
+            CardView c = hand[0].get(cardNumber);
+            hand[0].remove(cardNumber);
+            row[0][convertRowNumber(rowNumber)].add(c);
+            c.setInHand(false);
+            (new FlipCardAnimation(c, (row[0][convertRowNumber(rowNumber)].size() == 1 ? (X_POSITION_ROW_LEFT + X_POSITION_ROW_RIGHT - CARD_WIDTH) / 2 : (row[0][convertRowNumber(rowNumber)].get(row[0][convertRowNumber(rowNumber)].size() - 2)).getLayoutX() + SPACING + CARD_WIDTH), Y_POSITION_HAND, true, true, true)).play();
+            //refresh();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        System.out.println("this functiono ended");
+    }
+
+
+    public void addCardFromDeckToRow(Matcher matcher) {
+        int cardNumber = Integer.parseInt(matcher.group("cardNumber"));
+        int rowNumber = Integer.parseInt(matcher.group("rowNumber"));
+        addCardFromDeckToRow(cardNumber,rowNumber);
+    }
+
+    public void addCardFromHandToRow(Matcher matcher) {
+        int cardNumber = Integer.parseInt(matcher.group("cardNumber"));
+        int rowNumber = Integer.parseInt(matcher.group("rowNumber"));
+        System.out.println("we are here, " + cardNumber + " " + rowNumber);
+        addCardFromHandToRow(cardNumber,rowNumber);
+        System.out.println("OK so wtf???????");
     }
 
     public void addCardFromDiscardToHand(int cardNumber, int playerIndex) {
@@ -1021,5 +1051,23 @@ public class InGameMenu extends Application {
         } else {
             ((Label) mouseEvent.getSource()).setTextFill(Paint.valueOf("black"));
         }
+    }
+
+    
+    /////////////////////chatBox
+    public void refreshMessageBox(){
+
+
+    }
+
+    public void send(MouseEvent mouseEvent) {
+
+    }
+
+    public void cancel(MouseEvent mouseEvent) {
+        message.setText("");
+        messageBoxPane.setDisable(true);
+        messageBoxPane.setVisible(false);
+        mainPain.setDisable(false);
     }
 }

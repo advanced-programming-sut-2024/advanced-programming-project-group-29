@@ -25,9 +25,6 @@ public class FlipCardAnimation extends Transition {
         for (CardView c : CardView.getAllCardViews()) c.removeHandler();
         this.pane = pane;
         this.refreshInEnd = refreshInEnd;
-        Pane p = ((Pane) pane.getParent());
-        p.getChildren().remove(pane);
-        p.getChildren().add(pane);
         this.faceFirst = (Math.cos(Math.toRadians(pane.getRotate())) > 0);
         this.flip = flip;
         this.face = face;

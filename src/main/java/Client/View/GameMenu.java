@@ -447,6 +447,10 @@ public class GameMenu extends Application {
         if (isCommander) {
             String toRegex = "select leader " + name.getText();
             client.sendCommand(toRegex);
+            String factionName = (String) client.sendCommand(GameMenuRegex.GET_USER_FACTION_NAME.getRegex());
+            String commanderName = (String) client.sendCommand(GameMenuRegex.GET_USER_COMMANDER_NAME.getRegex());
+            javafx.scene.image.Image image = new javafx.scene.image.Image("/Images/Commander/" + factionName + "/" + commanderName + ".jpg");
+            leader.setImage(image);
         } else {
             String toRegex = "select faction -f " + name.getText();
             client.sendCommand(toRegex);
