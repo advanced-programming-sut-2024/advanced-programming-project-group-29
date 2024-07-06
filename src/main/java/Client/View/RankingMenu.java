@@ -53,10 +53,10 @@ public class RankingMenu extends Application {
             if (n >= 0 && n <= 9) a.add("See Last Game");
         }
         ArrayList<String> names = new ArrayList<>() {{
+            add("Status");
             add("Rank");
             add("Username");
             add("Count of Wins");
-            add("Status");
             add("Last Game");
         }};
         tableView.getColumns().clear();

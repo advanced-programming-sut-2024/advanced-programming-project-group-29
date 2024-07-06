@@ -18,7 +18,7 @@ public class RankingMenuController {
         ArrayList<String> users = User.getAllUsersByRank();
         ArrayList<String> result = new ArrayList<>();
         User First = User.getUserByUsername(users.get(0));
-        result.add("1\t" + First.getUsername() + "\t" + First.getNumberOfWins());
+        result.add((ApplicationController.checkIfUserIsOnline(First.getUsername()) ? "online" : "offline") + "\t1\t" + First.getUsername() + "\t" + First.getNumberOfWins());
         int currentRank = 1;
         int currentWins = First.getNumberOfWins();
         for (int i = 1; i < users.size(); i++) {
