@@ -233,13 +233,8 @@ public class InGameMenu extends Application {
                                 hand[0].remove(c);
                                 c.setInHand(false);
                                 Client.getClient().sendCommand("place special " + placedNumber + " in row " + (3 - finalJ));
-                                if (c.getCard().name.matches("(S|s)corch")) {
-                                    discard[0].add(c);
-                                    (new FlipCardAnimation(c, X_POSITION_DISCARD, Y_POSITION_DISCARD_1, true, true, true)).play();
-                                } else {
-                                    horn[0][finalJ - 1] = c;
-                                    (new FlipCardAnimation(c, X_POSITION_SPELL, Y, true, true, true)).play();
-                                }
+                                horn[0][finalJ - 1] = c;
+                                (new FlipCardAnimation(c, X_POSITION_SPELL, Y, true, true, true)).play();
                             }
                         }
                     }
@@ -252,18 +247,25 @@ public class InGameMenu extends Application {
                 if (!((Pane) mouseEvent.getSource()).getChildren().isEmpty()) {
                     for (CardView c : new ArrayList<>(hand[0])) {
                         if (c.isSelected()) {
-                            int n = weather.size();
-                            (new FlipCardAnimation(c, (n == 0 ? (X_POSITION_WEATHER_LEFT + X_POSITION_WEATHER_RIGHT - CARD_WIDTH) / 2 : weather.get(n - 1).getLayoutX() + CARD_WIDTH + SPACING), Y_POSITION_WEATHER, true, true, true)).play();
                             int placedNumber = -1;
                             for (int i = 0; i < hand[0].size(); i++)
                                 if (hand[0].get(i).equals(c))
                                     placedNumber = i;
-                            hand[0].remove(c);
-                            c.setInHand(false);
-                            weather.add(c);
-                            Client.getClient().sendCommand("place weather " + placedNumber);
-                            refreshWeather();
-                            (new FlipCardAnimation(c, (n == 0 ? (X_POSITION_WEATHER_LEFT + X_POSITION_WEATHER_RIGHT - CARD_WIDTH) / 2 : weather.get(n - 1).getLayoutX() + CARD_WIDTH + SPACING), Y_POSITION_WEATHER, true, true, false)).play();
+                            if (c.getCard().name.matches("(S|s)corch")) {
+                                hand[0].remove(c);
+                                c.setInHand(false);
+                                discard[0].add(c);
+                                Client.getClient().sendCommand("place weather " + placedNumber);
+                                (new FlipCardAnimation(c, X_POSITION_DISCARD, Y_POSITION_DISCARD_1, true, true, true)).play();
+                            } else {
+                                int n = weather.size();
+                                hand[0].remove(c);
+                                c.setInHand(false);
+                                weather.add(c);
+                                Client.getClient().sendCommand("place weather " + placedNumber);
+                                refreshWeather();
+                                (new FlipCardAnimation(c, (n == 0 ? (X_POSITION_WEATHER_LEFT + X_POSITION_WEATHER_RIGHT - CARD_WIDTH) / 2 : weather.get(n - 1).getLayoutX() + CARD_WIDTH + SPACING), Y_POSITION_WEATHER, true, true, true)).play();
+                            }
                         }
                     }
                 }
@@ -532,13 +534,13 @@ public class InGameMenu extends Application {
             CardView c = row[playerIndex][convertRowNumber(rowNumber)].get(cardNumber);
             row[playerIndex][convertRowNumber(rowNumber)].remove(cardNumber);
             discard[playerIndex].add(c);
-            (new BurningCardAnimation(c, X_POSITION_DISCARD, Y_POSITION_DISCARD_1)).play();
+            (new BurningCardAnimation(c, X_POSITION_DISCARD, (playerIndex == 0 ? Y_POSITION_DISCARD_1 : Y_POSITION_DISCARD_2))).play();
         });
     }
 
     public void destroySoldier(Matcher matcher) {
         int playerIndex = Integer.parseInt(matcher.group("playerIndex"));
-        int row = convertRowNumber(Integer.parseInt(matcher.group("row")));
+        int row = Integer.parseInt(matcher.group("row"));
         int cardNumber = Integer.parseInt(matcher.group("cardNumber"));
         destroySoldier(row, cardNumber, playerIndex);
     }

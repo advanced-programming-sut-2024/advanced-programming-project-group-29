@@ -124,6 +124,8 @@ public class Cardin {
             case SPELL:
                 if (cardName.matches("(D|d)ecoy")) {
                     spaces.add(Space.CARD);
+                } else if (cardName.matches("(S|s)corch")) {
+                    spaces.add(Space.WEATHER);
                 } else {
                     spaces.add(Space.SPELL);
                 }
