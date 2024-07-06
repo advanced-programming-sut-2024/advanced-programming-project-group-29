@@ -3,6 +3,8 @@ package Client.Model;
 import Client.Model.ApplicationRunningTimeData;
 import Client.View.Animations.FlipCardAnimation;
 import Client.View.InGameMenu;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -23,6 +25,7 @@ import javafx.scene.text.Font;
 import Client.Enum.Type;
 import Client.Enum.Attribute;
 import javafx.scene.text.FontWeight;
+import javafx.util.Duration;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -102,10 +105,16 @@ public class CardView extends Pane {
             hpBackground.setLayoutY(-3);
             hpBackground.setFitWidth(50);
             hpBackground.setFitHeight(50);
+            ImageView Reaction = new ImageView();
+            Reaction.setFitHeight(25);
+            Reaction.setFitWidth(25);
+            Reaction.setLayoutY(2);
+            Reaction.setLayoutX(43);
             this.items.getChildren().add(hpBackground);
             this.items.getChildren().add(hp);
             this.items.getChildren().add(type);
             this.items.getChildren().add(ability);
+            this.items.getChildren().add(Reaction);
         } else {
             ImageView ability = getImageViewAbilitySpells(card);
             ability.setLayoutX(-3);
@@ -326,5 +335,13 @@ public class CardView extends Pane {
     public void setPos(double x, double y) {
         this.setLayoutX(x);
         this.setLayoutY(y);
+    }
+
+    public void setReaction(String reaction) {
+        ((ImageView) this.items.getChildren().get(4)).setImage(new Image("/Images/Emojis/"+reaction));
+        Timeline t = new Timeline(new KeyFrame(Duration.seconds(7)));
+        t.setOnFinished(e -> ((ImageView) this.items.getChildren().get(4)).setImage(null));
+        t.setCycleCount(1);
+        t.play();
     }
 }

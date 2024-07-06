@@ -12,10 +12,11 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.regex.Matcher;
+
 import Client.View.InGameMenu;
 import com.google.gson.GsonBuilder;
 
-public class Listener extends Thread{
+public class Listener extends Thread {
     private Socket socket;
     private int port = 0;
 
@@ -32,7 +33,7 @@ public class Listener extends Thread{
             socket = server.accept();
             dataInputStream = new DataInputStream(socket.getInputStream());
             dataOutputStream = new DataOutputStream(socket.getOutputStream());
-            while(true) {
+            while (true) {
                 boolean waitForAnswer = false;
                 try {
                     Matcher matcher;
@@ -73,12 +74,12 @@ public class Listener extends Thread{
                         inGameMenu.showThreeCardOfOpponent();
                     else if ((matcher = LoginMenuRegex.SET_TOKEN.getMatcher(input)).matches())
                         Client.getClient().getSender().setToken(matcher.group("token"));
-                    else if((matcher = LoginMenuRegex.AUTHENTICATE.getMatcher(input)).matches()){
-                    // TODO: pop up an authentication window, asking for username and password, check it, when it was ok call setOutputStreamBuffer("null")
+                    else if ((matcher = LoginMenuRegex.AUTHENTICATE.getMatcher(input)).matches()) {
+                        // TODO: pop up an authentication window, asking for username and password, check it, when it was ok call setOutputStreamBuffer("null")
                         waitForAnswer = true;
-                    } else if((matcher = InGameMenuRegex.SHOW_REACTION.getMatcher(input)).matches()){
+                    } else if ((matcher = InGameMenuRegex.SHOW_REACTION.getMatcher(input)).matches()) {
                         inGameMenu.showReaction(matcher.group("reaction"));
-                    } else if((matcher = InGameMenuRegex.SHOW_REACTION_TO_CARD.getMatcher(input)).matches()){
+                    } else if ((matcher = InGameMenuRegex.SHOW_REACTION_TO_CARD.getMatcher(input)).matches()) {
                         inGameMenu.showReactionToCard(matcher.group("reaction"), Integer.parseInt(matcher.group("rowNumber")),
                                 Integer.parseInt(matcher.group("cardNumber")));
                     }
@@ -86,18 +87,7 @@ public class Listener extends Thread{
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
-                if (!waitForAnswer) {
-                    System.out.println("geryeeeeeeee");
-                    dataOutputStream.writeUTF("null");
-                    dataOutputStream.flush();
-                    continue;
-                }
-                while (outputBuffer == null) {
-                    continue;
-                }
-                System.out.println("sending " + outputBuffer);
-                dataOutputStream.writeUTF(outputBuffer);
+                dataOutputStream.writeUTF("null");
                 dataOutputStream.flush();
             }
         } catch (IOException e) {
@@ -105,7 +95,7 @@ public class Listener extends Thread{
         }
     }
 
-    public static ServerSocket getNewServerSocket(){
+    public static ServerSocket getNewServerSocket() {
         try {
             return new ServerSocket(0);
         } catch (IOException e) {
@@ -114,17 +104,17 @@ public class Listener extends Thread{
         }
     }
 
-    public int getPort(){
+    public int getPort() {
         System.out.println("heyyy " + port);
         return port;
     }
 
-    private void setOutputStreamBuffer(String outputStream){
+    private void setOutputStreamBuffer(String outputStream) {
         outputBuffer = outputStream;
     }
 
-    public void setOutputBuffer(Object object){
-        if(object == null){
+    public void setOutputBuffer(Object object) {
+        if (object == null) {
             setOutputStreamBuffer("null");
             return;
         }
@@ -133,7 +123,7 @@ public class Listener extends Thread{
     }
 
     public static Object deSerialize(String serializedObject) {
-        if(serializedObject.equals("null"))
+        if (serializedObject.equals("null"))
             return null;
         try {
             int endOfClassName = serializedObject.indexOf(":");

@@ -31,7 +31,7 @@ public class ChooseGameModelMenu extends Application {
 
     private Client client;
 
-    boolean isOnline;
+    private boolean isOnline;
 
     public ChooseGameModelMenu() {
         super();

@@ -48,12 +48,11 @@ public class InGameMenu extends Application {
     private final double X_POSITION_HAND_RIGHT = 1260;
     private final double X_POSITION_ROW_LEFT = 591;
     private final double X_POSITION_ROW_RIGHT = 1264;
-    private final double Y_POSITION_HAND = 704;
+    private final double Y_POSITION_HAND_1 = 704;
+    private final double Y_POSITION_HAND_2 = -150;
     private final double X_POSITION_WEATHER_LEFT = 121;
     private final double X_POSITION_WEATHER_RIGHT = 344;
     private final double Y_POSITION_WEATHER = 383;
-    private final double X_POSITION_CENTER_OF_SELECT = 759;
-    private final double Y_POSITION_CENTER_OF_SELECT = 350;
     private final double X_POSITION_DISCARD = 1297;
     private final double X_POSITION_SPELL = 495;
     private final double Y_POSITION_DISCARD_1 = 700;
@@ -66,7 +65,6 @@ public class InGameMenu extends Application {
     private final double Y_POSITION_ROW_22 = 122;
     private final double Y_POSITION_ROW_23 = 226;
     private final double CARD_WIDTH = 70;
-    private final double CARD_HEIGHT = 100;
     private final double SPACING = 5;
 
     public Pane row11;
@@ -125,6 +123,9 @@ public class InGameMenu extends Application {
     public Pane descriptionPain;
     public Pane messageBoxPane;
     public Pane showPain;
+    public Pane reactionPain;
+    public Pane showReactionPain;
+
 
     public ImageView image3;
     public ImageView image4;
@@ -137,8 +138,22 @@ public class InGameMenu extends Application {
     public ImageView showImage2;
     public ImageView showImage3;
 
+    public ImageView emojiReaction1;
+    public ImageView emojiReaction2;
+    public ImageView emojiReaction3;
+    public Label textReaction1;
+    public Label textReaction2;
+    public Label textReaction3;
+    public TextField typeReaction;
+    public Label opponentReaction;
+
+    private CardView LastSelectedCard;
+
     private int howManyChoice;
     private int step;
+    private boolean isVeto;
+    private int vetoStep;
+    private final boolean isOnline = false;
 
     public ScrollPane messageScroll;
     public TextField message;
@@ -282,6 +297,42 @@ public class InGameMenu extends Application {
                 }
             }
         });
+        for (int i = 0; i < 3; i++) {
+            Field emojiField = this.getClass().getDeclaredField("emojiReaction" + (i + 1));
+            Field textField = this.getClass().getDeclaredField("textReaction" + (i + 1));
+            emojiField.setAccessible(true);
+            textField.setAccessible(true);
+            int finalI = i;
+            ((ImageView) emojiField.get(this)).setOnMouseClicked(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent mouseEvent) {
+                    if (mouseEvent.getButton().equals(MouseButton.PRIMARY)) {
+                        if (mouseEvent.getClickCount() == 2) {
+                            String reaction = "";
+                            if (finalI == 0) reaction = "cursing.png";
+                            else if (finalI == 1) reaction = "suicide.png";
+                            else reaction = "thumbsup.png";
+                            Client.getClient().getSender().sendCommand("send emoji reaction " + reaction);
+                        }
+
+                    }
+                }
+            });
+            ((Label) textField.get(this)).setOnMouseClicked(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent mouseEvent) {
+                    if (mouseEvent.getButton().equals(MouseButton.PRIMARY)) {
+                        if (mouseEvent.getClickCount() == 2) {
+                            try {
+                                Client.getClient().getSender().sendCommand("send reaction " + ((Label) textField.get(this)).getText());
+                            } catch (IllegalAccessException e) {
+                                throw new RuntimeException(e);
+                            }
+                        }
+                    }
+                }
+            });
+        }
         image3.setOnKeyPressed(event -> {
             switch (event.getCode()) {
                 case RIGHT:
@@ -358,7 +409,7 @@ public class InGameMenu extends Application {
         });
     }
 
-    public void moveSoldier(Matcher matcher) throws NoSuchFieldException, IllegalAccessException {
+    public void moveSoldier(Matcher matcher) {
         int rowNumber = Integer.parseInt(matcher.group("rowNumber"));
         int cardNumber = Integer.parseInt(matcher.group("cardNumber"));
         int newRowNumber = Integer.parseInt(matcher.group("newRowNumber"));
@@ -412,7 +463,7 @@ public class InGameMenu extends Application {
             pain.getChildren().remove(c);
             pain.getChildren().add(c);
             c.setInHand(true);
-            (new FlipCardAnimation(c, (hand[0].size() == 1 ? (X_POSITION_HAND_LEFT + X_POSITION_HAND_RIGHT - CARD_WIDTH) / 2 : (hand[0].get(hand[0].size() - 2)).getLayoutX() + SPACING + CARD_WIDTH), Y_POSITION_HAND, true, true, true)).play();
+            (new FlipCardAnimation(c, (hand[0].size() == 1 ? (X_POSITION_HAND_LEFT + X_POSITION_HAND_RIGHT - CARD_WIDTH) / 2 : (hand[0].get(hand[0].size() - 2)).getLayoutX() + SPACING + CARD_WIDTH), Y_POSITION_HAND_1, true, true, true)).play();
         });
     }
 
@@ -461,11 +512,11 @@ public class InGameMenu extends Application {
             if (playerIndex == 0) {
                 pain.getChildren().add(c);
             }
-            (new FlipCardAnimation(c, (hand[playerIndex].size() == 1 ? (X_POSITION_HAND_LEFT + X_POSITION_HAND_RIGHT - CARD_WIDTH) / 2 : (hand[playerIndex].get(hand[playerIndex].size() - 2)).getLayoutX() + SPACING + CARD_WIDTH), Y_POSITION_HAND, true, true, true)).play();
+            (new FlipCardAnimation(c, (hand[playerIndex].size() == 1 ? (X_POSITION_HAND_LEFT + X_POSITION_HAND_RIGHT - CARD_WIDTH) / 2 : (hand[playerIndex].get(hand[playerIndex].size() - 2)).getLayoutX() + SPACING + CARD_WIDTH), Y_POSITION_HAND_1, true, true, true)).play();
         });
     }
 
-    public void showThreeCardOfOpponent() throws NoSuchFieldException, IllegalAccessException {
+    public void showThreeCardOfOpponent() {
         Platform.runLater(() -> {
             int n = hand[1].size();
             ArrayList<CardView> copyHandOpponent = new ArrayList<>(hand[1]);
@@ -605,7 +656,7 @@ public class InGameMenu extends Application {
         for (int k = 0; k < 2; k++) {
             ArrayList<Cardin> playerHand = (k == 0 ? gameBoardin.getPlayer1Hand() : gameBoardin.getPlayer2Hand());
             for (int i = 0; i < playerHand.size(); i++) {
-                CardView c = new CardView(playerHand.get(i), getXPosition(i, playerHand.size(), false, false), Y_POSITION_HAND, this, false);
+                CardView c = new CardView(playerHand.get(i), getXPosition(i, playerHand.size(), false, false), (i == 0 ? Y_POSITION_HAND_1 : Y_POSITION_HAND_2), this, false);
                 hand[k].add(c);
                 c.setInHand(true);
             }
@@ -615,6 +666,7 @@ public class InGameMenu extends Application {
             }
         }
         for (CardView c : hand[0]) pain.getChildren().add(c);
+        for (CardView c : hand[1]) pain.getChildren().add(c);
         for (CardView c : deck[0]) pain.getChildren().add(c);
         for (CardView c : deck[1]) pain.getChildren().add(c);
         System.out.println(gameBoardin.getPlayer1Faction() + "   " + gameBoardin.getPlayer1Commander());
@@ -665,7 +717,7 @@ public class InGameMenu extends Application {
 
     public void refresh() {
         for (int i = 0; i < 2; i++) {
-            setPositionVar(hand[i], false, false, Y_POSITION_HAND);
+            setPositionVar(hand[i], false, false, (i == 0 ? Y_POSITION_HAND_1 : Y_POSITION_HAND_2));
             setPositionCte(deck[i], X_POSITION_Deck, (i == 0 ? Y_POSITION_DISCARD_1 : Y_POSITION_DISCARD_2));
             setPositionCte(discard[i], X_POSITION_DISCARD, (i == 0 ? Y_POSITION_DISCARD_1 : Y_POSITION_DISCARD_2));
             for (int j = 0; j < 3; j++) {
@@ -931,21 +983,23 @@ public class InGameMenu extends Application {
     }
 
     private void setImageChange(int number) {
-        int n = 3 - number;
-        image1.setImage(null);
-        image2.setImage(null);
-        image3.setImage(null);
-        image4.setImage(null);
-        image5.setImage(null);
-        for (Image image : changeArray) {
-            try {
-                Field field = this.getClass().getDeclaredField("image" + (n++));
-                field.setAccessible(true);
-                ((ImageView) field.get(this)).setImage(image.getImage());
-                field.setAccessible(false);
-            } catch (NoSuchFieldException | IllegalAccessException ignored) {
+        Platform.runLater(() -> {
+            int n = 3 - number;
+            image1.setImage(null);
+            image2.setImage(null);
+            image3.setImage(null);
+            image4.setImage(null);
+            image5.setImage(null);
+            for (Image image : changeArray) {
+                try {
+                    Field field = this.getClass().getDeclaredField("image" + (n++));
+                    field.setAccessible(true);
+                    ((ImageView) field.get(this)).setImage(image.getImage());
+                    field.setAccessible(false);
+                } catch (NoSuchFieldException | IllegalAccessException ignored) {
+                }
             }
-        }
+        });
     }
 
     public void done(MouseEvent mouseEvent) {
@@ -955,15 +1009,32 @@ public class InGameMenu extends Application {
             if (selectedImages.get(step) >= selectedImages.get(i))
                 selectedImages.set(step, selectedImages.get(step) + 1);
         }
-        if (step == howManyChoice - 1) {
-            mainPain.setDisable(false);
-            changePain.setDisable(true);
-            changePain.setVisible(false);
-            System.out.println(selectedImages);
-            return;
+        if (isVeto) {
+            if (step == vetoStep - 1) {
+                if (vetoStep == 2) {
+                    vetoCard(false);
+                } else {
+                    mainPain.setDisable(false);
+                    changePain.setDisable(true);
+                    changePain.setVisible(false);
+                    Client.getClient().getSender().sendCommand("veto card chosen " + selectedImages.getFirst() + " " + selectedImages.get(1));
+                    isVeto = false;
+                    return;
+                }
+            }
+            step++;
+            setImageChange(selectedImages.get(step));
+        } else {
+            if (step == howManyChoice - 1) {
+                mainPain.setDisable(false);
+                changePain.setDisable(true);
+                changePain.setVisible(false);
+                Client.getClient().getSender().sendCommand("one card chosen " + selectedImages.getFirst());
+                return;
+            }
+            step++;
+            setImageChange(selectedImages.get(step));
         }
-        step++;
-        setImageChange(selectedImages.get(step));
     }
 
     public void forward(MouseEvent mouseEvent) {
@@ -980,14 +1051,68 @@ public class InGameMenu extends Application {
         return selectedImages;
     }
 
-    ///////////////////////reactions
-    public void showReaction(String reaction) {
-        // TODO: implement this, show a reaction which was added by opponent
-        // string reaction is just the format that you will send
+    private void vetoCard(boolean first) {
+        if (isOnline) vetoStep = 1;
+        else {
+            if (first) vetoStep = 2;
+            else vetoStep = 1;
+        }
+        isVeto = true;
+        selectBetweenCards(hand[(first ? 0 : 1)], 2);
     }
 
-    public void showReactionToCard(String reaction, int rowNumber, int cardNumber) {
-        // TODO: implement this, show a reaction which was added by opponent to a card
+    ///////////////////////reactions
+    public void showReactionToCard(Matcher matcher) {
+        String reaction = matcher.group("reaction");
+        showReactionToCard(reaction);
+    }
+
+    public void showReaction(Matcher matcher) {
+        String reaction = matcher.group("reaction");
+        showReaction(reaction);
+    }
+
+    public void showReaction(String reaction) {
+        showReactionPain.setDisable(false);
+        showReactionPain.setVisible(true);
+        mainPain.setDisable(true);
+        opponentReaction.setText(reaction);
+        Timeline t = new Timeline(new KeyFrame(Duration.seconds(7)));
+        t.setOnFinished(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                showReactionPain.setDisable(true);
+                showReactionPain.setVisible(false);
+                mainPain.setDisable(false);
+            }
+        });
+        t.setCycleCount(1);
+        t.play();
+    }
+
+    public void showReactionToCard(String reaction) {
+        if (LastSelectedCard != null) LastSelectedCard.setReaction(reaction);
+    }
+
+    public void reaction(MouseEvent mouseEvent) {
+        reactionPain.setDisable(false);
+        reactionPain.setVisible(true);
+        mainPain.setDisable(true);
+    }
+
+    public void sendReaction(MouseEvent mouseEvent) {
+        if (!typeReaction.getText().isEmpty()){
+            Client.getClient().getSender().sendCommand("send reaction " + typeReaction.getText());
+            reactionPain.setDisable(true);
+            reactionPain.setVisible(false);
+            mainPain.setDisable(false);
+        }
+    }
+
+    public void cancelReaction(MouseEvent mouseEvent) {
+        reactionPain.setDisable(true);
+        reactionPain.setVisible(false);
+        mainPain.setDisable(false);
     }
 
     /////////////////////passTurn
@@ -1101,7 +1226,6 @@ public class InGameMenu extends Application {
         }
     }
 
-
     /////////////////////chatBox
     public void refreshMessageBox() {
         ChatBox chatBox = (ChatBox) Client.getClient().getSender().sendCommand("get chat box");
@@ -1140,6 +1264,8 @@ public class InGameMenu extends Application {
     public void chatBox(MouseEvent mouseEvent) {
         refreshMessageBox();
         message.setText("");
+        pain.getChildren().remove(messageBoxPane);
+        pain.getChildren().add(messageBoxPane);
         messageBoxPane.setDisable(false);
         messageBoxPane.setVisible(true);
         mainPain.setDisable(true);

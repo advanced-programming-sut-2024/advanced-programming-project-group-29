@@ -242,7 +242,7 @@
             <Pane fx:id="rowHorn11" layoutX="472.0" layoutY="587.0" opacity="0.15" prefHeight="100.0" prefWidth="110.0" />
             <Pane fx:id="rowHorn12" layoutX="472.0" layoutY="472.0" opacity="0.15" prefHeight="100.0" prefWidth="110.0" />
             <Pane fx:id="rowHorn13" layoutX="472.0" layoutY="361.0" opacity="0.15" prefHeight="100.0" prefWidth="110.0" />
-            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#bfbfbf" height="43.0" layoutX="264.0" layoutY="721.0" onMouseClicked="#chatBox" onMouseEntered="#buttonEntered" onMouseExited="#buttonExited" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="95.0">
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#bfbfbf" height="43.0" layoutX="264.0" layoutY="695.0" onMouseClicked="#chatBox" onMouseEntered="#buttonEntered" onMouseExited="#buttonExited" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="95.0">
                <effect>
                   <Shadow height="6.17" radius="1.1025" width="0.24">
                      <color>
@@ -251,12 +251,12 @@
                   </Shadow>
                </effect>
             </Rectangle>
-            <Label layoutX="276.0" layoutY="732.0" onMouseClicked="#chatBox" onMouseEntered="#buttonEntered" onMouseExited="#buttonExited" text="Chat Box">
+            <Label layoutX="276.0" layoutY="706.0" onMouseClicked="#chatBox" onMouseEntered="#buttonEntered" onMouseExited="#buttonExited" text="Chat Box">
                <font>
                   <Font name="System Bold" size="16.0" />
                </font>
             </Label>
-            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#bfbfbf" height="43.0" layoutX="264.0" layoutY="775.0" onMouseClicked="#passTurn" onMouseEntered="#buttonEntered" onMouseExited="#buttonExited" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="95.0">
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#bfbfbf" height="43.0" layoutX="264.0" layoutY="797.0" onMouseClicked="#passTurn" onMouseEntered="#buttonEntered" onMouseExited="#buttonExited" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="95.0">
                <effect>
                   <Shadow height="6.17" radius="1.1025" width="0.24">
                      <color>
@@ -265,7 +265,21 @@
                   </Shadow>
                </effect>
             </Rectangle>
-            <Label layoutX="273.0" layoutY="786.0" onMouseClicked="#passTurn" onMouseEntered="#buttonEntered" onMouseExited="#buttonExited" text="Pass Turn">
+            <Label layoutX="273.0" layoutY="808.0" onMouseClicked="#passTurn" onMouseEntered="#buttonEntered" onMouseExited="#buttonExited" text="Pass Turn">
+               <font>
+                  <Font name="System Bold" size="16.0" />
+               </font>
+            </Label>
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#bfbfbf" height="43.0" layoutX="264.0" layoutY="746.0" onMouseClicked="#reaction" onMouseEntered="#buttonEntered" onMouseExited="#buttonExited" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="95.0">
+               <effect>
+                  <Shadow height="6.17" radius="1.1025" width="0.24">
+                     <color>
+                        <Color red="0.8799999952316284" green="0.8447999954223633" blue="0.8447999954223633" opacity="0.7241379022598267" />
+                     </color>
+                  </Shadow>
+               </effect>
+            </Rectangle>
+            <Label layoutX="276.0" layoutY="757.0" onMouseClicked="#reaction" onMouseEntered="#buttonEntered" onMouseExited="#buttonExited" text="Reaction">
                <font>
                   <Font name="System Bold" size="16.0" />
                </font>
@@ -447,6 +461,101 @@
             <Label layoutX="1348.0" layoutY="804.0" onMouseClicked="#cancel" onMouseEntered="#buttonEntered" onMouseExited="#buttonExited" prefHeight="22.0" prefWidth="54.0" text="Cancel">
                <font>
                   <Font name="System Bold" size="16.0" />
+               </font>
+            </Label>
+         </children>
+      </Pane>
+      <Pane fx:id="reactionPain" disable="true" layoutY="537.0" prefHeight="363.0" prefWidth="376.0" visible="false">
+         <children>
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#eed092" height="363.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="0.0" width="376.0">
+               <effect>
+                  <Shadow height="60.0" radius="29.5" width="60.0">
+                     <color>
+                        <Color red="0.07000000029802322" green="0.048661667853593826" blue="0.028699999675154686" />
+                     </color>
+                  </Shadow>
+               </effect>
+            </Rectangle>
+            <ImageView fx:id="emojiReaction1" fitHeight="91.0" fitWidth="77.0" layoutX="45.0" layoutY="46.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../Images/Emojis/cursing.png" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="emojiReaction2" fitHeight="91.0" fitWidth="77.0" layoutX="150.0" layoutY="46.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../Images/Emojis/suicide.png" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="emojiReaction3" fitHeight="91.0" fitWidth="77.0" layoutX="255.0" layoutY="46.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../Images/Emojis/thumbsup.png" />
+               </image>
+            </ImageView>
+            <Label fx:id="textReaction1" layoutX="36.0" layoutY="153.0" text="Good Job!!!" textFill="#dea543">
+               <font>
+                  <Font name="System Bold" size="20.0" />
+               </font>
+            </Label>
+            <Label fx:id="textReaction2" layoutX="162.0" layoutY="153.0" text="He He " textFill="#dea543">
+               <font>
+                  <Font name="System Bold" size="20.0" />
+               </font>
+            </Label>
+            <Label fx:id="textReaction3" layoutX="249.0" layoutY="153.0" text="Fuck You" textFill="#dea543">
+               <font>
+                  <Font name="System Bold" size="20.0" />
+               </font>
+            </Label>
+            <TextField fx:id="typeReaction" alignment="CENTER" layoutX="114.0" layoutY="204.0" prefHeight="41.0" prefWidth="161.0" promptText="or type here" />
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#bfbfbf" height="43.0" layoutX="201.0" layoutY="266.0" onMouseClicked="#sendReaction" onMouseEntered="#buttonEntered" onMouseExited="#buttonExited" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="95.0">
+               <effect>
+                  <Shadow height="6.17" radius="1.1025" width="0.24">
+                     <color>
+                        <Color red="0.8799999952316284" green="0.8447999954223633" blue="0.8447999954223633" opacity="0.7241379022598267" />
+                     </color>
+                  </Shadow>
+               </effect>
+            </Rectangle>
+            <Label layoutX="229.0" layoutY="278.0" onMouseClicked="#sendReaction" onMouseEntered="#buttonEntered" onMouseExited="#buttonExited" text="Send">
+               <font>
+                  <Font name="System Bold" size="16.0" />
+               </font>
+            </Label>
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#bfbfbf" height="43.0" layoutX="81.0" layoutY="267.0" onMouseClicked="#cancelReaction" onMouseEntered="#buttonEntered" onMouseExited="#buttonExited" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="95.0">
+               <effect>
+                  <Shadow height="6.17" radius="1.1025" width="0.24">
+                     <color>
+                        <Color red="0.8799999952316284" green="0.8447999954223633" blue="0.8447999954223633" opacity="0.7241379022598267" />
+                     </color>
+                  </Shadow>
+               </effect>
+            </Rectangle>
+            <Label layoutX="102.0" layoutY="278.0" onMouseClicked="#cancelReaction" onMouseEntered="#buttonEntered" onMouseExited="#buttonExited" text="Cancel">
+               <font>
+                  <Font name="System Bold" size="16.0" />
+               </font>
+            </Label>
+         </children>
+      </Pane>
+      <Pane fx:id="showReactionPain" disable="true" layoutX="26.0" layoutY="34.0" prefHeight="158.0" prefWidth="328.0" visible="false">
+         <children>
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#eed092" height="163.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="0.0" width="328.0">
+               <effect>
+                  <Shadow height="60.0" radius="29.5" width="60.0">
+                     <color>
+                        <Color red="0.07000000029802322" green="0.048661667853593826" blue="0.028699999675154686" />
+                     </color>
+                  </Shadow>
+               </effect>
+            </Rectangle>
+            <Label fx:id="opponentReaction" alignment="CENTER" layoutX="11.0" layoutY="59.0" prefHeight="84.0" prefWidth="307.0" text="lnsad" textFill="#dea543">
+               <font>
+                  <Font name="System Bold" size="25.0" />
+               </font>
+            </Label>
+            <Label layoutX="39.0" layoutY="14.0" prefHeight="45.0" prefWidth="251.0" text="Opponent Reaction" textFill="#dea543">
+               <font>
+                  <Font name="System Bold" size="25.0" />
                </font>
             </Label>
          </children>
