@@ -658,7 +658,7 @@ public class InGameMenu extends Application {
         for (int k = 0; k < 2; k++) {
             ArrayList<Cardin> playerHand = (k == 0 ? gameBoardin.getPlayer1Hand() : gameBoardin.getPlayer2Hand());
             for (int i = 0; i < playerHand.size(); i++) {
-                CardView c = new CardView(playerHand.get(i), getXPosition(i, playerHand.size(), false, false), (i == 0 ? Y_POSITION_HAND_1 : Y_POSITION_HAND_2), this, false);
+                CardView c = new CardView(playerHand.get(i), getXPosition(i, playerHand.size(), false, false), (k == 0 ? Y_POSITION_HAND_1 : Y_POSITION_HAND_2), this, false);
                 hand[k].add(c);
                 c.setInHand(true);
             }
