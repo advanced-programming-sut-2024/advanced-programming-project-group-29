@@ -45,6 +45,7 @@ public class CheatMenuController {
         GameBoard gameBoard = user.getCurrentGameBoard();
         int playerIndex = gameBoard.getPlayerNumber(user);
         Spell card = Spell.getRandomWeatherCard(user);
+        user.getHand().add(card);
         InGameMenuController.addCardToHand(sender, gameBoard, card, playerIndex);
     }
 
@@ -52,6 +53,7 @@ public class CheatMenuController {
         GameBoard gameBoard = user.getCurrentGameBoard();
         int playerIndex = gameBoard.getPlayerNumber(user);
         Spell card = Spell.getRandomSpecialCard(user);
+        user.getHand().add(card);
         InGameMenuController.addCardToHand(sender, gameBoard, card, playerIndex);
     }
 
@@ -59,6 +61,7 @@ public class CheatMenuController {
         GameBoard gameBoard = user.getCurrentGameBoard();
         int playerIndex = gameBoard.getPlayerNumber(user);
         Soldier card = Soldier.getRandomCard(user);
+        user.getHand().add(card);
         InGameMenuController.addCardToHand(sender, gameBoard, card, playerIndex);
     }
 

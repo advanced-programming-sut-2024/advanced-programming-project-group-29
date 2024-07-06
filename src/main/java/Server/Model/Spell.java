@@ -65,7 +65,7 @@ public class Spell extends Card {
     public static Spell getRandomSpecialCard(User user) {
         ArrayList<String> specialCards = new ArrayList<>();
         for (String cardName : Card.getAllCardNames()) {
-            if (isSpell(cardName) && !getIfThisSpellIsWeather(cardName))
+            if (isSpell(cardName) && !getIfThisSpellIsWeather(cardName) && cardName.matches("(M|m)ardroeme"))
                 specialCards.add(cardName);
         }
         int randomIndex = (int) (Math.random() * specialCards.size());

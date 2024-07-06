@@ -377,7 +377,7 @@ public class InGameMenu extends Application {
         });
     }
 
-    public void removeCardFromHandAndKillIt(int cardNumber) {
+    public void removeCardFromHandAndKillIt(int cardNumber, int playerIndex) { // TODO: playerIndex added
         Platform.runLater(() -> {
             CardView card = hand[0].get(cardNumber);
             hand[0].remove(card);
@@ -386,7 +386,7 @@ public class InGameMenu extends Application {
         });
     }
 
-    public void moveSoldier(int rowNumber, int cardNumber, int newRowNumber) {
+    public void moveSoldier(int rowNumber, int cardNumber, int newRowNumber, int playerIndex) {
         Platform.runLater(() -> {
             CardView c = row[0][convertRowNumber(rowNumber)].get(cardNumber);
             row[0][convertRowNumber(rowNumber)].remove(cardNumber);
@@ -413,7 +413,8 @@ public class InGameMenu extends Application {
         int rowNumber = Integer.parseInt(matcher.group("rowNumber"));
         int cardNumber = Integer.parseInt(matcher.group("cardNumber"));
         int newRowNumber = Integer.parseInt(matcher.group("newRowNumber"));
-        moveSoldier(rowNumber, cardNumber, newRowNumber);
+        int playerIndex = Integer.parseInt(matcher.group("playerIndex"));
+        moveSoldier(rowNumber, cardNumber, newRowNumber, playerIndex);
     }
 
     public void moveDiscardPileToDeckForBoth() {
@@ -446,7 +447,7 @@ public class InGameMenu extends Application {
         });
     }
 
-    public void addCardToHand(Cardin cardin) {
+    public void addCardToHand(Cardin cardin, int playerIndex) { // TODO: playerIndex added
         Platform.runLater(() -> {
             CardView c = new CardView(cardin, 0, 0, this, false);
             c.setInHand(true);
@@ -467,7 +468,7 @@ public class InGameMenu extends Application {
         });
     }
 
-    public void addCardFromDeckToRow(int cardNumber, int rowNumber) {
+    public void addCardFromDeckToRow(int cardNumber, int rowNumber, int playerIndex) { // TODO: player index added
         Platform.runLater(() -> {
             CardView c = deck[0].get(cardNumber);
             deck[0].remove(cardNumber);
@@ -479,7 +480,7 @@ public class InGameMenu extends Application {
         });
     }
 
-    public void addCardFromHandToRow(int cardNumber, int rowNumber) {
+    public void addCardFromHandToRow(int cardNumber, int rowNumber, int playerIndex) { // TODO: player index added
         Platform.runLater(() -> {
             CardView c = hand[0].get(cardNumber);
             hand[0].remove(cardNumber);
@@ -493,13 +494,15 @@ public class InGameMenu extends Application {
     public void addCardFromDeckToRow(Matcher matcher) {
         int cardNumber = Integer.parseInt(matcher.group("cardNumber"));
         int rowNumber = Integer.parseInt(matcher.group("rowNumber"));
-        addCardFromDeckToRow(cardNumber, rowNumber);
+        int playerIndex = Integer.parseInt(matcher.group("playerIndex"));
+        addCardFromDeckToRow(cardNumber, rowNumber, playerIndex);
     }
 
     public void addCardFromHandToRow(Matcher matcher) {
         int cardNumber = Integer.parseInt(matcher.group("cardNumber"));
         int rowNumber = Integer.parseInt(matcher.group("rowNumber"));
-        addCardFromHandToRow(cardNumber, rowNumber);
+        int playerIndex = Integer.parseInt(matcher.group("playerIndex"));
+        addCardFromHandToRow(cardNumber, rowNumber, playerIndex);
     }
 
     public void addCardFromDiscardToHand(int cardNumber, int playerIndex) {
@@ -562,7 +565,7 @@ public class InGameMenu extends Application {
         });
     }
 
-    public void changeThisCard(int rowNumber, int cardNumber, Cardin cardin) {
+    public void changeThisCard(int rowNumber, int cardNumber, Cardin cardin, int playerIndex) { // TODO: player index added
         Platform.runLater(() -> {
             CardView oldC = row[0][convertRowNumber(rowNumber)].get(cardNumber);
             CardView c = new CardView(cardin, oldC.getLayoutX(), oldC.getLayoutY(), this, false);
@@ -577,7 +580,8 @@ public class InGameMenu extends Application {
         int rowNumber = Integer.parseInt(matcher.group("rowNumber"));
         int cardNumber = Integer.parseInt(matcher.group("cardNumber"));
         Cardin cardin = (Cardin) Listener.deSerialize(matcher.group("cardinSerial"));
-        changeThisCard(rowNumber, cardNumber, cardin);
+        int playerIndex = Integer.parseInt(matcher.group("playerIndex"));
+        changeThisCard(rowNumber, cardNumber, cardin, playerIndex);
     }
 
     public void destroySoldier(int rowNumber, int cardNumber, int playerIndex) {
@@ -1269,5 +1273,28 @@ public class InGameMenu extends Application {
         messageBoxPane.setDisable(false);
         messageBoxPane.setVisible(true);
         mainPain.setDisable(true);
+    }
+
+    public void placeSpecialForOpponent(Matcher matcher) {
+        int rowNumber = Integer.parseInt(matcher.group("rowNumber"));
+        int cardNumber = Integer.parseInt(matcher.group("cardNumber"));
+        // TODO: implement this, opponent played an special card
+    }
+
+    public void placeWeatherForOpponent(Matcher matcher) {
+        int cardNumber = Integer.parseInt(matcher.group("cardNumber"));
+        // TODO: implement this, opponent played a weather card
+    }
+
+    public void placeSoldierForOpponent(Matcher matcher) {
+        int rowNumber = Integer.parseInt(matcher.group("rowNumber"));
+        int cardNumber = Integer.parseInt(matcher.group("cardNumber"));
+        // TODO: implement this, opponent played a soldier
+    }
+
+    public void moveWeatherFromDeckAndPlay(Matcher matcher) {
+        int cardNumber = Integer.parseInt(matcher.group("cardNumber"));
+        int playerIndex = Integer.parseInt(matcher.group("playerIndex"));
+        // TODO: implement this, move weather from deck to it's place and play it
     }
 }

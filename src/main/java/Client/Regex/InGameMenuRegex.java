@@ -17,6 +17,8 @@ public enum InGameMenuRegex {
     PASS_TURN("pass turn"),
     SEND_MESSAGE("send message (?<message>.+)"),
     GET_CHAT_BOX("get chat box"),
+    ONE_CARD_CHOSEN("one card chosen (?<cardNumber>\\d+)"),
+    VETO_CARD_CHOSEN("veto card chosen (?<cardNumber1>\\d+) (?<cardNumber2>\\d+)"),
     ;
 
     String regex;

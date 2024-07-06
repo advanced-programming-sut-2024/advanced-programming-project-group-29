@@ -44,14 +44,14 @@ public class Listener extends Thread {
                     waitForAnswer = false;
                     InGameMenu inGameMenu = Client.getInGameMenu();
                     if ((matcher = InGameMenuOutputCommand.ADD_CARD_TO_HAND.getMatcher(input)).matches())
-                        inGameMenu.addCardToHand((Cardin) deSerialize(matcher.group("cardinSerial")));
+                        inGameMenu.addCardToHand((Cardin) deSerialize(matcher.group("cardinSerial")), Integer.parseInt(matcher.group("playerIndex")));
                     else if ((matcher = InGameMenuOutputCommand.DESTROY_SOLDIER.getMatcher(input)).matches())
                         inGameMenu.destroySoldier(matcher);
                     else if ((matcher = InGameMenuOutputCommand.LET_PLAYER_SELECT_CARD.getMatcher(input)).matches()) {
                         inGameMenu.letUserChooseCard(matcher);
                         waitForAnswer = true;
                     } else if ((matcher = InGameMenuOutputCommand.REMOVE_CARD_FROM_HAND.getMatcher(input)).matches())
-                        inGameMenu.removeCardFromHandAndKillIt(Integer.parseInt(matcher.group("cardNumber")));
+                        inGameMenu.removeCardFromHandAndKillIt(Integer.parseInt(matcher.group("cardNumber")), Integer.parseInt(matcher.group("playerIndex")));
                     else if ((matcher = InGameMenuOutputCommand.CHANGE_CARD.getMatcher(input)).matches())
                         inGameMenu.changeThisCard(matcher);
                     else if ((matcher = InGameMenuOutputCommand.CLEAR_WEATHER.getMatcher(input)).matches())
@@ -67,9 +67,7 @@ public class Listener extends Thread {
                     else if ((matcher = InGameMenuOutputCommand.MOVE_DECK_TO_HAND.getMatcher(input)).matches())
                         inGameMenu.addCardFromDeckToHand(Integer.parseInt(matcher.group("cardNumber")));
                     else if ((matcher = InGameMenuOutputCommand.MOVE_DISCARD_TO_HAND.getMatcher(input)).matches())
-                        inGameMenu.addCardFromDiscardToHand(Integer.parseInt(matcher.group("cardNumber")), 0);
-                    else if ((matcher = InGameMenuOutputCommand.MOVE_OPPONENT_DISCARD_TO_HAND.getMatcher(input)).matches())
-                        inGameMenu.addCardFromDiscardToHand(Integer.parseInt(matcher.group("cardNumber")), 1);
+                        inGameMenu.addCardFromDiscardToHand(Integer.parseInt(matcher.group("cardNumber")), Integer.parseInt(matcher.group("playerIndex")));
                     else if ((matcher = InGameMenuOutputCommand.SEE_THREE_CARD.getMatcher(input)).matches())
                         inGameMenu.showThreeCardOfOpponent();
                     else if ((matcher = LoginMenuRegex.SET_TOKEN.getMatcher(input)).matches())
@@ -80,8 +78,15 @@ public class Listener extends Thread {
                     } else if ((matcher = InGameMenuRegex.SHOW_REACTION.getMatcher(input)).matches()) {
                         inGameMenu.showReaction(matcher.group("reaction"));
                     } else if ((matcher = InGameMenuRegex.SHOW_REACTION_TO_CARD.getMatcher(input)).matches()) {
-                        inGameMenu.showReactionToCard(matcher.group("reaction"), Integer.parseInt(matcher.group("rowNumber")),
-                                Integer.parseInt(matcher.group("cardNumber")));
+                        inGameMenu.showReactionToCard(matcher.group("reaction"));
+                    } else if((matcher = InGameMenuOutputCommand.PLACE_SPECIAL_FOR_OPPONENT.getMatcher(input)).matches()) {
+                        inGameMenu.placeSpecialForOpponent(matcher);
+                    }else if((matcher = InGameMenuOutputCommand.PLACE_WEATHER_FOR_OPPONENT.getMatcher(input)).matches()) {
+                        inGameMenu.placeWeatherForOpponent(matcher);
+                    }else if((matcher = InGameMenuOutputCommand.PLACE_SOLDIER_FOR_OPPONENT.getMatcher(input)).matches()) {
+                        inGameMenu.placeSoldierForOpponent(matcher);
+                    }else if((matcher = InGameMenuOutputCommand.MOVE_WEATHER_FORM_DECK_AND_PLAY.getMatcher(input)).matches()) {
+                        inGameMenu.moveWeatherFromDeckAndPlay(matcher);
                     }
 
                 } catch (Exception e) {

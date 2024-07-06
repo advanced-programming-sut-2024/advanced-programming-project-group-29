@@ -5,28 +5,25 @@ import java.util.regex.Pattern;
 
 public enum InGameMenuOutputCommand {
 
-    ADD_CARD_TO_HAND("add card to hand (?<cardinSerial>(\\n|.)+)"), // add cardinSerial to hand of current player
+    ADD_CARD_TO_HAND("add card to hand (?<cardinSerial>(\\n|.)+) (?<playerIndex>\\d)"), // add cardinSerial to hand of current player
     DESTROY_SOLDIER("destroy soldier (?<playerIndex>\\d) (?<row>\\d) (?<cardNumber>\\d+)"), // destroy soldier in row and column of the player in playerIndex,
     // close combat index is 0
-    SET_PLAYER_SCORE("set player score (?<playerIndex>\\d) (?<score>\\d+)"), // set score of the player in playerIndex to score
-    LET_PLAYER_VETO("let player veto card"), // let player select at most two cards from giver pile for veto
     LET_PLAYER_SELECT_CARD("show pile type (?<type>\\d) and let user choose (?<choice>\\d+)"), // let player select card from type pile (0: discard pile, 1: hand, 2: deck, 3: weathers in deck)
-    REMOVE_CARD_FROM_HAND("remove card from hand (?<cardNumber>\\d+)"), // remove cardNumber from hand
-    CHANGE_CARD("change card in (?<rowNumber>\\d) (?<cardNumber>\\d+) to (?<cardinSerial>(\\n|.)+)"), // change card in rowNumber and cardNumber to a giver cardin
+    REMOVE_CARD_FROM_HAND("remove card from hand (?<cardNumber>\\d+) (?<playerIndex>\\d)"), // remove cardNumber from hand
+    CHANGE_CARD("change card in (?<rowNumber>\\d) (?<cardNumber>\\d+) to (?<cardinSerial>(\\n|.)+) (?<playerIndex>\\d)"), // change card in rowNumber and cardNumber to a giver cardin
     CLEAR_WEATHER("clear all weather cards"), // clearing and removing all weathers
     MOVE_DISCARD_TO_DECK("move discard pile to deck"), // move both users discard pile to deck
-    MOVE_SOLDIER_TO_ROW("move soldier (?<rowNumber>\\d) (?<cardNumber>\\d+) to (?<newRowNumber>\\d)"), // move soldier in rowNumber and cardNumber to the end of newRowNumber
-    MOVE_DECK_TO_HAND("move soldier (?<cardNumber>\\d+) from deck to hand"),
-    MOVE_DISCARD_TO_HAND("move soldier (?<cardNumber>\\d+) from discard pile to hand"),
-    MOVE_OPPONENT_DISCARD_TO_HAND("move soldier (?<cardNumber>\\d+) from opponent's discard pile to hand"),
-    MOVE_HAND_TO_ROW("move soldier (?<cardNumber>\\d+) from hand to row (?<rowNumber>\\d+)"),
-    MOVE_DECK_TO_ROW("move soldier (?<cardNumber>\\d+) from deck to row (?<rowNumber>\\d+)"),
+    MOVE_SOLDIER_TO_ROW("move soldier (?<rowNumber>\\d) (?<cardNumber>\\d+) to (?<newRowNumber>\\d) (?<playerIndex>\\d)"), // move soldier in rowNumber and cardNumber to the end of newRowNumber
+    MOVE_DECK_TO_HAND("move soldier (?<cardNumber>\\d+) from deck to hand (?<playerIndex>\\d)"),
+    MOVE_DISCARD_TO_HAND("move soldier (?<cardNumber>\\d+) from discard pile to hand (?<playerIndex>\\d)"),
+    MOVE_HAND_TO_ROW("move soldier (?<cardNumber>\\d+) from hand to row (?<rowNumber>\\d+) (?<playerIndex>\\d)"),
+    MOVE_DECK_TO_ROW("move soldier (?<cardNumber>\\d+) from deck to row (?<rowNumber>\\d+) (?<playerIndex>\\d)"),
     SEE_THREE_CARD("see three random cards from opponent's hand"),
     PASS_TURN("pass turn"),
     PLACE_SPECIAL_FOR_OPPONENT("place special for opponent (?<cardNumber>\\d+) in row (?<rowNumber>\\d+)"),
     PLACE_WEATHER_FOR_OPPONENT("place weather for opponent (?<cardNumber>\\d+)"),
     PLACE_SOLDIER_FOR_OPPONENT("place soldier for opponent (?<cardNumber>\\d+) in row (?<rowNumber>\\d+)"),
-    CHANGE_CARD_FOR_OPPONENT("change card for opponent in (?<rowNumber>\\d) (?<cardNumber>\\d+) to (?<cardinSerial>(\\n|.)+)"),
+    MOVE_WEATHER_FORM_DECK_AND_PLAY("move weather from deck to it's place and play it (?<cardNumber>\\d+) (?<playerIndex>\\d)")
     ;
     private String command;
 
