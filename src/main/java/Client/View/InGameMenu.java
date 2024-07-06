@@ -16,6 +16,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -24,8 +25,12 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -134,6 +139,7 @@ public class InGameMenu extends Application {
     private int howManyChoice;
     private int step;
 
+    public ScrollPane messageScroll;
     public TextField message;
 
     private final ArrayList<CardView>[] hand = new ArrayList[2];
@@ -227,7 +233,7 @@ public class InGameMenu extends Application {
                                 hand[0].remove(c);
                                 c.setInHand(false);
                                 Client.getClient().sendCommand("place special " + placedNumber + " in row " + (3 - finalJ));
-                                if (c.getCard().name.matches("(S|s)corch")){
+                                if (c.getCard().name.matches("(S|s)corch")) {
                                     discard[0].add(c);
                                     (new FlipCardAnimation(c, X_POSITION_DISCARD, Y_POSITION_DISCARD_1, true, true, true)).play();
                                 } else {
@@ -388,7 +394,7 @@ public class InGameMenu extends Application {
         (new FlipCardAnimation(c, (hand[0].size() == 1 ? (X_POSITION_HAND_LEFT + X_POSITION_HAND_RIGHT - CARD_WIDTH) / 2 : (hand[0].get(hand[0].size() - 2)).getLayoutX() + SPACING + CARD_WIDTH), Y_POSITION_HAND, true, true, true)).play();
     }
 
-    public void addCardFromDeckToRow(int cardNumber,int rowNumber) {
+    public void addCardFromDeckToRow(int cardNumber, int rowNumber) {
         CardView c = deck[0].get(cardNumber);
         deck[0].remove(cardNumber);
         row[0][convertRowNumber(rowNumber)].add(c);
@@ -398,7 +404,7 @@ public class InGameMenu extends Application {
         (new FlipCardAnimation(c, (row[0][convertRowNumber(rowNumber)].size() == 1 ? (X_POSITION_ROW_LEFT + X_POSITION_ROW_RIGHT - CARD_WIDTH) / 2 : (row[0][convertRowNumber(rowNumber)].get(row[0][convertRowNumber(rowNumber)].size() - 2)).getLayoutX() + SPACING + CARD_WIDTH), Y_POSITION_HAND, true, true, true)).play();
     }
 
-    public void addCardFromHandToRow(int cardNumber,int rowNumber) {
+    public void addCardFromHandToRow(int cardNumber, int rowNumber) {
         System.out.println("calling this function " + cardNumber + " " + rowNumber);
         try {
             CardView c = hand[0].get(cardNumber);
@@ -417,14 +423,14 @@ public class InGameMenu extends Application {
     public void addCardFromDeckToRow(Matcher matcher) {
         int cardNumber = Integer.parseInt(matcher.group("cardNumber"));
         int rowNumber = Integer.parseInt(matcher.group("rowNumber"));
-        addCardFromDeckToRow(cardNumber,rowNumber);
+        addCardFromDeckToRow(cardNumber, rowNumber);
     }
 
     public void addCardFromHandToRow(Matcher matcher) {
         int cardNumber = Integer.parseInt(matcher.group("cardNumber"));
         int rowNumber = Integer.parseInt(matcher.group("rowNumber"));
         System.out.println("we are here, " + cardNumber + " " + rowNumber);
-        addCardFromHandToRow(cardNumber,rowNumber);
+        addCardFromHandToRow(cardNumber, rowNumber);
         System.out.println("OK so wtf???????");
     }
 
@@ -974,7 +980,6 @@ public class InGameMenu extends Application {
         Cardin horn23 = gameBoardin.getSpecialCard23();
 
 
-
         for (int i = 0; i < 2; i++) for (CardView c : hand[i]) pain.getChildren().remove(c);
         for (int i = 0; i < 2; i++) for (CardView c : deck[i]) pain.getChildren().remove(c);
         for (int i = 0; i < 2; i++) for (CardView c : discard[i]) pain.getChildren().remove(c);
@@ -1053,15 +1058,33 @@ public class InGameMenu extends Application {
         }
     }
 
-    
+
     /////////////////////chatBox
-    public void refreshMessageBox(){
-
-
+    public void refreshMessageBox() {
+        ChatBox chatBox = (ChatBox) Client.getClient().getSender().sendCommand("get chat box");
+        VBox vBox = new VBox();
+        for (Message m : chatBox.getAllMessage()) {
+            Label label = new Label(m.getUsername() + ": " + m.getMessage());
+            Font.font("System", FontWeight.BOLD, 14);
+            label.setLayoutY(5);
+            label.setLayoutX(5);
+            label.setPrefWidth(190);
+            label.setWrapText(true);
+            label.setTextFill(Paint.valueOf((chatBox.getCurrentUsername().equals(m.getUsername()) ? "green" : "red")));
+            System.out.println(label.getTextFill());
+            vBox.getChildren().add(label);
+            vBox.setSpacing(5);
+        }
+        messageScroll.setContent(vBox);
+        messageScroll.setVvalue(messageScroll.getVmax());
     }
 
     public void send(MouseEvent mouseEvent) {
-
+        if (!message.getText().isEmpty()) {
+            Client.getClient().getSender().sendCommand("send message " + message.getText());
+            message.setText("");
+        }
+        refreshMessageBox();
     }
 
     public void cancel(MouseEvent mouseEvent) {
@@ -1069,5 +1092,13 @@ public class InGameMenu extends Application {
         messageBoxPane.setDisable(true);
         messageBoxPane.setVisible(false);
         mainPain.setDisable(false);
+    }
+
+    public void chatBox(MouseEvent mouseEvent) {
+        refreshMessageBox();
+        message.setText("");
+        messageBoxPane.setDisable(false);
+        messageBoxPane.setVisible(true);
+        mainPain.setDisable(true);
     }
 }

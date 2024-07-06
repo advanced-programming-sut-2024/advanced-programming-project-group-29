@@ -31,6 +31,8 @@ public class ChooseGameModelMenu extends Application {
 
     private Client client;
 
+    boolean isOnline;
+
     public ChooseGameModelMenu() {
         super();
         client = Client.getClient();
@@ -54,10 +56,15 @@ public class ChooseGameModelMenu extends Application {
         choosePain.setDisable(true);
         startPain.setVisible(true);
         startPain.setDisable(false);
+        this.isOnline = false;
     }
 
     public void online(MouseEvent mouseEvent) {
-        //TODO : implement online
+        choosePain.setVisible(false);
+        choosePain.setDisable(true);
+        startPain.setVisible(true);
+        startPain.setDisable(false);
+        this.isOnline = true;
     }
 
     public void cancel(MouseEvent mouseEvent) throws Exception {

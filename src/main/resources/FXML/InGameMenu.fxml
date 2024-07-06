@@ -242,7 +242,7 @@
             <Pane fx:id="rowHorn11" layoutX="472.0" layoutY="587.0" opacity="0.15" prefHeight="100.0" prefWidth="110.0" />
             <Pane fx:id="rowHorn12" layoutX="472.0" layoutY="472.0" opacity="0.15" prefHeight="100.0" prefWidth="110.0" />
             <Pane fx:id="rowHorn13" layoutX="472.0" layoutY="361.0" opacity="0.15" prefHeight="100.0" prefWidth="110.0" />
-            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#bfbfbf" height="43.0" layoutX="256.0" layoutY="775.0" onMouseClicked="#passTurn" onMouseEntered="#buttonEntered" onMouseExited="#buttonExited" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="95.0">
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#bfbfbf" height="43.0" layoutX="264.0" layoutY="721.0" onMouseClicked="#chatBox" onMouseEntered="#buttonEntered" onMouseExited="#buttonExited" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="95.0">
                <effect>
                   <Shadow height="6.17" radius="1.1025" width="0.24">
                      <color>
@@ -251,7 +251,21 @@
                   </Shadow>
                </effect>
             </Rectangle>
-            <Label layoutX="265.0" layoutY="786.0" onMouseClicked="#passTurn" onMouseEntered="#buttonEntered" onMouseExited="#buttonExited" text="Pass Turn">
+            <Label layoutX="276.0" layoutY="732.0" onMouseClicked="#chatBox" onMouseEntered="#buttonEntered" onMouseExited="#buttonExited" text="Chat Box">
+               <font>
+                  <Font name="System Bold" size="16.0" />
+               </font>
+            </Label>
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#bfbfbf" height="43.0" layoutX="264.0" layoutY="775.0" onMouseClicked="#passTurn" onMouseEntered="#buttonEntered" onMouseExited="#buttonExited" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="95.0">
+               <effect>
+                  <Shadow height="6.17" radius="1.1025" width="0.24">
+                     <color>
+                        <Color red="0.8799999952316284" green="0.8447999954223633" blue="0.8447999954223633" opacity="0.7241379022598267" />
+                     </color>
+                  </Shadow>
+               </effect>
+            </Rectangle>
+            <Label layoutX="273.0" layoutY="786.0" onMouseClicked="#passTurn" onMouseEntered="#buttonEntered" onMouseExited="#buttonExited" text="Pass Turn">
                <font>
                   <Font name="System Bold" size="16.0" />
                </font>
@@ -390,7 +404,7 @@
             </ImageView>
          </children>
       </Pane>
-      <Pane fx:id="messageBoxPane" layoutX="4.0" layoutY="4.0" prefHeight="893.0" prefWidth="1592.0">
+      <Pane fx:id="messageBoxPane" disable="true" layoutX="4.0" layoutY="4.0" prefHeight="893.0" prefWidth="1592.0" visible="false">
          <children>
             <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#eed092" height="829.0" layoutX="1282.0" layoutY="33.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="0.0" width="280.0">
                <effect>
@@ -401,7 +415,7 @@
                   </Shadow>
                </effect>
             </Rectangle>
-            <ScrollPane hbarPolicy="NEVER" layoutX="1327.0" layoutY="57.0" prefHeight="674.0" prefWidth="200.0" vbarPolicy="NEVER">
+            <ScrollPane fx:id="messageScroll" hbarPolicy="NEVER" layoutX="1327.0" layoutY="57.0" prefHeight="674.0" prefWidth="200.0" vbarPolicy="NEVER">
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0" />
               </content>
