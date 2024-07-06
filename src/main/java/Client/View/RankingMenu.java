@@ -48,6 +48,10 @@ public class RankingMenu extends Application {
             ArrayList<String> splitLine = new ArrayList<>(Arrays.asList(line.split("\t")));
             result.add(splitLine);
         }
+        for (ArrayList<String> a : result){
+            int n = result.indexOf(a);
+            if (n >= 0 && n <= 9) a.add("See Last Game");
+        }
         ArrayList<String> names = new ArrayList<>() {{
             add("Rank");
             add("Username");
@@ -95,14 +99,6 @@ public class RankingMenu extends Application {
 
     @FXML
     public void initialize() {
-//        tableView.setOnMouseClicked(new EventHandler<MouseEvent>() {
-//            @Override
-//            public void handle(MouseEvent mouseEvent) {
-//                tableView.getSelectionModel().getSelectedCells().get(0)
-//            }
-//        });
-
-
         ObservableList<ArrayList<String>> data = getData();
         tableView.setItems(data);
         Timeline t = new Timeline(new KeyFrame(Duration.seconds(5), new EventHandler<ActionEvent>() {
