@@ -119,6 +119,7 @@ public abstract class Card {
     }
 
     protected static void executeMardoemeForRowNumber(GameBoard gameBoard, int playerIndex, int rowNumber) {
+        System.out.println("this function is running");
         for (Soldier otherSoldier : gameBoard.getRows()[playerIndex][rowNumber]) {
             if (otherSoldier.getAttribute() == Attribute.BERSERKER) {
                 otherSoldier.transformItToVidkaarl(!otherSoldier.getName().matches("Berserker"));
@@ -127,6 +128,7 @@ public abstract class Card {
     }
 
     protected static void executeCommanderHornForRowNumber(GameBoard gameBoard, int playerIndex, int rowNumber) {
+        System.out.println("in commenders horn");
         for (Soldier otherSoldier : gameBoard.getRows()[playerIndex][rowNumber]) {
             int hp = otherSoldier.getHp();
             InGameMenuController.changeHpForSoldier(gameBoard, otherSoldier, hp * 2);

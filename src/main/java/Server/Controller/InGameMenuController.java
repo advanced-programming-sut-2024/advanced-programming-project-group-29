@@ -394,15 +394,20 @@ public class InGameMenuController extends Thread {
         int placedNumber = card.getPlacedNumberInDeck();
         user.getDeck().remove(placedNumber);
         gameBoard.addSoldierToRow(gameBoard.getPlayerNumber(user), rowNumber, (Soldier) card);
+        gameBoard.setPlayerScore(gameBoard.getPlayerNumber(user), gameBoard.getPlayerScore(gameBoard.getPlayerNumber(user)) + ((Soldier) card).getShownHp());
         sender.sendCommand("move soldier " + placedNumber + " from deck to row " + rowNumber);
     }
 
     public static void moveCardFromHandToRow(Sender sender, Card card, int rowNumber) {
+        System.out.println("check it out for here....");
         User user = card.getUser();
         GameBoard gameBoard = user.getCurrentGameBoard();
         int placedNumber = user.getHand().indexOf(card);
         user.getHand().remove(placedNumber);
         gameBoard.addSoldierToRow(gameBoard.getPlayerNumber(user), rowNumber, (Soldier) card);
+        gameBoard.setPlayerScore(gameBoard.getPlayerNumber(user), gameBoard.getPlayerScore(gameBoard.getPlayerNumber(user)) + ((Soldier) card).getShownHp());
+        System.out.println("done with this function ... ");
         sender.sendCommand("move soldier " + placedNumber + " from hand to row " + rowNumber);
+        System.out.println("and messege recived ");
     }
 }

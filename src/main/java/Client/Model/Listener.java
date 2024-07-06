@@ -88,12 +88,17 @@ public class Listener extends Thread{
                 }
 
                 if (!waitForAnswer) {
+                    System.out.println("geryeeeeeeee");
                     dataOutputStream.writeUTF("null");
+                    dataOutputStream.flush();
+                    continue;
                 }
                 while (outputBuffer == null) {
                     continue;
                 }
+                System.out.println("sending " + outputBuffer);
                 dataOutputStream.writeUTF(outputBuffer);
+                dataOutputStream.flush();
             }
         } catch (IOException e) {
             e.printStackTrace();

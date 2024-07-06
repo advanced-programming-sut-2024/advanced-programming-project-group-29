@@ -30,6 +30,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import javax.xml.bind.SchemaOutputResolver;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -393,15 +394,23 @@ public class InGameMenu extends Application {
         row[0][convertRowNumber(rowNumber)].add(c);
         pain.getChildren().remove(c);
         pain.getChildren().add(c);
+        //refresh();
         (new FlipCardAnimation(c, (row[0][convertRowNumber(rowNumber)].size() == 1 ? (X_POSITION_ROW_LEFT + X_POSITION_ROW_RIGHT - CARD_WIDTH) / 2 : (row[0][convertRowNumber(rowNumber)].get(row[0][convertRowNumber(rowNumber)].size() - 2)).getLayoutX() + SPACING + CARD_WIDTH), Y_POSITION_HAND, true, true, true)).play();
     }
 
     public void addCardFromHandToRow(int cardNumber,int rowNumber) {
-        CardView c = hand[0].get(cardNumber);
-        hand[0].remove(cardNumber);
-        row[0][convertRowNumber(rowNumber)].add(c);
-        c.setInHand(false);
-        (new FlipCardAnimation(c, (row[0][convertRowNumber(rowNumber)].size() == 1 ? (X_POSITION_ROW_LEFT + X_POSITION_ROW_RIGHT - CARD_WIDTH) / 2 : (row[0][convertRowNumber(rowNumber)].get(row[0][convertRowNumber(rowNumber)].size() - 2)).getLayoutX() + SPACING + CARD_WIDTH), Y_POSITION_HAND, true, true, true)).play();
+        System.out.println("calling this function " + cardNumber + " " + rowNumber);
+        try {
+            CardView c = hand[0].get(cardNumber);
+            hand[0].remove(cardNumber);
+            row[0][convertRowNumber(rowNumber)].add(c);
+            c.setInHand(false);
+            (new FlipCardAnimation(c, (row[0][convertRowNumber(rowNumber)].size() == 1 ? (X_POSITION_ROW_LEFT + X_POSITION_ROW_RIGHT - CARD_WIDTH) / 2 : (row[0][convertRowNumber(rowNumber)].get(row[0][convertRowNumber(rowNumber)].size() - 2)).getLayoutX() + SPACING + CARD_WIDTH), Y_POSITION_HAND, true, true, true)).play();
+            //refresh();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        System.out.println("this functiono ended");
     }
 
 
@@ -414,7 +423,9 @@ public class InGameMenu extends Application {
     public void addCardFromHandToRow(Matcher matcher) {
         int cardNumber = Integer.parseInt(matcher.group("cardNumber"));
         int rowNumber = Integer.parseInt(matcher.group("rowNumber"));
+        System.out.println("we are here, " + cardNumber + " " + rowNumber);
         addCardFromHandToRow(cardNumber,rowNumber);
+        System.out.println("OK so wtf???????");
     }
 
     public void addCardFromDiscardToHand(int cardNumber, int playerIndex) {
