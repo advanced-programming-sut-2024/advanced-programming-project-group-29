@@ -116,6 +116,8 @@ public class InGameMenu extends Application {
     public Pane mainPain;
     public Pane changePain;
     public Pane descriptionPain;
+    public Pane messageBoxPane;
+    public Pane showPain;
 
     public ImageView image3;
     public ImageView image4;
@@ -124,12 +126,14 @@ public class InGameMenu extends Application {
     public ImageView image1;
     private final ArrayList<Image> changeArray = new ArrayList<>();
     private final ArrayList<Integer> selectedImages = new ArrayList<>();
-    public Pane showPain;
     public ImageView showImage1;
     public ImageView showImage2;
     public ImageView showImage3;
+
     private int howManyChoice;
     private int step;
+
+    public TextField message;
 
     private final ArrayList<CardView>[] hand = new ArrayList[2];
     private final ArrayList<CardView>[] deck = new ArrayList[2];
@@ -264,9 +268,6 @@ public class InGameMenu extends Application {
                 if (mouseEvent.getButton().equals(MouseButton.PRIMARY)) {
                     if (mouseEvent.getClickCount() == 3) {
                         Client.getClient().sendCommand("commander power play");
-                        for (int i = 0; i < 10000000; i++) {
-                            int b = i+i;
-                        }
                         refresh();
                     }
                 }
@@ -1039,5 +1040,23 @@ public class InGameMenu extends Application {
         } else {
             ((Label) mouseEvent.getSource()).setTextFill(Paint.valueOf("black"));
         }
+    }
+
+    
+    /////////////////////chatBox
+    public void refreshMessageBox(){
+
+
+    }
+
+    public void send(MouseEvent mouseEvent) {
+
+    }
+
+    public void cancel(MouseEvent mouseEvent) {
+        message.setText("");
+        messageBoxPane.setDisable(true);
+        messageBoxPane.setVisible(false);
+        mainPain.setDisable(false);
     }
 }
