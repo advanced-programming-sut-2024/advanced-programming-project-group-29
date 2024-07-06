@@ -58,7 +58,10 @@ public class Sender {
     private String sendMessage(String command) {
         try {
             sendBuffer.writeUTF(command);
-            return receiveBuffer.readUTF();
+            System.err.println("sent command " + command);
+            String s = receiveBuffer.readUTF();
+            System.err.println("why should I be doing this " + s);
+            return s;
         } catch (Exception e) {
             return null;
         }

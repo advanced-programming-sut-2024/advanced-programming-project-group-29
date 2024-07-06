@@ -151,13 +151,30 @@ public class Soldier extends Card {
     }
 
     private void executeActionForMuster(Soldier soldier) {
-        int rowNumber = getPlacedRowNumber(this, soldier.getGameBoard());
-        for(Card card : soldier.getUser().getDeck())
-            if(card.getName().equals(soldier.getName()))
-                InGameMenuController.moveCardFromDeckToRow(sender, card, rowNumber);
-        for(Card card : soldier.getUser().getHand())
-            if(card.getName().equals(soldier.getName()))
-                InGameMenuController.moveCardFromHandToRow(sender, card, rowNumber);
+        try {
+            int rowNumber = getPlacedRowNumber(this, soldier.getGameBoard());
+            boolean found = true;
+            while(found){
+                found = false;
+                for (Card card : soldier.getUser().getDeck())
+                    if (card.getName().equals(soldier.getName())) {
+                        InGameMenuController.moveCardFromDeckToRow(sender, card, rowNumber);
+                        found = true;
+                        break;
+                    }
+                for (Card card : soldier.getUser().getHand()) {
+                    System.out.println("in muster " + card.getName());
+                    if (card.getName().equals(soldier.getName())) {
+                        System.out.println("running for taht");
+                        InGameMenuController.moveCardFromHandToRow(sender, card, rowNumber);
+                        found = true;
+                        break;
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void executeActionForTransformers(Soldier soldier) { // TODO passive action!

@@ -224,9 +224,13 @@ public class GameBoard {
     }
 
     public boolean isThereAnyCommendersHornInRow(int playerNumber, int rowNumber) {
-        if (specialCards[playerNumber][rowNumber].getName().matches("Commander.+Horn"))
+        System.out.println("whattt the fuckkkkkkkk " + (specialCards[playerNumber][rowNumber] == null));
+        if (specialCards[playerNumber][rowNumber] != null &&
+                specialCards[playerNumber][rowNumber].getName().matches("Commander.+Horn"))
             return true;
+        System.out.println("checking for rows");
         for (Soldier soldier : rows[playerNumber][rowNumber]) {
+            System.out.println("wtf? " + soldier.getName() + " " + soldier.getAttribute());
             if (soldier.getAttribute() == Attribute.getAttributeFromString("commanders horn"))
                 return true;
         }
@@ -280,11 +284,24 @@ public class GameBoard {
                 playersCrystals[0]--;
             if(playersScore[1] <= playersScore[0])
                 playersCrystals[1]--;
+            executeActionForTransformers();
             return new Result(false);
         }
         currentPlayer = 1 - currentPlayer;
         isThereAnythingPlayed = false;
         return new Result(true);
+    }
+
+    private void executeActionForTransformers() {
+        for(int i = 0; i < 2; i++){
+            for(int j = 0; j < 3; j++){
+                for(Soldier soldier : rows[i][j]){
+                    if(soldier.getAttribute() == Attribute.TRANSFORMERS){
+                        soldier.executeAction();
+                    }
+                }
+            }
+        }
     }
 
     public boolean isGameOnline() {

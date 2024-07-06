@@ -21,27 +21,29 @@ public class Commander extends Card {
     }
 
     private Runnable getExecuteActionByCommanderName(String commanderName) {
+        System.out.println("commander name: " + commanderName);
+        commanderName = commanderName.toLowerCase();
         return switch (commanderName) {
-            case "The Siegemaster" -> this::theSiegemaster;
-            case "The Steel-Forged" -> this::theSteelForged;
-            case "King of Temeria" -> this::kingOfTemeria;
-            case "Lord Commander of the North" -> this::lordCommanderOfTheNorth;
-            case "Son of Medell" -> this::sonOfMedell;
-            case "The White Flame" -> this::theWhiteFlame;
-            case "His Imperial Majesty" -> this::hisImperialMajesty;
-            case "Emperor of Nilfgaard" -> this::emperorOfNilfgaard;
-            case "The Relentless" -> this::theRelentless;
-            case "Invader of the North" -> this::invaderOfTheNorth;
-            case "Bringer of Death" -> this::bringerOfDeath;
-            case "King of the wild Hunt" -> this::kingOfTheWildHunt;
-            case "Destroyer of Worlds" -> this::destroyerOfWorlds;
-            case "Commander of the Red Riders" -> this::commanderOfTheRedRiders;
-            case "The Treacherous" -> this::theTreacherous;
-            case "Queen of Dol Blathanna" -> this::queenOfDolBlathanna;
-            case "The Beautiful" -> this::theBeautiful;
-            case "Pureblood Elf" -> this::purebloodElf;
-            case "Hope of the Aen Seidhe" -> this::hopeOfTheAenSeidhe;
-            case "Crach an Craite" -> this::crachAnCraite;
+            case "the siegemaster" -> this::theSiegemaster;
+            case "the steel-Forged" -> this::theSteelForged;
+            case "king of temeria" -> this::kingOfTemeria;
+            case "lord commander of the north" -> this::lordCommanderOfTheNorth;
+            case "son of medell" -> this::sonOfMedell;
+            case "the white llame" -> this::theWhiteFlame;
+            case "his imperial majesty" -> this::hisImperialMajesty;
+            case "emperor of nilfgaard" -> this::emperorOfNilfgaard;
+            case "the relentless" -> this::theRelentless;
+            case "invader of the north" -> this::invaderOfTheNorth;
+            case "bringer of death" -> this::bringerOfDeath;
+            case "king of the wild hunt" -> this::kingOfTheWildHunt;
+            case "destroyer of worlds" -> this::destroyerOfWorlds;
+            case "commander of the red riders" -> this::commanderOfTheRedRiders;
+            case "the treacherous" -> this::theTreacherous;
+            case "queen of dol blathanna" -> this::queenOfDolBlathanna;
+            case "the beautiful" -> this::theBeautiful;
+            case "pureblood elf" -> this::purebloodElf;
+            case "hope of the aen seidhe" -> this::hopeOfTheAenSeidhe;
+            case "crach an craite" -> this::crachAnCraite;
             default -> () -> {
             };
         };
@@ -201,6 +203,7 @@ public class Commander extends Card {
 
     private void bringerOfDeath() {
         int playerNumber = this.gameBoard.getPlayerNumber(this.user);
+        System.out.println("bringer of death in commender");
         if (!gameBoard.isThereAnyCommendersHornInRow(playerNumber, 0))
             Card.executeCommanderHornForRowNumber(this.gameBoard, playerNumber, 0);
     }
