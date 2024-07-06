@@ -9,6 +9,7 @@ import Client.View.Animations.FlipCardAnimation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -205,7 +206,6 @@ public class InGameMenu extends Application {
                                     System.out.println((finalI - 1) + " " + (finalJ - 1));
                                     Client.getClient().sendCommand("place soldier " + placedNumber + " in row " + (3 - finalJ));
                                     (new FlipCardAnimation(c, (n == 0 ? (X_POSITION_ROW_LEFT + X_POSITION_ROW_RIGHT - CARD_WIDTH) / 2 : row[finalI - 1][finalJ - 1].get(n - 1).getLayoutX() + CARD_WIDTH + SPACING), Y, true, true, true)).play();
-
                                 }
                             }
                         }
@@ -309,116 +309,133 @@ public class InGameMenu extends Application {
     }
 
     public void changeDecoy(int rowNumber, int cardNumber, int cardNumberDecoy) {
-        CardView decoy = hand[0].get(cardNumberDecoy);
-        CardView soldier = row[0][rowNumber].get(cardNumber);
-        double x = decoy.getLayoutX();
-        double y = decoy.getLayoutY();
-        discard[0].add(decoy);
-        row[0][rowNumber].remove(soldier);
-        hand[0].set(cardNumberDecoy, soldier);
-        soldier.setInHand(true);
-        Client.getClient().sendCommand("place decoy " + cardNumberDecoy + " on card " + cardNumber + " in row " + convertRowNumber(rowNumber));
-        (new FlipCardAnimation(decoy, X_POSITION_DISCARD, Y_POSITION_DISCARD_1, true, true, false)).play();
-        (new FlipCardAnimation(soldier, x, y, true, true, true)).play();
+        Platform.runLater(() -> {
+            CardView decoy = hand[0].get(cardNumberDecoy);
+            CardView soldier = row[0][rowNumber].get(cardNumber);
+            double x = decoy.getLayoutX();
+            double y = decoy.getLayoutY();
+            discard[0].add(decoy);
+            row[0][rowNumber].remove(soldier);
+            hand[0].set(cardNumberDecoy, soldier);
+            soldier.setInHand(true);
+            Client.getClient().sendCommand("place decoy " + cardNumberDecoy + " on card " + cardNumber + " in row " + convertRowNumber(rowNumber));
+            (new FlipCardAnimation(decoy, X_POSITION_DISCARD, Y_POSITION_DISCARD_1, true, true, false)).play();
+            (new FlipCardAnimation(soldier, x, y, true, true, true)).play();
+        });
     }
 
     public void removeCardFromHandAndKillIt(int cardNumber) {
-        CardView card = hand[0].get(cardNumber);
-        hand[0].remove(card);
-        discard[0].add(card);
-        (new FlipCardAnimation(card, X_POSITION_DISCARD, Y_POSITION_DISCARD_1, true, true, true)).play();
+        Platform.runLater(() -> {
+            CardView card = hand[0].get(cardNumber);
+            hand[0].remove(card);
+            discard[0].add(card);
+            (new FlipCardAnimation(card, X_POSITION_DISCARD, Y_POSITION_DISCARD_1, true, true, true)).play();
+        });
     }
 
-    public void moveSoldier(int rowNumber, int cardNumber, int newRowNumber) throws NoSuchFieldException, IllegalAccessException {
-        CardView c = row[0][convertRowNumber(rowNumber)].get(cardNumber);
-        row[0][convertRowNumber(rowNumber)].remove(cardNumber);
-        row[0][convertRowNumber(newRowNumber)].add(c);
-        Field field = this.getClass().getDeclaredField("Y_POSITION_ROW_1" + convertRowNumber(newRowNumber));
-        field.setAccessible(true);
-        double Y = (double) field.get(this);
-        (new FlipCardAnimation(c, (row[0][convertRowNumber(newRowNumber)].size() == 1 ? (X_POSITION_ROW_LEFT + X_POSITION_ROW_RIGHT - CARD_WIDTH) / 2 :
-                row[0][convertRowNumber(newRowNumber)].get(row[0][convertRowNumber(newRowNumber)].size() - 2).getLayoutX() + CARD_WIDTH + SPACING), Y, true, true, true)).play();
+    public void moveSoldier(int rowNumber, int cardNumber, int newRowNumber) {
+        Platform.runLater(() -> {
+            CardView c = row[0][convertRowNumber(rowNumber)].get(cardNumber);
+            row[0][convertRowNumber(rowNumber)].remove(cardNumber);
+            row[0][convertRowNumber(newRowNumber)].add(c);
+            Field field = null;
+            try {
+                field = this.getClass().getDeclaredField("Y_POSITION_ROW_1" + convertRowNumber(newRowNumber));
+            } catch (NoSuchFieldException e) {
+                throw new RuntimeException(e);
+            }
+            field.setAccessible(true);
+            double Y = 0;
+            try {
+                Y = (double) field.get(this);
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException(e);
+            }
+            (new FlipCardAnimation(c, (row[0][convertRowNumber(newRowNumber)].size() == 1 ? (X_POSITION_ROW_LEFT + X_POSITION_ROW_RIGHT - CARD_WIDTH) / 2 :
+                    row[0][convertRowNumber(newRowNumber)].get(row[0][convertRowNumber(newRowNumber)].size() - 2).getLayoutX() + CARD_WIDTH + SPACING), Y, true, true, true)).play();
+        });
     }
 
-    public void moveSoldier(Matcher matcher) {
-        try {
-            int rowNumber = Integer.parseInt(matcher.group("rowNumber"));
-            int cardNumber = Integer.parseInt(matcher.group("cardNumber"));
-            int newRowNumber = Integer.parseInt(matcher.group("newRowNumber"));
-            moveSoldier(rowNumber, cardNumber, newRowNumber);
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            e.printStackTrace();
-        }
+    public void moveSoldier(Matcher matcher) throws NoSuchFieldException, IllegalAccessException {
+        int rowNumber = Integer.parseInt(matcher.group("rowNumber"));
+        int cardNumber = Integer.parseInt(matcher.group("cardNumber"));
+        int newRowNumber = Integer.parseInt(matcher.group("newRowNumber"));
+        moveSoldier(rowNumber, cardNumber, newRowNumber);
     }
 
     public void moveDiscardPileToDeckForBoth() {
-        ArrayList<CardView> discard1Copy = new ArrayList<>(discard[0]);
-        ArrayList<CardView> discard2Copy = new ArrayList<>(discard[1]);
-        deck[0].addAll(discard[0]);
-        deck[1].addAll(discard[1]);
-        discard[0].clear();
-        discard[1].clear();
-        final int[] flag1 = {0};
-        Timeline timeline1 = new Timeline(new KeyFrame(Duration.seconds(0.3), new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                (new FlipCardAnimation(discard1Copy.get(flag1[0]++), X_POSITION_Deck, Y_POSITION_DISCARD_1, false, true, false)).play();
-            }
-        }));
-        final int[] flag2 = {0};
-        Timeline timeline2 = new Timeline(new KeyFrame(Duration.seconds(0.3), new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                (new FlipCardAnimation(discard2Copy.get(flag2[0]++), X_POSITION_Deck, Y_POSITION_DISCARD_2, false, true, false)).play();
-            }
-        }));
-        timeline1.setCycleCount(discard1Copy.size());
-        timeline2.setCycleCount(discard2Copy.size());
-        if (!discard1Copy.isEmpty()) timeline1.play();
-        if (!discard2Copy.isEmpty()) timeline2.play();
-        refresh();
+        Platform.runLater(() -> {
+            ArrayList<CardView> discard1Copy = new ArrayList<>(discard[0]);
+            ArrayList<CardView> discard2Copy = new ArrayList<>(discard[1]);
+            deck[0].addAll(discard[0]);
+            deck[1].addAll(discard[1]);
+            discard[0].clear();
+            discard[1].clear();
+            final int[] flag1 = {0};
+            Timeline timeline1 = new Timeline(new KeyFrame(Duration.seconds(0.3), new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent actionEvent) {
+                    (new FlipCardAnimation(discard1Copy.get(flag1[0]++), X_POSITION_Deck, Y_POSITION_DISCARD_1, false, true, false)).play();
+                }
+            }));
+            final int[] flag2 = {0};
+            Timeline timeline2 = new Timeline(new KeyFrame(Duration.seconds(0.3), new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent actionEvent) {
+                    (new FlipCardAnimation(discard2Copy.get(flag2[0]++), X_POSITION_Deck, Y_POSITION_DISCARD_2, false, true, false)).play();
+                }
+            }));
+            timeline1.setCycleCount(discard1Copy.size());
+            timeline2.setCycleCount(discard2Copy.size());
+            if (!discard1Copy.isEmpty()) timeline1.play();
+            if (!discard2Copy.isEmpty()) timeline2.play();
+            refresh();
+        });
     }
 
     public void addCardToHand(Cardin cardin) {
-        CardView c = new CardView(cardin, 0, 0, this, false);
-        hand[0].add(c);
-        refresh();
+        Platform.runLater(() -> {
+            CardView c = new CardView(cardin, 0, 0, this, false);
+            c.setInHand(true);
+            hand[0].add(c);
+            refresh();
+        });
     }
 
     public void addCardFromDeckToHand(int cardNumber) {
-        CardView c = deck[0].get(cardNumber);
-        deck[0].remove(cardNumber);
-        hand[0].add(c);
-        pain.getChildren().remove(c);
-        pain.getChildren().add(c);
-        (new FlipCardAnimation(c, (hand[0].size() == 1 ? (X_POSITION_HAND_LEFT + X_POSITION_HAND_RIGHT - CARD_WIDTH) / 2 : (hand[0].get(hand[0].size() - 2)).getLayoutX() + SPACING + CARD_WIDTH), Y_POSITION_HAND, true, true, true)).play();
+        Platform.runLater(() -> {
+            CardView c = deck[0].get(cardNumber);
+            deck[0].remove(cardNumber);
+            hand[0].add(c);
+            pain.getChildren().remove(c);
+            pain.getChildren().add(c);
+            c.setInHand(true);
+            (new FlipCardAnimation(c, (hand[0].size() == 1 ? (X_POSITION_HAND_LEFT + X_POSITION_HAND_RIGHT - CARD_WIDTH) / 2 : (hand[0].get(hand[0].size() - 2)).getLayoutX() + SPACING + CARD_WIDTH), Y_POSITION_HAND, true, true, true)).play();
+        });
     }
 
     public void addCardFromDeckToRow(int cardNumber, int rowNumber) {
-        CardView c = deck[0].get(cardNumber);
-        deck[0].remove(cardNumber);
-        row[0][convertRowNumber(rowNumber)].add(c);
-        pain.getChildren().remove(c);
-        pain.getChildren().add(c);
-        //refresh();
-        (new FlipCardAnimation(c, (row[0][convertRowNumber(rowNumber)].size() == 1 ? (X_POSITION_ROW_LEFT + X_POSITION_ROW_RIGHT - CARD_WIDTH) / 2 : (row[0][convertRowNumber(rowNumber)].get(row[0][convertRowNumber(rowNumber)].size() - 2)).getLayoutX() + SPACING + CARD_WIDTH), Y_POSITION_HAND, true, true, true)).play();
+        Platform.runLater(() -> {
+            CardView c = deck[0].get(cardNumber);
+            deck[0].remove(cardNumber);
+            row[0][convertRowNumber(rowNumber)].add(c);
+            pain.getChildren().remove(c);
+            int j = convertRowNumber(rowNumber);
+            pain.getChildren().add(c);
+            (new FlipCardAnimation(c, (row[0][convertRowNumber(rowNumber)].size() == 1 ? (X_POSITION_ROW_LEFT + X_POSITION_ROW_RIGHT - CARD_WIDTH) / 2 : (row[0][convertRowNumber(rowNumber)].get(row[0][convertRowNumber(rowNumber)].size() - 2)).getLayoutX() + SPACING + CARD_WIDTH), (j == 0 ? Y_POSITION_ROW_11 : (j == 1 ? Y_POSITION_ROW_12 : Y_POSITION_ROW_13)), true, true, true)).play();
+        });
     }
 
     public void addCardFromHandToRow(int cardNumber, int rowNumber) {
-        System.out.println("calling this function " + cardNumber + " " + rowNumber);
-        try {
+        Platform.runLater(() -> {
             CardView c = hand[0].get(cardNumber);
             hand[0].remove(cardNumber);
             row[0][convertRowNumber(rowNumber)].add(c);
+            int j = convertRowNumber(rowNumber);
             c.setInHand(false);
-            (new FlipCardAnimation(c, (row[0][convertRowNumber(rowNumber)].size() == 1 ? (X_POSITION_ROW_LEFT + X_POSITION_ROW_RIGHT - CARD_WIDTH) / 2 : (row[0][convertRowNumber(rowNumber)].get(row[0][convertRowNumber(rowNumber)].size() - 2)).getLayoutX() + SPACING + CARD_WIDTH), Y_POSITION_HAND, true, true, true)).play();
-            //refresh();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        System.out.println("this functiono ended");
+            (new FlipCardAnimation(c, (row[0][convertRowNumber(rowNumber)].size() == 1 ? (X_POSITION_ROW_LEFT + X_POSITION_ROW_RIGHT - CARD_WIDTH) / 2 : (row[0][convertRowNumber(rowNumber)].get(row[0][convertRowNumber(rowNumber)].size() - 2)).getLayoutX() + SPACING + CARD_WIDTH), (j == 0 ? Y_POSITION_ROW_11 : (j == 1 ? Y_POSITION_ROW_12 : Y_POSITION_ROW_13)), true, true, true)).play();
+        });
     }
-
 
     public void addCardFromDeckToRow(Matcher matcher) {
         int cardNumber = Integer.parseInt(matcher.group("cardNumber"));
@@ -429,64 +446,78 @@ public class InGameMenu extends Application {
     public void addCardFromHandToRow(Matcher matcher) {
         int cardNumber = Integer.parseInt(matcher.group("cardNumber"));
         int rowNumber = Integer.parseInt(matcher.group("rowNumber"));
-        System.out.println("we are here, " + cardNumber + " " + rowNumber);
         addCardFromHandToRow(cardNumber, rowNumber);
-        System.out.println("OK so wtf???????");
     }
 
     public void addCardFromDiscardToHand(int cardNumber, int playerIndex) {
-        CardView c = discard[playerIndex].get(cardNumber);
-        discard[playerIndex].remove(cardNumber);
-        hand[playerIndex].add(c);
-        pain.getChildren().remove(c);
-        if (playerIndex == 0) {
-            pain.getChildren().add(c);
-        }
-        (new FlipCardAnimation(c, (hand[playerIndex].size() == 1 ? (X_POSITION_HAND_LEFT + X_POSITION_HAND_RIGHT - CARD_WIDTH) / 2 : (hand[playerIndex].get(hand[playerIndex].size() - 2)).getLayoutX() + SPACING + CARD_WIDTH), Y_POSITION_HAND, true, true, true)).play();
+        Platform.runLater(() -> {
+            CardView c = discard[playerIndex].get(cardNumber);
+            discard[playerIndex].remove(cardNumber);
+            hand[playerIndex].add(c);
+            pain.getChildren().remove(c);
+            c.setInHand(true);
+            if (playerIndex == 0) {
+                pain.getChildren().add(c);
+            }
+            (new FlipCardAnimation(c, (hand[playerIndex].size() == 1 ? (X_POSITION_HAND_LEFT + X_POSITION_HAND_RIGHT - CARD_WIDTH) / 2 : (hand[playerIndex].get(hand[playerIndex].size() - 2)).getLayoutX() + SPACING + CARD_WIDTH), Y_POSITION_HAND, true, true, true)).play();
+        });
     }
 
     public void showThreeCardOfOpponent() throws NoSuchFieldException, IllegalAccessException {
-        int n = hand[1].size();
-        ArrayList<CardView> copyHandOpponent = new ArrayList<>(hand[1]);
-        ArrayList<CardView> show = new ArrayList<>();
-        if (n == 1) {
-            show.add(copyHandOpponent.getFirst());
-        } else if (n == 2) {
-            show.add(copyHandOpponent.get(0));
-            show.add(copyHandOpponent.get(1));
-        } else if (n != 0) {
-            Collections.shuffle(copyHandOpponent);
-            show.add(copyHandOpponent.get(0));
-            show.add(copyHandOpponent.get(1));
-            show.add(copyHandOpponent.get(2));
-        }
-        showImage1.setImage(null);
-        showImage2.setImage(null);
-        showImage3.setImage(null);
-        for (int i = 0; i < show.size(); i++) {
-            Field field = this.getClass().getDeclaredField("showImage" + (i + 1));
-            field.setAccessible(true);
-            ((ImageView) field.get(this)).setImage(new javafx.scene.image.Image("Images/Soldiers/" + show.get(i).getCard().getFaction().getName() + "/" + show.get(i).getCard().name + ".jpg"));
-        }
-        showPain.setVisible(true);
-        showPain.setDisable(false);
-        Timeline t = new Timeline(new KeyFrame(Duration.seconds(10), new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                showPain.setVisible(false);
-                showPain.setDisable(true);
+        Platform.runLater(() -> {
+            int n = hand[1].size();
+            ArrayList<CardView> copyHandOpponent = new ArrayList<>(hand[1]);
+            ArrayList<CardView> show = new ArrayList<>();
+            if (n == 1) {
+                show.add(copyHandOpponent.getFirst());
+            } else if (n == 2) {
+                show.add(copyHandOpponent.get(0));
+                show.add(copyHandOpponent.get(1));
+            } else if (n != 0) {
+                Collections.shuffle(copyHandOpponent);
+                show.add(copyHandOpponent.get(0));
+                show.add(copyHandOpponent.get(1));
+                show.add(copyHandOpponent.get(2));
             }
-        }));
-        t.play();
+            showImage1.setImage(null);
+            showImage2.setImage(null);
+            showImage3.setImage(null);
+            for (int i = 0; i < show.size(); i++) {
+                Field field = null;
+                try {
+                    field = this.getClass().getDeclaredField("showImage" + (i + 1));
+                } catch (NoSuchFieldException e) {
+                    throw new RuntimeException(e);
+                }
+                field.setAccessible(true);
+                try {
+                    ((ImageView) field.get(this)).setImage(new javafx.scene.image.Image("Images/Soldiers/" + show.get(i).getCard().getFaction().getName() + "/" + show.get(i).getCard().name + ".jpg"));
+                } catch (IllegalAccessException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            showPain.setVisible(true);
+            showPain.setDisable(false);
+            Timeline t = new Timeline(new KeyFrame(Duration.seconds(10), new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent actionEvent) {
+                    showPain.setVisible(false);
+                    showPain.setDisable(true);
+                }
+            }));
+            t.play();
+        });
     }
 
     public void changeThisCard(int rowNumber, int cardNumber, Cardin cardin) {
-        CardView oldC = row[0][convertRowNumber(rowNumber)].get(cardNumber);
-        CardView c = new CardView(cardin, oldC.getLayoutX(), oldC.getLayoutY(), this, false);
-        row[0][convertRowNumber(rowNumber)].set(cardNumber, c);
-        pain.getChildren().remove(oldC);
-        pain.getChildren().add(c);
-        refresh();
+        Platform.runLater(() -> {
+            CardView oldC = row[0][convertRowNumber(rowNumber)].get(cardNumber);
+            CardView c = new CardView(cardin, oldC.getLayoutX(), oldC.getLayoutY(), this, false);
+            row[0][convertRowNumber(rowNumber)].set(cardNumber, c);
+            pain.getChildren().remove(oldC);
+            pain.getChildren().add(c);
+            refresh();
+        });
     }
 
     public void changeThisCard(Matcher matcher) {
@@ -497,10 +528,12 @@ public class InGameMenu extends Application {
     }
 
     public void destroySoldier(int rowNumber, int cardNumber, int playerIndex) {
-        CardView c = row[playerIndex][convertRowNumber(rowNumber)].get(cardNumber);
-        row[playerIndex][convertRowNumber(rowNumber)].remove(cardNumber);
-        discard[playerIndex].add(c);
-        (new BurningCardAnimation(c, X_POSITION_DISCARD, Y_POSITION_DISCARD_1)).play();
+        Platform.runLater(() -> {
+            CardView c = row[playerIndex][convertRowNumber(rowNumber)].get(cardNumber);
+            row[playerIndex][convertRowNumber(rowNumber)].remove(cardNumber);
+            discard[playerIndex].add(c);
+            (new BurningCardAnimation(c, X_POSITION_DISCARD, Y_POSITION_DISCARD_1)).play();
+        });
     }
 
     public void destroySoldier(Matcher matcher) {
@@ -516,9 +549,11 @@ public class InGameMenu extends Application {
     }
 
     public void clearWeather() {
-        setWeather(false, false, false);
-        weather.forEach(c -> pain.getChildren().remove(c));
-        weather.clear();
+        Platform.runLater(() -> {
+            setWeather(false, false, false);
+            weather.forEach(c -> pain.getChildren().remove(c));
+            weather.clear();
+        });
     }
 
     //////////////////////// refresh
@@ -780,6 +815,8 @@ public class InGameMenu extends Application {
 
     ///////////////// cheat code
     private void showCheatMenu() {
+        pain.getChildren().remove(changePain);
+        pain.getChildren().add(changePain);
         cheatPane.setVisible(true);
         cheatPane.setDisable(false);
         cheatPane.requestFocus();
@@ -796,14 +833,12 @@ public class InGameMenu extends Application {
             showErrorInCheatMenu();
             return;
         }
-        showSuccessfulCheatCode();
         Client.getClient().sendCommand("apply cheat code " + cheatCodeString);
-    }
-
-    private void showSuccessfulCheatCode() {
-        result.setVisible(true);
-        result.setFill(Paint.valueOf("#008000"));
-        result.setText("Cheat code applied!");
+        mainPain.setDisable(false);
+        cheatPane.setVisible(false);
+        cheatPane.setDisable(true);
+        mainPain.requestFocus();
+        refresh();
     }
 
     private void showErrorInCheatMenu() {
