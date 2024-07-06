@@ -111,8 +111,8 @@ public class Spell extends Card {
         ArrayList<Soldier> maxPowerSoldiers = new ArrayList<>();
         GameBoard gameBoard = spell.getGameBoard();
         for (int i = 0; i < 2; i++) {
-            for (int j = 0; j <= 2; j++) {
-                for (Soldier soldier : gameBoard.getRows()[i][j]) {
+            for (int j = 0; j < 3; j++) {
+                for (Soldier soldier : gameBoard.getRows()[i][j]) if(!soldier.isHero()) {
                     if (soldier.getShownHp() > maxPower) {
                         maxPower = soldier.getShownHp();
                         maxPowerSoldiers.clear();

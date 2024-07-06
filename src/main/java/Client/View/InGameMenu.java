@@ -886,24 +886,30 @@ public class InGameMenu extends Application {
 
     /////////////////////////choice card
     private void selectBetweenCards(ArrayList<CardView> arrayList, int Choices) {
-        pain.getChildren().remove(changePain);
-        pain.getChildren().add(changePain);
-        changePain.setVisible(true);
-        changePain.setDisable(false);
-        mainPain.setDisable(true);
-        image3.requestFocus();
-        changeArray.clear();
-        for (CardView c : arrayList) {
-            Image image = new Image("/Images/Soldiers/" + c.getCard().faction.getName() + "/" + c.getCard().name + ".jpg", 1, 1, "" + arrayList.indexOf(c));
-            changeArray.add(image);
+        try {
+            Platform.runLater(() -> {
+                pain.getChildren().remove(changePain);
+                pain.getChildren().add(changePain);
+                changePain.setVisible(true);
+                changePain.setDisable(false);
+                mainPain.setDisable(true);
+                image3.requestFocus();
+                changeArray.clear();
+                for (CardView c : arrayList) {
+                    Image image = new Image("/Images/Soldiers/" + c.getCard().faction.getName() + "/" + c.getCard().name + ".jpg", 1, 1, "" + arrayList.indexOf(c));
+                    changeArray.add(image);
+                }
+                howManyChoice = Choices;
+                selectedImages.clear();
+                for (int i = 0; i < howManyChoice; i++) {
+                    selectedImages.add(0);
+                }
+                step = 0;
+                setImageChange(selectedImages.get(step));
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        howManyChoice = Choices;
-        selectedImages.clear();
-        for (int i = 0; i < howManyChoice; i++) {
-            selectedImages.add(0);
-        }
-        step = 0;
-        setImageChange(selectedImages.get(step));
     }
 
     public void letUserChooseCard(Matcher matcher) {

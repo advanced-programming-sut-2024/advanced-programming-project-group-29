@@ -107,6 +107,8 @@ public class InGameMenuController extends Thread {
             int playerIndex = user.getCurrentGameBoard().getPlayerNumber(user);
             GameBoard gameBoard = user.getCurrentGameBoard();
             Spell spell = (Spell) user.getHand().get(cardNumber);
+            if(spell.getName().matches("(S|s)corch"))
+                spell.getUser().getDiscardPile().add(spell);
             user.getHand().remove(cardNumber);
             spell.executeAction();
         } catch (Exception e) {
@@ -144,6 +146,7 @@ public class InGameMenuController extends Thread {
     }
 
     public static Card getOneCardFromDiscardPile(Sender sender, User user){
+        System.out.println("yes we are here... " + user.getDiscardPile().size());
         if(user.getDiscardPile().size() == 0)
             return null;
         ArrayList<Integer> cardNumber = (ArrayList<Integer>) sender.sendCommand("show pile type " + 0 + " and let user choose " + 1);

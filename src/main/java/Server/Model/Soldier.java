@@ -278,6 +278,7 @@ public class Soldier extends Card {
         int playerIndex = gameBoard.getPlayerNumber(this.getUser());
         int cardNumber = getPlacedNumber();
         gameBoard.getRows()[playerIndex][rowNumber].set(cardNumber, bear);
+        gameBoard.setPlayerScore(playerIndex, gameBoard.getPlayerScore(playerIndex) - this.getShownHp() + bear.getShownHp());
         InGameMenuController.changeCardInGraphic(sender, rowNumber, cardNumber, bear);
     }
 
