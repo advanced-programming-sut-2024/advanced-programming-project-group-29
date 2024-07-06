@@ -218,7 +218,6 @@ public class InGameMenu extends Application {
                                     hand[0].remove(c);
                                     c.setInHand(false);
                                     row[finalI - 1][finalJ - 1].add(c);
-                                    System.out.println((finalI - 1) + " " + (finalJ - 1));
                                     Client.getClient().sendCommand("place soldier " + placedNumber + " in row " + (3 - finalJ));
                                     (new FlipCardAnimation(c, (n == 0 ? (X_POSITION_ROW_LEFT + X_POSITION_ROW_RIGHT - CARD_WIDTH) / 2 : row[finalI - 1][finalJ - 1].get(n - 1).getLayoutX() + CARD_WIDTH + SPACING), Y, true, true, true)).play();
                                 }
@@ -656,7 +655,6 @@ public class InGameMenu extends Application {
 
     private void firstRefresh() {
         GameBoardin gameBoardin = getGameBoardin();
-        System.out.println(gameBoardin == null);
         for (int k = 0; k < 2; k++) {
             ArrayList<Cardin> playerHand = (k == 0 ? gameBoardin.getPlayer1Hand() : gameBoardin.getPlayer2Hand());
             for (int i = 0; i < playerHand.size(); i++) {
@@ -673,7 +671,6 @@ public class InGameMenu extends Application {
         for (CardView c : hand[1]) pain.getChildren().add(c);
         for (CardView c : deck[0]) pain.getChildren().add(c);
         for (CardView c : deck[1]) pain.getChildren().add(c);
-        System.out.println(gameBoardin.getPlayer1Faction() + "   " + gameBoardin.getPlayer1Commander());
         leader1.setImage(new javafx.scene.image.Image("/Images/Raw/" + gameBoardin.getPlayer1Faction() + "/" + gameBoardin.getPlayer1Commander() + ".jpg"));
         leader2.setImage(new javafx.scene.image.Image("/Images/Raw/" + gameBoardin.getPlayer2Faction() + "/" + gameBoardin.getPlayer2Commander() + ".jpg"));
         leaderActive1.setImage(gameBoardin.isPlayer1CommanderHasAction() ? new javafx.scene.image.Image("/Images/icons/icon_leader_active.png") : null);
@@ -1242,7 +1239,6 @@ public class InGameMenu extends Application {
             label.setPrefWidth(190);
             label.setWrapText(true);
             label.setTextFill(Paint.valueOf((chatBox.getCurrentUsername().equals(m.getUsername()) ? "green" : "red")));
-            System.out.println(label.getTextFill());
             vBox.getChildren().add(label);
             vBox.setSpacing(5);
         }

@@ -225,13 +225,10 @@ public class GameBoard {
     }
 
     public boolean isThereAnyCommendersHornInRow(int playerNumber, int rowNumber) {
-        System.out.println("whattt the fuckkkkkkkk " + (specialCards[playerNumber][rowNumber] == null));
         if (specialCards[playerNumber][rowNumber] != null &&
                 specialCards[playerNumber][rowNumber].getName().matches("Commander.+Horn"))
             return true;
-        System.out.println("checking for rows");
         for (Soldier soldier : rows[playerNumber][rowNumber]) {
-            System.out.println("wtf? " + soldier.getName() + " " + soldier.getAttribute());
             if (soldier.getAttribute() == Attribute.getAttributeFromString("commanders horn"))
                 return true;
         }
@@ -260,18 +257,6 @@ public class GameBoard {
 
     public int getCurrentPlayerIndex() {
         return currentPlayer;
-    }
-
-    public void setAllCardsForUserSender(Sender sender, User user) {
-        int playerIndex = getPlayerNumber(user);
-        for(int i = 0; i < 3; i++) {
-            for (Card card : rows[playerIndex][i])
-                card.setSender(sender);
-            if(specialCards[playerIndex][i] != null)
-                specialCards[playerIndex][i].setSender(sender);
-        }
-        if(playersLeaders[playerIndex] != null)
-            playersLeaders[playerIndex].setSender(sender);
     }
 
     public Result passTurn() {

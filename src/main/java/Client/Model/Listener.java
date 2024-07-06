@@ -29,7 +29,6 @@ public class Listener extends Thread {
         try {
             ServerSocket server = getNewServerSocket();
             port = server.getLocalPort();
-            System.out.println("wtf? " + port);
             socket = server.accept();
             dataInputStream = new DataInputStream(socket.getInputStream());
             dataOutputStream = new DataOutputStream(socket.getOutputStream());
@@ -39,7 +38,6 @@ public class Listener extends Thread {
                     Matcher matcher;
                     String input = dataInputStream.readUTF();
                     System.out.println("got that command " + input);
-                    System.out.println((matcher = InGameMenuOutputCommand.CHANGE_CARD.getMatcher(input)).matches());
                     outputBuffer = null;
                     waitForAnswer = false;
                     InGameMenu inGameMenu = Client.getInGameMenu();
@@ -110,7 +108,6 @@ public class Listener extends Thread {
     }
 
     public int getPort() {
-        System.out.println("heyyy " + port);
         return port;
     }
 
@@ -136,7 +133,7 @@ public class Listener extends Thread {
             com.google.gson.Gson gson = new GsonBuilder().setPrettyPrinting().create();
             return gson.fromJson(serializedObject.substring(endOfClassName + 1), objectsClass);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            System.err.println(e.getMessage());
             e.printStackTrace();
         }
         return null;

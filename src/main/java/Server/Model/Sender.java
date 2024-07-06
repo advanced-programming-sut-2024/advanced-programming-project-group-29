@@ -60,7 +60,6 @@ public class Sender {
             sendBuffer.writeUTF(command);
             System.err.println("sent command " + command);
             String s = receiveBuffer.readUTF();
-            System.err.println("why should I be doing this " + s);
             return s;
         } catch (Exception e) {
             return null;
@@ -85,7 +84,7 @@ public class Sender {
             com.google.gson.Gson gson = new GsonBuilder().setPrettyPrinting().create();
             return gson.fromJson(serializedObject.substring(endOfClassName + 1), objectsClass);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            System.err.println(e.getMessage());
             e.printStackTrace();
         }
         return null;

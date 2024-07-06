@@ -69,8 +69,6 @@ public class GameBoardin {
             row23 = new ArrayList<>();
             player1Crystal = gameBoard.getPlayerCrystals(playerIndex);
             player2Crystal = gameBoard.getPlayerCrystals(opponentIndex);
-            System.out.println(user1.getUsername());
-            System.out.println(user1.getHand().size());
             for (Card card : user1.getHand())
                 player1Hand.add(new Cardin(card));
             for (Card card : user2.getHand())
@@ -132,7 +130,6 @@ public class GameBoardin {
             player1XP = gameBoard.getPlayerScore(playerIndex);
             player2XP = gameBoard.getPlayerScore(opponentIndex);
             currentPlayerIndex = gameBoard.getCurrentPlayerIndex() + 1;
-            System.out.println("crystals check " + player1Crystal + " " + player2Crystal);
         } catch (Exception e) {
             e.printStackTrace();
         }

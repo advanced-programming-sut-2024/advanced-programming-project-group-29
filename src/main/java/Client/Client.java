@@ -43,7 +43,6 @@ public class Client {
         }
         System.out.println(listener.getPort());
         sender.sendCommand("127.0.0.1 " + listener.getPort());
-        System.out.println("ha?");
         Main.main(new String[]{});
     }
 

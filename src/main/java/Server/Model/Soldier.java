@@ -158,15 +158,13 @@ public class Soldier extends Card {
                 found = false;
                 for (Card card : soldier.getUser().getDeck())
                     if (card.getName().equals(soldier.getName())) {
-                        InGameMenuController.moveCardFromDeckToRow(sender, card, rowNumber);
+                        InGameMenuController.moveCardFromDeckToRow(this.getSender(), card, rowNumber);
                         found = true;
                         break;
                     }
                 for (Card card : soldier.getUser().getHand()) {
-                    System.out.println("in muster " + card.getName());
                     if (card.getName().equals(soldier.getName())) {
-                        System.out.println("running for taht");
-                        InGameMenuController.moveCardFromHandToRow(sender, card, rowNumber);
+                        InGameMenuController.moveCardFromHandToRow(this.getSender(), card, rowNumber);
                         found = true;
                         break;
                     }
@@ -192,8 +190,8 @@ public class Soldier extends Card {
     private void executeActionForSpy(Soldier soldier) {
         GameBoard gameBoard = soldier.getGameBoard();
         int playerIndex = gameBoard.getPlayerNumber(soldier.getUser());
-        gameBoard.getRandomCardFromDeckAndAddItToHand(sender, playerIndex);
-        gameBoard.getRandomCardFromDeckAndAddItToHand(sender, playerIndex);
+        gameBoard.getRandomCardFromDeckAndAddItToHand(this.getSender(), playerIndex);
+        gameBoard.getRandomCardFromDeckAndAddItToHand(this.getSender(), playerIndex);
     }
 
     private void executeActionForScorch(Soldier soldier) {
@@ -279,7 +277,7 @@ public class Soldier extends Card {
         int cardNumber = getPlacedNumber();
         gameBoard.getRows()[playerIndex][rowNumber].set(cardNumber, bear);
         gameBoard.setPlayerScore(playerIndex, gameBoard.getPlayerScore(playerIndex) - this.getShownHp() + bear.getShownHp());
-        InGameMenuController.changeCardInGraphic(sender, rowNumber, cardNumber, bear);
+        InGameMenuController.changeCardInGraphic(this.getSender(), rowNumber, cardNumber, bear);
     }
 
     @Override
@@ -290,8 +288,6 @@ public class Soldier extends Card {
     public int getPlacedNumber() {
         GameBoard gameBoard = this.getGameBoard();
         int rowNumber = getPlacedRowNumber(this, gameBoard);
-        System.out.println("name " + getName());
-        System.out.println("row number: " + rowNumber);
         int playerIndex = gameBoard.getPlayerNumber(this.getUser());
         for(int i = 0; i < gameBoard.getRows()[playerIndex][rowNumber].size(); i++)
             if(gameBoard.getRows()[playerIndex][rowNumber].get(i) == this)

@@ -43,7 +43,6 @@ public class GameMenuController {
         } else if (inputCommand.matches(GameMenuRegex.GET_USER_COMMANDER_NAME.getRegex())) {
             return applicationController.getCurrentUser().getCommander().getName();
         } else if (inputCommand.matches(GameMenuRegex.GET_ALLOWED_NUMBER_BY_CARD_NAME.getRegex())) {
-            System.out.println("ya I'm still here");
             return getAllowedNumberByCardName(GameMenuRegex.GET_ALLOWED_NUMBER_BY_CARD_NAME.getMatcher(inputCommand));
         } else if (inputCommand.matches(GameMenuRegex.GET_CARDS_IN_DECK_NAMES.getRegex())) {
             return getDeckCardsNames(applicationController.getCurrentUser());
@@ -281,7 +280,6 @@ public class GameMenuController {
 
     public static Integer getAllowedNumberByCardName(Matcher matcher) {
         String name = matcher.group("cardName");
-        System.out.println("check it out " + name);
         return Card.getAllowedNumberByCardName(name);
     }
 

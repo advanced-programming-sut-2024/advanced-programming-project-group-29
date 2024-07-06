@@ -10,12 +10,8 @@ import java.util.regex.Matcher;
 
 public class LoginMenuController {
     public static Result processRequest(ApplicationController applicationController, String inputCommand) {
-        System.out.println("ya here");
         if (inputCommand.matches(LoginMenuRegex.LOGIN.getRegex())) {
-            System.out.println("pring");
-            Result result = login(applicationController, LoginMenuRegex.LOGIN.getMatcher(inputCommand));
-            System.out.println(result.getMessage());
-            return result;
+            return login(applicationController, LoginMenuRegex.LOGIN.getMatcher(inputCommand));
         }
         if (inputCommand.matches(LoginMenuRegex.FORGET_PASSWORD.getRegex())) {
             return forgetPassword(LoginMenuRegex.FORGET_PASSWORD.getMatcher(inputCommand));
@@ -48,7 +44,6 @@ public class LoginMenuController {
         applicationController.setCurrentUser(user);
         Result result = new Result(true, "User logged in successfully.");
         result.setToken(user.getJWT());
-        System.out.println("wtffff");
         return result;
     }
 

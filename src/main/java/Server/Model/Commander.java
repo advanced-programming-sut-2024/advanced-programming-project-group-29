@@ -9,7 +9,6 @@ import java.util.Random;
 
 public class Commander extends Card {
     private boolean hasAction = true;
-    private Sender sender;
 
     public Commander(String name, User user) {
         super(name, user);
@@ -21,11 +20,10 @@ public class Commander extends Card {
     }
 
     private Runnable getExecuteActionByCommanderName(String commanderName) {
-        System.out.println("commander name: " + commanderName);
         commanderName = commanderName.toLowerCase();
         return switch (commanderName) {
             case "the siegemaster" -> this::theSiegemaster;
-            case "the steel-Forged" -> this::theSteelForged;
+            case "the steel-forged" -> this::theSteelForged;
             case "king of temeria" -> this::kingOfTemeria;
             case "lord commander of the north" -> this::lordCommanderOfTheNorth;
             case "son of medell" -> this::sonOfMedell;
@@ -76,7 +74,7 @@ public class Commander extends Card {
     }
 
     private void theSteelForged() {
-        this.gameBoard.clearAllWeather(sender);
+        this.gameBoard.clearAllWeather(this.getSender());
     }
 
     private void kingOfTemeria() {
@@ -96,11 +94,11 @@ public class Commander extends Card {
             else if (currentHp > card.getShownHp()) card = soldier;
         }
         if (sumHp <= 10) return;
-        InGameMenuController.destroySoldier(sender, this.gameBoard, card);
+        InGameMenuController.destroySoldier(this.getSender(), this.gameBoard, card);
     }
 
     private void crachAnCraite() {
-        InGameMenuController.moveDiscardPileToDeckForBoth(this.user, sender);
+        InGameMenuController.moveDiscardPileToDeckForBoth(this.user, this.getSender());
     }
 
     private void hopeOfTheAenSeidhe() {
@@ -126,7 +124,7 @@ public class Commander extends Card {
                 if (rowNumber == betterRowNumber[playerNumber]) continue;
                 for (Soldier soldier : this.gameBoard.getRows()[playerNumber][rowNumber]) {
                     if (soldier.type == Type.AGILE)
-                        InGameMenuController.moveSoldier(sender, soldier, playerNumber, betterRowNumber[playerNumber]);
+                        InGameMenuController.moveSoldier(this.getSender(), soldier, playerNumber, betterRowNumber[playerNumber]);
                 }
             }
         }
@@ -162,7 +160,7 @@ public class Commander extends Card {
             if (card == null) card = soldier;
             else if (soldier.getShownHp() > card.getShownHp()) card = soldier;
         }
-        InGameMenuController.destroySoldier(sender, gameBoard, card);
+        InGameMenuController.destroySoldier(this.getSender(), gameBoard, card);
     }
 
     private void theTreacherous() {
@@ -178,7 +176,7 @@ public class Commander extends Card {
     }
 
     private void commanderOfTheRedRiders() {
-        Card selectedCard = InGameMenuController.getOneCardWeathersInDeck(sender, user);
+        Card selectedCard = InGameMenuController.getOneCardWeathersInDeck(this.getSender(), user);
         if(selectedCard == null)
             return;
         InGameMenuController.addWeatherAndRemoveFromDeck((Spell) selectedCard);
@@ -187,23 +185,22 @@ public class Commander extends Card {
     private void destroyerOfWorlds() {
         Card[] removedCards = new Card[2];
         for (int i = 0; i < 2; i++) {
-            removedCards[i] = InGameMenuController.getOneCardFromHand(sender, user);
-            InGameMenuController.removeCardFromHand(sender, gameBoard, removedCards[i], gameBoard.getPlayerNumber(user));
+            removedCards[i] = InGameMenuController.getOneCardFromHand(this.getSender(), user);
+            InGameMenuController.removeCardFromHand(this.getSender(), gameBoard, removedCards[i], gameBoard.getPlayerNumber(user));
         }
-        Card card = InGameMenuController.getOneCardFromDeck(sender, user);
-        InGameMenuController.moveCardFromDeckToHand(sender, card);
+        Card card = InGameMenuController.getOneCardFromDeck(this.getSender(), user);
+        InGameMenuController.moveCardFromDeckToHand(this.getSender(), card);
     }
 
     private void kingOfTheWildHunt() {
-        Card card = InGameMenuController.getOneCardFromDiscardPile(sender, user);
+        Card card = InGameMenuController.getOneCardFromDiscardPile(this.getSender(), user);
         if (card == null)
             return;
-        InGameMenuController.moveCardFromDiscardToHand(sender, card);
+        InGameMenuController.moveCardFromDiscardToHand(this.getSender(), card);
     }
 
     private void bringerOfDeath() {
         int playerNumber = this.gameBoard.getPlayerNumber(this.user);
-        System.out.println("bringer of death in commender");
         if (!gameBoard.isThereAnyCommendersHornInRow(playerNumber, 0))
             Card.executeCommanderHornForRowNumber(this.gameBoard, playerNumber, 0);
     }
@@ -215,19 +212,19 @@ public class Commander extends Card {
         Card card;
         card = selectCardRandomly(discardPile);
         if (card != null) {
-            InGameMenuController.moveCardFromDiscardToHand(sender, card);
+            InGameMenuController.moveCardFromDiscardToHand(this.getSender(), card);
         }
         card = selectCardRandomly(opponentDiscardPile);
         if (card != null) {
-            InGameMenuController.moveCardFromOpponentDiscardPileToHand(sender, card);
+            InGameMenuController.moveCardFromOpponentDiscardPileToHand(this.getSender(), card);
         }
     }
 
     private void theRelentless() {
-        Card card = InGameMenuController.getOneCardFromDiscardPile(sender, user);
+        Card card = InGameMenuController.getOneCardFromDiscardPile(this.getSender(), user);
         if (card == null)
             return;
-        InGameMenuController.moveCardFromDiscardToHand(sender, card);
+        InGameMenuController.moveCardFromDiscardToHand(this.getSender(), card);
     }
 
     private void emperorOfNilfgaard() {
@@ -238,7 +235,7 @@ public class Commander extends Card {
     }
 
     private void hisImperialMajesty() {
-        InGameMenuController.seeThreeRandomCardsFromOpponentsHand(sender);
+        InGameMenuController.seeThreeRandomCardsFromOpponentsHand(this.getSender());
     }
 
     private void theWhiteFlame() {
@@ -264,7 +261,7 @@ public class Commander extends Card {
             else if (currentHp > card.getShownHp()) card = soldier;
         }
         if (sumHp <= 10) return;
-        InGameMenuController.destroySoldier(sender, this.gameBoard, card);
+        InGameMenuController.destroySoldier(this.getSender(), this.gameBoard, card);
     }
 
     private Card selectCardRandomly (ArrayList<Card> list) {
@@ -273,9 +270,5 @@ public class Commander extends Card {
         int length = list.size();
         int index = random.nextInt() % length;
         return list.get(index);
-    }
-
-    public Sender getSender(){
-        return sender;
     }
 }

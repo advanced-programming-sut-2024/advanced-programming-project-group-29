@@ -391,17 +391,11 @@ public class InGameMenuController extends Thread {
     }
 
     public static GameBoardin getGameBoardin(User user){
-        System.out.println("ya your all here");
-        System.out.println(user.getUsername());
         GameBoardin gameBoardin = new GameBoardin(user);
-        System.out.println(gameBoardin == null);
-        System.out.println(gameBoardin.getPlayer1Commander());
-        System.out.println(gameBoardin.getPlayer1XP());
         return gameBoardin;
     }
 
     public static void moveCardFromDeckToHand(Sender sender, Card card) {
-        System.out.println("all right in spy " + card.getName());
         int placedNumber = card.getPlacedNumberInDeck();
         card.getUser().getDeck().remove(placedNumber);
         card.getUser().getHand().add(card);

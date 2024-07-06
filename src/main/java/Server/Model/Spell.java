@@ -130,7 +130,6 @@ public class Spell extends Card {
 
 
     private static void executeActionForMardoeme(Spell spell) {
-        System.out.println("not even here????");
         GameBoard gameBoard = spell.getGameBoard();
         int playerIndex = gameBoard.getPlayerNumber(spell.getUser());
         int rowNumber = getPlacedRowNumber(gameBoard, spell);

@@ -324,7 +324,6 @@ public class User {
             for (String line : lines)
                 makeUserFromJson(line);
         } catch (Exception e) {
-            System.out.println("hey that wasnt' completed");
             e.printStackTrace();
             System.out.println(e.getMessage());
         }
@@ -438,10 +437,8 @@ public class User {
     }
 
     public void createHand() { // have all cards in deck, it will remove all in hand
-        System.out.println("creating hand for " + username);
         hand.clear();
         ArrayList<Card> keepDeck = new ArrayList<>(deck);
-        System.out.println("we have deck size: " + deck.size());
         Collections.shuffle(keepDeck);
         for (int i = 0; i < Math.min(10, keepDeck.size()); i++) {
             hand.add(keepDeck.get(i));
@@ -449,28 +446,14 @@ public class User {
         for (Card card : hand) {
             deck.remove(card);
         }
-        System.out.println("and finaly hand size" + hand.size());
-    }
-
-    public void setAllCardsSenders(Sender sender) {
-        for (Card card : discardPile)
-            card.setSender(sender);
-        for (Card card : hand)
-            card.setSender(sender);
-        for (Card card : deck)
-            card.setSender(sender);
-        if (currentGameBoard != null)
-            currentGameBoard.setAllCardsForUserSender(sender, this);
     }
 
     public String getJWT() {
-        System.out.println("oh all hre");
         String subject = username + "%&*" + password;
         long nowMillis = System.currentTimeMillis();
         Date now = new Date(nowMillis);
         long expMillis = nowMillis + 1000 * EXPIATION_TIME;
         Date exp = new Date(expMillis);
-        System.out.println("well done?");
         try {
             String jwt = Jwts.builder()
                     .setSubject(subject)
