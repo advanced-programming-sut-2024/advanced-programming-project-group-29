@@ -215,10 +215,10 @@ public class Soldier extends Card {
     private static void executeActionForMedic(Soldier soldier) {
         GameBoard gameBoard = soldier.getGameBoard();
         int playerIndex = soldier.getGameBoard().getPlayerNumber(soldier.getUser());
-        Card card = InGameMenuController.getOneCardFromDiscardPile(soldier.getSender(), soldier.getUser());
-        if(card == null)
+        if(soldier.getUser().getDiscardPile().size() == 0)
             return;
-        InGameMenuController.moveCardFromDiscardToHand(soldier.getSender(), card);
+        InGameMenuController.getOneCardFromDiscardPile(soldier.getSender(), soldier.getUser());
+        // rest of this function, moving this chosen card to hand, is implemented in InGameMenuController.moveCardFromDiscardToHand(Sender sender, int cardNumber);
     }
 
 

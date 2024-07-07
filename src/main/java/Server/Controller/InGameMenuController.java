@@ -50,7 +50,7 @@ public class InGameMenuController extends Thread {
             } else if ((matcher = InGameMenuRegex.GET_CHAT_BOX.getMatcher(inputCommand)).matches()){
                 result = getChatBox(applicationController);
             } else if((matcher = InGameMenuRegex.ONE_CARD_CHOSEN.getMatcher(inputCommand)).matches()){
-
+                moveCardFromDiscardToHandForMedic(sender, Integer.parseInt(matcher.group("cardNumber")));
             }
             user.setInProcess(false);
             user.getOpponent().setInProcess(false);
@@ -148,28 +148,42 @@ public class InGameMenuController extends Thread {
         opponent.createHand();
     }
 
-    public static Card getOneCardFromDiscardPile(Sender sender, User user){
+    public static boolean getOneCardFromDiscardPile(Sender sender, User user){
         if(user.getDiscardPile().size() == 0)
-            return null;
-        ArrayList<Integer> cardNumber = (ArrayList<Integer>) sender.sendCommand("show pile type " + 0 + " and let user choose " + 1);
-        return user.getDiscardPile().get(cardNumber.get(0));
+            return false;
+        user.setOptionsType(0);
+        sender.sendCommand("show pile type " + 0 + " and let user choose " + 1);
+        return true;
     }
 
-    public static Card getOneCardFromHand(Sender sender, User user){
+    public static void moveCardFromDiscardToHandForMedic(Sender sender, int cardNumber){
+        User user = sender.getUser();
+        Card card = user.getDiscardPile().get(cardNumber);
+        user.getDiscardPile().remove(cardNumber);
+        user.getHand().add(card);
+        sender.sendCommand("move soldier " + cardNumber + " from discard pile to hand 0");
+        if(user.getCurrentGameBoard().isGameOnline())
+            sender.getUser().getOpponent().getSender().sendCommand("move soldier " + cardNumber + " from discard pile to hand 1");
+    }
+
+    /*
+    public static boolean getOneCardFromHand(Sender sender, User user){
         if(user.getHand().size() == 0)
-            return null;
-        ArrayList<Integer> cardNumber = (ArrayList<Integer>) sender.sendCommand("show pile type " + 1 + " and let user choose " + 1);
-        return user.getHand().get(cardNumber.get(0));
+            return false;
+        user.setOptionsType(1);
+        sender.sendCommand("show pile type " + 1 + " and let user choose " + 1);
+        return true;
     }
 
-    public static Card getOneCardFromDeck(Sender sender, User user){
+    public static boolean getOneCardFromDeck(Sender sender, User user){
         if(user.getDeck().size() == 0)
-            return null;
-        ArrayList<Integer> cardNumber = (ArrayList<Integer>) sender.sendCommand("show pile type " + 2 + " and let user choose " + 1);
-        return user.getDeck().get(cardNumber.get(0));
+            return false;
+        user.setOptionsType(2);
+        sender.sendCommand("show pile type " + 2 + " and let user choose " + 1);
+        return true;
     }
 
-    public static Card getOneCardWeathersInDeck(Sender sender, User user){
+    public static boolean getOneCardWeathersInDeck(Sender sender, User user){
         ArrayList<Card> options = new ArrayList<>();
         for (Card card : user.getDeck()) {
             if (card instanceof Spell) {
@@ -178,10 +192,12 @@ public class InGameMenuController extends Thread {
             }
         }
         if (options.isEmpty())
-            return null;
-        ArrayList<Integer> cardNumber = (ArrayList<Integer>) sender.sendCommand("show pile type " + 3 + " and let user choose " + 1);
-        return options.get(cardNumber.get(0));
+            return false;
+        user.setOptionsType(3);
+        sender.sendCommand("show pile type " + 3 + " and let user choose " + 1);
+        return true;
     }
+    */
 
 
     public static void addCardToHand(Sender sender, GameBoard gameBoard, Card card, int playerIndex) {
@@ -213,6 +229,7 @@ public class InGameMenuController extends Thread {
         int rowNumber = Soldier.getPlacedRowNumber(soldier, gameBoard);
         int placedNumber = soldier.getPlacedNumber();
         gameBoard.getRows()[playerIndex][rowNumber].remove(soldier);
+        soldier.getUser().getDiscardPile().add(soldier);
         gameBoard.setPlayerScore(playerIndex, gameBoard.getPlayerScore(playerIndex) - soldier.getShownHp());
         playerIndex = getClientVersionOfPlayerIndex(sender.getUser(), gameBoard.getPlayer(playerIndex));
         sender.sendCommand("destroy soldier " + playerIndex + " " + rowNumber + " " + placedNumber);

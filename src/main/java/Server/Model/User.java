@@ -47,7 +47,8 @@ public class User {
     private final ArrayList<String> friends = new ArrayList<>();
     private final ArrayList<String> friendRequests = new ArrayList<>();
     private final HashMap<String, SavedDeck> savedDecks = new HashMap<>();
-    private boolean inProcess = false;
+    private transient boolean inProcess = false;
+    private transient int optionsType;
 
     public User(String username, String password, String nickname, String email) {
         this.username = username;
@@ -590,5 +591,13 @@ public class User {
         }
         strings.add(stringBuilder.toString());
         return strings.toArray(new String[0]);
+    }
+
+    public void setOptionsType(int optionsType) {
+        this.optionsType = optionsType;
+    }
+
+    public int getOptionsType() {
+        return optionsType;
     }
 }
