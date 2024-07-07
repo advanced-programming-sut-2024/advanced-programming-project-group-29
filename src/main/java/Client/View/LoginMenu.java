@@ -4,15 +4,18 @@ import Client.Client;
 import Client.Enum.Menu;
 import Client.Model.ApplicationRunningTimeData;
 import Client.Model.Result;
-import Client.Regex.LoginMenuRegex;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.effect.DropShadow;
+import javafx.scene.effect.Shadow;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
@@ -22,6 +25,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.Objects;
+import java.util.regex.Matcher;
 
 public class LoginMenu extends Application {
     private final double HEIGHT_OF_TEXT_WARNING = 25;
@@ -204,7 +208,7 @@ public class LoginMenu extends Application {
     }
 
     public void buttonEntered(MouseEvent mouseEvent) {
-        if (mouseEvent.getSource() instanceof Rectangle){
+        if (mouseEvent.getSource() instanceof Rectangle) {
             Pane paneS = (Pane) ((Rectangle) mouseEvent.getSource()).getParent();
             int n = paneS.getChildren().indexOf((Rectangle) mouseEvent.getSource()) + 1;
             ((Label) paneS.getChildren().get(n)).setTextFill(Paint.valueOf("e47429"));
@@ -214,7 +218,7 @@ public class LoginMenu extends Application {
     }
 
     public void buttonExited(MouseEvent mouseEvent) {
-        if (mouseEvent.getSource() instanceof Rectangle){
+        if (mouseEvent.getSource() instanceof Rectangle) {
             Pane paneS = (Pane) ((Rectangle) mouseEvent.getSource()).getParent();
             int n = paneS.getChildren().indexOf((Rectangle) mouseEvent.getSource()) + 1;
             ((Label) paneS.getChildren().get(n)).setTextFill(Paint.valueOf("black"));
