@@ -147,7 +147,7 @@ public class InGameMenu extends Application {
     public TextField typeReaction;
     public Label opponentReaction;
 
-    private CardView LastSelectedCard;0
+    private CardView LastSelectedCard;
 
     private int howManyChoice;
     private int step;
