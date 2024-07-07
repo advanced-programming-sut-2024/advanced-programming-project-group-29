@@ -317,6 +317,9 @@ public class InGameMenu extends Application {
                             else if (finalI == 1) reaction = "suicide.png";
                             else reaction = "thumbsup.png";
                             Client.getClient().getSender().sendCommand("send emoji reaction " + reaction);
+                            reactionPain.setDisable(true);
+                            reactionPain.setVisible(false);
+                            mainPain.setDisable(false);
                         }
 
                     }
@@ -328,6 +331,9 @@ public class InGameMenu extends Application {
                     if (mouseEvent.getButton().equals(MouseButton.PRIMARY)) {
                         if (mouseEvent.getClickCount() == 2) {
                             Client.getClient().getSender().sendCommand("send reaction " + text.getText());
+                            reactionPain.setDisable(true);
+                            reactionPain.setVisible(false);
+                            mainPain.setDisable(false);
                         }
                     }
                 }
