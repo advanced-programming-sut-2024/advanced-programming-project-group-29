@@ -272,6 +272,7 @@ public class GameMenuController {
             //return new Result(false, "You should have at least 22 soldiers in your deck.");
         }
         GameBoard gameBoard = user.getCurrentGameBoard();
+        user.getCommander().setGameBoard(gameBoard);
         gameBoard.changeTurn();
         // TODO: do not run the following line if game is online
         applicationController.setCurrentUser(user.getOpponent());
