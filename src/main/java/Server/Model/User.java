@@ -1,9 +1,6 @@
 package Server.Model;
 
 import Server.Enum.Faction;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
@@ -411,13 +408,13 @@ public class User {
     }
 
     public void acceptFriendRequest(User user) {
-        friendRequests.remove(user);
+        friendRequests.remove(user.getUsername());
         friends.add(user.getUsername());
         user.addFriend(this.username);
     }
 
     public void rejectFriendRequest(User user) {
-        friendRequests.remove(user);
+        friendRequests.remove(user.getUsername());
     }
 
     public void receiveFriendRequest(User user) {
@@ -430,9 +427,9 @@ public class User {
     }
 
     public String getStatusFriendRequest(User user) {
-        if (friends.contains(user))
+        if (friends.contains(user.username))
             return "Friend";
-        if (friendRequests.contains(user))
+        if (friendRequests.contains(user.getUsername()))
             return "Pending";
         return "Not Sent Yet";
     }
@@ -575,7 +572,6 @@ public class User {
                 user.friendRequests.add(friendRequest);
         }
         user.savedDecks.putAll(savedDecks);
-        return;
     }
 
     private static String[] splitStringWithEmptyStrings (String string, char c) {

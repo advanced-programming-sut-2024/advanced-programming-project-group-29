@@ -135,6 +135,9 @@ public class ApplicationController extends Thread {
                     case FRIENDS_MENU:
                         object = Server.Controller.FriendMenuController.processRequest(this, inputCommand);
                         break;
+                    case FRIEND_REQUESTS_MENU:
+                        object = Server.Controller.FriendRequestController.processRequest(this, inputCommand);
+                        break;
                     case RANKING_MENU:
                         object = Server.Controller.RankingMenuController.processRequest(this, inputCommand);
                         break;

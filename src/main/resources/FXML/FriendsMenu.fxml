@@ -109,8 +109,8 @@
             <Font size="15.0" />
          </font>
       </Label>
-      <Rectangle fx:id="rectangle" arcHeight="5.0" arcWidth="8.0" fill="#b6f59654" height="45.0" layoutX="214.0" layoutY="563.0" stroke="WHITE" strokeType="INSIDE" visible="false" width="200.0" onMouseClicked="#sendFriendRequest"/>
-      <Label fx:id="status" alignment="CENTER" layoutX="214.0" layoutY="564.0" prefHeight="45" prefWidth="200.0" text="Send Friend Request" textAlignment="CENTER" textFill="WHITE" visible="false" onMouseClicked="#sendFriendRequest">
+      <Rectangle fx:id="rectangle" arcHeight="5.0" arcWidth="8.0" fill="#b6f59654" height="45.0" layoutX="300.0" layoutY="563.0" onMouseClicked="#sendFriendRequest" stroke="WHITE" strokeType="INSIDE" visible="false" width="200.0" />
+      <Label fx:id="status" alignment="CENTER" layoutX="300.0" layoutY="564.0" onMouseClicked="#sendFriendRequest" prefHeight="45" prefWidth="200.0" text="Send Friend Request" textAlignment="CENTER" textFill="WHITE" visible="false">
          <font>
             <Font size="16.0" />
          </font>
@@ -120,5 +120,11 @@
             <Font size="14.0" />
          </font>
       </Label>
-   </children>
+      <Button alignment="CENTER" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onMouseClicked="#back" prefHeight="36.0" prefWidth="73.0" text="Back" textAlignment="CENTER" />
+      <Rectangle arcHeight="5.0" arcWidth="8.0" fill="#b6f59654" height="45.0" layoutX="710.0" layoutY="563.0" onMouseClicked="#seeFriendRequests" stroke="WHITE" strokeType="INSIDE" width="200.0" />
+      <Label alignment="CENTER" layoutX="710.0" layoutY="564.0" onMouseClicked="#seeFriendRequests" prefHeight="45" prefWidth="200.0" text="See Friend Requests" textAlignment="CENTER" textFill="WHITE">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Label>   </children>
 </AnchorPane>

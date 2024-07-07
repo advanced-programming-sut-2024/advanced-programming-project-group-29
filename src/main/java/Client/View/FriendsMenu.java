@@ -4,6 +4,7 @@ import Client.Client;
 import Client.Enum.Menu;
 import Client.Model.ApplicationRunningTimeData;
 import Client.Model.Result;
+import Server.Regex.FriendMenuRegex;
 import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -11,6 +12,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
@@ -33,7 +35,7 @@ public class FriendsMenu extends Application {
     public Label userNotFound;
     public Rectangle rectangle;
 
-    private Client client;
+    private final Client client;
 
     public FriendsMenu() {
         super();
@@ -112,8 +114,14 @@ public class FriendsMenu extends Application {
         Result result = (Result) client.sendCommand("send friend request -u " + searchedUsername);
         if (result.isSuccessful()) {
             status.setText("Pending");
-        } else {
         }
     }
 
+    public void back(MouseEvent mouseEvent) throws Exception {
+        new ProfileMenu().start(ApplicationRunningTimeData.getStage());
+    }
+
+    public void seeFriendRequests(MouseEvent mouseEvent) throws Exception {
+        new FriendRequestsMenu().start(ApplicationRunningTimeData.getStage());
+    }
 }

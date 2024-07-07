@@ -10,5 +10,6 @@ public enum Menu {
     REGISTER_MENU,
     PROFILE_MENU,
     FRIENDS_MENU,
+    FRIEND_REQUESTS_MENU,
     RANKING_MENU;
 }

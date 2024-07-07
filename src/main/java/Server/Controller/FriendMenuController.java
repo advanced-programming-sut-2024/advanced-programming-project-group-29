@@ -18,12 +18,6 @@ public class FriendMenuController {
         if (inputCommand.matches(FriendMenuRegex.GET_STATUS.getRegex())) {
             return getStatus(applicationController, FriendMenuRegex.GET_STATUS.getMatcher(inputCommand));
         }
-        if (inputCommand.matches(FriendMenuRegex.RESPOND_TO_REQUEST.getRegex())) {
-            return respondRequest(applicationController, FriendMenuRegex.RESPOND_TO_REQUEST.getMatcher(inputCommand));
-        }
-        if (inputCommand.matches(FriendMenuRegex.GET_FRIEND_REQUESTS.getRegex())) {
-            return getFriendRequests(applicationController);
-        }
         return null;
     }
 
@@ -39,11 +33,11 @@ public class FriendMenuController {
     private static Result sendFriendRequest(ApplicationController applicationController, Matcher matcher) {
         String username = matcher.group("username");
         User user = User.getUserByUsername(username);
-        if (getStatus(applicationController, user).equals("Not Sent Yet")) {
-            applicationController.getCurrentUser().sendFriendRequest(User.getUserByUsername(username));
-            return new Result(true, "Friend Request Sent");
+        if (!getStatus(applicationController, user).equals("Not Sent Yet")) {
+            return new Result(false, getStatus(applicationController, user));
         }
-        return new Result(false, getStatus(applicationController, user));
+        applicationController.getCurrentUser().sendFriendRequest(user);
+        return new Result(true, "Friend Request Sent");
     }
 
     private static String getStatus(ApplicationController applicationController, Matcher matcher) {
@@ -55,21 +49,5 @@ public class FriendMenuController {
         if (user.equals(applicationController.getCurrentUser()))
             return "You";
         return user.getStatusFriendRequest(applicationController.getCurrentUser());
-    }
-
-    private static Result respondRequest(ApplicationController applicationController, Matcher matcher) {
-        String answer = matcher.group("answer");
-        String username = matcher.group("username");
-        User user = User.getUserByUsername(username);
-        if (answer.equals("reject")) {
-            applicationController.getCurrentUser().rejectFriendRequest(user);
-        } else {
-            applicationController.getCurrentUser().acceptFriendRequest(user);
-        }
-        return new Result(true, "Friend added");
-    }
-
-    private static ArrayList<String> getFriendRequests(ApplicationController applicationController) {
-        return applicationController.getCurrentUser().getFriendRequests();
     }
 }

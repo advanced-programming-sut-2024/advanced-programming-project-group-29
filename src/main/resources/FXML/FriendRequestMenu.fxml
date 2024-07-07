@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Client.View.FriendRequestsMenu">
+    <children>
+        <ImageView fitHeight="800.0" fitWidth="1202.0" pickOnBounds="true" preserveRatio="true">
+            <image>
+                <Image url="@../Images/Background/LoginMenuBackground.png" />
+            </image>
+        </ImageView>
+        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#eed092" height="600.0" layoutX="175.0" layoutY="100.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="0.0" width="850.0">
+            <effect>
+                <Shadow height="60.0" radius="29.5" width="60.0">
+                    <color>
+                        <Color red="0.02631578966975212" green="0.01885964907705784" blue="0.001461988314986229" opacity="0.7799999713897705" />
+                    </color>
+                </Shadow>
+            </effect>
+        </Rectangle>
+      <Label alignment="CENTER" layoutX="533.0" layoutY="120.0" text="Friend Requests" textAlignment="CENTER" textFill="WHITE">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+        <VBox fx:id="vbox" layoutX="200.0" layoutY="150.0" prefHeight="500.0" prefWidth="800.0" spacing="7.0">
+        </VBox>
+    </children>
+</AnchorPane>
