@@ -80,9 +80,8 @@ public class GameMenu extends Application {
     private final ArrayList<Image> notSelectedCards = new ArrayList<>();
     private final ArrayList<Image> selectedCards = new ArrayList<>();
 
-    public GameMenu(boolean isOnline) {
+    public GameMenu() {
         super();
-        this.isOnline = isOnline;
         client = Client.getClient();
         client.sendCommand("menu enter " + Menu.GAME_MENU.toString());
     }

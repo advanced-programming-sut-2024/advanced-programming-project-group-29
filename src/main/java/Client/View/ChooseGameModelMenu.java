@@ -86,7 +86,7 @@ public class ChooseGameModelMenu extends Application {
         if (!result.isSuccessful()) {
             sayAlert(result.getMessage().getFirst(), true);
         } else {
-            new GameMenu(isOnline).start(ApplicationRunningTimeData.getStage());
+            new GameMenu().start(ApplicationRunningTimeData.getStage());
         }
     }
 
