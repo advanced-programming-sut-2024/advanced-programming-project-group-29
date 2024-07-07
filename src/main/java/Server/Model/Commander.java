@@ -90,7 +90,7 @@ public class Commander extends Card {
         for (Soldier soldier : this.gameBoard.getRows()[opponentNumber][2]) {
             int currentHp = soldier.getShownHp();
             sumHp += currentHp;
-            if (card == null) if (currentHp > 10) card = soldier;
+            if (card == null) card = soldier;
             else if (currentHp > card.getShownHp()) card = soldier;
         }
         if (sumHp <= 10) return;
@@ -176,7 +176,14 @@ public class Commander extends Card {
     }
 
     private void commanderOfTheRedRiders() {
-        Card selectedCard = InGameMenuController.getOneCardWeathersInDeck(this.getSender(), user);
+        ArrayList<Card> options = new ArrayList<>();
+        for (Card card : user.getDeck()) {
+            if (card instanceof Spell) {
+                if (((Spell) card).isWeather())
+                    options.add(card);
+            }
+        }
+        Card selectedCard = selectCardRandomly(options);
         if(selectedCard == null)
             return;
         InGameMenuController.addWeatherAndRemoveFromDeck((Spell) selectedCard);
@@ -185,15 +192,15 @@ public class Commander extends Card {
     private void destroyerOfWorlds() {
         Card[] removedCards = new Card[2];
         for (int i = 0; i < 2; i++) {
-            removedCards[i] = InGameMenuController.getOneCardFromHand(this.getSender(), user);
+            removedCards[i] = selectCardRandomly(user.getHand());
             InGameMenuController.removeCardFromHand(this.getSender(), gameBoard, removedCards[i], gameBoard.getPlayerNumber(user));
         }
-        Card card = InGameMenuController.getOneCardFromDeck(this.getSender(), user);
+        Card card = selectCardRandomly(user.getDeck());
         InGameMenuController.moveCardFromDeckToHand(this.getSender(), card);
     }
 
     private void kingOfTheWildHunt() {
-        Card card = InGameMenuController.getOneCardFromDiscardPile(this.getSender(), user);
+        Card card = selectCardRandomly(user.getDiscardPile());
         if (card == null)
             return;
         InGameMenuController.moveCardFromDiscardToHand(this.getSender(), card);
@@ -221,9 +228,10 @@ public class Commander extends Card {
     }
 
     private void theRelentless() {
-        Card card = InGameMenuController.getOneCardFromDiscardPile(this.getSender(), user);
+        Card card = selectCardRandomly(user.getOpponent().getDiscardPile());
         if (card == null)
             return;
+        //TODO from opponent discard to hand
         InGameMenuController.moveCardFromDiscardToHand(this.getSender(), card);
     }
 
@@ -257,7 +265,7 @@ public class Commander extends Card {
         for (Soldier soldier : this.gameBoard.getRows()[playerNumber][1]) {
             int currentHp = soldier.getShownHp();
             sumHp += currentHp;
-            if (card == null) if (currentHp > 10) card = soldier;
+            if (card == null)  card = soldier;
             else if (currentHp > card.getShownHp()) card = soldier;
         }
         if (sumHp <= 10) return;
@@ -269,6 +277,17 @@ public class Commander extends Card {
         Random random = new Random();
         int length = list.size();
         int index = random.nextInt() % length;
+        boolean hasNonHero = false;
+        for (Card card : list) {
+            if (!card.isHero()) {
+                hasNonHero = true;
+                break;
+            }
+        }
+        if (!hasNonHero) return null;
+        while (list.get(index).isHero()) {
+            index = random.nextInt() % length;
+        }
         return list.get(index);
     }
 }
