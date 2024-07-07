@@ -175,7 +175,7 @@ public class Soldier extends Card {
         }
     }
 
-    private void executeActionForTransformers(Soldier soldier) { // TODO passive action!
+    public void executeActionForTransformers(Soldier soldier) { // TODO passive action!
         InGameMenuController.changeHpForSoldier(soldier.getGameBoard(), soldier, 8);
     }
 

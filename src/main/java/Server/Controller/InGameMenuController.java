@@ -146,6 +146,7 @@ public class InGameMenuController extends Thread {
         User opponent = user.getOpponent();
         user.createHand();
         opponent.createHand();
+
     }
 
     public static boolean getOneCardFromDiscardPile(Sender sender, User user){
@@ -408,8 +409,15 @@ public class InGameMenuController extends Thread {
     }
 
     public static GameBoardin getGameBoardin(User user){
-        GameBoardin gameBoardin = new GameBoardin(user);
-        return gameBoardin;
+        try {
+            System.out.println("new gameboardin is being created");
+            GameBoardin gameBoardin = new GameBoardin(user);
+            return gameBoardin;
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public static void moveCardFromDeckToHand(Sender sender, Card card) {
