@@ -606,6 +606,29 @@ public class InGameMenu extends Application {
         destroySoldier(row, cardNumber, playerIndex);
     }
 
+    public void placeSpecialForOpponent(Matcher matcher) {
+        int rowNumber = Integer.parseInt(matcher.group("rowNumber"));
+        int cardNumber = Integer.parseInt(matcher.group("cardNumber"));
+        // TODO: implement this, opponent played an special card
+    }
+
+    public void placeWeatherForOpponent(Matcher matcher) {
+        int cardNumber = Integer.parseInt(matcher.group("cardNumber"));
+        // TODO: implement this, opponent played a weather card
+    }
+
+    public void placeSoldierForOpponent(Matcher matcher) {
+        int rowNumber = Integer.parseInt(matcher.group("rowNumber"));
+        int cardNumber = Integer.parseInt(matcher.group("cardNumber"));
+        // TODO: implement this, opponent played a soldier
+    }
+
+    public void moveWeatherFromDeckAndPlay(Matcher matcher) {
+        int cardNumber = Integer.parseInt(matcher.group("cardNumber"));
+        int playerIndex = Integer.parseInt(matcher.group("playerIndex"));
+        // TODO: implement this, move weather from deck to it's place and play it
+    }
+
     private int convertRowNumber(int fatemeRowNumber) {
         int ostadRowNumber = 2 - fatemeRowNumber; // :))
         return ostadRowNumber;
@@ -1280,28 +1303,5 @@ public class InGameMenu extends Application {
         messageBoxPane.setDisable(false);
         messageBoxPane.setVisible(true);
         mainPain.setDisable(true);
-    }
-
-    public void placeSpecialForOpponent(Matcher matcher) {
-        int rowNumber = Integer.parseInt(matcher.group("rowNumber"));
-        int cardNumber = Integer.parseInt(matcher.group("cardNumber"));
-        // TODO: implement this, opponent played an special card
-    }
-
-    public void placeWeatherForOpponent(Matcher matcher) {
-        int cardNumber = Integer.parseInt(matcher.group("cardNumber"));
-        // TODO: implement this, opponent played a weather card
-    }
-
-    public void placeSoldierForOpponent(Matcher matcher) {
-        int rowNumber = Integer.parseInt(matcher.group("rowNumber"));
-        int cardNumber = Integer.parseInt(matcher.group("cardNumber"));
-        // TODO: implement this, opponent played a soldier
-    }
-
-    public void moveWeatherFromDeckAndPlay(Matcher matcher) {
-        int cardNumber = Integer.parseInt(matcher.group("cardNumber"));
-        int playerIndex = Integer.parseInt(matcher.group("playerIndex"));
-        // TODO: implement this, move weather from deck to it's place and play it
     }
 }

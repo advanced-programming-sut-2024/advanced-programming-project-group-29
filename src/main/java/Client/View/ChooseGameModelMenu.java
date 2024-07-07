@@ -81,12 +81,18 @@ public class ChooseGameModelMenu extends Application {
     }
 
     public void startGame(MouseEvent mouseEvent) throws Exception {
-        String toRegex = "create game -p2 " + opponentUsername.getText() + " " + (isOnline ? "online" : "offline");
+        String toRegex = "";
+        if (isOnline) toRegex = "create game -p2 " + opponentUsername.getText() + " " + (isOnline ? "online" : "offline"); //TODO Regex for online
+        else toRegex = "create game -p2 " + opponentUsername.getText() + " " + (isOnline ? "online" : "offline"); //TODO edit this regex
         Result result = (Result) client.sendCommand(toRegex);
         if (!result.isSuccessful()) {
             sayAlert(result.getMessage().getFirst(), true);
         } else {
-            new GameMenu().start(ApplicationRunningTimeData.getStage());
+            if (isOnline) {
+                //TODO show game menu for both users
+            } else {
+                (new GameMenu(false)).start(ApplicationRunningTimeData.getStage());
+            }
         }
     }
 

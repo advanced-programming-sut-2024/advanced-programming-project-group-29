@@ -20,6 +20,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.util.Duration;
@@ -41,14 +42,14 @@ public class RankingMenu extends Application {
     }
 
 
-    private ObservableList<ArrayList<String>> getData(){
+    private ObservableList<ArrayList<String>> getData() {
         ArrayList<String> ranks = (ArrayList<String>) client.sendCommand(RankingMenuRegex.GET_RANKING.getRegex());
         ArrayList<ArrayList<String>> result = new ArrayList<>();
         for (String line : ranks) {
             ArrayList<String> splitLine = new ArrayList<>(Arrays.asList(line.split("\t")));
             result.add(splitLine);
         }
-        for (ArrayList<String> a : result){
+        for (ArrayList<String> a : result) {
             int n = result.indexOf(a);
             if (n >= 0 && n <= 9) a.add("See Last Game");
         }
@@ -65,6 +66,24 @@ public class RankingMenu extends Application {
             TableColumn<ArrayList<String>, String> column = new TableColumn<>(names.get(i));
             column.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().get(index)));
             column.setStyle("-fx-alignment: CENTER;");
+            if (i == 4) {
+                column.setCellFactory(c -> new TableCell<ArrayList<String>, String>() {
+                    @Override
+                    protected void updateItem(String item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (item == null || empty) {
+                            setText(null);
+                        } else {
+                            setText(item);
+                            setOnMouseClicked(event -> {
+                                if (item.equals("See Last Game") && event.getClickCount() == 2) {
+                                    System.out.println("sdlnlansd");
+                                }
+                            });
+                        }
+                    }
+                });
+            }
             tableView.getColumns().add(column);
         }
         ObservableList<ArrayList<String>> data = FXCollections.observableArrayList(result);
@@ -96,17 +115,23 @@ public class RankingMenu extends Application {
         return data;
     }
 
+    private void refreshPain(ObservableList<ArrayList<String>> data, int n) {
+        tableView.setItems(data);
+        nUsers.setText("Ranking between " + n + " users");
+    }
+
 
     @FXML
     public void initialize() {
-        ObservableList<ArrayList<String>> data = getData();
-        tableView.setItems(data);
+        final ObservableList<ArrayList<String>>[] data = new ObservableList[]{getData()};
+        refreshPain(data[0], data[0].size());
         Timeline t = new Timeline(new KeyFrame(Duration.seconds(5), new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
                 ObservableList<ArrayList<String>> newData = getData();
-                if (!data.equals(newData)){
-                    tableView.setItems(newData);
+                if (!data[0].equals(newData)) {
+                    data[0] = newData;
+                    refreshPain(data[0], data[0].size());
                 }
             }
         }));
