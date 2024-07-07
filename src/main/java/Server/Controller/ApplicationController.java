@@ -144,6 +144,7 @@ public class ApplicationController extends Thread {
                     if(currentMenu == Menu.IN_GAME_MENU || currentMenu == Menu.GAME_MENU)
                         currentUser.setSender(sender);
                 }
+                System.out.println(object == null);
                 if(object == null)
                     dataOutputStream.writeUTF("null");
                 else {

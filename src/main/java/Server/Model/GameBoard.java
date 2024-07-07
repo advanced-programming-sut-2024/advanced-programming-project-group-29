@@ -283,7 +283,7 @@ public class GameBoard {
             for(int j = 0; j < 3; j++){
                 for(Soldier soldier : rows[i][j]){
                     if(soldier.getAttribute() == Attribute.TRANSFORMERS){
-                        soldier.executeAction();
+                        soldier.executeActionForTransformers(soldier);
                     }
                 }
             }

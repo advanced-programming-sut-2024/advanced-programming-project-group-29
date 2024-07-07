@@ -276,7 +276,7 @@ public class Commander extends Card {
         if (list.isEmpty()) return null;
         Random random = new Random();
         int length = list.size();
-        int index = random.nextInt() % length;
+        int index = random.nextInt(length);
         boolean hasNonHero = false;
         for (Card card : list) {
             if (!card.isHero()) {
