@@ -1070,26 +1070,30 @@ public class InGameMenu extends Application {
     }
 
     public void showReaction(Matcher matcher) {
-        String reaction = matcher.group("reaction");
-        showReaction(reaction);
+        Platform.runLater(() -> {
+            String reaction = matcher.group("reaction");
+            showReaction(reaction);
+        });
     }
 
     public void showReaction(String reaction) {
-        showReactionPain.setDisable(false);
-        showReactionPain.setVisible(true);
-        mainPain.setDisable(true);
-        opponentReaction.setText(reaction);
-        Timeline t = new Timeline(new KeyFrame(Duration.seconds(7)));
-        t.setOnFinished(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                showReactionPain.setDisable(true);
-                showReactionPain.setVisible(false);
-                mainPain.setDisable(false);
-            }
+        Platform.runLater(() -> {
+            showReactionPain.setDisable(false);
+            showReactionPain.setVisible(true);
+            mainPain.setDisable(true);
+            opponentReaction.setText(reaction);
+            Timeline t = new Timeline(new KeyFrame(Duration.seconds(7)));
+            t.setOnFinished(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent actionEvent) {
+                    showReactionPain.setDisable(true);
+                    showReactionPain.setVisible(false);
+                    mainPain.setDisable(false);
+                }
+            });
+            t.setCycleCount(1);
+            t.play();
         });
-        t.setCycleCount(1);
-        t.play();
     }
 
     public void showReactionToCard(String reaction) {
