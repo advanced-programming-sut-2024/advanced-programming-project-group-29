@@ -38,7 +38,8 @@ public class GameBoard {
     private boolean isGameOnline = false;
     ChatBox chatBox = new ChatBox();
 
-    public GameBoard(User player1, User player2) {
+    public GameBoard(User player1, User player2, boolean isGameOnline) {
+        this.isGameOnline = isGameOnline;
         playersCrystals[0] = 2;
         playersCrystals[1] = 2;
         players[0] = player1;

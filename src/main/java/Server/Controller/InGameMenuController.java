@@ -39,9 +39,9 @@ public class InGameMenuController extends Thread {
                 startGame(user);
             } else if ((matcher = InGameMenuRegex.GET_GAME_BOARDIN.getMatcher(inputCommand)).matches()) {
                 result = getGameBoardin(user);
-            } else if ((matcher = InGameMenuRegex.SHOW_REACTION.getMatcher(inputCommand)).matches()) {
+            } else if ((matcher = InGameMenuRegex.SEND_REACTION.getMatcher(inputCommand)).matches() && user.getCurrentGameBoard().isGameOnline()) {
                 opponentSender.sendCommand(inputCommand);
-            } else if ((matcher = InGameMenuRegex.SHOW_REACTION_TO_CARD.getMatcher(inputCommand)).matches()) {
+            } else if ((matcher = InGameMenuRegex.SEND_EMOJI_REACTION.getMatcher(inputCommand)).matches() && user.getCurrentGameBoard().isGameOnline()) {
                 opponentSender.sendCommand(inputCommand);
             } else if ((matcher = InGameMenuRegex.PASS_TURN.getMatcher(inputCommand)).matches()) {
                 result = passTurn(applicationController);

@@ -4,7 +4,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public enum GameMenuRegex {
-    CREATE_GAME("create game -p2( (?<player2>.+))?"),
+    CREATE_GAME("create game -p2 (?<player2>.+) (?<type>(online)|(offline))"),
     SHOW_FACTIONS("show factions"),
     SELECT_FACTION("select faction -f (?<faction>\\S+)"),
     SHOW_CARDS("show cards"),

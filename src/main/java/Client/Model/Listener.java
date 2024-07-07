@@ -73,10 +73,10 @@ public class Listener extends Thread {
                     else if ((matcher = LoginMenuRegex.AUTHENTICATE.getMatcher(input)).matches()) {
                         // TODO: pop up an authentication window, asking for username and password, check it, when it was ok call setOutputStreamBuffer("null")
                         waitForAnswer = true;
-                    } else if ((matcher = InGameMenuRegex.SHOW_REACTION.getMatcher(input)).matches()) {
-                        inGameMenu.showReaction(matcher.group("reaction"));
-                    } else if ((matcher = InGameMenuRegex.SHOW_REACTION_TO_CARD.getMatcher(input)).matches()) {
-                        inGameMenu.showReactionToCard(matcher.group("reaction"));
+                    } else if ((matcher = InGameMenuRegex.SEND_REACTION.getMatcher(input)).matches()) {
+                        inGameMenu.showReaction(matcher);
+                    } else if ((matcher = InGameMenuRegex.SEND_EMOJI_REACTION.getMatcher(input)).matches()) {
+                        inGameMenu.showReactionToCard(matcher);
                     } else if((matcher = InGameMenuOutputCommand.PLACE_SPECIAL_FOR_OPPONENT.getMatcher(input)).matches()) {
                         inGameMenu.placeSpecialForOpponent(matcher);
                     }else if((matcher = InGameMenuOutputCommand.PLACE_WEATHER_FOR_OPPONENT.getMatcher(input)).matches()) {

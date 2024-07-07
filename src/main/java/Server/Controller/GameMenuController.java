@@ -73,6 +73,7 @@ public class GameMenuController {
 
     public static Result createGame(User user1, Matcher matcher) {
         String player2 = matcher.group("player2");
+        boolean isOnline = matcher.group("type").equals("online");
         if (player2 == null) {
             return new Result(false, "You should enter the second player's username.");
         }
@@ -89,7 +90,7 @@ public class GameMenuController {
         if (user2.getCurrentGameBoard() != null) {
             return new Result(false, "This player is already in a game.");
         }
-        GameBoard gameBoard = new GameBoard(user1, user2);
+        GameBoard gameBoard = new GameBoard(user1, user2, isOnline);
         user1.setCurrentGameBoard(gameBoard);
         user2.setCurrentGameBoard(gameBoard);
         return new Result(true, "Game created successfully.");
@@ -274,8 +275,8 @@ public class GameMenuController {
         GameBoard gameBoard = user.getCurrentGameBoard();
         user.getCommander().setGameBoard(gameBoard);
         gameBoard.changeTurn();
-        // TODO: do not run the following line if game is online
-        applicationController.setCurrentUser(user.getOpponent());
+        if(!gameBoard.isGameOnline())
+            applicationController.setCurrentUser(user.getOpponent());
         return new Result(true, "Turn changed successfully.");
     }
 
