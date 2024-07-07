@@ -77,7 +77,6 @@ public class ApplicationController extends Thread {
             currentMenu = Menu.LOGIN_MENU;
             DataInputStream dataInputStream = new DataInputStream(listenerSocket.getInputStream());
             DataOutputStream dataOutputStream = new DataOutputStream(listenerSocket.getOutputStream());
-            String outputCommand = "";
             String inputCommand = dataInputStream.readUTF();
             int ipEndIndex = inputCommand.indexOf(" ");
             sender = new Sender(inputCommand.substring(0, ipEndIndex),
@@ -85,10 +84,17 @@ public class ApplicationController extends Thread {
             dataOutputStream.writeUTF("null");
             while(true) {
                 inputCommand = dataInputStream.readUTF();
+                if (inputCommand.equals(LoginMenuRegex.LOGOUT.getRegex())) {
+                    currentUser = null;
+                    currentMenu = Menu.LOGIN_MENU;
+                    dataOutputStream.writeUTF("null");
+                    continue;
+                }
                 if(currentUser != null){
                     int endOfToken = inputCommand.indexOf(":");
-                    if(!currentUser.checkJWT(inputCommand.substring(0, endOfToken)))
+                    if(!currentUser.checkJWT(inputCommand.substring(0, endOfToken))) {
                         sender.sendCommand("authenticate");
+                    }
                     inputCommand = inputCommand.substring(endOfToken + 1);
                 }
                 System.out.println("got that command " + inputCommand);
@@ -147,7 +153,6 @@ public class ApplicationController extends Thread {
                     if(currentMenu == Menu.IN_GAME_MENU || currentMenu == Menu.GAME_MENU)
                         currentUser.setSender(sender);
                 }
-                System.out.println(object == null);
                 if(object == null)
                     dataOutputStream.writeUTF("null");
                 else {

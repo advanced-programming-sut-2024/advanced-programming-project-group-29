@@ -3,6 +3,7 @@ package Client.View;
 import Client.Client;
 import Client.Enum.Menu;
 import Client.Model.ApplicationRunningTimeData;
+import Client.Regex.LoginMenuRegex;
 import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -19,9 +20,9 @@ import java.util.Objects;
 public class MainMenu extends Application {
 
     public Label nickname;
-    private Client client;
+    private final Client client;
 
-    public MainMenu () {
+    public MainMenu() {
         super();
         client = Client.getClient();
         client.sendCommand("menu enter " + Menu.MAIN_MENU.toString());
@@ -44,16 +45,17 @@ public class MainMenu extends Application {
     }
 
 
-    public void newGame(MouseEvent mouseEvent) throws Exception {
+    public void newGame() throws Exception {
         new ChooseGameModelMenu().start(ApplicationRunningTimeData.getStage());
     }
 
-    public void profile(MouseEvent mouseEvent) throws Exception{
+    public void profile() throws Exception {
         new ProfileMenu().start(ApplicationRunningTimeData.getStage());
     }
 
-    public void logout(MouseEvent mouseEvent) {
-        //TODO
+    public void logout() throws Exception {
+        client.sendCommand(LoginMenuRegex.LOGOUT.getRegex());
+        new LoginMenu().start(ApplicationRunningTimeData.getStage());
     }
 
     public void buttonEntered(MouseEvent mouseEvent) {
