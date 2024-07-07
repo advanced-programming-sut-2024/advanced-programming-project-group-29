@@ -89,7 +89,10 @@ public class ChooseGameModelMenu extends Application {
             sayAlert(result.getMessage().getFirst(), true);
         } else {
             if (isOnline) {
-                //TODO show game menu for both users
+                String username = "";
+                Pane popUp = PopUp.createPopUp(0,"User " + username + " has been invited to play with you", username);
+                //TODO add popUp to Opponent menu
+                sayAlert("User " + opponentUsername.getText() + " has been invited to play with you, wait for accept", false);
             } else {
                 (new GameMenu(false)).start(ApplicationRunningTimeData.getStage());
             }
@@ -140,6 +143,4 @@ public class ChooseGameModelMenu extends Application {
         label.setFont(Font.font("System", FontWeight.BOLD, 16));
         return label;
     }
-
-
 }

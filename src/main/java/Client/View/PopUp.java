@@ -17,8 +17,7 @@ import javafx.scene.text.FontWeight;
 import java.util.regex.Matcher;
 
 public class PopUp {
-    public static Pane createPopUp(Matcher matcher) {
-        int j = Integer.parseInt(matcher.group("model"));  // 0 for request friend  1 for online game 2 for tournament
+    public static Pane createPopUp(int model, String textPopUp, String UsernameOfApplicant) {
         Pane pain = new Pane();
         pain.setPrefWidth(425);
         pain.setPrefHeight(189);
@@ -63,7 +62,7 @@ public class PopUp {
         acceptBack.setEffect(shadow);
         pain.getChildren().add(acceptBack);
         pain.getChildren().add(ignoreBack);
-        Label ignore = new Label("Ignore");
+        Label ignore = new Label("reject");
         ignore.setFont(Font.font("System", FontWeight.BOLD, 16));
         ignore.setLayoutX(101);
         ignore.setLayoutY(113);
@@ -77,8 +76,7 @@ public class PopUp {
         accept.setPrefHeight(22);
         pain.getChildren().add(accept);
         pain.getChildren().add(ignore);
-        String text = matcher.group("text");
-        Label textLabel = new Label(text);
+        Label textLabel = new Label(textPopUp);
         textLabel.setLayoutX(20);
         textLabel.setLayoutY(29);
         textLabel.setPrefWidth(386);
@@ -88,18 +86,18 @@ public class PopUp {
         textLabel.setFont(Font.font("System", FontWeight.BOLD, 15));
         textLabel.setTextFill(Paint.valueOf("#dea543"));
         pain.getChildren().add(textLabel);
-        switch (j) {
+        switch (model) {
             case 0:
                 accept.setOnMouseClicked(new EventHandler<MouseEvent>() {
                     @Override
                     public void handle(MouseEvent mouseEvent) {
-                        Client.getClient().getSender().sendCommand(""); //TODO
+                        Client.getClient().getSender().sendCommand("accept -u " + UsernameOfApplicant);
                     }
                 });
                 ignore.setOnMouseClicked(new EventHandler<MouseEvent>() {
                     @Override
                     public void handle(MouseEvent mouseEvent) {
-                        Client.getClient().getSender().sendCommand(""); //TODO
+                        Client.getClient().getSender().sendCommand("reject -u " + UsernameOfApplicant);
                     }
                 });
                 break;
@@ -107,27 +105,13 @@ public class PopUp {
                 accept.setOnMouseClicked(new EventHandler<MouseEvent>() {
                     @Override
                     public void handle(MouseEvent mouseEvent) {
-                        Client.getClient().getSender().sendCommand(""); //TODO
+                        Client.getClient().getSender().sendCommand("accept play -u " + UsernameOfApplicant);
                     }
                 });
                 ignore.setOnMouseClicked(new EventHandler<MouseEvent>() {
                     @Override
                     public void handle(MouseEvent mouseEvent) {
-                        Client.getClient().getSender().sendCommand(""); //TODO
-                    }
-                });
-                break;
-            case 2:
-                accept.setOnMouseClicked(new EventHandler<MouseEvent>() {
-                    @Override
-                    public void handle(MouseEvent mouseEvent) {
-                        Client.getClient().getSender().sendCommand(""); //TODO
-                    }
-                });
-                ignore.setOnMouseClicked(new EventHandler<MouseEvent>() {
-                    @Override
-                    public void handle(MouseEvent mouseEvent) {
-                        Client.getClient().getSender().sendCommand(""); //TODO
+                        Client.getClient().getSender().sendCommand("reject play -u " + UsernameOfApplicant);
                     }
                 });
         }
