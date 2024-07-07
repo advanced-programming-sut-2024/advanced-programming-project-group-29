@@ -42,6 +42,8 @@ public class FriendMenuController {
 
     private static String getStatus(ApplicationController applicationController, Matcher matcher) {
         String username = matcher.group("username");
+        if (User.getUserByUsername(username) == null)
+            return null;
         return getStatus(applicationController, User.getUserByUsername(username));
     }
 

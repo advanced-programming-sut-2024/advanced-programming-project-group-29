@@ -84,6 +84,8 @@ public class FriendsMenu extends Application {
         String searchedUsername = searchedField.getText();
         Result result = (Result) client.sendCommand("show info -u " + searchedUsername);
         if (!result.isSuccessful()) {
+            status.setVisible(false);
+            rectangle.setVisible(false);
             userNotFound.setVisible(true);
             return;
         }
@@ -101,6 +103,7 @@ public class FriendsMenu extends Application {
         draw.setText(splitResult.get(6).getLast());
         lose.setText(splitResult.get(7).getLast());
         String statusText = (String) client.sendCommand("get status -u " + searchedUsername);
+        System.err.println(statusText);
         if (statusText.equals("You")) {
             status.setVisible(false);
             rectangle.setVisible(false);

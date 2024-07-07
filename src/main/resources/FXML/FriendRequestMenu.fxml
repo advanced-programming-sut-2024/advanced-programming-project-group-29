@@ -31,5 +31,6 @@
       </Label>
         <VBox fx:id="vbox" layoutX="200.0" layoutY="150.0" prefHeight="500.0" prefWidth="800.0" spacing="7.0">
         </VBox>
+        <Button alignment="CENTER" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onMouseClicked="#back" prefHeight="36.0" prefWidth="73.0" text="Back" textAlignment="CENTER" />
     </children>
 </AnchorPane>

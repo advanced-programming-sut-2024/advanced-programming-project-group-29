@@ -5,6 +5,8 @@ import Client.Enum.Menu;
 import Client.Model.ApplicationRunningTimeData;
 import Client.Model.Result;
 import Server.Regex.FriendMenuRegex;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -21,6 +23,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +32,9 @@ import java.util.Objects;
 public class FriendRequestsMenu extends Application {
 
     private final Client client;
+    @FXML
     public VBox vbox;
+    private Timeline timeline;
 
     public FriendRequestsMenu() {
         super();
@@ -40,6 +45,21 @@ public class FriendRequestsMenu extends Application {
 
     @FXML
     public void initialize() {
+        build();
+    }
+
+    @Override
+    public void start(Stage stage) throws Exception {
+        stage.setResizable(false);
+        stage.centerOnScreen();
+        Pane pane = FXMLLoader.load(Objects.requireNonNull(FriendRequestsMenu.class.getResource("/FXML/FriendRequestMenu.fxml")));
+        Scene scene = new Scene(pane);
+        stage.setScene(scene);
+        stage.show();
+        ApplicationRunningTimeData.setPane(pane);
+    }
+
+    private void build() {
         ArrayList<String> friendRequests = (ArrayList<String>) client.sendCommand(FriendMenuRegex.GET_FRIEND_REQUESTS.getRegex());
         if (friendRequests == null) {
             return;
@@ -92,18 +112,18 @@ public class FriendRequestsMenu extends Application {
                 vbox.getChildren().remove(declineLabel.getParent());
             });
         }
-
+        if (timeline == null) {
+            timeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
+                vbox.getChildren().clear();
+                build();
+            }));
+            timeline.setCycleCount(Timeline.INDEFINITE);
+            timeline.play();
+        }
     }
 
-    @Override
-    public void start(Stage stage) throws Exception {
-        stage.setResizable(false);
-        stage.centerOnScreen();
-        Pane pane = FXMLLoader.load(Objects.requireNonNull(FriendRequestsMenu.class.getResource("/FXML/FriendRequestMenu.fxml")));
-        Scene scene = new Scene(pane);
-        stage.setScene(scene);
-        stage.show();
-        ApplicationRunningTimeData.setPane(pane);
+    public void back() throws Exception {
+        timeline.stop();
+        new FriendsMenu().start(ApplicationRunningTimeData.getStage());
     }
-
 }
