@@ -147,7 +147,7 @@ public class InGameMenu extends Application {
     public TextField typeReaction;
     public Label opponentReaction;
 
-    private CardView LastSelectedCard;
+    private CardView LastSelectedCard;0
 
     private int howManyChoice;
     private int step;
@@ -220,6 +220,7 @@ public class InGameMenu extends Application {
                                     row[finalI - 1][finalJ - 1].add(c);
                                     Client.getClient().sendCommand("place soldier " + placedNumber + " in row " + (3 - finalJ));
                                     (new FlipCardAnimation(c, (n == 0 ? (X_POSITION_ROW_LEFT + X_POSITION_ROW_RIGHT - CARD_WIDTH) / 2 : row[finalI - 1][finalJ - 1].get(n - 1).getLayoutX() + CARD_WIDTH + SPACING), Y, true, true, true)).play();
+                                    LastSelectedCard = c;
                                 }
                             }
                         }
@@ -249,6 +250,7 @@ public class InGameMenu extends Application {
                                 Client.getClient().sendCommand("place special " + placedNumber + " in row " + (3 - finalJ));
                                 horn[0][finalJ - 1] = c;
                                 (new FlipCardAnimation(c, X_POSITION_SPELL, Y, true, true, true)).play();
+                                LastSelectedCard = c;
                             }
                         }
                     }
@@ -279,6 +281,7 @@ public class InGameMenu extends Application {
                                 Client.getClient().sendCommand("place weather " + placedNumber);
                                 refreshWeather();
                                 (new FlipCardAnimation(c, (n == 0 ? (X_POSITION_WEATHER_LEFT + X_POSITION_WEATHER_RIGHT - CARD_WIDTH) / 2 : weather.get(n - 1).getLayoutX() + CARD_WIDTH + SPACING), Y_POSITION_WEATHER, true, true, true)).play();
+                                LastSelectedCard = c;
                             }
                         }
                     }
@@ -302,7 +305,9 @@ public class InGameMenu extends Application {
             emojiField.setAccessible(true);
             textField.setAccessible(true);
             int finalI = i;
-            ((ImageView) emojiField.get(this)).setOnMouseClicked(new EventHandler<MouseEvent>() {
+            ImageView emoji = (ImageView) emojiField.get(this);
+            Label text = (Label) textField.get(this);
+            emoji.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent mouseEvent) {
                     if (mouseEvent.getButton().equals(MouseButton.PRIMARY)) {
@@ -317,16 +322,12 @@ public class InGameMenu extends Application {
                     }
                 }
             });
-            ((Label) textField.get(this)).setOnMouseClicked(new EventHandler<MouseEvent>() {
+            text.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent mouseEvent) {
                     if (mouseEvent.getButton().equals(MouseButton.PRIMARY)) {
                         if (mouseEvent.getClickCount() == 2) {
-                            try {
-                                Client.getClient().getSender().sendCommand("send reaction " + ((Label) textField.get(this)).getText());
-                            } catch (IllegalAccessException e) {
-                                throw new RuntimeException(e);
-                            }
+                            Client.getClient().getSender().sendCommand("send reaction " + text.getText());
                         }
                     }
                 }
