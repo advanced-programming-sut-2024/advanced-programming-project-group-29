@@ -24,6 +24,10 @@ public enum GameMenuRegex {
     GET_CARDS_IN_DECK_NAMES("get cards in deck names"),
     GET_USER_SAVED_DECK("get user saved deck"),
     INITIATE_DECK("initiate deck"),
+    ACCEPT_PLAY("accept play -u (?<username>.+)"),
+    REJECT_PLAY("reject play -u (?<username>.+)"),
+    SEND_GAME_REQUEST("show pop-up for game request -p (?<username>.+)"),
+    START_GAME("start new game")
     ;
 
     private final String regex;

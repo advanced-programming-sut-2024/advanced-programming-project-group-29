@@ -1,9 +1,11 @@
 package Client.Model;
 
 import Client.Client;
+import Client.Regex.GameMenuRegex;
 import Client.Regex.InGameMenuOutputCommand;
 import Client.Regex.InGameMenuRegex;
 import Client.Regex.LoginMenuRegex;
+import Client.View.ChooseGameModelMenu;
 import Client.View.InGameMenu;
 
 import java.io.DataInputStream;
@@ -41,6 +43,7 @@ public class Listener extends Thread {
                     outputBuffer = null;
                     waitForAnswer = false;
                     InGameMenu inGameMenu = Client.getInGameMenu();
+                    ChooseGameModelMenu chooseGameModelMenu = ApplicationRunningTimeData.getChooseGameModelMenu();
                     if ((matcher = InGameMenuOutputCommand.ADD_CARD_TO_HAND.getMatcher(input)).matches())
                         inGameMenu.addCardToHand((Cardin) deSerialize(matcher.group("cardinSerial")), Integer.parseInt(matcher.group("playerIndex")));
                     else if ((matcher = InGameMenuOutputCommand.DESTROY_SOLDIER.getMatcher(input)).matches())
@@ -77,14 +80,18 @@ public class Listener extends Thread {
                         inGameMenu.showReaction(matcher);
                     } else if ((matcher = InGameMenuRegex.SEND_EMOJI_REACTION.getMatcher(input)).matches()) {
                         inGameMenu.showReactionToCard(matcher);
-                    } else if((matcher = InGameMenuOutputCommand.PLACE_SPECIAL_FOR_OPPONENT.getMatcher(input)).matches()) {
+                    } else if ((matcher = InGameMenuOutputCommand.PLACE_SPECIAL_FOR_OPPONENT.getMatcher(input)).matches()) {
                         inGameMenu.placeSpecialForOpponent(matcher);
-                    }else if((matcher = InGameMenuOutputCommand.PLACE_WEATHER_FOR_OPPONENT.getMatcher(input)).matches()) {
+                    } else if ((matcher = InGameMenuOutputCommand.PLACE_WEATHER_FOR_OPPONENT.getMatcher(input)).matches()) {
                         inGameMenu.placeWeatherForOpponent(matcher);
-                    }else if((matcher = InGameMenuOutputCommand.PLACE_SOLDIER_FOR_OPPONENT.getMatcher(input)).matches()) {
+                    } else if ((matcher = InGameMenuOutputCommand.PLACE_SOLDIER_FOR_OPPONENT.getMatcher(input)).matches()) {
                         inGameMenu.placeSoldierForOpponent(matcher);
-                    }else if((matcher = InGameMenuOutputCommand.MOVE_WEATHER_FORM_DECK_AND_PLAY.getMatcher(input)).matches()) {
+                    } else if ((matcher = InGameMenuOutputCommand.MOVE_WEATHER_FORM_DECK_AND_PLAY.getMatcher(input)).matches()) {
                         inGameMenu.moveWeatherFromDeckAndPlay(matcher);
+                    } else if ((matcher = GameMenuRegex.SEND_GAME_REQUEST.getMatcher(input)).matches()) {
+                        ApplicationRunningTimeData.createPopUp(1, "New game request!", matcher.group("username"));
+                    } else if ((matcher = GameMenuRegex.START_GAME.getMatcher(input)).matches()){
+                        chooseGameModelMenu.startNewGameMenu();
                     }
 
                 } catch (Exception e) {

@@ -150,8 +150,7 @@ public class ApplicationController extends Thread {
                 }
                 sender.setUser(currentUser);
                 if(currentUser != null) {
-                    if(currentMenu == Menu.IN_GAME_MENU || currentMenu == Menu.GAME_MENU)
-                        currentUser.setSender(sender);
+                    currentUser.setSender(sender);
                 }
                 if(object == null)
                     dataOutputStream.writeUTF("null");

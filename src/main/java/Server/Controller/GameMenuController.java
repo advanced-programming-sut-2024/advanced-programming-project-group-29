@@ -1,5 +1,6 @@
 package Server.Controller;
 
+import Client.Model.ApplicationRunningTimeData;
 import Client.Model.Listener;
 import Client.Model.LocalDeckSaver;
 import Server.Enum.Faction;
@@ -15,7 +16,7 @@ import java.util.regex.Matcher;
 public class GameMenuController {
     public static Object processRequest(ApplicationController applicationController, String inputCommand) {
         if (inputCommand.matches(GameMenuRegex.CREATE_GAME.getRegex())) {
-            return createGame(applicationController.getCurrentUser(), GameMenuRegex.CREATE_GAME.getMatcher(inputCommand));
+            return createGame(applicationController, GameMenuRegex.CREATE_GAME.getMatcher(inputCommand));
         } else if (inputCommand.matches(GameMenuRegex.SHOW_FACTIONS.getRegex())) {
             return showFactions();
         } else if (inputCommand.matches(GameMenuRegex.SELECT_FACTION.getRegex())) {
@@ -58,8 +59,21 @@ public class GameMenuController {
             InGameMenuController.startGame(applicationController.getCurrentUser());
         } else if (inputCommand.matches(GameMenuRegex.INITIATE_DECK.getRegex())) {
             return initiateDeck(applicationController.getCurrentUser());
+        } else if(inputCommand.matches(GameMenuRegex.ACCEPT_PLAY.getRegex())){
+            acceptPlay(applicationController.getCurrentUser(), GameMenuRegex.ACCEPT_PLAY.getMatcher(inputCommand));
+        } else if(inputCommand.matches(GameMenuRegex.REJECT_PLAY.getRegex())){
+            rejectPlay(applicationController.getCurrentUser(), GameMenuRegex.REJECT_PLAY.getMatcher(inputCommand));
         }
         return null;
+    }
+
+    private static void rejectPlay(User currentUser, Matcher matcher) {
+        // TODO: later ostad will tell you :}
+    }
+
+    private static void acceptPlay(User currentUser, Matcher matcher) {
+        User user = User.getUserByUsername(matcher.group("username"));
+        user.getSender().sendCommand("start new game");
     }
 
     private static ArrayList<String> initiateDeck(User currentUser) {
@@ -73,7 +87,8 @@ public class GameMenuController {
         return deckNames;
     }
 
-    public static Result createGame(User user1, Matcher matcher) {
+    public static Result createGame(ApplicationController applicationController, Matcher matcher) {
+        User user1 = applicationController.getCurrentUser();
         String player2 = matcher.group("player2");
         boolean isOnline = matcher.group("type").equals("online");
         if (player2 == null) {
@@ -91,6 +106,10 @@ public class GameMenuController {
         }
         if (user2.getCurrentGameBoard() != null) {
             return new Result(false, "This player is already in a game.");
+        }
+        if(isOnline){
+            user2.getSender().sendCommand("show pop-up for game request -p " + user1.getUsername());
+            return new Result(true, "Game request sent successfully.");
         }
         GameBoard gameBoard = new GameBoard(user1, user2, isOnline);
         user1.setCurrentGameBoard(gameBoard);
