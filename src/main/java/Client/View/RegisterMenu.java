@@ -100,6 +100,7 @@ public class RegisterMenu extends Application {
             emailPain.setDisable(true);
             questionPain.setDisable(false);
             questionPain.setVisible(true);
+            deleteWarning();
         } else {
             sayAlert(result.getMessage().getFirst(), 2, true);
         }
@@ -117,6 +118,11 @@ public class RegisterMenu extends Application {
         String random = (String) client.sendCommand(RegisterMenuRegex.GENERATE_RANDOM_PASSWORD.getRegex());
         this.password.setText(random);
         this.confirmPassword.setText(random);
+    }
+
+    private void deleteWarning() {
+        Pane pane = ApplicationRunningTimeData.getPane();
+        pane.getChildren().remove(this.warning);
     }
 
     public void setQuestion(MouseEvent mouseEvent) {

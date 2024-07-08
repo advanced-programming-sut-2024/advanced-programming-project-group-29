@@ -1,7 +1,6 @@
 package Client;
 
 import Client.Regex.LoginMenuRegex;
-import com.google.gson.GsonBuilder;
 
 import Client.Model.*;
 import Client.View.*;
@@ -14,6 +13,7 @@ public class Client {
     private Listener listener;
     private static Sender sender;
     private static InGameMenu inGameMenu;
+    private static boolean isReadyForOnline = false;
 
     public static void main(String[] args) throws Exception {
         client = new Client();
@@ -24,6 +24,14 @@ public class Client {
 
     public static Client getClient() {
         return client;
+    }
+
+    public static boolean isIsReadyForOnline() {
+        return isReadyForOnline;
+    }
+
+    public static void setReadyForOnline(boolean isReadyForOnline) {
+        Client.isReadyForOnline = isReadyForOnline;
     }
 
     public static InGameMenu getInGameMenu() {

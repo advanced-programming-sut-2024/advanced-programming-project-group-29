@@ -90,6 +90,7 @@ public class GameMenu extends Application {
 
     @FXML
     public void initialize() {
+        this.isOnline = Client.isIsReadyForOnline();
         image3.setOnKeyPressed(event -> {
             switch (event.getCode()) {
                 case RIGHT:

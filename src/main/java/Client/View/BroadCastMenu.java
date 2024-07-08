@@ -44,7 +44,7 @@ public class BroadCastMenu extends Application {
     private final double Y_POSITION_ROW_13 = 360;
     private final double Y_POSITION_ROW_21 = 12;
     private final double Y_POSITION_ROW_22 = 122;
-    private final double Y_POSITION_ROW_23 = 226;
+    private final double Y_POSITION_ROW_23 = 236;
     private final double CARD_WIDTH = 70;
     private final double SPACING = 5;
 

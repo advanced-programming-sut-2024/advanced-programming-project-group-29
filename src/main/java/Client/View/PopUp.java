@@ -1,6 +1,7 @@
 package Client.View;
 
 import Client.Client;
+import Client.Model.ApplicationRunningTimeData;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
@@ -106,6 +107,12 @@ public class PopUp {
                     @Override
                     public void handle(MouseEvent mouseEvent) {
                         Client.getClient().getSender().sendCommand("accept play -u " + UsernameOfApplicant);
+                        Client.setReadyForOnline(true);
+                        try {
+                            (new GameMenu()).start(ApplicationRunningTimeData.getStage());
+                        } catch (Exception e) {
+                            throw new RuntimeException(e);
+                        }
                     }
                 });
                 ignore.setOnMouseClicked(new EventHandler<MouseEvent>() {

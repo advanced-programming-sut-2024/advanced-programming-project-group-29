@@ -81,23 +81,25 @@ public class ChooseGameModelMenu extends Application {
     }
 
     public void startGame(MouseEvent mouseEvent) throws Exception {
-        String toRegex = "";
-        if (isOnline) toRegex = "create game -p2 " + opponentUsername.getText() + " " + (isOnline ? "online" : "offline"); //TODO Regex for online
-        else toRegex = "create game -p2 " + opponentUsername.getText() + " " + (isOnline ? "online" : "offline"); //TODO edit this regex
+        String toRegex = "create game -p2 " + opponentUsername.getText() + " " + (isOnline ? "online" : "offline");
         Result result = (Result) client.sendCommand(toRegex);
         if (!result.isSuccessful()) {
             sayAlert(result.getMessage().getFirst(), true);
         } else {
             if (isOnline) {
-                String username = "";
-                Pane popUp = PopUp.createPopUp(0,"User " + username + " has been invited to play with you", username);
-                //TODO add popUp to Opponent menu
+                Client.setReadyForOnline(true);
                 sayAlert("User " + opponentUsername.getText() + " has been invited to play with you, wait for accept", false);
             } else {
+                Client.setReadyForOnline(false);
                 (new GameMenu()).start(ApplicationRunningTimeData.getStage());
             }
         }
     }
+
+    public void startNewGameMenu() throws Exception {
+        (new GameMenu()).start(ApplicationRunningTimeData.getStage());
+    }
+
 
     public void buttonEntered(MouseEvent mouseEvent) {
         if (mouseEvent.getSource() instanceof Rectangle) {

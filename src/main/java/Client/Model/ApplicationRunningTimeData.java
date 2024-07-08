@@ -1,5 +1,6 @@
 package Client.Model;
 
+import Client.View.PopUp;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
@@ -9,6 +10,13 @@ public class ApplicationRunningTimeData {
     private static Pane pane;
     private static String loggedInUserUsername;
 
+
+    public static void createPopUp(int model, String textPopUp, String UsernameOfApplicant){
+        Pane p = PopUp.createPopUp(model,textPopUp,UsernameOfApplicant);
+        p.setLayoutY(50);
+        p.setLayoutX(50);
+        pane.getChildren().add(p);
+    }
 
     public static void setLoggedInUserUsername(String loggedInUserUsername) {
         ApplicationRunningTimeData.loggedInUserUsername = loggedInUserUsername;

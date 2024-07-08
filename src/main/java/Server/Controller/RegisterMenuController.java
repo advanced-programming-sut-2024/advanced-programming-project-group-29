@@ -65,7 +65,7 @@ public class RegisterMenuController {
             return new Result(false, "Passwords do not match.");
         }
         new User(username, password, nickname, email);
-        return new Result(true, "User created successfully. Please answer the security question!");
+        return new Result(true, "User created successfully. check your email!");
     }
 
     public static String generateRandomPassword() {
