@@ -90,6 +90,43 @@
             </Label>
          </children>
       </Pane>
+      <Pane fx:id="emailPain" disable="true" layoutX="370.0" layoutY="182.0" prefHeight="408.0" prefWidth="463.0" visible="false">
+         <children>
+            <Rectangle fx:id="darkBackEmail" arcHeight="5.0" arcWidth="5.0" fill="#eed092" height="255.0" layoutX="23.0" layoutY="89.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="0.0" width="418.0">
+               <effect>
+                  <Shadow height="60.0" radius="29.5" width="60.0">
+                     <color>
+                        <Color red="0.07894736528396606" green="0.05610379949212074" blue="0.03326023370027542" opacity="0.7799999713897705" />
+                     </color>
+                  </Shadow>
+               </effect>
+            </Rectangle>
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#bfbfbf" height="43.0" layoutX="69.0" layoutY="245.0" onMouseClicked="#next" onMouseEntered="#buttonEntered" onMouseExited="#buttonExited" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="327.0">
+               <effect>
+                  <Shadow height="6.17" radius="1.1025" width="0.24">
+                     <color>
+                        <Color red="0.8799999952316284" green="0.8447999954223633" blue="0.8447999954223633" opacity="0.7241379022598267" />
+                     </color>
+                  </Shadow>
+               </effect>
+            </Rectangle>
+            <Label layoutX="212.0" layoutY="256.0" onMouseClicked="#next" onMouseEntered="#buttonEntered" onMouseExited="#buttonExited" text="Next">
+               <font>
+                  <Font name="System Bold" size="16.0" />
+               </font>
+            </Label>
+            <TextField fx:id="emailConfirm" alignment="CENTER" layoutX="68.0" layoutY="189.0" prefHeight="43.0" prefWidth="327.0" promptText="Confirm Code">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </TextField>
+            <Label layoutX="112.0" layoutY="117.0" prefHeight="56.0" prefWidth="240.0" text="We have been send you an email, Enter the code below" textFill="#dea543" wrapText="true">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font>
+            </Label>
+         </children>
+      </Pane>
       <Pane fx:id="questionPain" disable="true" layoutX="369.0" layoutY="181.0" prefHeight="408.0" prefWidth="463.0" visible="false">
          <children>
             <Rectangle fx:id="darkBack1" arcHeight="5.0" arcWidth="5.0" fill="#eed092" height="315.0" layoutX="23.0" layoutY="29.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="0.0" width="418.0">
