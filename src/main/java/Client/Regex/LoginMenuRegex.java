@@ -6,6 +6,8 @@ import java.util.regex.Pattern;
 public enum LoginMenuRegex {
     LOGIN("login -u (?<username>\\S+) -p (?<password>\\S+) (?<stayLoggedIn>-stay-logged-in)?"),
     LOGOUT("logout"),
+    SEND_EMAIL("send email -e (?<email>\\S+)"),
+    VERIFY_EMAIL("verify email -c (?<code>\\d+) -e (?<email>\\S+)"),
     FORGET_PASSWORD("forget password -u (?<username>\\S+)"),
     ANSWER("answer -a (?<answer>\\S+) -u (?<username>\\S+)"),
     CHANGE_PASSWORD("change password -p (?<password>\\S+) -c (?<passwordConfirm>\\S+) -u (?<username>\\S+)"),
@@ -13,8 +15,7 @@ public enum LoginMenuRegex {
     LOAD_USER("load users"),
     GET_NEW_JWT("get new jwt"),
     AUTHENTICATE("authenticate"),
-    SET_TOKEN("set new token (?<token>.+)")
-    ;
+    SET_TOKEN("set new token (?<token>.+)");
 
     private final String regex;
 

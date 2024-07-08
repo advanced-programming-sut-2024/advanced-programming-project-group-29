@@ -1,13 +1,11 @@
 package Server.Controller;
 
+import Server.Model.EmailUtil;
 import Server.Model.Result;
 import Server.Model.User;
+import Server.Regex.LoginMenuRegex;
 import Server.Regex.RegisterMenuRegex;
-import Server.Controller.ApplicationController;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 
-import java.util.Date;
 import java.util.Random;
 import java.util.regex.Matcher;
 
@@ -29,6 +27,12 @@ public class RegisterMenuController {
         if (inputCommand.matches(RegisterMenuRegex.PICK_QUESTION.getRegex())) {
             return answerSecurityQuestion(RegisterMenuRegex.PICK_QUESTION.getMatcher(inputCommand));
         }
+        if (inputCommand.matches(LoginMenuRegex.SEND_EMAIL.getRegex())) {
+            return sendEmail(LoginMenuRegex.SEND_EMAIL.getMatcher(inputCommand));
+        }
+        if (inputCommand.matches(LoginMenuRegex.VERIFY_EMAIL.getRegex())) {
+            return verifyEmail(LoginMenuRegex.VERIFY_EMAIL.getMatcher(inputCommand));
+        }
         return null;
     }
 
@@ -40,8 +44,7 @@ public class RegisterMenuController {
         String email = matcher.group("email");
         if (User.getUserByUsername(username) != null) {
             String newUsername;
-            do
-            {
+            do {
                 newUsername = username + new Random().nextInt(1000);
             } while (User.getUserByUsername(newUsername) != null);
             return new Result(false, "Username is already taken. We suggest you to use " + newUsername + " instead.", newUsername);
@@ -116,10 +119,23 @@ public class RegisterMenuController {
         return true;
     }
 
-    public static boolean hasAnsweredQuestion (Matcher matcher) {
+    public static boolean hasAnsweredQuestion(Matcher matcher) {
         String username = matcher.group("username");
         User user = User.getUserByUsername(username);
         return user.hasUserAnswerTheQuestion();
     }
 
+    private static Result sendEmail(Matcher matcher) {
+        String email = matcher.group("email");
+        EmailUtil.generateAndSendVerificationCode(email);
+        return new Result(true, "Email sent successfully.");
+    }
+
+    private static Result verifyEmail(Matcher matcher) {
+        String email = matcher.group("email");
+        int code = Integer.parseInt(matcher.group("code"));
+        if (EmailUtil.verifyCode(email, code))
+            return new Result(true, "Email verified successfully.");
+        return new Result(false, "Code is incorrect.");
+    }
 }

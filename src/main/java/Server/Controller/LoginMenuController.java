@@ -2,10 +2,7 @@ package Server.Controller;
 
 import Server.Model.*;
 import Server.Regex.LoginMenuRegex;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 
-import java.util.Date;
 import java.util.regex.Matcher;
 
 public class LoginMenuController {
@@ -28,6 +25,12 @@ public class LoginMenuController {
         if (inputCommand.matches(LoginMenuRegex.LOAD_USER.getRegex())) {
             return loadUsers();
         }
+        if (inputCommand.matches(LoginMenuRegex.SEND_EMAIL.getRegex())) {
+            return sendEmail(LoginMenuRegex.SEND_EMAIL.getMatcher(inputCommand));
+        }
+        if (inputCommand.matches(LoginMenuRegex.VERIFY_EMAIL.getRegex())) {
+            return verifyEmail(LoginMenuRegex.VERIFY_EMAIL.getMatcher(inputCommand));
+        }
         return null;
     }
 
@@ -47,7 +50,7 @@ public class LoginMenuController {
         return result;
     }
 
-    public static Result forgetPassword(Matcher matcher) {
+    private static Result forgetPassword(Matcher matcher) {
         String username = matcher.group("username");
         User user = User.getUserByUsername(username);
         if (user == null)
@@ -55,7 +58,7 @@ public class LoginMenuController {
         return new Result(true, user.getQuestion());
     }
 
-    public static Result answerQuestion(Matcher matcher) {
+    private static Result answerQuestion(Matcher matcher) {
         String answer = matcher.group("answer");
         String username = matcher.group("username");
         User user = User.getUserByUsername(username);
@@ -66,7 +69,7 @@ public class LoginMenuController {
         return new Result(true, "Select a new password.");
     }
 
-    public static Result changePassword(Matcher matcher) {
+    private static Result changePassword(Matcher matcher) {
         String password = matcher.group("password");
         String passwordConfirm = matcher.group("passwordConfirm");
         String username = matcher.group("username");
@@ -99,5 +102,19 @@ public class LoginMenuController {
         } catch (Exception e) {
             return new Result(false, "Error loading users.");
         }
+    }
+
+    private static Result sendEmail(Matcher matcher) {
+        String email = matcher.group("email");
+        EmailUtil.generateAndSendVerificationCode(email);
+        return new Result(true, "Email sent successfully.");
+    }
+
+    private static Result verifyEmail(Matcher matcher) {
+        String email = matcher.group("email");
+        int code = Integer.parseInt(matcher.group("code"));
+        if (EmailUtil.verifyCode(email, code))
+            return new Result(true, "Email verified successfully.");
+        return new Result(false, "Code is incorrect.");
     }
 }
