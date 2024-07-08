@@ -1,11 +1,8 @@
 package Server.Model;
 
 import Server.Controller.InGameMenuController;
-import org.json.JSONObject;
-import Server.Enum.Faction;
 import Server.Enum.Type;
-import Server.Model.*;
-import Server.Controller.ApplicationController;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -96,6 +93,7 @@ public class Spell extends Card {
 
     private static void executeActionForClearWeather(Spell spell) {
         GameBoard gameBoard = spell.getGameBoard();
+        gameBoard.setsAnyThingPlayed(true);
         gameBoard.clearAllWeather(spell.getSender());
     }
 
@@ -112,15 +110,16 @@ public class Spell extends Card {
         GameBoard gameBoard = spell.getGameBoard();
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 3; j++) {
-                for (Soldier soldier : gameBoard.getRows()[i][j]) if(!soldier.isHero()) {
-                    if (soldier.getShownHp() > maxPower) {
-                        maxPower = soldier.getShownHp();
-                        maxPowerSoldiers.clear();
-                        maxPowerSoldiers.add(soldier);
-                    } else if (soldier.getShownHp() == maxPower) {
-                        maxPowerSoldiers.add(soldier);
+                for (Soldier soldier : gameBoard.getRows()[i][j])
+                    if (!soldier.isHero()) {
+                        if (soldier.getShownHp() > maxPower) {
+                            maxPower = soldier.getShownHp();
+                            maxPowerSoldiers.clear();
+                            maxPowerSoldiers.add(soldier);
+                        } else if (soldier.getShownHp() == maxPower) {
+                            maxPowerSoldiers.add(soldier);
+                        }
                     }
-                }
             }
         }
         for (Soldier soldier : maxPowerSoldiers) {

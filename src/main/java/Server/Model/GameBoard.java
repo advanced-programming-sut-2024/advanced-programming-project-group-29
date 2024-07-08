@@ -1,21 +1,7 @@
 package Server.Model;
 
-import Server.Enum.Faction;
-import Server.Enum.Type;
+import Server.Controller.InGameMenuController;
 import Server.Enum.Attribute;
-import Server.Enum.CheatCode;
-import Server.Regex.GameMenuRegex;
-import Server.Model.Result;
-import Server.Model.User;
-import Server.Model.Soldier;
-import Server.Model.Spell;
-import Server.Model.Card;
-import Server.Model.Commander;
-import Server.Model.SavedDeck;
-import Server.Model.GameHistory;
-import Server.Model.Cardin;
-import Server.Model.GameBoardin;
-import Server.Controller.*;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -61,7 +47,7 @@ public class GameBoard {
         }
         for (int i = 0; i < 2; i++) {
             playersLeaders[i] = null;
-            for(Card card : players[i].getDeck())
+            for (Card card : players[i].getDeck())
                 card.setGameBoard(this);
         }
     }
@@ -80,6 +66,7 @@ public class GameBoard {
 
     public void addSoldierToRow(int playerNumber, int rowNumber, Soldier soldier) {
         rows[playerNumber][rowNumber].add(soldier);
+        isThereAnythingPlayed = true;
     }
 
     public void removeSoldierFromRow(int playerNumber, int rowNumber, Soldier soldier) {
@@ -117,6 +104,7 @@ public class GameBoard {
 
     public void addSpecialCard(int playerNumber, int rowNumber, Spell spell) {
         specialCards[playerNumber][rowNumber] = spell;
+        isThereAnythingPlayed = true;
     }
 
     public Commander getPlayerLeader(int playerNumber) {
@@ -199,6 +187,7 @@ public class GameBoard {
     }
 
     public void addWeather(Spell spell) {
+        isThereAnythingPlayed = true;
         weather.add(spell);
         String name = spell.getName().toLowerCase();
         if (name.matches(".*biting.+frost.*"))
@@ -220,7 +209,7 @@ public class GameBoard {
 
 
     public boolean rowHasWeather(int rowNumber) {
-        if(rowNumber < 0 || rowNumber > 2)
+        if (rowNumber < 0 || rowNumber > 2)
             return false;
         return rowHasWeather[rowNumber];
     }
@@ -236,13 +225,13 @@ public class GameBoard {
         return false;
     }
 
-    public int getCurrentPlayer(){
+    public int getCurrentPlayer() {
         return currentPlayer;
     }
 
     public int getRowShownScore(int playerIndex, int rowNumber) {
         int scoreSum = 0;
-        for(Soldier soldier : rows[playerIndex][rowNumber])
+        for (Soldier soldier : rows[playerIndex][rowNumber])
             scoreSum += soldier.getShownHp();
         return scoreSum;
     }
@@ -261,18 +250,24 @@ public class GameBoard {
     }
 
     public Result passTurn() {
-        if(!isThereAnythingPlayed)
-            notPlayingTurns++;
-        else
+        if (notPlayingTurns == 1) {
             notPlayingTurns = 0;
-        if(notPlayingTurns == 2){
-            notPlayingTurns = 0;
-            if(playersScore[0] <= playersScore[1])
+            if (playersScore[0] <= playersScore[1]) {
                 playersCrystals[0]--;
-            if(playersScore[1] <= playersScore[0])
+            }
+            if (playersScore[1] <= playersScore[0]) {
                 playersCrystals[1]--;
+            }
             executeActionForTransformers();
-            return new Result(false);
+            if (playersScore[0] == playersScore[1])
+                return new Result(false, "It's a draw!");
+            String winner = playersScore[0] > playersScore[1] ? players[0].getUsername() : players[1].getUsername();
+            return new Result(false, winner + " won the round!");
+        }
+        if (!isThereAnythingPlayed) {
+            notPlayingTurns++;
+        } else {
+            notPlayingTurns = 0;
         }
         currentPlayer = 1 - currentPlayer;
         isThereAnythingPlayed = false;
@@ -280,10 +275,10 @@ public class GameBoard {
     }
 
     private void executeActionForTransformers() {
-        for(int i = 0; i < 2; i++){
-            for(int j = 0; j < 3; j++){
-                for(Soldier soldier : rows[i][j]){
-                    if(soldier.getAttribute() == Attribute.TRANSFORMERS){
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 3; j++) {
+                for (Soldier soldier : rows[i][j]) {
+                    if (soldier.getAttribute() == Attribute.TRANSFORMERS) {
                         soldier.executeActionForTransformers(soldier);
                     }
                 }
@@ -301,5 +296,9 @@ public class GameBoard {
 
     public ChatBox getChatBox() {
         return chatBox;
+    }
+
+    public void setsAnyThingPlayed(boolean b) {
+        isThereAnythingPlayed = b;
     }
 }

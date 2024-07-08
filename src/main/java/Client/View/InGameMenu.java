@@ -1168,8 +1168,7 @@ public class InGameMenu extends Application {
     public void passTurn(MouseEvent mouseEvent) {
         Result result = (Result) Client.getClient().getSender().sendCommand("pass turn");
         if (!result.isSuccessful()) {
-            //TODO get user name of round winner
-            String winnerUser = "ali";
+            String winnerUser = result.getMessage().getFirst();
             endRound(winnerUser);
         } else {
             swapAllThings();
@@ -1254,8 +1253,8 @@ public class InGameMenu extends Application {
         }
     }
 
-    private void endRound(String winnerUser) {
-        endTurnAnnounce.setText("Turn End, User \"" + winnerUser + "\" win this round");
+    private void endRound(String endRoundText) {
+        endTurnAnnounce.setText(endRoundText);
         turnPain.setVisible(true);
         turnPain.setDisable(false);
         mainPain.setDisable(true);

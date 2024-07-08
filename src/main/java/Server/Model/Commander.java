@@ -49,6 +49,7 @@ public class Commander extends Card {
 
     public void executeAction() {
         if (!hasAction) return;
+        this.gameBoard.setsAnyThingPlayed(true);
         getExecuteActionByCommanderName(this.getName()).run();
         this.hasAction = false;
     }
