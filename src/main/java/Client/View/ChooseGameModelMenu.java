@@ -94,7 +94,7 @@ public class ChooseGameModelMenu extends Application {
                 //TODO add popUp to Opponent menu
                 sayAlert("User " + opponentUsername.getText() + " has been invited to play with you, wait for accept", false);
             } else {
-                (new GameMenu(false)).start(ApplicationRunningTimeData.getStage());
+                (new GameMenu()).start(ApplicationRunningTimeData.getStage());
             }
         }
     }

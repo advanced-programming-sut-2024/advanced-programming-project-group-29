@@ -101,6 +101,9 @@ public class InGameMenu extends Application {
     public ImageView imageWhenSelected;
     public Label description;
     public Rectangle darkBackDescription;
+    public ImageView winner2;
+    public ImageView winner1;
+
 
     public Text result;
     public TextField cheatCode;
@@ -146,6 +149,9 @@ public class InGameMenu extends Application {
     public Label textReaction3;
     public TextField typeReaction;
     public Label opponentReaction;
+    public Pane turnPain;
+    public Label endTurnAnnounce;
+
 
     private CardView LastSelectedCard;
 
@@ -783,6 +789,16 @@ public class InGameMenu extends Application {
         remainsDeck2.setText(gameBoardin.getPlayer2Deck().size() + "");
         remainsHand1.setText(gameBoardin.getPlayer1Hand().size() + "");
         remainsHand2.setText(gameBoardin.getPlayer2Hand().size() + "");
+        if (gameBoardin.getPlayer1XP() == gameBoardin.getPlayer2XP()){
+            winner2.setVisible(false);
+            winner1.setVisible(false);
+        } else if (gameBoardin.getPlayer1XP() < gameBoardin.getPlayer2XP()) {
+            winner2.setVisible(true);
+            winner1.setVisible(false);
+        } else {
+            winner2.setVisible(false);
+            winner1.setVisible(true);
+        }
         for (int k = 0; k < 3; k++) {
             for (int j = 0; j < 2; j++) {
                 ArrayList<Cardin> b = (k == 0 ? (j == 0 ? gameBoardin.getPlayer1Hand() : gameBoardin.getPlayer2Hand()) : (k == 1 ? (j == 0 ? gameBoardin.getPlayer1Deck() : gameBoardin.getPlayer2Deck()) : (j == 0 ? gameBoardin.getPlayer1Discard() : gameBoardin.getPlayer2Discard())));
@@ -1109,7 +1125,6 @@ public class InGameMenu extends Application {
         Platform.runLater(() -> {
             showReactionPain.setDisable(false);
             showReactionPain.setVisible(true);
-            mainPain.setDisable(true);
             opponentReaction.setText(reaction);
             Timeline t = new Timeline(new KeyFrame(Duration.seconds(7)));
             t.setOnFinished(new EventHandler<ActionEvent>() {
@@ -1117,7 +1132,6 @@ public class InGameMenu extends Application {
                 public void handle(ActionEvent actionEvent) {
                     showReactionPain.setDisable(true);
                     showReactionPain.setVisible(false);
-                    mainPain.setDisable(false);
                 }
             });
             t.setCycleCount(1);
@@ -1156,7 +1170,9 @@ public class InGameMenu extends Application {
         swapAllThings();
         refresh();
         if (!result.isSuccessful()) {
-            endRound();
+            //TODO get user name of round winner
+            String winnerUser = "";
+            endRound(winnerUser);
         }
     }
 
@@ -1237,8 +1253,12 @@ public class InGameMenu extends Application {
         }
     }
 
-    private void endRound() {
-        // TODO: implement this, show the end of the round
+    private void endRound(String winnerUser) {
+
+    }
+
+    private void endGame() {
+
     }
 
     public void buttonEntered(MouseEvent mouseEvent) {
