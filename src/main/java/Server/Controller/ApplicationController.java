@@ -3,6 +3,7 @@ package Server.Controller;
 import Server.Model.*;
 import Server.Enum.Menu;
 import Server.Regex.ChangeMenuRegex;
+import Server.Regex.GameMenuRegex;
 import Server.Regex.LoginMenuRegex;
 import com.google.gson.GsonBuilder;
 import javafx.application.Application;
@@ -97,8 +98,7 @@ public class ApplicationController extends Thread {
                     }
                     inputCommand = inputCommand.substring(endOfToken + 1);
                 }
-                System.out.println("got that command " + inputCommand);
-                System.err.println(currentMenu);
+                System.out.println("got that command " + inputCommand + " " + currentMenu + " from " + (currentUser != null ? currentUser.getUsername() : "null"));
                 if (inputCommand.matches(ChangeMenuRegex.CHANGE_MENU.getRegex())) {
                     currentMenu = Menu.valueOf(ChangeMenuRegex.CHANGE_MENU.getMatcher(inputCommand).group("menuName"));
                     sender.setUser(currentUser);
@@ -117,6 +117,11 @@ public class ApplicationController extends Thread {
                     LoginMenuController.saveUsers();
                     dataOutputStream.writeUTF("null");
                     continue;
+                }
+                if(inputCommand.matches(GameMenuRegex.ACCEPT_PLAY.getRegex())){
+                    GameMenuController.acceptPlay(this.getCurrentUser(), GameMenuRegex.ACCEPT_PLAY.getMatcher(inputCommand));
+                } else if(inputCommand.matches(GameMenuRegex.REJECT_PLAY.getRegex())){
+                    GameMenuController.rejectPlay(this.getCurrentUser(), GameMenuRegex.REJECT_PLAY.getMatcher(inputCommand));
                 }
                 Object object = null;
                 switch(currentMenu){
@@ -151,6 +156,7 @@ public class ApplicationController extends Thread {
                 sender.setUser(currentUser);
                 if(currentUser != null) {
                     currentUser.setSender(sender);
+
                 }
                 if(object == null)
                     dataOutputStream.writeUTF("null");

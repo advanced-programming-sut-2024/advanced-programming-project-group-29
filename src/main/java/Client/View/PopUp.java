@@ -92,13 +92,13 @@ public class PopUp {
                 accept.setOnMouseClicked(new EventHandler<MouseEvent>() {
                     @Override
                     public void handle(MouseEvent mouseEvent) {
-                        Client.getClient().getSender().sendCommand("accept -u " + UsernameOfApplicant);
+                        Client.getClient().sendCommand("accept -u " + UsernameOfApplicant);
                     }
                 });
                 ignore.setOnMouseClicked(new EventHandler<MouseEvent>() {
                     @Override
                     public void handle(MouseEvent mouseEvent) {
-                        Client.getClient().getSender().sendCommand("reject -u " + UsernameOfApplicant);
+                        Client.getClient().sendCommand("reject -u " + UsernameOfApplicant);
                     }
                 });
                 break;
@@ -106,7 +106,11 @@ public class PopUp {
                 accept.setOnMouseClicked(new EventHandler<MouseEvent>() {
                     @Override
                     public void handle(MouseEvent mouseEvent) {
-                        Client.getClient().getSender().sendCommand("accept play -u " + UsernameOfApplicant);
+                        try {
+                            Client.getClient().sendCommand("accept play -u " + UsernameOfApplicant);
+                        } catch (Exception e) {
+                            throw new RuntimeException(e);
+                        }
                         Client.setReadyForOnline(true);
                         try {
                             (new GameMenu()).start(ApplicationRunningTimeData.getStage());
@@ -118,7 +122,7 @@ public class PopUp {
                 ignore.setOnMouseClicked(new EventHandler<MouseEvent>() {
                     @Override
                     public void handle(MouseEvent mouseEvent) {
-                        Client.getClient().getSender().sendCommand("reject play -u " + UsernameOfApplicant);
+                        Client.getClient().sendCommand("reject play -u " + UsernameOfApplicant);
                     }
                 });
         }

@@ -6,7 +6,7 @@ import Client.Regex.InGameMenuOutputCommand;
 import Client.Regex.InGameMenuRegex;
 import Client.Regex.LoginMenuRegex;
 import Client.View.ChooseGameModelMenu;
-import Client.View.InGameMenu;
+import Client.View.*;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -17,6 +17,9 @@ import java.util.regex.Matcher;
 
 import Client.View.InGameMenu;
 import com.google.gson.GsonBuilder;
+import javafx.scene.Scene;
+import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
 
 public class Listener extends Thread {
     private Socket socket;
@@ -73,9 +76,12 @@ public class Listener extends Thread {
                         inGameMenu.showThreeCardOfOpponent();
                     else if ((matcher = LoginMenuRegex.SET_TOKEN.getMatcher(input)).matches())
                         Client.getClient().getSender().setToken(matcher.group("token"));
-                    else if ((matcher = LoginMenuRegex.AUTHENTICATE.getMatcher(input)).matches()) {
-                        // TODO: pop up an authentication window, asking for username and password, check it, when it was ok call setOutputStreamBuffer("null")
-                        waitForAnswer = true;
+                    else if ((matcher = LoginMenuRegex.AUTHENTICATE.getMatcher(input)).matches()) { // TODO: it should be debugged
+                        try {
+                            new LoginMenu().start(ApplicationRunningTimeData.getStage());
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     } else if ((matcher = InGameMenuRegex.SEND_REACTION.getMatcher(input)).matches()) {
                         inGameMenu.showReaction(matcher);
                     } else if ((matcher = InGameMenuRegex.SEND_EMOJI_REACTION.getMatcher(input)).matches()) {
@@ -89,7 +95,8 @@ public class Listener extends Thread {
                     } else if ((matcher = InGameMenuOutputCommand.MOVE_WEATHER_FORM_DECK_AND_PLAY.getMatcher(input)).matches()) {
                         inGameMenu.moveWeatherFromDeckAndPlay(matcher);
                     } else if ((matcher = GameMenuRegex.SEND_GAME_REQUEST.getMatcher(input)).matches()) {
-                        ApplicationRunningTimeData.createPopUp(1, "New game request!", matcher.group("username"));
+                        String username = matcher.group("username");
+                        ApplicationRunningTimeData.createPopUp(1, "User " + username + " sent a new game request!", username);
                     } else if ((matcher = GameMenuRegex.START_GAME.getMatcher(input)).matches()){
                         chooseGameModelMenu.startNewGameMenu();
                     }

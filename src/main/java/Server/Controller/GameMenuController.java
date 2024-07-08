@@ -59,19 +59,15 @@ public class GameMenuController {
             InGameMenuController.startGame(applicationController.getCurrentUser());
         } else if (inputCommand.matches(GameMenuRegex.INITIATE_DECK.getRegex())) {
             return initiateDeck(applicationController.getCurrentUser());
-        } else if(inputCommand.matches(GameMenuRegex.ACCEPT_PLAY.getRegex())){
-            acceptPlay(applicationController.getCurrentUser(), GameMenuRegex.ACCEPT_PLAY.getMatcher(inputCommand));
-        } else if(inputCommand.matches(GameMenuRegex.REJECT_PLAY.getRegex())){
-            rejectPlay(applicationController.getCurrentUser(), GameMenuRegex.REJECT_PLAY.getMatcher(inputCommand));
         }
         return null;
     }
 
-    private static void rejectPlay(User currentUser, Matcher matcher) {
+    public static void rejectPlay(User currentUser, Matcher matcher) {
         // TODO: later ostad will tell you :}
     }
 
-    private static void acceptPlay(User currentUser, Matcher matcher) {
+    public static void acceptPlay(User currentUser, Matcher matcher) {
         User user = User.getUserByUsername(matcher.group("username"));
         user.getSender().sendCommand("start new game");
     }

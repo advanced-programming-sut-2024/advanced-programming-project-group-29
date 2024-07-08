@@ -5,6 +5,7 @@ import Client.Enum.Menu;
 import Client.Model.*;
 import Client.Regex.GameMenuRegex;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
@@ -27,6 +28,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -124,13 +126,20 @@ public class GameMenu extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        stage.setResizable(false);
-        stage.centerOnScreen();
-        Pane pane = FXMLLoader.load(Objects.requireNonNull(RegisterMenu.class.getResource("/FXML/GameMenu.fxml")));
-        Scene scene = new Scene(pane);
-        stage.setScene(scene);
-        stage.show();
-        ApplicationRunningTimeData.setPane(pane);
+        Platform.runLater(() -> {
+            stage.setResizable(false);
+            stage.centerOnScreen();
+            Pane pane = null;
+            try {
+                pane = FXMLLoader.load(Objects.requireNonNull(RegisterMenu.class.getResource("/FXML/GameMenu.fxml")));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            Scene scene = new Scene(pane);
+            stage.setScene(scene);
+            stage.show();
+            ApplicationRunningTimeData.setPane(pane);
+        });
     }
 
     private void createCards() {
