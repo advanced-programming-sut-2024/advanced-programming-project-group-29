@@ -39,6 +39,10 @@ public class ChooseGameModelMenu extends Application {
         client.sendCommand("menu enter " + Menu.CHOOSE_MENU.toString());
     }
 
+    public void initialize() {
+        ApplicationRunningTimeData.setChooseGameModelMenu(this);
+    }
+
     @Override
     public void start(Stage stage) throws Exception {
         stage.setResizable(false);
