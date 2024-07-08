@@ -177,9 +177,14 @@ public class GameMenu extends Application {
 
 
     private void moveFromPreviousDeck() {
-        ArrayList<String> previousDeck = (ArrayList<String>) client.sendCommand("initiate deck");
-        for (String name : previousDeck) moveCardInit(name);
-        refresh();
+        try {
+            ArrayList<String> previousDeck = (ArrayList<String>) client.sendCommand("initiate deck");
+            System.out.println("all done with initiating ");
+            for (String name : previousDeck) moveCardInit(name);
+            refresh();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void moveCardInit(String name) {

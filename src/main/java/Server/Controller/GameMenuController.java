@@ -69,18 +69,31 @@ public class GameMenuController {
 
     public static void acceptPlay(User currentUser, Matcher matcher) {
         User user = User.getUserByUsername(matcher.group("username"));
+        GameBoard gameBoard = new GameBoard(currentUser, user, true);
+        currentUser.setCurrentGameBoard(gameBoard);
+        user.setCurrentGameBoard(gameBoard);
         user.getSender().sendCommand("start new game");
     }
 
     private static ArrayList<String> initiateDeck(User currentUser) {
-        int currentPlayerNumber = currentUser.getCurrentGameBoard().getCurrentPlayer();
-        User user = currentUser.getCurrentGameBoard().getPlayer(currentPlayerNumber);
-        ArrayList<String> deckNames = user.getDeckNames();
-        ArrayList<Card> deck = user.getDeck();
-        while (!deck.isEmpty()) {
-            deck.removeFirst();
+        try {
+            User user;
+            if (currentUser.getCurrentGameBoard().isGameOnline())
+                user = currentUser;
+            else {
+                int currentPlayerNumber = currentUser.getCurrentGameBoard().getCurrentPlayer();
+                user = currentUser.getCurrentGameBoard().getPlayer(currentPlayerNumber);
+            }
+            ArrayList<String> deckNames = user.getDeckNames();
+            ArrayList<Card> deck = user.getDeck();
+            while (!deck.isEmpty()) {
+                deck.removeFirst();
+            }
+            return deckNames;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
         }
-        return deckNames;
     }
 
     public static Result createGame(ApplicationController applicationController, Matcher matcher) {
@@ -107,7 +120,7 @@ public class GameMenuController {
             user2.getSender().sendCommand("show pop-up for game request -p " + user1.getUsername());
             return new Result(true, "Game request sent successfully.");
         }
-        GameBoard gameBoard = new GameBoard(user1, user2, isOnline);
+        GameBoard gameBoard = new GameBoard(user1, user2, false);
         user1.setCurrentGameBoard(gameBoard);
         user2.setCurrentGameBoard(gameBoard);
         return new Result(true, "Game created successfully.");
