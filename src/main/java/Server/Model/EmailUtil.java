@@ -11,11 +11,11 @@ public class EmailUtil {
     private static HashMap<String, Integer> emailVerificationCodes = new HashMap<>();
 
     public static void sendEmail(String toEmail, String subject, String body) {
-        final String fromEmail = "gwent29_2024@gmail.com"; // requires valid email id
+        final String fromEmail = "gwent29.2024@gmail.com"; // requires valid email id
         final String password = "jfsw dthp xfke fuzc\n"; // correct password for your email id
 
         Properties props = new Properties();
-        props.put("mail.smtp.host", "smtp.example.com"); // SMTP Host
+        props.put("mail.smtp.host", "smtp.gmail.com"); // SMTP Host
         props.put("mail.smtp.port", "587"); // TLS Port
         props.put("mail.smtp.auth", "true"); // enable authentication
         props.put("mail.smtp.starttls.enable", "true"); // enable STARTTLS
