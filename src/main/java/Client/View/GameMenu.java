@@ -28,6 +28,8 @@ import javafx.stage.Stage;
 
 import java.io.File;
 import java.lang.reflect.Field;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
@@ -346,12 +348,10 @@ public class GameMenu extends Application {
         FileChooser filechooser = new FileChooser();
         filechooser.setTitle("Select File");
         File file = filechooser.showOpenDialog(ApplicationRunningTimeData.getStage());
-        SavedDeck savedDeck;
         boolean success = true;
         if (file != null) {
             try {
-                savedDeck = LocalDeckSaver.loadDeck(file.getPath());
-                toRegex += Sender.getSendableObject(savedDeck);
+                toRegex += Files.readString(Path.of(file.getPath()));
             } catch (Exception ignored) {
                 success = false;
             }

@@ -21,9 +21,4 @@ public class LocalDeckSaver {
             return new Result(false, "Error saving deck.");
         }
     }
-
-    public static SavedDeck loadDeck (String filePath) {
-        //TODO
-        return null;
-    }
 }

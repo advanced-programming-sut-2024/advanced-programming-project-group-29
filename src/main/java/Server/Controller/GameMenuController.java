@@ -1,11 +1,13 @@
 package Server.Controller;
 
 import Client.Model.Listener;
+import Client.Model.LocalDeckSaver;
 import Server.Enum.Faction;
 import Server.Enum.Type;
 import Server.Model.*;
 import Server.Regex.GameMenuRegex;
 import Server.Regex.InGameMenuRegex;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.regex.Matcher;
@@ -189,10 +191,9 @@ public class GameMenuController {
         String type = matcher.group("type");
         if (type.equals("-f")) {
             try {
-                SavedDeck savedDeck = (SavedDeck) Listener.deSerialize(matcher.group("name"));
-                if (user.extractDataFromSavedDeck(savedDeck))
-                    return new Result(true, "Deck loaded successfully.");
-                return new Result(false, "Error loading deck.");
+                SavedDeck savedDeck = new Gson().fromJson(matcher.group("name"), SavedDeck.class);
+                user.loadDeck(savedDeck);
+                return new Result(true, "Deck loaded successfully.");
             } catch (Exception e) {
                 return new Result(false, "Error loading deck.");
             }

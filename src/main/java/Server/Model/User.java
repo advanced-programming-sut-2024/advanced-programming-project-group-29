@@ -367,6 +367,10 @@ public class User {
         extractDataFromSavedDeck(savedDeck);
     }
 
+    public void loadDeck(SavedDeck savedDeck) {
+        extractDataFromSavedDeck(savedDeck);
+    }
+
     public boolean extractDataFromSavedDeck(SavedDeck savedDeck) {
         this.deck = new ArrayList<>();
         for (String cardName : savedDeck.getDeck()) {
