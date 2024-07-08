@@ -99,6 +99,8 @@ public class Listener extends Thread {
                         ApplicationRunningTimeData.createPopUp(1, "User " + username + " sent a new game request!", username);
                     } else if ((matcher = GameMenuRegex.START_GAME.getMatcher(input)).matches()){
                         chooseGameModelMenu.startNewGameMenu();
+                    } else if(InGameMenuOutputCommand.REFRESH.getMatcher(input).matches()){
+                        inGameMenu.refresh();
                     }
 
                 } catch (Exception e) {

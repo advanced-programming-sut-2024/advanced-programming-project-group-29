@@ -145,7 +145,10 @@ public class InGameMenuController extends Thread {
     public static void startGame(User user){
         User opponent = user.getOpponent();
         user.createHand();
-        opponent.createHand();
+        if(user.getCurrentGameBoard().isGameOnline())
+            opponent.getSender().sendCommand("refresh");
+        else
+            opponent.createHand();
 
     }
 

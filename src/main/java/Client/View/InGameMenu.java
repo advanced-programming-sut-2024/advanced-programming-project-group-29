@@ -616,23 +616,27 @@ public class InGameMenu extends Application {
         int rowNumber = Integer.parseInt(matcher.group("rowNumber"));
         int cardNumber = Integer.parseInt(matcher.group("cardNumber"));
         // TODO: implement this, opponent played an special card
+        refresh();
     }
 
     public void placeWeatherForOpponent(Matcher matcher) {
         int cardNumber = Integer.parseInt(matcher.group("cardNumber"));
         // TODO: implement this, opponent played a weather card
+        refresh();
     }
 
     public void placeSoldierForOpponent(Matcher matcher) {
         int rowNumber = Integer.parseInt(matcher.group("rowNumber"));
         int cardNumber = Integer.parseInt(matcher.group("cardNumber"));
         // TODO: implement this, opponent played a soldier
+        refresh();
     }
 
     public void moveWeatherFromDeckAndPlay(Matcher matcher) {
         int cardNumber = Integer.parseInt(matcher.group("cardNumber"));
         int playerIndex = Integer.parseInt(matcher.group("playerIndex"));
         // TODO: implement this, move weather from deck to it's place and play it
+        refresh();
     }
 
     private int convertRowNumber(int fatemeRowNumber) {
@@ -753,84 +757,86 @@ public class InGameMenu extends Application {
     }
 
     public void refresh() {
-        for (int i = 0; i < 2; i++) {
-            setPositionVar(hand[i], false, false, (i == 0 ? Y_POSITION_HAND_1 : Y_POSITION_HAND_2));
-            setPositionCte(deck[i], X_POSITION_Deck, (i == 0 ? Y_POSITION_DISCARD_1 : Y_POSITION_DISCARD_2));
-            setPositionCte(discard[i], X_POSITION_DISCARD, (i == 0 ? Y_POSITION_DISCARD_1 : Y_POSITION_DISCARD_2));
-            for (int j = 0; j < 3; j++) {
-                double Y = (i == 0 ? (j == 0 ? Y_POSITION_ROW_11 : (j == 1 ? Y_POSITION_ROW_12 : Y_POSITION_ROW_13)) : (j == 0 ? Y_POSITION_ROW_21 : (j == 1 ? Y_POSITION_ROW_22 : Y_POSITION_ROW_23)));
-                setPositionVar(row[i][j], true, false, Y);
-                if (horn[i][j] != null) horn[i][j].setPos(X_POSITION_SPELL, Y);
-            }
-        }
-        setPositionVar(weather, true, true, Y_POSITION_WEATHER);
-        GameBoardin gameBoardin = getGameBoardin();
-        leader1.setImage(new javafx.scene.image.Image("/Images/Raw/" + gameBoardin.getPlayer1Faction() + "/" + gameBoardin.getPlayer1Commander() + ".jpg"));
-        leader2.setImage(new javafx.scene.image.Image("/Images/Raw/" + gameBoardin.getPlayer2Faction() + "/" + gameBoardin.getPlayer2Commander() + ".jpg"));
-        leaderActive1.setImage(gameBoardin.isPlayer1CommanderHasAction() ? new javafx.scene.image.Image("/Images/icons/icon_leader_active.png") : null);
-        leaderActive2.setImage(gameBoardin.isPlayer2CommanderHasAction() ? new javafx.scene.image.Image("/Images/icons/icon_leader_active.png") : null);
-        factionIcon1.setImage(new javafx.scene.image.Image("/Images/icons/deck_shield_" + gameBoardin.getPlayer1Faction().toLowerCase() + ".png"));
-        factionIcon2.setImage(new javafx.scene.image.Image("/Images/icons/deck_shield_" + gameBoardin.getPlayer2Faction().toLowerCase() + ".png"));
-        username1.setText(gameBoardin.getPlayer1Username());
-        username2.setText(gameBoardin.getPlayer2Username());
-        setCrystal(crystal11, (gameBoardin.getPlayer1Crystal() >= 1));
-        setCrystal(crystal12, (gameBoardin.getPlayer1Crystal() == 2));
-        setCrystal(crystal21, (gameBoardin.getPlayer2Crystal() >= 1));
-        setCrystal(crystal22, (gameBoardin.getPlayer2Crystal() == 2));
-        score11.setText(gameBoardin.getRow11XP() + "");
-        score12.setText(gameBoardin.getRow12XP() + "");
-        score13.setText(gameBoardin.getRow13XP() + "");
-        score21.setText(gameBoardin.getRow21XP() + "");
-        score22.setText(gameBoardin.getRow22XP() + "");
-        score23.setText(gameBoardin.getRow23XP() + "");
-        totalScore1.setText(gameBoardin.getPlayer1XP() + "");
-        totalScore2.setText(gameBoardin.getPlayer2XP() + "");
-        remainsDeck1.setText(gameBoardin.getPlayer1Deck().size() + "");
-        remainsDeck2.setText(gameBoardin.getPlayer2Deck().size() + "");
-        remainsHand1.setText(gameBoardin.getPlayer1Hand().size() + "");
-        remainsHand2.setText(gameBoardin.getPlayer2Hand().size() + "");
-        if (gameBoardin.getPlayer1XP() == gameBoardin.getPlayer2XP()){
-            winner2.setVisible(false);
-            winner1.setVisible(false);
-        } else if (gameBoardin.getPlayer1XP() < gameBoardin.getPlayer2XP()) {
-            winner2.setVisible(true);
-            winner1.setVisible(false);
-        } else {
-            winner2.setVisible(false);
-            winner1.setVisible(true);
-        }
-        for (int k = 0; k < 3; k++) {
-            for (int j = 0; j < 2; j++) {
-                ArrayList<Cardin> b = (k == 0 ? (j == 0 ? gameBoardin.getPlayer1Hand() : gameBoardin.getPlayer2Hand()) : (k == 1 ? (j == 0 ? gameBoardin.getPlayer1Deck() : gameBoardin.getPlayer2Deck()) : (j == 0 ? gameBoardin.getPlayer1Discard() : gameBoardin.getPlayer2Discard())));
-                for (int i = 0; i < b.size(); i++) {
-                    ArrayList<CardView>[] z = (k == 0 ? hand : (k == 1 ? deck : discard));
-                    if (z[j].get(i).getCard().isSoldier) {
-                        z[j].get(i).getCard().setHp(b.get(i).hp);
-                        z[j].get(i).setHP();
-                    }
+        Platform.runLater(() -> {
+            for (int i = 0; i < 2; i++) {
+                setPositionVar(hand[i], false, false, (i == 0 ? Y_POSITION_HAND_1 : Y_POSITION_HAND_2));
+                setPositionCte(deck[i], X_POSITION_Deck, (i == 0 ? Y_POSITION_DISCARD_1 : Y_POSITION_DISCARD_2));
+                setPositionCte(discard[i], X_POSITION_DISCARD, (i == 0 ? Y_POSITION_DISCARD_1 : Y_POSITION_DISCARD_2));
+                for (int j = 0; j < 3; j++) {
+                    double Y = (i == 0 ? (j == 0 ? Y_POSITION_ROW_11 : (j == 1 ? Y_POSITION_ROW_12 : Y_POSITION_ROW_13)) : (j == 0 ? Y_POSITION_ROW_21 : (j == 1 ? Y_POSITION_ROW_22 : Y_POSITION_ROW_23)));
+                    setPositionVar(row[i][j], true, false, Y);
+                    if (horn[i][j] != null) horn[i][j].setPos(X_POSITION_SPELL, Y);
                 }
             }
-        }
-        for (int j = 0; j < 2; j++) {
+            setPositionVar(weather, true, true, Y_POSITION_WEATHER);
+            GameBoardin gameBoardin = getGameBoardin();
+            leader1.setImage(new javafx.scene.image.Image("/Images/Raw/" + gameBoardin.getPlayer1Faction() + "/" + gameBoardin.getPlayer1Commander() + ".jpg"));
+            leader2.setImage(new javafx.scene.image.Image("/Images/Raw/" + gameBoardin.getPlayer2Faction() + "/" + gameBoardin.getPlayer2Commander() + ".jpg"));
+            leaderActive1.setImage(gameBoardin.isPlayer1CommanderHasAction() ? new javafx.scene.image.Image("/Images/icons/icon_leader_active.png") : null);
+            leaderActive2.setImage(gameBoardin.isPlayer2CommanderHasAction() ? new javafx.scene.image.Image("/Images/icons/icon_leader_active.png") : null);
+            factionIcon1.setImage(new javafx.scene.image.Image("/Images/icons/deck_shield_" + gameBoardin.getPlayer1Faction().toLowerCase() + ".png"));
+            factionIcon2.setImage(new javafx.scene.image.Image("/Images/icons/deck_shield_" + gameBoardin.getPlayer2Faction().toLowerCase() + ".png"));
+            username1.setText(gameBoardin.getPlayer1Username());
+            username2.setText(gameBoardin.getPlayer2Username());
+            setCrystal(crystal11, (gameBoardin.getPlayer1Crystal() >= 1));
+            setCrystal(crystal12, (gameBoardin.getPlayer1Crystal() == 2));
+            setCrystal(crystal21, (gameBoardin.getPlayer2Crystal() >= 1));
+            setCrystal(crystal22, (gameBoardin.getPlayer2Crystal() == 2));
+            score11.setText(gameBoardin.getRow11XP() + "");
+            score12.setText(gameBoardin.getRow12XP() + "");
+            score13.setText(gameBoardin.getRow13XP() + "");
+            score21.setText(gameBoardin.getRow21XP() + "");
+            score22.setText(gameBoardin.getRow22XP() + "");
+            score23.setText(gameBoardin.getRow23XP() + "");
+            totalScore1.setText(gameBoardin.getPlayer1XP() + "");
+            totalScore2.setText(gameBoardin.getPlayer2XP() + "");
+            remainsDeck1.setText(gameBoardin.getPlayer1Deck().size() + "");
+            remainsDeck2.setText(gameBoardin.getPlayer2Deck().size() + "");
+            remainsHand1.setText(gameBoardin.getPlayer1Hand().size() + "");
+            remainsHand2.setText(gameBoardin.getPlayer2Hand().size() + "");
+            if (gameBoardin.getPlayer1XP() == gameBoardin.getPlayer2XP()){
+                winner2.setVisible(false);
+                winner1.setVisible(false);
+            } else if (gameBoardin.getPlayer1XP() < gameBoardin.getPlayer2XP()) {
+                winner2.setVisible(true);
+                winner1.setVisible(false);
+            } else {
+                winner2.setVisible(false);
+                winner1.setVisible(true);
+            }
             for (int k = 0; k < 3; k++) {
-                ArrayList<Cardin> rowFlag;
-                if (j == 0) {
-                    if (k == 0) rowFlag = gameBoardin.getRow11();
-                    else if (k == 1) rowFlag = gameBoardin.getRow12();
-                    else rowFlag = gameBoardin.getRow13();
-                } else {
-                    if (k == 0) rowFlag = gameBoardin.getRow21();
-                    else if (k == 1) rowFlag = gameBoardin.getRow22();
-                    else rowFlag = gameBoardin.getRow23();
-                }
-                for (int i = 0; i < rowFlag.size(); i++) {
-                    if (row[j][k].get(i).getCard().isSoldier) {
-                        row[j][k].get(i).getCard().setHp(rowFlag.get(i).hp);
-                        row[j][k].get(i).setHP();
+                for (int j = 0; j < 2; j++) {
+                    ArrayList<Cardin> b = (k == 0 ? (j == 0 ? gameBoardin.getPlayer1Hand() : gameBoardin.getPlayer2Hand()) : (k == 1 ? (j == 0 ? gameBoardin.getPlayer1Deck() : gameBoardin.getPlayer2Deck()) : (j == 0 ? gameBoardin.getPlayer1Discard() : gameBoardin.getPlayer2Discard())));
+                    for (int i = 0; i < b.size(); i++) {
+                        ArrayList<CardView>[] z = (k == 0 ? hand : (k == 1 ? deck : discard));
+                        if (z[j].get(i).getCard().isSoldier) {
+                            z[j].get(i).getCard().setHp(b.get(i).hp);
+                            z[j].get(i).setHP();
+                        }
                     }
                 }
             }
-        }
+            for (int j = 0; j < 2; j++) {
+                for (int k = 0; k < 3; k++) {
+                    ArrayList<Cardin> rowFlag;
+                    if (j == 0) {
+                        if (k == 0) rowFlag = gameBoardin.getRow11();
+                        else if (k == 1) rowFlag = gameBoardin.getRow12();
+                        else rowFlag = gameBoardin.getRow13();
+                    } else {
+                        if (k == 0) rowFlag = gameBoardin.getRow21();
+                        else if (k == 1) rowFlag = gameBoardin.getRow22();
+                        else rowFlag = gameBoardin.getRow23();
+                    }
+                    for (int i = 0; i < rowFlag.size(); i++) {
+                        if (row[j][k].get(i).getCard().isSoldier) {
+                            row[j][k].get(i).getCard().setHp(rowFlag.get(i).hp);
+                            row[j][k].get(i).setHP();
+                        }
+                    }
+                }
+            }
+        });
     }
 
     ////////////// select Card and Yellow

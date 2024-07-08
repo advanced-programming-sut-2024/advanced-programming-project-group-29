@@ -190,7 +190,9 @@ public class Soldier extends Card {
     private void executeActionForSpy(Soldier soldier) {
         GameBoard gameBoard = soldier.getGameBoard();
         int playerIndex = gameBoard.getPlayerNumber(soldier.getUser());
-        gameBoard.getRandomCardFromDeckAndAddItToHand(this.getSender(), playerIndex);
+        if(soldier.getUser().getDeck().size() > 0)
+            gameBoard.getRandomCardFromDeckAndAddItToHand(this.getSender(), playerIndex);
+        if(soldier.getUser().getDeck().size() > 0)
         gameBoard.getRandomCardFromDeckAndAddItToHand(this.getSender(), playerIndex);
     }
 

@@ -23,7 +23,8 @@ public enum InGameMenuOutputCommand {
     PLACE_SPECIAL_FOR_OPPONENT("place special for opponent (?<cardNumber>\\d+) in row (?<rowNumber>\\d+)"),
     PLACE_WEATHER_FOR_OPPONENT("place weather for opponent (?<cardNumber>\\d+)"),
     PLACE_SOLDIER_FOR_OPPONENT("place soldier for opponent (?<cardNumber>\\d+) in row (?<rowNumber>\\d+)"),
-    MOVE_WEATHER_FORM_DECK_AND_PLAY("move weather from deck to it's place and play it (?<cardNumber>\\d+) (?<playerIndex>\\d)")
+    MOVE_WEATHER_FORM_DECK_AND_PLAY("move weather from deck to it's place and play it (?<cardNumber>\\d+) (?<playerIndex>\\d)"),
+    REFRESH("refresh")
     ;
     private String command;
 
