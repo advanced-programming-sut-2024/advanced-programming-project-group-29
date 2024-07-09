@@ -63,7 +63,7 @@ public class InGameMenu extends Application {
     private final double Y_POSITION_ROW_13 = 360;
     private final double Y_POSITION_ROW_21 = 12;
     private final double Y_POSITION_ROW_22 = 122;
-    private final double Y_POSITION_ROW_23 = 226;
+    private final double Y_POSITION_ROW_23 = 236;
     private final double CARD_WIDTH = 70;
     private final double SPACING = 5;
 
@@ -149,8 +149,12 @@ public class InGameMenu extends Application {
     public Label textReaction3;
     public TextField typeReaction;
     public Label opponentReaction;
+
+
     public Pane turnPain;
     public Label endTurnAnnounce;
+    public Pane endPain;
+    public Label endGameAnnounce;
 
 
     private CardView LastSelectedCard;
@@ -159,7 +163,7 @@ public class InGameMenu extends Application {
     private int step;
     private boolean isVeto;
     private int vetoStep;
-    private final boolean isOnline = false;
+    private boolean isOnline;
 
     public ScrollPane messageScroll;
     public TextField message;
@@ -178,6 +182,7 @@ public class InGameMenu extends Application {
 
     @FXML
     public void initialize() throws NoSuchFieldException, IllegalAccessException {
+        this.isOnline = Client.isIsReadyForOnline();
         for (int i = 0; i < 2; i++) {
             hand[i] = new ArrayList<>();
             deck[i] = new ArrayList<>();
@@ -678,6 +683,24 @@ public class InGameMenu extends Application {
         moveWeatherFromDeckAndPlay(cardNumber, playerIndex);
     }
 
+    public void moveSoldierFromOpponentHandToPlayerRow(int cardNumber, int rowNumber) {
+        Platform.runLater(() -> {
+            CardView c = hand[1].get(cardNumber);
+            hand[1].remove(cardNumber);
+            c.setInHand(false);
+            row[0][convertRowNumber(rowNumber)].add(c);
+            int j = convertRowNumber(rowNumber);
+            double Y = (j == 0 ? Y_POSITION_ROW_11 : (j == 1 ? Y_POSITION_ROW_12 : Y_POSITION_ROW_13));
+            (new FlipCardAnimation(c, (row[0][convertRowNumber(rowNumber)].size() == 1 ? (X_POSITION_ROW_LEFT + X_POSITION_ROW_RIGHT - CARD_WIDTH) / 2 : (row[0][convertRowNumber(rowNumber)].get(row[0][convertRowNumber(rowNumber)].size() - 2)).getLayoutX() + SPACING + CARD_WIDTH), Y, true, true, true)).play();
+        });
+    }
+
+    public void moveSoldierFromOpponentHandToPlayerRow(Matcher matcher) {
+        int rowNumber = Integer.parseInt(matcher.group("rowNumber"));
+        int cardNumber = Integer.parseInt(matcher.group("cardNumber"));
+        moveSoldierFromOpponentHandToPlayerRow(cardNumber, rowNumber);
+    }
+
     private int convertRowNumber(int fatemeRowNumber) {
         int ostadRowNumber = 2 - fatemeRowNumber; // :))
         return ostadRowNumber;
@@ -692,9 +715,8 @@ public class InGameMenu extends Application {
     }
 
     ///////////////////////// isPlayerTurn
-
-    private void isPlayerTurn(boolean isPlayerTurn){
-        if (isPlayerTurn){
+    private void isPlayerTurn(boolean isPlayerTurn) {
+        if (isPlayerTurn) {
             for (CardView c : hand[0]) c.setInHand(true);
         } else {
             for (CardView c : hand[0]) c.setInHand(false);
@@ -739,7 +761,7 @@ public class InGameMenu extends Application {
 
     private GameBoardin getGameBoardin() {
         GameBoardin gameBoardin = (GameBoardin) Client.getClient().sendCommand("get game board");
-        while(gameBoardin.isInProcess())
+        while (gameBoardin.isInProcess())
             gameBoardin = (GameBoardin) Client.getClient().sendCommand("get game board");
         return gameBoardin;
     }
@@ -1236,15 +1258,14 @@ public class InGameMenu extends Application {
         }
     }
 
-//    public void passTurn(){  //TODO
-//        if () {
-//            String winnerUser = result.getMessage().getFirst();
-//            endRound(winnerUser);
-//        } else {
-//            swapAllThings();
-//            refresh();
-//        }
-//    }
+    public void passTurn(String winner) {  //TODO if round ends give winner username else give "";
+        if (winner.isEmpty()) {
+            swapAllThings();
+            refresh();
+        } else {
+            endRound(winner);
+        }
+    }
 
     private void swapAllThings() {
         GameBoardin gameBoardin = getGameBoardin();
@@ -1343,8 +1364,26 @@ public class InGameMenu extends Application {
         t.play();
     }
 
-    private void endGame() {
-
+    public void endGame(String winner) { //TODO if game ends call this func for both and give the winner username
+        //TODO save game history
+        endGameAnnounce.setText("Game ends, the winner is \"" + winner + "\"");
+        endPain.setVisible(true);
+        endPain.setDisable(false);
+        mainPain.setDisable(true);
+        Timeline t = new Timeline(new KeyFrame(Duration.seconds(5)));
+        t.setCycleCount(1);
+        t.setOnFinished(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                //TODO anything we want to do after game ends
+                try {
+                    (new MainMenu()).start(ApplicationRunningTimeData.getStage());
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
+        t.play();
     }
 
     public void buttonEntered(MouseEvent mouseEvent) {
@@ -1409,11 +1448,5 @@ public class InGameMenu extends Application {
         messageBoxPane.setDisable(false);
         messageBoxPane.setVisible(true);
         mainPain.setDisable(true);
-    }
-
-    public void moveSoldierFromOpponentHandToPlayerRow(Matcher matcher) {
-        int rowNumber = Integer.parseInt(matcher.group("rowNumber"));
-        int cardNumber = Integer.parseInt(matcher.group("cardNumber"));
-        // TODO: implement this
     }
 }

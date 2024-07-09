@@ -93,7 +93,7 @@ public class GameMenu extends Application {
     @FXML
     public void initialize() {
         this.isOnline = Client.isIsReadyForOnline();
-        if (isOnline){
+        if (isOnline) {
             changeTurn.setText("Start Game");
         }
         image3.setOnKeyPressed(event -> {
@@ -276,12 +276,24 @@ public class GameMenu extends Application {
         return count;
     }
 
+
+    public void startNewInGameMenu() throws Exception { //TODO call this for start the game
+        (new InGameMenu()).start(ApplicationRunningTimeData.getStage());
+    }
+
+
     public void changeTurn(MouseEvent mouseEvent) throws Exception {
         Result result = (Result) client.sendCommand(GameMenuRegex.CHANGE_TURN.getRegex());
-        if (isOnline){
-            if (result.isSuccessful()){
-                InGameMenu inGameMenu = new InGameMenu();
-                inGameMenu.start(ApplicationRunningTimeData.getStage());
+        if (isOnline) {
+            if (result.isSuccessful()) {
+                int indexOfLabel;
+                if (mouseEvent.getSource() instanceof Label)
+                    indexOfLabel = mainPain.getChildren().indexOf(mouseEvent.getSource());
+                else indexOfLabel = mainPain.getChildren().indexOf(mouseEvent.getSource()) + 1;
+                mainPain.getChildren().get(indexOfLabel - 1).setOnMouseClicked(null);
+                mainPain.getChildren().get(indexOfLabel).setOnMouseClicked(null);
+                ((Label) mainPain.getChildren().get(indexOfLabel)).setText("Wait");
+                //inGameMenu.start(ApplicationRunningTimeData.getStage()); //TODO online game doesn't start from here call startNewInGameMenu
             }
         } else {
             if (!isChangeTurn) {
