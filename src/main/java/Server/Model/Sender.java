@@ -55,10 +55,12 @@ public class Sender {
         }
     }
 
-    private String sendMessage(String command) {
+    private String sendMessage(String command, boolean waitForAnswer) {
         try {
             sendBuffer.writeUTF(command);
             System.err.println("sent command " + command);
+            if(!waitForAnswer)
+                return null;
             String s = receiveBuffer.readUTF();
             return s;
         } catch (Exception e) {
@@ -68,10 +70,18 @@ public class Sender {
 
     public Object sendCommand(String command) {
         try {
-            return deSerialize(sendMessage(command));
+            return deSerialize(sendMessage(command, true));
         } catch (Exception e) {
             e.printStackTrace();
             return null;
+        }
+    }
+
+    public void sendCommandWithOutResponse(String command) {
+        try {
+            sendMessage(command, false);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

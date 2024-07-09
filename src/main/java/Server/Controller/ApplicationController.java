@@ -1,5 +1,6 @@
 package Server.Controller;
 
+import Client.View.LoginMenu;
 import Server.Model.*;
 import Server.Enum.Menu;
 import Server.Regex.ChangeMenuRegex;
@@ -38,6 +39,7 @@ public class ApplicationController extends Thread {
     private Menu currentMenu;
     private Sender sender;
     private Socket listenerSocket;
+    private boolean waitForAuthentication = false;
 
     public static void main(String[] args){
         QueueChecker queueChecker = new QueueChecker();
@@ -95,8 +97,11 @@ public class ApplicationController extends Thread {
                 inputCommand = dataInputStream.readUTF();
                 if(currentUser != null){
                     int endOfToken = inputCommand.indexOf(":");
-                    if(!currentUser.checkJWT(inputCommand.substring(0, endOfToken))) {
-                        sender.sendCommand("authenticate");
+                    if(!currentUser.checkJWT(inputCommand.substring(0, endOfToken)) && currentMenu.isOkToAuthenticate()) {
+                        waitForAuthentication = true;
+                        currentMenu = Menu.LOGIN_MENU;
+                        currentUser = null;
+                        sender.sendCommandWithOutResponse("authenticate");
                     }
                     inputCommand = inputCommand.substring(endOfToken + 1);
                 }
@@ -108,7 +113,12 @@ public class ApplicationController extends Thread {
                     continue;
                 }
                 if (inputCommand.matches(ChangeMenuRegex.CHANGE_MENU.getRegex())) {
-                    currentMenu = Menu.valueOf(ChangeMenuRegex.CHANGE_MENU.getMatcher(inputCommand).group("menuName"));
+                    Menu requestedMenu = Menu.valueOf(ChangeMenuRegex.CHANGE_MENU.getMatcher(inputCommand).group("menuName"));
+                    if(requestedMenu != Menu.LOGIN_MENU && requestedMenu != Menu.REGISTER_MENU && currentUser == null){
+                        dataOutputStream.writeUTF("null");
+                        continue;
+                    }
+                    currentMenu = requestedMenu;
                     sender.setUser(currentUser);
                     if(currentUser != null) {
                         if(currentMenu == Menu.IN_GAME_MENU || currentMenu == Menu.GAME_MENU)
@@ -119,6 +129,7 @@ public class ApplicationController extends Thread {
                 }
                 if(inputCommand.matches(LoginMenuRegex.GET_NEW_JWT.getRegex())){
                     dataOutputStream.writeUTF(this.getCurrentUser().getJWT());
+                    waitForAuthentication = false;
                     continue;
                 }
                 if (inputCommand.matches(LoginMenuRegex.SAVE_USER.getRegex())) {

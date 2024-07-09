@@ -17,6 +17,7 @@ import java.util.regex.Matcher;
 
 import Client.View.InGameMenu;
 import com.google.gson.GsonBuilder;
+import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
@@ -76,12 +77,15 @@ public class Listener extends Thread {
                         inGameMenu.showThreeCardOfOpponent();
                     else if ((matcher = LoginMenuRegex.SET_TOKEN.getMatcher(input)).matches())
                         Client.getClient().getSender().setToken(matcher.group("token"));
-                    else if ((matcher = LoginMenuRegex.AUTHENTICATE.getMatcher(input)).matches()) { // TODO: it should be debugged
-                        try {
-                            new LoginMenu().start(ApplicationRunningTimeData.getStage());
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+                    else if ((matcher = LoginMenuRegex.AUTHENTICATE.getMatcher(input)).matches()) {
+                        Client.getClient().getSender().setToken(null);
+                        Platform.runLater(() -> {
+                            try {
+                                new LoginMenu().start(ApplicationRunningTimeData.getStage());
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        });
                     } else if ((matcher = InGameMenuRegex.SEND_REACTION.getMatcher(input)).matches()) {
                         inGameMenu.showReaction(matcher);
                     } else if ((matcher = InGameMenuRegex.SEND_EMOJI_REACTION.getMatcher(input)).matches()) {
@@ -97,9 +101,9 @@ public class Listener extends Thread {
                     } else if ((matcher = GameMenuRegex.SEND_GAME_REQUEST.getMatcher(input)).matches()) {
                         String username = matcher.group("username");
                         ApplicationRunningTimeData.createPopUp(1, "User " + username + " sent a new game request!", username);
-                    } else if ((matcher = GameMenuRegex.START_GAME.getMatcher(input)).matches()){
+                    } else if ((matcher = GameMenuRegex.START_GAME.getMatcher(input)).matches()) {
                         chooseGameModelMenu.startNewGameMenu();
-                    } else if(InGameMenuOutputCommand.REFRESH.getMatcher(input).matches()){
+                    } else if (InGameMenuOutputCommand.REFRESH.getMatcher(input).matches()) {
                         inGameMenu.refresh();
                     }
 
