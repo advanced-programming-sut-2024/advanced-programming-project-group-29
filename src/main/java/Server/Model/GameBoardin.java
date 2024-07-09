@@ -8,7 +8,7 @@ import java.util.ArrayList;
 public class GameBoardin {
     int player1Crystal = 2;
     int player2Crystal = 2;
-    int currentPlayerIndex = 1;
+    String currentPlayerUsername;
     ArrayList<Cardin> player1Hand;
     ArrayList<Cardin> player2Hand;
     ArrayList<Cardin> player1Deck;
@@ -54,6 +54,7 @@ public class GameBoardin {
             User user1 = gameBoard.getPlayer(playerIndex);
             User user2 = gameBoard.getPlayer(opponentIndex);
             inProcess = user1.getInProcess() && user2.getInProcess();
+            currentPlayerUsername = gameBoard.getPlayer(gameBoard.getCurrentPlayerIndex()).getUsername();
             player1Hand = new ArrayList<>();
             player2Hand = new ArrayList<>();
             player1Deck = new ArrayList<>();
@@ -129,7 +130,6 @@ public class GameBoardin {
             row23XP = gameBoard.getRowShownScore(opponentIndex, 0);
             player1XP = gameBoard.getPlayerScore(playerIndex);
             player2XP = gameBoard.getPlayerScore(opponentIndex);
-            currentPlayerIndex = gameBoard.getCurrentPlayerIndex() + 1;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -259,8 +259,8 @@ public class GameBoardin {
         return inProcess;
     }
 
-    public int getCurrentPlayerIndex() {
-        return currentPlayerIndex;
+    public String getCurrentPlayerIndex() {
+        return currentPlayerUsername;
     }
 
     public Cardin getSpecialCard11() {

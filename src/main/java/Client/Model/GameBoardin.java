@@ -1,11 +1,14 @@
 package Client.Model;
 
+import Server.Controller.ApplicationController;
+import Server.Model.*;
+
 import java.util.ArrayList;
 
 public class GameBoardin {
     int player1Crystal = 2;
     int player2Crystal = 2;
-    int currentPlayerIndex = 1;
+    String currentPlayerUsername;
     ArrayList<Cardin> player1Hand;
     ArrayList<Cardin> player2Hand;
     ArrayList<Cardin> player1Deck;
@@ -167,14 +170,8 @@ public class GameBoardin {
         return inProcess;
     }
 
-    public void showAllCardAndHp(){
-        for(Cardin cardin : row13){
-            System.out.println(cardin.getName() + " " + cardin.getHp());
-        }
-    }
-
-    public int getCurrentPlayerIndex() {
-        return currentPlayerIndex;
+    public String getCurrentPlayerIndex() {
+        return currentPlayerUsername;
     }
 
     public Cardin getSpecialCard11() {
