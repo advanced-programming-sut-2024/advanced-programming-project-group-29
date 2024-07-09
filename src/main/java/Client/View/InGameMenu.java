@@ -1233,9 +1233,15 @@ public class InGameMenu extends Application {
         }
     }
 
-    public void passTurn(){  //TODO
-        passTurn(null);
-    }
+//    public void passTurn(){  //TODO
+//        if () {
+//            String winnerUser = result.getMessage().getFirst();
+//            endRound(winnerUser);
+//        } else {
+//            swapAllThings();
+//            refresh();
+//        }
+//    }
 
     private void swapAllThings() {
         GameBoardin gameBoardin = getGameBoardin();
