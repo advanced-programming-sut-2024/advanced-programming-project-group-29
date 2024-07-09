@@ -6,9 +6,14 @@ import Server.Regex.ChangeMenuRegex;
 import Server.Regex.GameMenuRegex;
 import Server.Regex.LoginMenuRegex;
 import com.google.gson.GsonBuilder;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -35,6 +40,8 @@ public class ApplicationController extends Thread {
     private Socket listenerSocket;
 
     public static void main(String[] args){
+        QueueChecker queueChecker = new QueueChecker();
+        queueChecker.start();
         ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(THREAD_COUNT);
         try {
             ServerSocket server = new ServerSocket(PORT);
@@ -84,13 +91,8 @@ public class ApplicationController extends Thread {
                     Integer.parseInt(inputCommand.substring(ipEndIndex + 1)));
             dataOutputStream.writeUTF("null");
             while(true) {
+                System.out.println("waiting for a new commadn");
                 inputCommand = dataInputStream.readUTF();
-                if (inputCommand.equals(LoginMenuRegex.LOGOUT.getRegex())) {
-                    currentUser = null;
-                    currentMenu = Menu.LOGIN_MENU;
-                    dataOutputStream.writeUTF("null");
-                    continue;
-                }
                 if(currentUser != null){
                     int endOfToken = inputCommand.indexOf(":");
                     if(!currentUser.checkJWT(inputCommand.substring(0, endOfToken))) {
@@ -99,6 +101,12 @@ public class ApplicationController extends Thread {
                     inputCommand = inputCommand.substring(endOfToken + 1);
                 }
                 System.out.println("got that command " + inputCommand + " " + currentMenu + " from " + (currentUser != null ? currentUser.getUsername() : "null"));
+                if (inputCommand.equals(LoginMenuRegex.LOGOUT.getRegex())) {
+                    currentUser = null;
+                    currentMenu = Menu.LOGIN_MENU;
+                    dataOutputStream.writeUTF("null");
+                    continue;
+                }
                 if (inputCommand.matches(ChangeMenuRegex.CHANGE_MENU.getRegex())) {
                     currentMenu = Menu.valueOf(ChangeMenuRegex.CHANGE_MENU.getMatcher(inputCommand).group("menuName"));
                     sender.setUser(currentUser);
@@ -236,4 +244,18 @@ public class ApplicationController extends Thread {
         this.pane = pane;
     }
 
+}
+
+class QueueChecker extends Thread{
+    @Override
+    public void run() {
+        while(true){
+            User.checkForPendingOpponentsFound();
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }

@@ -15,6 +15,7 @@ import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.util.Objects;
@@ -23,6 +24,7 @@ public class ChooseGameModelMenu extends Application {
     private final double HEIGHT_OF_TEXT_WARNING = 25;
     private final double LENGTH_OF_FULL_LINE = 25;
     private final double HEIGHT_OF_DARK_BACK = 230;
+    public Text randomText;
     private Label warning;
     public Rectangle darkBack;
     public TextField opponentUsername;
@@ -71,6 +73,17 @@ public class ChooseGameModelMenu extends Application {
         this.isOnline = true;
     }
 
+    public void random(MouseEvent mouseEvent) {
+        this.isOnline = true;
+        Result result = (Result) client.sendCommand("find an opponent randomly");
+        if (!result.isSuccessful()) {
+            sayAlert(result.getMessage().getFirst(), true);
+        } else {
+            Client.setReadyForOnline(true);
+            randomText.setVisible(true);
+        }
+    }
+
     public void cancel(MouseEvent mouseEvent) throws Exception {
         new MainMenu().start(ApplicationRunningTimeData.getStage());
     }
@@ -81,6 +94,7 @@ public class ChooseGameModelMenu extends Application {
         choosePain.setVisible(true);
         choosePain.setDisable(false);
         opponentUsername.setText("");
+        randomText.setVisible(false);
         deleteWarning();
     }
 

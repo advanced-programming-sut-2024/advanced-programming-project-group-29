@@ -10,8 +10,9 @@
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Client.View.ChooseGameModelMenu">
+<AnchorPane prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Client.View.ChooseGameModelMenu">
    <children>
       <ImageView fitHeight="800.0" fitWidth="1205.0" pickOnBounds="true" preserveRatio="true">
          <image>
@@ -20,7 +21,7 @@
       </ImageView>
       <Pane fx:id="choosePain" layoutX="325.0" layoutY="218.0" prefHeight="364.0" prefWidth="553.0">
          <children>
-            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#eed092" height="273.0" layoutX="68.0" layoutY="46.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="0.0" width="418.0">
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#eed092" height="327.0" layoutX="69.0" layoutY="21.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="0.0" width="418.0">
                <effect>
                   <Shadow height="60.0" radius="29.5" width="60.0">
                      <color>
@@ -29,12 +30,12 @@
                   </Shadow>
                </effect>
             </Rectangle>
-            <Label alignment="CENTER" layoutX="114.0" layoutY="67.0" prefHeight="46.0" prefWidth="326.0" text="Choose the way that you want to play" textFill="#dea543">
+            <Label alignment="CENTER" layoutX="116.0" layoutY="26.0" prefHeight="46.0" prefWidth="326.0" text="Choose the way that you want to play" textFill="#dea543">
                <font>
                   <Font name="System Bold" size="16.0" />
                </font>
             </Label>
-            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#bfbfbf" height="43.0" layoutX="163.0" layoutY="120.0" onMouseClicked="#offline" onMouseEntered="#buttonEntered" onMouseExited="#buttonExited" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="227.0">
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#bfbfbf" height="43.0" layoutX="163.0" layoutY="78.0" onMouseClicked="#offline" onMouseEntered="#buttonEntered" onMouseExited="#buttonExited" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="227.0">
                <effect>
                   <Shadow height="6.17" radius="1.1025" width="0.24">
                      <color>
@@ -43,12 +44,12 @@
                   </Shadow>
                </effect>
             </Rectangle>
-            <Label layoutX="193.0" layoutY="131.0" onMouseClicked="#offline" onMouseEntered="#buttonEntered" onMouseExited="#buttonExited" text="Start an offline game">
+            <Label layoutX="209.0" layoutY="90.0" onMouseClicked="#offline" onMouseEntered="#buttonEntered" onMouseExited="#buttonExited" text="Start an offline game">
                <font>
                   <Font name="System Bold" size="16.0" />
                </font>
             </Label>
-            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#bfbfbf" height="43.0" layoutX="164.0" layoutY="176.0" onMouseClicked="#online" onMouseEntered="#buttonEntered" onMouseExited="#buttonExited" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="227.0">
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#bfbfbf" height="43.0" layoutX="165.0" layoutY="129.0" onMouseClicked="#online" onMouseEntered="#buttonEntered" onMouseExited="#buttonExited" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="227.0">
                <effect>
                   <Shadow height="6.17" radius="1.1025" width="0.24">
                      <color>
@@ -57,12 +58,12 @@
                   </Shadow>
                </effect>
             </Rectangle>
-            <Label layoutX="194.0" layoutY="187.0" onMouseClicked="#online" onMouseEntered="#buttonEntered" onMouseExited="#buttonExited" text="Start an online game">
+            <Label layoutX="208.0" layoutY="141.0" onMouseClicked="#online" onMouseEntered="#buttonEntered" onMouseExited="#buttonExited" text="Start an online game">
                <font>
                   <Font name="System Bold" size="16.0" />
                </font>
             </Label>
-            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#bfbfbf" height="43.0" layoutX="215.0" layoutY="231.0" onMouseClicked="#cancel" onMouseEntered="#buttonEntered" onMouseExited="#buttonExited" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="123.0">
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#bfbfbf" height="43.0" layoutX="165.0" layoutY="182.0" onMouseClicked="#random" onMouseEntered="#buttonEntered" onMouseExited="#buttonExited" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="227.0">
                <effect>
                   <Shadow height="6.17" radius="1.1025" width="0.24">
                      <color>
@@ -71,14 +72,33 @@
                   </Shadow>
                </effect>
             </Rectangle>
-            <Label layoutX="252.0" layoutY="241.0" onMouseClicked="#cancel" onMouseEntered="#buttonEntered" onMouseExited="#buttonExited" text="cancel">
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#bfbfbf" height="43.0" layoutX="215.0" layoutY="240.0" onMouseClicked="#cancel" onMouseEntered="#buttonEntered" onMouseExited="#buttonExited" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="123.0">
+               <effect>
+                  <Shadow height="6.17" radius="1.1025" width="0.24">
+                     <color>
+                        <Color red="0.8799999952316284" green="0.8447999954223633" blue="0.8447999954223633" opacity="0.7241379022598267" />
+                     </color>
+                  </Shadow>
+               </effect>
+            </Rectangle>
+            <Label layoutX="254.0" layoutY="252.0" onMouseClicked="#cancel" onMouseEntered="#buttonEntered" onMouseExited="#buttonExited" text="cancel">
                <font>
                   <Font name="System Bold" size="16.0" />
                </font>
             </Label>
+            <Label layoutX="200.0" layoutY="194.0" onMouseClicked="#random" onMouseEntered="#buttonEntered" onMouseExited="#buttonExited" text="Start a game randomly">
+               <font>
+                  <Font name="System Bold" size="16.0" />
+               </font>
+            </Label>
+            <Text fx:id="randomText" fill="green" layoutX="185.0" layoutY="316.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Searching for an opponent..." visible="false">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Text>
          </children>
       </Pane>
-      <Pane fx:id="startPain" disable="true" layoutX="325.0" layoutY="218.0" prefHeight="364.0" prefWidth="553.0" visible="false">
+      <Pane fx:id="startPain" layoutX="325.0" layoutY="218.0" prefHeight="364.0" prefWidth="553.0" visible="false">
          <children>
             <Rectangle fx:id="darkBack" arcHeight="5.0" arcWidth="5.0" fill="#eed092" height="230.0" layoutX="91.0" layoutY="47.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="0.0" width="388.0">
                <effect>

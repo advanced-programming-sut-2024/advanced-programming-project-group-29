@@ -59,8 +59,18 @@ public class GameMenuController {
             InGameMenuController.startGame(applicationController.getCurrentUser());
         } else if (inputCommand.matches(GameMenuRegex.INITIATE_DECK.getRegex())) {
             return initiateDeck(applicationController.getCurrentUser());
+        } else if(inputCommand.matches(GameMenuRegex.SEARCH_FOR_RANDOM_OPPONENT.getRegex())){
+            return searchForRandomOpponent(applicationController.getSender(), applicationController.getCurrentUser());
         }
         return null;
+    }
+
+    private static Result searchForRandomOpponent(Sender sender, User user) {
+        if (user.getCurrentGameBoard() != null) {
+            return new Result(false, "You are already in a game.");
+        }
+        User.addUserToQueueForRandomPlay(user);
+        return new Result(true);
     }
 
     public static void rejectPlay(User currentUser, Matcher matcher) {
@@ -117,6 +127,8 @@ public class GameMenuController {
             return new Result(false, "This player is already in a game.");
         }
         if(isOnline){
+            if(!ApplicationController.checkIfUserIsOnline(user2.getUsername()))
+                return new Result(false, "This player is not online.");
             user2.getSender().sendCommand("show pop-up for game request -p " + user1.getUsername());
             return new Result(true, "Game request sent successfully.");
         }
@@ -326,5 +338,18 @@ public class GameMenuController {
     private static SavedDeck getUserSavedDeck(ApplicationController applicationController) {
         User user = applicationController.getCurrentUser();
         return new SavedDeck(user.getDeckNames(), user.getCommander().getName(), user.getFaction().getName());
+    }
+
+    public static void startNewRandomGame(User user1, User user2) {
+        GameBoard gameBoard = new GameBoard(user1, user2, true);
+        user1.setCurrentGameBoard(gameBoard);
+        user2.setCurrentGameBoard(gameBoard);
+        try {
+            System.out.println("user1 " + user1.getUsername() + " user2: " + user2.getUsername());
+            user2.getSender().sendCommand("start new game");
+            user1.getSender().sendCommand("start new game");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

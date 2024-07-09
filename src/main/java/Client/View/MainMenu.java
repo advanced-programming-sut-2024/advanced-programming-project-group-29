@@ -55,6 +55,7 @@ public class MainMenu extends Application {
 
     public void logout() throws Exception {
         client.sendCommand(LoginMenuRegex.LOGOUT.getRegex());
+        client.getSender().setToken(null);
         new LoginMenu().start(ApplicationRunningTimeData.getStage());
     }
 

@@ -1,5 +1,6 @@
 package Server.Model;
 
+import Server.Controller.GameMenuController;
 import Server.Enum.Faction;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -24,6 +25,7 @@ public class User {
     };
 
     private static ArrayList<User> allUsers = new ArrayList<>();
+    private static User[] pendingUserForRandomPlay = new User[2];
     private static final int EXPIATION_TIME = 30;
     private static final String SECRET_KEY = "For the rest of your days, you will be known as Robin Hood.";
     private String username;
@@ -78,6 +80,22 @@ public class User {
 
     public static String[] getSecurityQuestions() {
         return securityQuestions;
+    }
+
+    public static void addUserToQueueForRandomPlay(User user) {
+        if(pendingUserForRandomPlay[0] == user || pendingUserForRandomPlay[1] == user)
+            return;
+        if(pendingUserForRandomPlay[0] == null)
+            pendingUserForRandomPlay[0] = user;
+        else pendingUserForRandomPlay[1] = user;
+    }
+
+    public static void checkForPendingOpponentsFound() {
+        if(pendingUserForRandomPlay[0] != null && pendingUserForRandomPlay[1] != null) {
+            GameMenuController.startNewRandomGame(pendingUserForRandomPlay[0], pendingUserForRandomPlay[1]);
+            pendingUserForRandomPlay[0] = null;
+            pendingUserForRandomPlay[1] = null;
+        }
     }
 
     public void setQuestion(int questionNumber, String answer) {
