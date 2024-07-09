@@ -25,6 +25,8 @@ public class GameBoard {
     ChatBox chatBox = new ChatBox();
 
     public GameBoard(User player1, User player2, boolean isGameOnline) {
+        player1.setCurrentGameBoard(this);
+        player2.setCurrentGameBoard(this);
         this.isGameOnline = isGameOnline;
         playersCrystals[0] = 2;
         playersCrystals[1] = 2;

@@ -25,7 +25,7 @@ public class MainMenu extends Application {
     public MainMenu() {
         super();
         client = Client.getClient();
-        client.sendCommand("menu enter " + Menu.MAIN_MENU.toString());
+        client.sendCommand("menu enter " + Menu.MAIN_MENU);
     }
 
     @FXML
@@ -81,5 +81,11 @@ public class MainMenu extends Application {
 
     public void ranking(MouseEvent mouseEvent) throws Exception {
         new RankingMenu().start(ApplicationRunningTimeData.getStage());
+    }
+
+    public void addToTournament() throws Exception {
+        client.sendCommand("menu enter " + Menu.TOURNAMENT_MENU);
+        client.sendCommand("add to tournament -u " + ApplicationRunningTimeData.getLoggedInUserUsername());
+        new TournamentMenu().start(ApplicationRunningTimeData.getStage());
     }
 }

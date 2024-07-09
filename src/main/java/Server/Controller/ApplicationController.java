@@ -171,6 +171,9 @@ public class ApplicationController extends Thread {
                     case RANKING_MENU:
                         object = Server.Controller.RankingMenuController.processRequest(this, inputCommand);
                         break;
+                    case TOURNAMENT_MENU:
+                        object = Server.Controller.TournamentMenuController.processRequest(this, inputCommand);
+                        break;
                 }
                 sender.setUser(currentUser);
                 if(currentUser != null) {

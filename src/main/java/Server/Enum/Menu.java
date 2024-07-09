@@ -11,7 +11,8 @@ public enum Menu {
     PROFILE_MENU,
     FRIENDS_MENU,
     FRIEND_REQUESTS_MENU,
-    RANKING_MENU;
+    RANKING_MENU,
+    TOURNAMENT_MENU;
 
     public boolean isOkToAuthenticate() {
         return this != GAME_MENU  && this != IN_GAME_MENU &&
