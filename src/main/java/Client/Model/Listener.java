@@ -105,6 +105,8 @@ public class Listener extends Thread {
                         chooseGameModelMenu.startNewGameMenu();
                     } else if (InGameMenuOutputCommand.REFRESH.getMatcher(input).matches()) {
                         inGameMenu.refresh();
+                    } else if((matcher = InGameMenuOutputCommand.MOVE_OPPONENT_HAND_TO_MY_ROW.getMatcher(input)).matches()){
+                        inGameMenu.moveSoldierFromOpponentHandToPlayerRow(matcher);
                     }
 
                 } catch (Exception e) {

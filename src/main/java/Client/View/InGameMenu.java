@@ -739,6 +739,8 @@ public class InGameMenu extends Application {
 
     private GameBoardin getGameBoardin() {
         GameBoardin gameBoardin = (GameBoardin) Client.getClient().sendCommand("get game board");
+        while(gameBoardin.isInProcess())
+            gameBoardin = (GameBoardin) Client.getClient().sendCommand("get game board");
         return gameBoardin;
     }
 
@@ -860,6 +862,7 @@ public class InGameMenu extends Application {
                     ArrayList<Cardin> b = (k == 0 ? (j == 0 ? gameBoardin.getPlayer1Hand() : gameBoardin.getPlayer2Hand()) : (k == 1 ? (j == 0 ? gameBoardin.getPlayer1Deck() : gameBoardin.getPlayer2Deck()) : (j == 0 ? gameBoardin.getPlayer1Discard() : gameBoardin.getPlayer2Discard())));
                     for (int i = 0; i < b.size(); i++) {
                         ArrayList<CardView>[] z = (k == 0 ? hand : (k == 1 ? deck : discard));
+                        System.out.println("here we had " + k + " " + j);
                         if (z[j].get(i).getCard().isSoldier) {
                             z[j].get(i).getCard().setHp(b.get(i).hp);
                             z[j].get(i).setHP();
@@ -1400,5 +1403,11 @@ public class InGameMenu extends Application {
         messageBoxPane.setDisable(false);
         messageBoxPane.setVisible(true);
         mainPain.setDisable(true);
+    }
+
+    public void moveSoldierFromOpponentHandToPlayerRow(Matcher matcher) {
+        int rowNumber = Integer.parseInt(matcher.group("rowNumber"));
+        int cardNumber = Integer.parseInt(matcher.group("cardNumber"));
+        // TODO: implement this
     }
 }
