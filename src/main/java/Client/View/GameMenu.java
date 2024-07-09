@@ -92,6 +92,7 @@ public class GameMenu extends Application {
 
     @FXML
     public void initialize() {
+        ApplicationRunningTimeData.setGameMenu(this);
         this.isOnline = Client.isIsReadyForOnline();
         if (isOnline) {
             changeTurn.setText("Start Game");
@@ -182,7 +183,6 @@ public class GameMenu extends Application {
     private void moveFromPreviousDeck() {
         try {
             ArrayList<String> previousDeck = (ArrayList<String>) client.sendCommand("initiate deck");
-            System.out.println("all done with initiating ");
             for (String name : previousDeck) moveCardInit(name);
             refresh();
         } catch (Exception e) {
@@ -283,7 +283,7 @@ public class GameMenu extends Application {
 
 
     public void changeTurn(MouseEvent mouseEvent) throws Exception {
-        Result result = (Result) client.sendCommand(GameMenuRegex.CHANGE_TURN.getRegex());
+        Result result = (Result) client.sendCommand((isOnline ? GameMenuRegex.DECK_CHOSEN.getRegex() : GameMenuRegex.CHANGE_TURN.getRegex()));
         if (isOnline) {
             if (result.isSuccessful()) {
                 int indexOfLabel;

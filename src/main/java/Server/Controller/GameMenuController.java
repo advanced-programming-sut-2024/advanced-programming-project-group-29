@@ -61,8 +61,33 @@ public class GameMenuController {
             return initiateDeck(applicationController.getCurrentUser());
         } else if(inputCommand.matches(GameMenuRegex.SEARCH_FOR_RANDOM_OPPONENT.getRegex())){
             return searchForRandomOpponent(applicationController.getSender(), applicationController.getCurrentUser());
+        } else if(inputCommand.matches(GameMenuRegex.DECK_CHOSEN.getRegex())){
+            return addUserToWaitQueue(applicationController.getCurrentUser());
         }
         return null;
+    }
+
+    private static Result addUserToWaitQueue(User user) {
+        if (user.getNumberOfSoldiersInDeck() < 22) {
+            //TODO : uncomment following line
+            //return new Result(false, "You should have at least 22 soldiers in your deck.");
+        }
+        user.setWaitForGame(true);
+        if(user.getOpponent().getWaitForGame()){
+            startOnlineGame(user, user.getOpponent());
+        }
+        return new Result(true);
+    }
+
+    private static void startOnlineGame(User user1, User user2) {
+        user1.createHand();
+        user2.createHand();
+        user1.setInProcess(false);
+        user2.setInProcess(false);
+        System.out.println("user1: " + user1.getUsername() + " " + user1.getHand().size());
+        System.out.println("user2: " + user2.getUsername() + " " + user2.getHand().size());
+        user1.getSender().sendCommandWithOutResponse("start in game menu");
+        user2.getSender().sendCommandWithOutResponse("start in game menu");
     }
 
     private static Result searchForRandomOpponent(Sender sender, User user) {

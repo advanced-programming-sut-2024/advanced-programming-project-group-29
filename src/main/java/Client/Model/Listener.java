@@ -48,6 +48,7 @@ public class Listener extends Thread {
                     waitForAnswer = false;
                     InGameMenu inGameMenu = Client.getInGameMenu();
                     ChooseGameModelMenu chooseGameModelMenu = ApplicationRunningTimeData.getChooseGameModelMenu();
+                    GameMenu gameMenu = ApplicationRunningTimeData.getGameMenu();
                     if ((matcher = InGameMenuOutputCommand.ADD_CARD_TO_HAND.getMatcher(input)).matches())
                         inGameMenu.addCardToHand((Cardin) deSerialize(matcher.group("cardinSerial")), Integer.parseInt(matcher.group("playerIndex")));
                     else if ((matcher = InGameMenuOutputCommand.DESTROY_SOLDIER.getMatcher(input)).matches())
@@ -107,6 +108,23 @@ public class Listener extends Thread {
                         inGameMenu.refresh();
                     } else if((matcher = InGameMenuOutputCommand.MOVE_OPPONENT_HAND_TO_MY_ROW.getMatcher(input)).matches()){
                         inGameMenu.moveSoldierFromOpponentHandToPlayerRow(matcher);
+                    } else if((matcher = GameMenuRegex.START_IN_GAME_MENU.getMatcher(input)).matches()){
+                        Platform.runLater(() -> {
+                            try {
+                                gameMenu.startNewInGameMenu();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        });
+                    } else if((matcher = InGameMenuOutputCommand.PASS_TURN_FOR_OPPONENT.getMatcher(input)).matches()){
+                        Matcher finalMatcher = matcher;
+                        Platform.runLater(() -> {
+                            try {
+                                inGameMenu.passTurn(finalMatcher.group("winner"));
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        });
                     }
 
                 } catch (Exception e) {

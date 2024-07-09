@@ -1,6 +1,7 @@
 package Client.Model;
 
 import Client.View.ChooseGameModelMenu;
+import Client.View.GameMenu;
 import Client.View.PopUp;
 import javafx.application.Platform;
 import javafx.scene.layout.Pane;
@@ -12,6 +13,7 @@ public class ApplicationRunningTimeData {
     private static Pane pane;
     private static String loggedInUserUsername;
     private static ChooseGameModelMenu chooseGameModelMenu;
+    private static GameMenu gameMenu;
 
 
     public static void createPopUp(int model, String textPopUp, String UsernameOfApplicant){
@@ -57,5 +59,13 @@ public class ApplicationRunningTimeData {
 
     public static void setPane(Pane newPane) {
         pane = newPane;
+    }
+
+    public static GameMenu getGameMenu() {
+        return gameMenu;
+    }
+
+    public static void setGameMenu(GameMenu gameMenu) {
+        ApplicationRunningTimeData.gameMenu = gameMenu;
     }
 }

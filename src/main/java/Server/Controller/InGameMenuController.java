@@ -70,11 +70,12 @@ public class InGameMenuController extends Thread {
 
     private static Result passTurn(ApplicationController applicationController) {
         User user = applicationController.getCurrentUser();
+        Result result = user.getCurrentGameBoard().passTurn();
         if(user.getCurrentGameBoard().isGameOnline())
-            user.getOpponent().getSender().sendCommand("pass turn");
+            user.getOpponent().getSender().sendCommand("pass turn " + (result.isSuccessful() ? "" : result.getMessage().get(1)));
         else
             applicationController.setCurrentUser(user.getOpponent());
-        return user.getCurrentGameBoard().passTurn();
+        return result;
     }
 
     private static void commanderPowerPlay(User user) {
@@ -145,15 +146,11 @@ public class InGameMenuController extends Thread {
         }
     }
 
-    public static void startGame(User user){
+    public static void startGame(User user){ // it is only for offline games
         User opponent = user.getOpponent();
         user.createHand();
         user.setInProcess(false);
-        if(user.getCurrentGameBoard().isGameOnline())
-            opponent.getSender().sendCommandWithOutResponse("refresh");
-        else
-            opponent.createHand();
-
+        opponent.createHand();
     }
 
     public static boolean getOneCardFromDiscardPile(Sender sender, User user){

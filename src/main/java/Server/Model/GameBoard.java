@@ -262,9 +262,9 @@ public class GameBoard {
             }
             executeActionForTransformers();
             if (playersScore[0] == playersScore[1])
-                return new Result(false, "It's a draw!");
+                return new Result(false, "It's a draw!", "draw");
             String winner = playersScore[0] > playersScore[1] ? players[0].getUsername() : players[1].getUsername();
-            return new Result(false, winner + " won the round!");
+            return new Result(false, winner + " won the round!", winner);
         }
         if (!isThereAnythingPlayed) {
             notPlayingTurns++;
