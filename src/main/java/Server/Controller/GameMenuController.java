@@ -79,10 +79,12 @@ public class GameMenuController {
 
     public static void acceptPlay(User currentUser, Matcher matcher) {
         User user = User.getUserByUsername(matcher.group("username"));
+        currentUser.setInProcess(true);
+        user.setInProcess(true);
         GameBoard gameBoard = new GameBoard(currentUser, user, true);
         currentUser.setCurrentGameBoard(gameBoard);
         user.setCurrentGameBoard(gameBoard);
-        user.getSender().sendCommand("start new game");
+        user.getSender().sendCommandWithOutResponse("start new game");
     }
 
     private static ArrayList<String> initiateDeck(User currentUser) {
@@ -342,6 +344,8 @@ public class GameMenuController {
 
     public static void startNewRandomGame(User user1, User user2) {
         GameBoard gameBoard = new GameBoard(user1, user2, true);
+        user1.setInProcess(true);
+        user2.setInProcess(true);
         user1.setCurrentGameBoard(gameBoard);
         user2.setCurrentGameBoard(gameBoard);
         try {
