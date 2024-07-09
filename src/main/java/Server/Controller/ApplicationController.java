@@ -45,6 +45,7 @@ public class ApplicationController extends Thread {
         QueueChecker queueChecker = new QueueChecker();
         queueChecker.start();
         ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(THREAD_COUNT);
+        Server.Controller.LoginMenuController.processRequest(null, LoginMenuRegex.LOAD_USER.getRegex());
         try {
             ServerSocket server = new ServerSocket(PORT);
             Socket socket;
@@ -83,7 +84,6 @@ public class ApplicationController extends Thread {
     @Override
     public void run() {
         try{
-            Server.Controller.LoginMenuController.processRequest(this, LoginMenuRegex.LOAD_USER.getRegex());
             currentMenu = Menu.LOGIN_MENU;
             DataInputStream dataInputStream = new DataInputStream(listenerSocket.getInputStream());
             DataOutputStream dataOutputStream = new DataOutputStream(listenerSocket.getOutputStream());
@@ -93,7 +93,7 @@ public class ApplicationController extends Thread {
                     Integer.parseInt(inputCommand.substring(ipEndIndex + 1)));
             dataOutputStream.writeUTF("null");
             while(true) {
-                System.out.println("waiting for a new commadn");
+                System.out.println("waiting for a new command");
                 inputCommand = dataInputStream.readUTF();
                 if(currentUser != null){
                     int endOfToken = inputCommand.indexOf(":");
