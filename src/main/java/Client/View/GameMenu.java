@@ -93,6 +93,9 @@ public class GameMenu extends Application {
     @FXML
     public void initialize() {
         this.isOnline = Client.isIsReadyForOnline();
+        if (isOnline){
+            changeTurn.setText("Start Game");
+        }
         image3.setOnKeyPressed(event -> {
             switch (event.getCode()) {
                 case RIGHT:
@@ -275,17 +278,24 @@ public class GameMenu extends Application {
 
     public void changeTurn(MouseEvent mouseEvent) throws Exception {
         Result result = (Result) client.sendCommand(GameMenuRegex.CHANGE_TURN.getRegex());
-        if (!isChangeTurn) {
-            if (result.isSuccessful()) {
-                changeTurn.setText("Start Game");
-                isChangeTurn = true;
-                createCards();
-                moveFromPreviousDeck();
-            }
-        } else {
-            if (result.isSuccessful()) {
+        if (isOnline){
+            if (result.isSuccessful()){
                 InGameMenu inGameMenu = new InGameMenu();
                 inGameMenu.start(ApplicationRunningTimeData.getStage());
+            }
+        } else {
+            if (!isChangeTurn) {
+                if (result.isSuccessful()) {
+                    changeTurn.setText("Start Game");
+                    isChangeTurn = true;
+                    createCards();
+                    moveFromPreviousDeck();
+                }
+            } else {
+                if (result.isSuccessful()) {
+                    InGameMenu inGameMenu = new InGameMenu();
+                    inGameMenu.start(ApplicationRunningTimeData.getStage());
+                }
             }
         }
     }

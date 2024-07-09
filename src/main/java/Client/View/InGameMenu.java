@@ -612,31 +612,70 @@ public class InGameMenu extends Application {
         destroySoldier(row, cardNumber, playerIndex);
     }
 
+    public void placeSpecialForOpponent(int rowNumber, int cardNumber) {
+        Platform.runLater(() -> {
+            CardView c = hand[1].get(cardNumber);
+            hand[1].remove(cardNumber);
+            c.setInHand(false);
+            horn[1][convertRowNumber(rowNumber)] = c;
+            (new FlipCardAnimation(c, X_POSITION_SPELL, (convertRowNumber(rowNumber) == 0 ? Y_POSITION_ROW_21 : (convertRowNumber(rowNumber) == 1 ? Y_POSITION_ROW_22 : Y_POSITION_ROW_23)), true, true, true)).play();
+        });
+    }
+
     public void placeSpecialForOpponent(Matcher matcher) {
         int rowNumber = Integer.parseInt(matcher.group("rowNumber"));
         int cardNumber = Integer.parseInt(matcher.group("cardNumber"));
-        // TODO: implement this, opponent played an special card
-        refresh();
+        placeSpecialForOpponent(rowNumber, cardNumber);
+    }
+
+    public void placeWeatherForOpponent(int cardNumber) {
+        Platform.runLater(() -> {
+            CardView c = hand[1].get(cardNumber);
+            hand[1].remove(cardNumber);
+            c.setInHand(false);
+            weather.add(c);
+            refreshWeather();
+            (new FlipCardAnimation(c, (weather.size() == 1 ? (X_POSITION_WEATHER_LEFT + X_POSITION_WEATHER_RIGHT - CARD_WIDTH) / 2 : (weather.get(weather.size() - 2)).getLayoutX() + SPACING + CARD_WIDTH), Y_POSITION_WEATHER, true, true, true)).play();
+        });
     }
 
     public void placeWeatherForOpponent(Matcher matcher) {
         int cardNumber = Integer.parseInt(matcher.group("cardNumber"));
-        // TODO: implement this, opponent played a weather card
-        refresh();
+        placeWeatherForOpponent(cardNumber);
+    }
+
+    public void placeSoldierForOpponent(int rowNumber, int cardNumber) {
+        Platform.runLater(() -> {
+            CardView c = hand[1].get(cardNumber);
+            hand[1].remove(cardNumber);
+            c.setInHand(false);
+            row[1][convertRowNumber(rowNumber)].add(c);
+            int j = convertRowNumber(rowNumber);
+            double Y = (j == 0 ? Y_POSITION_ROW_21 : (j == 1 ? Y_POSITION_ROW_22 : Y_POSITION_ROW_23));
+            (new FlipCardAnimation(c, (row[1][convertRowNumber(rowNumber)].size() == 1 ? (X_POSITION_ROW_LEFT + X_POSITION_ROW_RIGHT - CARD_WIDTH) / 2 : (row[1][convertRowNumber(rowNumber)].get(row[1][convertRowNumber(rowNumber)].size() - 2)).getLayoutX() + SPACING + CARD_WIDTH), Y, true, true, true)).play();
+        });
     }
 
     public void placeSoldierForOpponent(Matcher matcher) {
         int rowNumber = Integer.parseInt(matcher.group("rowNumber"));
         int cardNumber = Integer.parseInt(matcher.group("cardNumber"));
-        // TODO: implement this, opponent played a soldier
-        refresh();
+        placeSoldierForOpponent(rowNumber, cardNumber);
+    }
+
+    public void moveWeatherFromDeckAndPlay(int cardNumber, int indexPlayer) {
+        Platform.runLater(() -> {
+            CardView c = deck[indexPlayer].get(cardNumber);
+            deck[indexPlayer].remove(cardNumber);
+            weather.add(c);
+            refreshWeather();
+            (new FlipCardAnimation(c, (weather.size() == 1 ? (X_POSITION_WEATHER_LEFT + X_POSITION_WEATHER_RIGHT - CARD_WIDTH) / 2 : (weather.get(weather.size() - 2)).getLayoutX() + SPACING + CARD_WIDTH), Y_POSITION_WEATHER, true, true, true)).play();
+        });
     }
 
     public void moveWeatherFromDeckAndPlay(Matcher matcher) {
         int cardNumber = Integer.parseInt(matcher.group("cardNumber"));
         int playerIndex = Integer.parseInt(matcher.group("playerIndex"));
-        // TODO: implement this, move weather from deck to it's place and play it
-        refresh();
+        moveWeatherFromDeckAndPlay(cardNumber, playerIndex);
     }
 
     private int convertRowNumber(int fatemeRowNumber) {
@@ -650,6 +689,16 @@ public class InGameMenu extends Application {
             weather.forEach(c -> pain.getChildren().remove(c));
             weather.clear();
         });
+    }
+
+    ///////////////////////// isPlayerTurn
+
+    private void isPlayerTurn(boolean isPlayerTurn){
+        if (isPlayerTurn){
+            for (CardView c : hand[0]) c.setInHand(true);
+        } else {
+            for (CardView c : hand[0]) c.setInHand(false);
+        }
     }
 
     //////////////////////// refresh
@@ -727,6 +776,7 @@ public class InGameMenu extends Application {
         remainsDeck2.setText(gameBoardin.getPlayer2Deck().size() + "");
         remainsHand1.setText(gameBoardin.getPlayer1Hand().size() + "");
         remainsHand2.setText(gameBoardin.getPlayer2Hand().size() + "");
+        isPlayerTurn(gameBoardin.getCurrentPlayerIndex().equals(gameBoardin.getPlayer1Username()));
     }
 
     private double getXPosition(int i, int n, boolean row, boolean weather) {
@@ -794,7 +844,8 @@ public class InGameMenu extends Application {
             remainsDeck2.setText(gameBoardin.getPlayer2Deck().size() + "");
             remainsHand1.setText(gameBoardin.getPlayer1Hand().size() + "");
             remainsHand2.setText(gameBoardin.getPlayer2Hand().size() + "");
-            if (gameBoardin.getPlayer1XP() == gameBoardin.getPlayer2XP()){
+            isPlayerTurn(gameBoardin.getCurrentPlayerIndex().equals(gameBoardin.getPlayer1Username()));
+            if (gameBoardin.getPlayer1XP() == gameBoardin.getPlayer2XP()) {
                 winner2.setVisible(false);
                 winner1.setVisible(false);
             } else if (gameBoardin.getPlayer1XP() < gameBoardin.getPlayer2XP()) {
@@ -1180,6 +1231,10 @@ public class InGameMenu extends Application {
             swapAllThings();
             refresh();
         }
+    }
+
+    public void passTurn(){  //TODO
+        passTurn(null);
     }
 
     private void swapAllThings() {
