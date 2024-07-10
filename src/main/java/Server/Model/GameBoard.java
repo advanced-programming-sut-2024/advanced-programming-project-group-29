@@ -33,7 +33,9 @@ public class GameBoard {
         playersCrystals[1] = 2;
         players[0] = player1;
         players[1] = player2;
-        gameHistory = new GameHistory(player1, player2, new Date());
+        gameLog[0] = new GameLog(player1.getUsername(), player2.getUsername());
+        gameLog[1] = new GameLog(player2.getUsername(), player1.getUsername());
+        gameHistory = new GameHistory(player1, player2, new Date(), gameLog[0], gameLog[1]);
         currentPlayer = 0;
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 3; j++) {
@@ -53,8 +55,6 @@ public class GameBoard {
             for (Card card : players[i].getDeck())
                 card.setGameBoard(this);
         }
-        gameLog[0] = new GameLog(player1.getUsername(), player2.getUsername());
-        gameLog[1] = new GameLog(player2.getUsername(), player1.getUsername());
     }
 
     public User getPlayer(int playerNumber) {
