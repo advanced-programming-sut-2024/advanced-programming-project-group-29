@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import Server.Enum.Faction;
 
 public class DatabaseManager {
-    private static final String URL = "jdbc:sqlite:/home/radal/IdeaProjects/advanced-programming-project-group-29/src/main/resources/sqlite/Users.db";
+    private static final String URL = "jdbc:sqlite:" + "src/main/resources/sqlite/Users.db";
 
     public static void connect() {
         Connection conn = null;
@@ -38,7 +38,7 @@ public class DatabaseManager {
         if (userExists(user.getUsername()))
             return;
 
-        String sql = "INSERT INTO User(username, password, nickname, email, questionNumber, answer, faction, commander, deck) VALUES(?,?,?,?,?,?,?,?,?)";
+        String sql = "INSERT INTO User(username, password, nickname, email, questionNumber, answer, faction, commander, deck, gameHistory) VALUES(?,?,?,?,?,?,?,?,?,?)";
 
         try (Connection conn = DriverManager.getConnection(URL);
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -53,6 +53,9 @@ public class DatabaseManager {
             ArrayList<String> deckNames = user.getDeckNames();
             String jsonDeck = new Gson().toJson(deckNames);
             pstmt.setString(9, jsonDeck);
+            ArrayList<GameHistory> gameHistories = user.getGameHistory();
+            String jsonGameHistory = new Gson().toJson(gameHistories);
+            pstmt.setString(10, jsonGameHistory);
             pstmt.executeUpdate();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -76,7 +79,7 @@ public class DatabaseManager {
     }
 
     public static void updateUser(User user, String oldUsername) {
-        String sql = "UPDATE User SET username = ?, password = ?, nickname = ?, email = ?, questionNumber = ?, answer = ?, faction = ?, commander = ?, deck = ? WHERE username = ?";
+        String sql = "UPDATE User SET username = ?, password = ?, nickname = ?, email = ?, questionNumber = ?, answer = ?, faction = ?, commander = ?, deck = ? gameHistory = ? WHERE username = ?";
 
         try (Connection conn = DriverManager.getConnection(URL);
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -91,7 +94,10 @@ public class DatabaseManager {
             ArrayList<String> deckNames = user.getDeckNames();
             String jsonDeck = new Gson().toJson(deckNames);
             pstmt.setString(9, jsonDeck);
-            pstmt.setString(10, oldUsername);
+            ArrayList<GameHistory> gameHistories = user.getGameHistory();
+            String jsonGameHistory = new Gson().toJson(gameHistories);
+            pstmt.setString(10, jsonGameHistory);
+            pstmt.setString(11, oldUsername);
             pstmt.executeUpdate();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -107,6 +113,8 @@ public class DatabaseManager {
 
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
+                System.err.println(rs.getString("username"));
+                System.err.println(URL);
                 String username = rs.getString("username");
                 String password = rs.getString("password");
                 String nickname = rs.getString("nickname");
@@ -117,12 +125,15 @@ public class DatabaseManager {
                 String commander = rs.getString("commander");
                 String jsonDeck = rs.getString("deck");
                 ArrayList<String> deckNames = new Gson().fromJson(jsonDeck, ArrayList.class);
+                String jsonGameHistory = rs.getString("gameHistory");
+                ArrayList<GameHistory> gameHistories = new Gson().fromJson(jsonGameHistory, ArrayList.class);
 
                 User user = new User(username, password, nickname, email);
                 user.setQuestion(questionNumber, answer);
                 user.setFaction(Faction.getFactionFromString(faction));
                 user.setCommander(new Commander(commander, user));
                 user.extractDeckFromDeckNames(deckNames);
+                user.setGameHistory(gameHistories);
                 users.add(user);
             }
         } catch (SQLException e) {

@@ -39,7 +39,7 @@ public class User {
     private Commander commander;
     private transient Sender sender;
     private transient GameBoard currentGameBoard;
-    private final ArrayList<GameHistory> gameHistory = new ArrayList<>();
+    private ArrayList<GameHistory> gameHistory = new ArrayList<>();
     private final ArrayList<String> friends = new ArrayList<>();
     private final ArrayList<String> friendRequests = new ArrayList<>();
     private final HashMap<String, SavedDeck> savedDecks = new HashMap<>();
@@ -223,6 +223,11 @@ public class User {
 
     public void addGameHistory(GameHistory gameHistory) {
         this.gameHistory.add(gameHistory);
+    }
+
+    public void setGameHistory(ArrayList<GameHistory> gameHistories) {
+        this.gameHistory.clear();
+        this.gameHistory.addAll(gameHistories);
     }
 
     public ArrayList<GameHistory> getGameHistory() {
