@@ -398,6 +398,27 @@ public class InGameMenu extends Application {
         });
     }
 
+    private void placeDecoy(int cardNumber,int rowNumber,int targetNumber,int playerIndex){
+        CardView decoy = hand[playerIndex].get(cardNumber);
+        CardView soldier = row[playerIndex][convertRowNumber(rowNumber)].get(targetNumber);
+        double x = decoy.getLayoutX();
+        double y = decoy.getLayoutY();
+        discard[playerIndex].add(decoy);
+        row[playerIndex][convertRowNumber(rowNumber)].remove(soldier);
+        hand[playerIndex].set(cardNumber, soldier);
+        soldier.setInHand(true);
+        (new FlipCardAnimation(decoy, X_POSITION_DISCARD, (playerIndex == 0 ? Y_POSITION_DISCARD_1 : Y_POSITION_DISCARD_2), true, true, false)).play();
+        (new FlipCardAnimation(soldier, x, y, true, true, true)).play();
+    }
+
+    public void placeDecoy(Matcher matcher){
+        int cardNumber = Integer.parseInt(matcher.group("cardNumber")); // decoy index in hand
+        int rowNumber = Integer.parseInt(matcher.group("rowNumber"));
+        int targetNumber = Integer.parseInt(matcher.group("targetNumber")); // index of card to be replaced with decoy
+        int playerIndex = Integer.parseInt(matcher.group("playerIndex"));
+        placeDecoy(cardNumber,rowNumber,targetNumber,playerIndex);
+    }
+
     public void removeCardFromHandAndKillIt(int cardNumber, int playerIndex) {
         Platform.runLater(() -> {
             CardView card = hand[playerIndex].get(cardNumber);
@@ -731,13 +752,6 @@ public class InGameMenu extends Application {
             weather.forEach(c -> pain.getChildren().remove(c));
             weather.clear();
         });
-    }
-
-    public void placeDecoy(Matcher matcher){ // TODO: implement this function
-        int cardNumber = Integer.parseInt(matcher.group("cardNumber")); // decoy index in hand
-        int rowNumber = Integer.parseInt(matcher.group("rowNumber"));
-        int targetNumber = Integer.parseInt(matcher.group("targetNumber")); // index of card to be replaced with decoy
-        int playerIndex = Integer.parseInt(matcher.group("playerIndex"));
     }
 
     ///////////////////////// isPlayerTurn

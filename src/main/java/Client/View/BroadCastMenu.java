@@ -333,18 +333,18 @@ public class BroadCastMenu extends Application {
     }
 
     /////////////////////////////////////////////////////////////
-    public void changeDecoy(int rowNumber, int cardNumber, int cardNumberDecoy) { //TODO
-        Platform.runLater(() -> {
-            CardView decoy = hand[0].get(cardNumberDecoy);
-            CardView soldier = row[0][rowNumber].get(cardNumber);
-            double x = decoy.getLayoutX();
-            double y = decoy.getLayoutY();
-            discard[0].add(decoy);
-            row[0][rowNumber].remove(soldier);
-            hand[0].set(cardNumberDecoy, soldier);
-            (new FlipCardAnimation(decoy, X_POSITION_DISCARD, Y_POSITION_DISCARD_1, true, true, false)).play();
-            (new FlipCardAnimation(soldier, x, y, true, true, false)).play();
-        });
+
+    private void placeDecoy(int cardNumber,int rowNumber,int targetNumber,int playerIndex){
+        CardView decoy = hand[playerIndex].get(cardNumber);
+        CardView soldier = row[playerIndex][convertRowNumber(rowNumber)].get(targetNumber);
+        double x = decoy.getLayoutX();
+        double y = decoy.getLayoutY();
+        discard[playerIndex].add(decoy);
+        row[playerIndex][convertRowNumber(rowNumber)].remove(soldier);
+        hand[playerIndex].set(cardNumber, soldier);
+        soldier.setInHand(true);
+        (new FlipCardAnimation(decoy, X_POSITION_DISCARD, (playerIndex == 0 ? Y_POSITION_DISCARD_1 : Y_POSITION_DISCARD_2), true, true, false)).play();
+        (new FlipCardAnimation(soldier, x, y, true, true, true)).play();
     }
 
     public void removeCardFromHandAndKillIt(int cardNumber, int playerIndex) {

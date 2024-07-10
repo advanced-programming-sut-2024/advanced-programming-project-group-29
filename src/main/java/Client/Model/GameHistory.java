@@ -9,7 +9,7 @@ public class GameHistory {
     private Date gameDate;
     private int winner; // 0 for player1, 1 for player2 and -1 for draw
     private GameLog[] gameLog = new GameLog[2];
-    
+
     public String getPlayer(int playerNumber) {
         return players[playerNumber];
     }
