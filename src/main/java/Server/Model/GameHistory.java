@@ -8,11 +8,14 @@ public class GameHistory {
     private ArrayList<Integer>[] scorePerRound = new ArrayList[2];
     private Date gameDate;
     private int winner; // 0 for player1, 1 for player2 and -1 for draw
+    private GameLog[] gameLog = new GameLog[2];
 
-    public GameHistory(User player1, User player2, Date gameDate) {
+    public GameHistory(User player1, User player2, Date gameDate, GameLog player1GameLog, GameLog player2GameLog) {
         players[0] = player1;
         players[1] = player2;
         this.gameDate = gameDate;
+        gameLog[0] = player1GameLog;
+        gameLog[1] = player2GameLog;
     }
 
     public void setPlayer(int playerNumber, User player) {
@@ -78,7 +81,7 @@ public class GameHistory {
         User player1 = User.getUserByUsername(parts[0]);
         User player2 = User.getUserByUsername(parts[1]);
         Date gameDate = new Date(Long.parseLong(parts[2]));
-        GameHistory gameHistory = new GameHistory(player1, player2, gameDate);
+        GameHistory gameHistory = new GameHistory(player1, player2, gameDate, null, null); // TODO: add gameLog
         gameHistory.setWinner(Integer.parseInt(parts[3]));
         int numberOfRounds = (parts.length - 4) / 2;
         int pointer = 4;

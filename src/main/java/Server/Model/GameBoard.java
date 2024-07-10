@@ -22,7 +22,8 @@ public class GameBoard {
     private boolean isThereAnythingPlayed = false;
     private int notPlayingTurns = 0;
     private boolean isGameOnline = false;
-    ChatBox chatBox = new ChatBox();
+    private ChatBox chatBox = new ChatBox();
+    private GameLog[] gameLog = new GameLog[2];
 
     public GameBoard(User player1, User player2, boolean isGameOnline) {
         player1.setCurrentGameBoard(this);
@@ -32,7 +33,9 @@ public class GameBoard {
         playersCrystals[1] = 2;
         players[0] = player1;
         players[1] = player2;
-        gameHistory = new GameHistory(player1, player2, new Date());
+        gameLog[0] = new GameLog(player1.getUsername(), player2.getUsername());
+        gameLog[1] = new GameLog(player2.getUsername(), player1.getUsername());
+        gameHistory = new GameHistory(player1, player2, new Date(), gameLog[0], gameLog[1]);
         currentPlayer = 0;
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 3; j++) {
@@ -262,9 +265,9 @@ public class GameBoard {
             }
             executeActionForTransformers();
             if (playersScore[0] == playersScore[1])
-                return new Result(false, "It's a draw!");
+                return new Result(false, "It's a draw!", "draw");
             String winner = playersScore[0] > playersScore[1] ? players[0].getUsername() : players[1].getUsername();
-            return new Result(false, winner + " won the round!");
+            return new Result(false, winner + " won the round!", winner);
         }
         if (!isThereAnythingPlayed) {
             notPlayingTurns++;
@@ -302,5 +305,10 @@ public class GameBoard {
 
     public void setsAnyThingPlayed(boolean b) {
         isThereAnythingPlayed = b;
+    }
+
+    public void addLog(String command, int playerIndex) {
+        gameLog[playerIndex].addGameBoardin(new GameBoardin(players[playerIndex]));
+        gameLog[playerIndex].addCommand(command);
     }
 }

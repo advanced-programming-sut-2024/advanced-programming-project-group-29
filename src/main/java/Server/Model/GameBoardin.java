@@ -53,7 +53,7 @@ public class GameBoardin {
             int opponentIndex = 1 - playerIndex;
             User user1 = gameBoard.getPlayer(playerIndex);
             User user2 = gameBoard.getPlayer(opponentIndex);
-            inProcess = user1.getInProcess() && user2.getInProcess();
+            inProcess = user1.getInProcess() || user2.getInProcess();
             currentPlayerUsername = gameBoard.getPlayer(gameBoard.getCurrentPlayerIndex()).getUsername();
             player1Hand = new ArrayList<>();
             player2Hand = new ArrayList<>();
@@ -70,6 +70,7 @@ public class GameBoardin {
             row23 = new ArrayList<>();
             player1Crystal = gameBoard.getPlayerCrystals(playerIndex);
             player2Crystal = gameBoard.getPlayerCrystals(opponentIndex);
+            System.out.println("crating a new gameboardin " + user1.getHand().size() + " " + user2.getHand().size());
             for (Card card : user1.getHand())
                 player1Hand.add(new Cardin(card));
             for (Card card : user2.getHand())

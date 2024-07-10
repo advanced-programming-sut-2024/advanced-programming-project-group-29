@@ -48,6 +48,7 @@ public class User {
     private final HashMap<String, SavedDeck> savedDecks = new HashMap<>();
     private transient boolean inProcess = false;
     private transient int optionsType;
+    private transient boolean waitForGame = false;
 
     public User(String username, String password, String nickname, String email) {
         this.username = username;
@@ -617,5 +618,13 @@ public class User {
 
     public int getOptionsType() {
         return optionsType;
+    }
+
+    public void setWaitForGame(boolean waitForGame) {
+        this.waitForGame = waitForGame;
+    }
+
+    public boolean getWaitForGame() {
+        return waitForGame;
     }
 }

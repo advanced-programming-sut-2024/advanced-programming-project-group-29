@@ -28,7 +28,9 @@ public enum GameMenuRegex {
     REJECT_PLAY("reject play -u (?<username>.+)"),
     SEND_GAME_REQUEST("show pop-up for game request -p (?<username>.+)"),
     START_GAME("start new game"),
-    SEARCH_FOR_RANDOM_OPPONENT("find an opponent randomly")
+    SEARCH_FOR_RANDOM_OPPONENT("find an opponent randomly"),
+    DECK_CHOSEN("deck chosen"),
+    START_IN_GAME_MENU("start in game menu")
     ;
 
     private final String regex;

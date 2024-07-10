@@ -191,7 +191,8 @@ public class InGameMenu extends Application {
                 row[i][j] = new ArrayList<>();
             }
         }
-        Client.getClient().sendCommand("start game");
+        if(!isOnline)
+            Client.getClient().sendCommand("start game");
         mainPain.requestFocus();
         mainPain.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
@@ -618,7 +619,7 @@ public class InGameMenu extends Application {
         destroySoldier(row, cardNumber, playerIndex);
     }
 
-    public void placeSpecialForOpponent(int rowNumber, int cardNumber) {
+    public void placeSpecial(int rowNumber, int cardNumber, int playerIndex) {  // TODO: player index added, it used to be for opponent
         Platform.runLater(() -> {
             CardView c = hand[1].get(cardNumber);
             hand[1].remove(cardNumber);
@@ -628,13 +629,14 @@ public class InGameMenu extends Application {
         });
     }
 
-    public void placeSpecialForOpponent(Matcher matcher) {
+    public void placeSpecial(Matcher matcher) {
         int rowNumber = Integer.parseInt(matcher.group("rowNumber"));
         int cardNumber = Integer.parseInt(matcher.group("cardNumber"));
-        placeSpecialForOpponent(rowNumber, cardNumber);
+        int playerIndex = Integer.parseInt(matcher.group("playerIndex"));
+        placeSpecial(rowNumber, cardNumber, playerIndex);
     }
 
-    public void placeWeatherForOpponent(int cardNumber) {
+    public void placeWeather(int cardNumber, int playerIndex) {  // TODO: player index added, it used to be for opponent
         Platform.runLater(() -> {
             CardView c = hand[1].get(cardNumber);
             hand[1].remove(cardNumber);
@@ -645,12 +647,13 @@ public class InGameMenu extends Application {
         });
     }
 
-    public void placeWeatherForOpponent(Matcher matcher) {
+    public void placeWeather(Matcher matcher) {
         int cardNumber = Integer.parseInt(matcher.group("cardNumber"));
-        placeWeatherForOpponent(cardNumber);
+        int playerIndex = Integer.parseInt(matcher.group("playerIndex"));
+        placeWeather(cardNumber, playerIndex);
     }
 
-    public void placeSoldierForOpponent(int rowNumber, int cardNumber) {
+    public void placeSoldier(int rowNumber, int cardNumber, int playerIndex) {  // TODO: player index added, it used to be for opponent
         Platform.runLater(() -> {
             CardView c = hand[1].get(cardNumber);
             hand[1].remove(cardNumber);
@@ -662,10 +665,11 @@ public class InGameMenu extends Application {
         });
     }
 
-    public void placeSoldierForOpponent(Matcher matcher) {
+    public void placeSoldier(Matcher matcher) {
         int rowNumber = Integer.parseInt(matcher.group("rowNumber"));
         int cardNumber = Integer.parseInt(matcher.group("cardNumber"));
-        placeSoldierForOpponent(rowNumber, cardNumber);
+        int playerIndex = Integer.parseInt(matcher.group("playerIndex"));
+        placeSoldier(rowNumber, cardNumber, playerIndex);
     }
 
     public void moveWeatherFromDeckAndPlay(int cardNumber, int indexPlayer) {
@@ -684,7 +688,7 @@ public class InGameMenu extends Application {
         moveWeatherFromDeckAndPlay(cardNumber, playerIndex);
     }
 
-    public void moveSoldierFromOpponentHandToPlayerRow(int cardNumber, int rowNumber) {
+    public void moveSoldierFromOpponentHandToPlayerRow(int cardNumber, int rowNumber, int playerIndex) { // TODO: player index added
         Platform.runLater(() -> {
             CardView c = hand[1].get(cardNumber);
             hand[1].remove(cardNumber);
@@ -699,7 +703,8 @@ public class InGameMenu extends Application {
     public void moveSoldierFromOpponentHandToPlayerRow(Matcher matcher) {
         int rowNumber = Integer.parseInt(matcher.group("rowNumber"));
         int cardNumber = Integer.parseInt(matcher.group("cardNumber"));
-        moveSoldierFromOpponentHandToPlayerRow(cardNumber, rowNumber);
+        int playerIndex = Integer.parseInt(matcher.group("playerIndex"));
+        moveSoldierFromOpponentHandToPlayerRow(cardNumber, rowNumber, playerIndex);
     }
 
     private int convertRowNumber(int fatemeRowNumber) {
@@ -769,6 +774,7 @@ public class InGameMenu extends Application {
 
     private void firstRefresh() {
         GameBoardin gameBoardin = getGameBoardin();
+        System.out.println("in our gameboardin: " + gameBoardin.getPlayer1Hand().size());
         for (int k = 0; k < 2; k++) {
             ArrayList<Cardin> playerHand = (k == 0 ? gameBoardin.getPlayer1Hand() : gameBoardin.getPlayer2Hand());
             for (int i = 0; i < playerHand.size(); i++) {
