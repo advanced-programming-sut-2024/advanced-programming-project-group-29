@@ -18,19 +18,20 @@ public class Sender {
     }
 
     public boolean establishConnection(String address, int port) {
-        try {
-            socket = new Socket(address, port);
-            sendBuffer = new DataOutputStream(
-                    socket.getOutputStream()
-            );
-            receiveBuffer = new DataInputStream(
-                    socket.getInputStream()
-            );
-            return true;
-        } catch (Exception e) {
-            System.err.println("Unable to initialize socket!");
-            e.printStackTrace();
-            return false;
+        while(true) {
+            try {
+                socket = new Socket(address, port);
+                sendBuffer = new DataOutputStream(
+                        socket.getOutputStream()
+                );
+                receiveBuffer = new DataInputStream(
+                        socket.getInputStream()
+                );
+                return true;
+            } catch (Exception e) {
+                System.err.println("Unable to initialize socket!");
+                e.printStackTrace();
+            }
         }
     }
 
