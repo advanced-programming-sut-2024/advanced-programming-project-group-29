@@ -466,10 +466,11 @@ public class InGameMenu extends Application {
 
     public void addCardToHand(Cardin cardin, int playerIndex) {
         Platform.runLater(() -> {
-            CardView c = new CardView(cardin, 0, 0, this, false);
+            CardView c = new CardView(cardin, -200, -200, this, false);
             c.setInHand(true);
             hand[playerIndex].add(c);
-            refresh();
+            pain.getChildren().add();
+            (new FlipCardAnimation()).play();
         });
     }
 
