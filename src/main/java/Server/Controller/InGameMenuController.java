@@ -95,7 +95,7 @@ public class InGameMenuController extends Thread {
         user.getHand().remove(cardNumber);
         gameBoard.addSpecialCard(playerIndex, rowNumber, spell);
         if(user.getCurrentGameBoard().isGameOnline())
-            user.getOpponent().getSender().sendCommandWithOutResponse("place special for opponent " + cardNumber + " in row " + rowNumber);
+            user.getOpponent().getSender().sendCommandWithOutResponse("place special " + cardNumber + " in row " + rowNumber + " 1");
         spell.executeAction();
     }
 
@@ -111,7 +111,7 @@ public class InGameMenuController extends Thread {
                 // TODO: if you want you can call a function to add this spell from opponent's hand to discard
             }
             else if(user.getCurrentGameBoard().isGameOnline())
-                user.getOpponent().getSender().sendCommandWithOutResponse("place weather for opponent " + cardNumber);
+                user.getOpponent().getSender().sendCommandWithOutResponse("place weather " + cardNumber + " 1");
             spell.executeAction();
         } catch (Exception e) {
             e.printStackTrace();
@@ -138,7 +138,7 @@ public class InGameMenuController extends Thread {
                 if(soldier.hasAttribute(Attribute.SPY))
                     user.getOpponent().getSender().sendCommandWithOutResponse("move soldier " + cardNumber + " from opponent's hand to my row " + rowNumber);
                 else
-                    user.getOpponent().getSender().sendCommandWithOutResponse("place soldier for opponent " + cardNumber + " in row " + rowNumber);
+                    user.getOpponent().getSender().sendCommandWithOutResponse("place soldier " + cardNumber + " in row " + rowNumber + " 1");
             }
             soldier.executeAction();
         } catch (Exception e) {

@@ -22,7 +22,8 @@ public class GameBoard {
     private boolean isThereAnythingPlayed = false;
     private int notPlayingTurns = 0;
     private boolean isGameOnline = false;
-    ChatBox chatBox = new ChatBox();
+    private ChatBox chatBox = new ChatBox();
+    private GameLog[] gameLog = new GameLog[2];
 
     public GameBoard(User player1, User player2, boolean isGameOnline) {
         player1.setCurrentGameBoard(this);
@@ -302,5 +303,10 @@ public class GameBoard {
 
     public void setsAnyThingPlayed(boolean b) {
         isThereAnythingPlayed = b;
+    }
+
+    public void addLog(String command, int playerIndex) {
+        gameLog[playerIndex].addGameBoardin(new GameBoardin(players[playerIndex]));
+        gameLog[playerIndex].addCommand(command);
     }
 }

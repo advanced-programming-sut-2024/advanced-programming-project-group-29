@@ -618,7 +618,7 @@ public class InGameMenu extends Application {
         destroySoldier(row, cardNumber, playerIndex);
     }
 
-    public void placeSpecialForOpponent(int rowNumber, int cardNumber) {
+    public void placeSpecial(int rowNumber, int cardNumber, int playerIndex) {  // TODO: player index added, it used to be for opponent
         Platform.runLater(() -> {
             CardView c = hand[1].get(cardNumber);
             hand[1].remove(cardNumber);
@@ -628,13 +628,14 @@ public class InGameMenu extends Application {
         });
     }
 
-    public void placeSpecialForOpponent(Matcher matcher) {
+    public void placeSpecial(Matcher matcher) {
         int rowNumber = Integer.parseInt(matcher.group("rowNumber"));
         int cardNumber = Integer.parseInt(matcher.group("cardNumber"));
-        placeSpecialForOpponent(rowNumber, cardNumber);
+        int playerIndex = Integer.parseInt(matcher.group("playerIndex"));
+        placeSpecial(rowNumber, cardNumber, playerIndex);
     }
 
-    public void placeWeatherForOpponent(int cardNumber) {
+    public void placeWeather(int cardNumber, int playerIndex) {  // TODO: player index added, it used to be for opponent
         Platform.runLater(() -> {
             CardView c = hand[1].get(cardNumber);
             hand[1].remove(cardNumber);
@@ -645,12 +646,13 @@ public class InGameMenu extends Application {
         });
     }
 
-    public void placeWeatherForOpponent(Matcher matcher) {
+    public void placeWeather(Matcher matcher) {
         int cardNumber = Integer.parseInt(matcher.group("cardNumber"));
-        placeWeatherForOpponent(cardNumber);
+        int playerIndex = Integer.parseInt(matcher.group("playerIndex"));
+        placeWeather(cardNumber, playerIndex);
     }
 
-    public void placeSoldierForOpponent(int rowNumber, int cardNumber) {
+    public void placeSoldier(int rowNumber, int cardNumber, int playerIndex) {  // TODO: player index added, it used to be for opponent
         Platform.runLater(() -> {
             CardView c = hand[1].get(cardNumber);
             hand[1].remove(cardNumber);
@@ -662,10 +664,11 @@ public class InGameMenu extends Application {
         });
     }
 
-    public void placeSoldierForOpponent(Matcher matcher) {
+    public void placeSoldier(Matcher matcher) {
         int rowNumber = Integer.parseInt(matcher.group("rowNumber"));
         int cardNumber = Integer.parseInt(matcher.group("cardNumber"));
-        placeSoldierForOpponent(rowNumber, cardNumber);
+        int playerIndex = Integer.parseInt(matcher.group("playerIndex"));
+        placeSoldier(rowNumber, cardNumber, playerIndex);
     }
 
     public void moveWeatherFromDeckAndPlay(int cardNumber, int indexPlayer) {
