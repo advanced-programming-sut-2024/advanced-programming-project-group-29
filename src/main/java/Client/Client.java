@@ -1,14 +1,15 @@
 package Client;
 
+import Client.Model.Listener;
+import Client.Model.Sender;
 import Client.Regex.LoginMenuRegex;
-
-import Client.Model.*;
-import Client.View.*;
+import Client.View.InGameMenu;
+import Client.View.Main;
 
 public class Client {
 
     private static String SERVER_IP = "127.0.0.1";
-    private static int SERVER_PORT = 4000;
+    private static int SERVER_PORT = 8080;
     private static Client client;
     private Listener listener;
     private static Sender sender;
@@ -55,7 +56,7 @@ public class Client {
         sender = new Sender(SERVER_IP, SERVER_PORT);
         listener = new Listener();
         listener.start();
-        while(listener.getPort() == 0) {
+        while (listener.getPort() == 0) {
             continue;
         }
         System.out.println(listener.getPort());

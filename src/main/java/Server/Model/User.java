@@ -46,6 +46,7 @@ public class User {
     private transient boolean inProcess = false;
     private transient int optionsType;
     private transient boolean waitForGame = false;
+    private Tournament tournament;
 
     public User(String username, String password, String nickname, String email) {
         this.username = username;
@@ -81,15 +82,15 @@ public class User {
     }
 
     public static void addUserToQueueForRandomPlay(User user) {
-        if(pendingUserForRandomPlay[0] == user || pendingUserForRandomPlay[1] == user)
+        if (pendingUserForRandomPlay[0] == user || pendingUserForRandomPlay[1] == user)
             return;
-        if(pendingUserForRandomPlay[0] == null)
+        if (pendingUserForRandomPlay[0] == null)
             pendingUserForRandomPlay[0] = user;
         else pendingUserForRandomPlay[1] = user;
     }
 
     public static void checkForPendingOpponentsFound() {
-        if(pendingUserForRandomPlay[0] != null && pendingUserForRandomPlay[1] != null) {
+        if (pendingUserForRandomPlay[0] != null && pendingUserForRandomPlay[1] != null) {
             GameMenuController.startNewRandomGame(pendingUserForRandomPlay[0], pendingUserForRandomPlay[1]);
             pendingUserForRandomPlay[0] = null;
             pendingUserForRandomPlay[1] = null;
@@ -347,7 +348,7 @@ public class User {
     }
 
 
-    public static void loadUser(){
+    public static void loadUser() {
         DatabaseManager.loadUsers();
     }
 
@@ -615,7 +616,7 @@ public class User {
 
      */
 
-    private static String[] splitStringWithEmptyStrings (String string, char c) {
+    private static String[] splitStringWithEmptyStrings(String string, char c) {
         ArrayList<String> strings = new ArrayList<>();
         StringBuilder stringBuilder = new StringBuilder();
         for (int i = 0; i < string.length(); i++) {
@@ -644,5 +645,13 @@ public class User {
 
     public boolean getWaitForGame() {
         return waitForGame;
+    }
+
+    public Tournament getTournament() {
+        return tournament;
+    }
+
+    public void setTournament(Tournament tournament) {
+        this.tournament = tournament;
     }
 }

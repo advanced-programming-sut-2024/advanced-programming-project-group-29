@@ -1,7 +1,7 @@
 package Client.Model;
 
-import Client.Model.ApplicationRunningTimeData;
-import Client.View.Animations.FlipCardAnimation;
+import Client.Enum.Attribute;
+import Client.Enum.Type;
 import Client.View.InGameMenu;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -12,25 +12,17 @@ import javafx.event.EventHandler;
 import javafx.geometry.Point3D;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.control.Label;
-import javafx.scene.effect.Effect;
-import javafx.scene.effect.Glow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
-import Client.Enum.Type;
-import Client.Enum.Attribute;
 import javafx.scene.text.FontWeight;
 import javafx.util.Duration;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Objects;
-import java.util.Random;
 
 public class CardView extends Pane {
     private static final ArrayList<CardView> allCardViews = new ArrayList<>();
@@ -49,24 +41,24 @@ public class CardView extends Pane {
     private SimpleBooleanProperty isInChangeSituation = new SimpleBooleanProperty(false);
 
     private final EventHandler<MouseEvent> onMouseEnteredHandler = e -> {
-        if (isInHand && !isUp){
+        if (isInHand && !isUp) {
             goUp();
             super.setStyle("-fx-effect: dropshadow(gaussian, rgb(222, 165, 107, 1), 15, 0.7, 0, 0);");
         }
     };
     private final EventHandler<MouseEvent> onMouseExitedHandler = e -> {
-        if (isInHand && isUp){
+        if (isInHand && isUp) {
             goDown();
             super.setStyle(null);
         }
     };
 
 
-    public CardView(Cardin card, double x, double y,InGameMenu inGameMenu,boolean rotate) {
+    public CardView(Cardin card, double x, double y, InGameMenu inGameMenu, boolean rotate) {
         this.inGameMenu = inGameMenu;
         allCardViews.add(this);
         this.card = card;
-        this.path = "/Images/Raw/" +  card.faction.getName() + "/" + card.name + ".jpg";
+        this.path = "/Images/Raw/" + card.faction.getName() + "/" + card.name + ".jpg";
         this.face = new Image(path);
         this.back = new Image("/Images/icons/deck_back_" + card.faction.getName().toLowerCase() + ".png");
         this.background = new ImageView(path);
@@ -158,15 +150,15 @@ public class CardView extends Pane {
         super.setOnMouseExited(onMouseExitedHandler);
         super.setOnMouseClicked(e -> {
             if (isInHand) super.requestFocus();
-            if (!isInHand && isInChangeSituation.get()){
+            if (!isInHand && isInChangeSituation.get()) {
                 CardView decoy = null;
-                for (CardView c : allCardViews){
+                for (CardView c : allCardViews) {
                     if (c.isSelected) {
                         decoy = c;
                         break;
                     }
                 }
-                inGameMenu.changeDecoy(inGameMenu.getIndexOfRow(this),inGameMenu.getIndexInRow(this),inGameMenu.getIndexInHand(decoy));
+                inGameMenu.changeDecoy(inGameMenu.getIndexOfRow(this), inGameMenu.getIndexInRow(this), inGameMenu.getIndexInHand(decoy));
             }
         });
         super.focusedProperty().addListener(new ChangeListener<Boolean>() {
@@ -263,7 +255,7 @@ public class CardView extends Pane {
         return HEIGHT;
     }
 
-    public void setItem(boolean visible){
+    public void setItem(boolean visible) {
         items.setVisible(visible);
     }
 
@@ -301,15 +293,15 @@ public class CardView extends Pane {
         this.isUp = false;
     }
 
-    public void setHandler(){
+    public void setHandler() {
         super.setOnMouseEntered(onMouseEnteredHandler);
         super.setOnMouseExited(onMouseExitedHandler);
     }
 
-    public void removeHandler(){
+    public void removeHandler() {
         super.setOnMouseEntered(null);
         super.setOnMouseExited(null);
-        if (this.isUp){
+        if (this.isUp) {
             goDown();
             super.setStyle(null);
         }
@@ -323,22 +315,13 @@ public class CardView extends Pane {
         isInChangeSituation.set(inChangeSituation);
     }
 
-    private void glow(boolean isGlowing) {
-        if (isGlowing) {
-            background.setEffect(new Glow(0.5));
-            //todo: set the glow effect
-        } else {
-            background.setEffect(null);
-        }
-    }
-
     public void setPos(double x, double y) {
         this.setLayoutX(x);
         this.setLayoutY(y);
     }
 
     public void setReaction(String reaction) {
-        ((ImageView) this.items.getChildren().get(4)).setImage(new Image("/Images/Emojis/"+reaction));
+        ((ImageView) this.items.getChildren().get(4)).setImage(new Image("/Images/Emojis/" + reaction));
         Timeline t = new Timeline(new KeyFrame(Duration.seconds(7)));
         t.setOnFinished(e -> ((ImageView) this.items.getChildren().get(4)).setImage(null));
         t.setCycleCount(1);
