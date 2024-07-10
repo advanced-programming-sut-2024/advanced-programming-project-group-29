@@ -40,10 +40,7 @@ import javax.xml.bind.SchemaOutputResolver;
 import java.lang.reflect.Field;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.Objects;
+import java.util.*;
 import java.util.regex.Matcher;
 
 public class InGameMenu extends Application {
@@ -398,7 +395,7 @@ public class InGameMenu extends Application {
         });
     }
 
-    private void placeDecoy(int cardNumber,int rowNumber,int targetNumber,int playerIndex){
+    private void placeDecoy(int cardNumber, int rowNumber, int targetNumber, int playerIndex) {
         CardView decoy = hand[playerIndex].get(cardNumber);
         CardView soldier = row[playerIndex][convertRowNumber(rowNumber)].get(targetNumber);
         double x = decoy.getLayoutX();
@@ -411,12 +408,12 @@ public class InGameMenu extends Application {
         (new FlipCardAnimation(soldier, x, y, true, true, true)).play();
     }
 
-    public void placeDecoy(Matcher matcher){
+    public void placeDecoy(Matcher matcher) {
         int cardNumber = Integer.parseInt(matcher.group("cardNumber")); // decoy index in hand
         int rowNumber = Integer.parseInt(matcher.group("rowNumber"));
         int targetNumber = Integer.parseInt(matcher.group("targetNumber")); // index of card to be replaced with decoy
         int playerIndex = Integer.parseInt(matcher.group("playerIndex"));
-        placeDecoy(cardNumber,rowNumber,targetNumber,playerIndex);
+        placeDecoy(cardNumber, rowNumber, targetNumber, playerIndex);
     }
 
     public void removeCardFromHandAndKillIt(int cardNumber, int playerIndex) {
@@ -468,14 +465,14 @@ public class InGameMenu extends Application {
             discard[0].clear();
             discard[1].clear();
             final int[] flag1 = {0};
-            Timeline timeline1 = new Timeline(new KeyFrame(Duration.seconds(0.3), new EventHandler<ActionEvent>() {
+            Timeline timeline1 = new Timeline(new KeyFrame(Duration.seconds(0.2), new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent actionEvent) {
                     (new FlipCardAnimation(discard1Copy.get(flag1[0]++), X_POSITION_Deck, Y_POSITION_DISCARD_1, false, true, false)).play();
                 }
             }));
             final int[] flag2 = {0};
-            Timeline timeline2 = new Timeline(new KeyFrame(Duration.seconds(0.3), new EventHandler<ActionEvent>() {
+            Timeline timeline2 = new Timeline(new KeyFrame(Duration.seconds(0.2), new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent actionEvent) {
                     (new FlipCardAnimation(discard2Copy.get(flag2[0]++), X_POSITION_Deck, Y_POSITION_DISCARD_2, false, true, false)).play();
@@ -483,9 +480,15 @@ public class InGameMenu extends Application {
             }));
             timeline1.setCycleCount(discard1Copy.size());
             timeline2.setCycleCount(discard2Copy.size());
+            Timeline t = (discard1Copy.size() >= discard2Copy.size() ? timeline1 : timeline2);
+            t.setOnFinished(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent actionEvent) {
+                    refresh();
+                }
+            });
             if (!discard1Copy.isEmpty()) timeline1.play();
             if (!discard2Copy.isEmpty()) timeline2.play();
-            refresh();
         });
     }
 
@@ -645,7 +648,7 @@ public class InGameMenu extends Application {
         destroySoldier(row, cardNumber, playerIndex);
     }
 
-    public void placeSpecial(int rowNumber, int cardNumber, int playerIndex) {  // TODO: player index added, it used to be for opponent
+    public void placeSpecial(int rowNumber, int cardNumber, int playerIndex) {
         Platform.runLater(() -> {
             CardView c = hand[playerIndex].get(cardNumber);
             hand[playerIndex].remove(cardNumber);
@@ -680,7 +683,7 @@ public class InGameMenu extends Application {
         placeWeather(cardNumber, playerIndex);
     }
 
-    public void placeSoldier(int rowNumber, int cardNumber, int playerIndex) {  // TODO: player index added, it used to be for opponent
+    public void placeSoldier(int rowNumber, int cardNumber, int playerIndex) {
         System.err.println("got that command place soldier for " + rowNumber + " " + cardNumber + " " + playerIndex);
         Platform.runLater(() -> {
             try {
@@ -692,7 +695,7 @@ public class InGameMenu extends Application {
                 double Y = (playerIndex == 0 ? (j == 0 ? Y_POSITION_ROW_11 : (j == 1 ? Y_POSITION_ROW_12 : Y_POSITION_ROW_13)) : (j == 0 ? Y_POSITION_ROW_21 : (j == 1 ? Y_POSITION_ROW_22 : Y_POSITION_ROW_23)));
                 (new FlipCardAnimation(c, (row[playerIndex][convertRowNumber(rowNumber)].size() == 1 ? (X_POSITION_ROW_LEFT + X_POSITION_ROW_RIGHT - CARD_WIDTH) / 2 : (row[playerIndex][convertRowNumber(rowNumber)].get(row[playerIndex][convertRowNumber(rowNumber)].size() - 2)).getLayoutX() + SPACING + CARD_WIDTH), Y, true, true, true)).play();
                 System.out.println("done with creating flip animation");
-            } catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         });
@@ -724,8 +727,8 @@ public class InGameMenu extends Application {
     public void moveSoldierFromOpponentHandToPlayerRow(int cardNumber, int rowNumber, int playerIndex) {
         System.out.println("we are in this function ");
         Platform.runLater(() -> {
-            CardView c = hand[1-playerIndex].get(cardNumber);
-            hand[1-playerIndex].remove(cardNumber);
+            CardView c = hand[1 - playerIndex].get(cardNumber);
+            hand[1 - playerIndex].remove(cardNumber);
             c.setInHand(false);
             row[playerIndex][convertRowNumber(rowNumber)].add(c);
             int j = convertRowNumber(rowNumber);
@@ -746,6 +749,49 @@ public class InGameMenu extends Application {
         return ostadRowNumber;
     }
 
+    private void moveAllCardFromBoardToDiscard() {
+        ArrayList<CardView> allCardsInBoardFor1 = new ArrayList<>();
+        ArrayList<CardView> allCardsInBoardFor2 = new ArrayList<>();
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 3; j++) {
+                if (i == 0) allCardsInBoardFor1.addAll(row[i][j]);
+                else allCardsInBoardFor2.addAll(row[i][j]);
+                row[i][j].clear();
+                if (horn[i][j] != null) {
+                    if (i == 0) allCardsInBoardFor1.add(horn[i][j]);
+                    else allCardsInBoardFor2.add(horn[i][j]);
+                    horn[i][j] = null;
+                }
+            }
+        }
+        clearWeather();
+        final int[] i = {0};
+        Timeline t1 = new Timeline(new KeyFrame(Duration.seconds(0.1), new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                (new FlipCardAnimation(allCardsInBoardFor1.get(i[0]++), X_POSITION_DISCARD, Y_POSITION_DISCARD_1, true, true, false)).play();
+            }
+        }));
+        final int[] j = {0};
+        Timeline t2 = new Timeline(new KeyFrame(Duration.seconds(0.1), new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                (new FlipCardAnimation(allCardsInBoardFor1.get(j[0]++), X_POSITION_DISCARD, Y_POSITION_DISCARD_2, true, true, false)).play();
+            }
+        }));
+        t1.setCycleCount(allCardsInBoardFor1.size());
+        t2.setCycleCount(allCardsInBoardFor2.size());
+        Timeline t = (allCardsInBoardFor1.size() >= allCardsInBoardFor2.size() ? t1 : t2);
+        t.setOnFinished(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                refresh();
+            }
+        });
+        if (!allCardsInBoardFor1.isEmpty()) t1.play();
+        if (!allCardsInBoardFor2.isEmpty()) t2.play();
+    }
+
     public void clearWeather() {
         Platform.runLater(() -> {
             setWeather(false, false, false);
@@ -756,7 +802,7 @@ public class InGameMenu extends Application {
 
     ///////////////////////// isPlayerTurn
     private void isPlayerTurn(boolean isPlayerTurn) {
-        if(isOnline) {
+        if (isOnline) {
             if (isPlayerTurn) {
                 for (CardView c : hand[0]) c.setInHand(true);
             } else {
@@ -958,7 +1004,7 @@ public class InGameMenu extends Application {
                         }
                     }
                 }
-            } catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         });
@@ -1307,7 +1353,7 @@ public class InGameMenu extends Application {
         }
     }
 
-    public void passTurn(String winner) {  //TODO if round ends give winner username else give "";
+    public void passTurn(String winner) {
         if (winner.isEmpty()) {
             swapAllThings();
             refresh();
@@ -1406,7 +1452,6 @@ public class InGameMenu extends Application {
         t.setOnFinished(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
-                //TODO add scores
                 turnPain.setVisible(false);
                 turnPain.setDisable(true);
                 mainPain.setDisable(false);
@@ -1417,9 +1462,7 @@ public class InGameMenu extends Application {
         t.play();
     }
 
-    public void endGame(String winner) { //TODO if game ends call this func for both and give the winner username
-        System.out.println("this function called........");
-        //TODO save game history
+    public void endGame(String winner) {
         if (winner.isEmpty()) {
             endGameAnnounce.setText("Game ends, Draw");
         } else endGameAnnounce.setText("Game ends, the winner is \"" + winner + "\"");
@@ -1433,7 +1476,6 @@ public class InGameMenu extends Application {
         t.setOnFinished(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
-                //TODO anything we want to do after game ends
                 try {
                     (new MainMenu()).start(ApplicationRunningTimeData.getStage());
                 } catch (Exception e) {
