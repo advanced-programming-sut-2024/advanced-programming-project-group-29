@@ -36,6 +36,8 @@ public class GameBoard {
         gameLog[0] = new GameLog(player1.getUsername(), player2.getUsername());
         gameLog[1] = new GameLog(player2.getUsername(), player1.getUsername());
         gameHistory = new GameHistory(player1, player2, new Date(), gameLog[0], gameLog[1]);
+        player1.addGameHistory(gameHistory);
+        player2.addGameHistory(gameHistory);
         currentPlayer = 0;
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 3; j++) {
@@ -263,11 +265,13 @@ public class GameBoard {
             if (playersScore[1] <= playersScore[0]) {
                 playersCrystals[1]--;
             }
+            gameHistory.addScoreForRound(playersScore[0], 0);
+            gameHistory.addScoreForRound(playersScore[1], 1);
             executeActionForTransformers();
             String winner = playersScore[0] > playersScore[1] ? players[0].getUsername() : (playersScore[0] == playersScore[1] ? "" : players[1].getUsername());
             if(playersCrystals[0] == 0 || playersCrystals[1] == 0){
                 InGameMenuController.endGame(winner, players[0], players[1]);
-                // TODO: update game history and probably game log
+                gameHistory.setWinner(playersScore[0] > playersScore[1] ? 0 : (playersScore[0] == playersScore[1] ? -1 : 1));
                 players[0].setCurrentGameBoard(null);
                 players[1].setCurrentGameBoard(null);
                 return null;

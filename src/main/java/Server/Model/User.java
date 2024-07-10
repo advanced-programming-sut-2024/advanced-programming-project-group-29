@@ -579,6 +579,7 @@ public class User {
         return jsonBuilder.toString();
     }
 
+    /*
     public static void makeUserFromJson(String jsonLine) {
         if (jsonLine.isEmpty()) return;
         int beginIndexOfHashMaps = jsonLine.indexOf("[");
@@ -611,6 +612,8 @@ public class User {
         }
         user.savedDecks.putAll(savedDecks);
     }
+
+     */
 
     private static String[] splitStringWithEmptyStrings (String string, char c) {
         ArrayList<String> strings = new ArrayList<>();
