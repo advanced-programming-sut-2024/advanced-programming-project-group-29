@@ -257,6 +257,7 @@ public class GameBoard {
     }
 
     public Result passTurn() {
+        currentPlayer = 1 - currentPlayer;
         if (notPlayingTurns == 1) {
             notPlayingTurns = 0;
             if (playersScore[0] <= playersScore[1]) {
@@ -276,6 +277,7 @@ public class GameBoard {
                 players[1].setCurrentGameBoard(null);
                 return null;
             }
+            InGameMenuController.clearGame(players[0], players[1]);
             if (playersScore[0] == playersScore[1])
                 return new Result(false, "draw");
             return new Result(false,  winner);
@@ -285,7 +287,6 @@ public class GameBoard {
         } else {
             notPlayingTurns = 0;
         }
-        currentPlayer = 1 - currentPlayer;
         isThereAnythingPlayed = false;
         return new Result(true);
     }
@@ -321,5 +322,21 @@ public class GameBoard {
     public void addLog(String command, int playerIndex) {
         gameLog[playerIndex].addGameBoardin(new GameBoardin(players[playerIndex]));
         gameLog[playerIndex].addCommand(command);
+    }
+
+
+    public void clearGameBoard() {
+        for(int i = 0; i < 2; i++){
+            playersScore[i] = 0;
+            for(int j = 0; j < 3; j++){
+                players[i].getDiscardPile().addAll(rows[i][j]);
+                if(specialCards[i][j] != null)
+                    players[i].getDiscardPile().add(specialCards[i][j]);
+                rows[i][j].clear();
+                specialCards[i][j] = null;
+                rowHasWeather[j] = false;
+            }
+        }
+        weather.clear();
     }
 }

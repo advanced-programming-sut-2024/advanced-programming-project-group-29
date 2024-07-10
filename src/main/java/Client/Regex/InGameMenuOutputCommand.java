@@ -28,7 +28,9 @@ public enum InGameMenuOutputCommand {
     REFRESH("refresh"),
     PASS_TURN_FOR_OPPONENT("pass turn (?<winner>.*)"),
     END_GAME("end game (?<winner>.+)"),
-    PLACE_DECOY("place decoy (?<cardNumber>\\d+) to card in (?<rowNumber>\\d) (?<targetNumber>\\d+) (?<playerIndex>\\d)")
+    PLACE_DECOY("place decoy (?<cardNumber>\\d+) to card in (?<rowNumber>\\d) (?<targetNumber>\\d+) (?<playerIndex>\\d)"),
+    CLEAR_GAME("clear game"),
+    REFRESH_CHAT_BOX("refresh chat box"),
     ;
     private String command;
 

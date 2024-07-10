@@ -143,6 +143,22 @@ public class Listener extends Thread {
                                 e.printStackTrace();
                             }
                         });
+                    } else if((matcher = InGameMenuOutputCommand.CLEAR_GAME.getMatcher(input)).matches()){
+                        Platform.runLater(() -> {
+                            try {
+                                inGameMenu.moveAllCardFromBoardToDiscard();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        });
+                    } else if((matcher = InGameMenuOutputCommand.REFRESH_CHAT_BOX.getMatcher(input)).matches()){
+                        Platform.runLater(() -> {
+                            try {
+                                inGameMenu.refreshMessageBox();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        });
                     }
 
                 } catch (Exception e) {

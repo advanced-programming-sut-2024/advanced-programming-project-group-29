@@ -66,6 +66,8 @@ public class InGameMenuController extends Thread {
     private static void saveMessage(ApplicationController applicationController, String message) {
         GameBoard gameBoard = applicationController.getCurrentUser().getCurrentGameBoard();
         gameBoard.addMessage(new Message(applicationController.getCurrentUser().getUsername(), message));
+        if(gameBoard.isGameOnline())
+            applicationController.getCurrentUser().getOpponent().getSender().sendCommandWithOutResponse("refresh chat box");
     }
 
     private static Result passTurn(ApplicationController applicationController) {
@@ -502,5 +504,15 @@ public class InGameMenuController extends Thread {
         GameBoard gameBoard = user1.getCurrentGameBoard();
         gameBoard.addLog("end game " + winner, 0);
         gameBoard.addLog("end game " + winner, 1);
+    }
+
+    public static void clearGame(User player1, User player2) {
+        GameBoard gameBoard = player1.getCurrentGameBoard();
+        gameBoard.clearGameBoard();
+        player1.getSender().sendCommandWithOutResponse("clear game");
+        if(gameBoard.isGameOnline())
+            player2.getSender().sendCommandWithOutResponse("clear game");
+        gameBoard.addLog("clear game", 0);
+        gameBoard.addLog("clear game", 1);
     }
 }

@@ -749,7 +749,7 @@ public class InGameMenu extends Application {
         return ostadRowNumber;
     }
 
-    private void moveAllCardFromBoardToDiscard() {
+    public void moveAllCardFromBoardToDiscard() {
         ArrayList<CardView> allCardsInBoardFor1 = new ArrayList<>();
         ArrayList<CardView> allCardsInBoardFor2 = new ArrayList<>();
         for (int i = 0; i < 2; i++) {
