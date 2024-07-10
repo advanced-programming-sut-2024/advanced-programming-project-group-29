@@ -70,8 +70,11 @@ public class InGameMenuController extends Thread {
 
     private static Result passTurn(ApplicationController applicationController) {
         User user = applicationController.getCurrentUser();
+        boolean isOnline = user.getCurrentGameBoard().isGameOnline();
         Result result = user.getCurrentGameBoard().passTurn();
-        if(user.getCurrentGameBoard().isGameOnline())
+        if(user.getCurrentGameBoard() == null)
+            return null;
+        if(isOnline)
             user.getOpponent().getSender().sendCommand("pass turn " + (result.isSuccessful() ? "" : result.getMessage().get(0)));
         else
             applicationController.setCurrentUser(user.getOpponent());
