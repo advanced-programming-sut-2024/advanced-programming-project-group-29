@@ -1298,6 +1298,8 @@ public class InGameMenu extends Application {
     /////////////////////passTurn
     public void passTurn(MouseEvent mouseEvent) {
         Result result = (Result) Client.getClient().getSender().sendCommand("pass turn");
+        if(result == null)
+            return;
         if (!result.isSuccessful()) {
             String winnerUser = result.getMessage().getFirst();
             endRound(winnerUser);
