@@ -53,6 +53,8 @@ public class GameBoard {
             for (Card card : players[i].getDeck())
                 card.setGameBoard(this);
         }
+        gameLog[0] = new GameLog(player1.getUsername(), player2.getUsername());
+        gameLog[1] = new GameLog(player2.getUsername(), player1.getUsername());
     }
 
     public User getPlayer(int playerNumber) {
