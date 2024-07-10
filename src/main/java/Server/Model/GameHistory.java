@@ -76,23 +76,20 @@ public class GameHistory {
         return stringBuilder.toString();
     }
 
-    /*
-    public static GameHistory fromJson(String json) {
-        String[] parts = json.split(",");
-        User player1 = User.getUserByUsername(parts[0]);
-        User player2 = User.getUserByUsername(parts[1]);
-        Date gameDate = new Date(Long.parseLong(parts[2]));
-        GameHistory gameHistory = new GameHistory(player1, player2, gameDate, null, null); // TODO: add gameLog
-        gameHistory.setWinner(Integer.parseInt(parts[3]));
-        int numberOfRounds = (parts.length - 4) / 2;
-        int pointer = 4;
-        for (int i = 0; i < 2; i++) {
-            for (int j = 0; j < numberOfRounds; j++) {
-                gameHistory.setScorePerRound(Integer.parseInt(parts[pointer]), j, i);
-            }
-        }
-        return gameHistory;
-    }
-
-     */
+//    public static GameHistory fromJson(String json) {
+//        String[] parts = json.split(",");
+//        User player1 = User.getUserByUsername(parts[0]);
+//        User player2 = User.getUserByUsername(parts[1]);
+//        Date gameDate = new Date(Long.parseLong(parts[2]));
+//        GameHistory gameHistory = new GameHistory(player1, player2, gameDate, null, null); // TODO: add gameLog
+//        gameHistory.setWinner(Integer.parseInt(parts[3]));
+//        int numberOfRounds = (parts.length - 4) / 2;
+//        int pointer = 4;
+//        for (int i = 0; i < 2; i++) {
+//            for (int j = 0; j < numberOfRounds; j++) {
+//                gameHistory.setScorePerRound(Integer.parseInt(parts[pointer]), j, i);
+//            }
+//        }
+//        return gameHistory;
+//    }
 }

@@ -112,7 +112,7 @@ public class BroadCastMenu extends Application {
         client.sendCommand("menu enter " + Menu.GAME_MENU.toString()); //TODO add regex BROADCAST_MENU
     }
 
-    /*
+
 
     public void initialize() {
         if (!isOnline) {
@@ -140,7 +140,7 @@ public class BroadCastMenu extends Application {
         }
     }
 
-     */
+
 
     @Override
     public void start(Stage stage) throws Exception {
