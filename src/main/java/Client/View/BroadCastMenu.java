@@ -96,6 +96,8 @@ public class BroadCastMenu extends Application {
         client.sendCommand("menu enter " + Menu.GAME_MENU.toString()); //TODO add regex;
     }
 
+    /*
+
     public void initialize() {
         if (!isOnline) {
             GameLog gameLog = (GameLog) Client.getClient().getSender().sendCommand(""); //TODO
@@ -117,6 +119,8 @@ public class BroadCastMenu extends Application {
             timeline.play();
         }
     }
+
+     */
 
     @Override
     public void start(Stage stage) throws Exception {

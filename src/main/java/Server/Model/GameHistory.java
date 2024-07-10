@@ -30,15 +30,11 @@ public class GameHistory {
         return gameDate;
     }
 
-    public void setScorePerRound(int score, int roundNumber, int playerNumber) {
+    public void addScoreForRound(int score, int playerNumber) {
         if (scorePerRound[playerNumber] == null) {
             scorePerRound[playerNumber] = new ArrayList<>();
         }
-        if (scorePerRound[playerNumber].size() < roundNumber) {
-            scorePerRound[playerNumber].add(score);
-        } else {
-            scorePerRound[playerNumber].set(roundNumber, score);
-        }
+        scorePerRound[playerNumber].add(score);
     }
 
     public int getPlayerNumber(User player) {
@@ -76,6 +72,7 @@ public class GameHistory {
         return stringBuilder.toString();
     }
 
+    /*
     public static GameHistory fromJson(String json) {
         String[] parts = json.split(",");
         User player1 = User.getUserByUsername(parts[0]);
@@ -92,4 +89,6 @@ public class GameHistory {
         }
         return gameHistory;
     }
+
+     */
 }
