@@ -256,7 +256,7 @@
                   <Font name="System Bold" size="16.0" />
                </font>
             </Label>
-            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#bfbfbf" height="43.0" layoutX="264.0" layoutY="797.0" onMouseClicked="#passTurn" onMouseEntered="#buttonEntered" onMouseExited="#buttonExited" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="95.0">
+            <Rectangle fx:id="passRectangle" arcHeight="5.0" arcWidth="5.0" fill="#bfbfbf" height="43.0" layoutX="264.0" layoutY="797.0" onMouseClicked="#passTurn" onMouseEntered="#buttonEntered" onMouseExited="#buttonExited" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="95.0">
                <effect>
                   <Shadow height="6.17" radius="1.1025" width="0.24">
                      <color>
@@ -265,7 +265,7 @@
                   </Shadow>
                </effect>
             </Rectangle>
-            <Label layoutX="273.0" layoutY="808.0" onMouseClicked="#passTurn" onMouseEntered="#buttonEntered" onMouseExited="#buttonExited" text="Pass Turn">
+            <Label fx:id="passLabel" layoutX="273.0" layoutY="808.0" onMouseClicked="#passTurn" onMouseEntered="#buttonEntered" onMouseExited="#buttonExited" text="Pass Turn">
                <font>
                   <Font name="System Bold" size="16.0" />
                </font>

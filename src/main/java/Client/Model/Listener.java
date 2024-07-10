@@ -120,7 +120,7 @@ public class Listener extends Thread {
                         Matcher finalMatcher = matcher;
                         Platform.runLater(() -> {
                             try {
-                                inGameMenu.passTurn(finalMatcher.group("winner"));
+                                inGameMenu.passTurn(finalMatcher.group("winner")); //TODO: check this
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }

@@ -150,12 +150,12 @@ public class InGameMenu extends Application {
     public TextField typeReaction;
     public Label opponentReaction;
 
-
+    public Rectangle passRectangle;
+    public Label passLabel;
     public Pane turnPain;
     public Label endTurnAnnounce;
     public Pane endPain;
     public Label endGameAnnounce;
-
 
     private CardView LastSelectedCard;
 
@@ -776,18 +776,11 @@ public class InGameMenu extends Application {
         Timeline t2 = new Timeline(new KeyFrame(Duration.seconds(0.1), new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
-                (new FlipCardAnimation(allCardsInBoardFor1.get(j[0]++), X_POSITION_DISCARD, Y_POSITION_DISCARD_2, true, true, false)).play();
+                (new FlipCardAnimation(allCardsInBoardFor2.get(j[0]++), X_POSITION_DISCARD, Y_POSITION_DISCARD_2, true, true, false)).play();
             }
         }));
         t1.setCycleCount(allCardsInBoardFor1.size());
         t2.setCycleCount(allCardsInBoardFor2.size());
-        Timeline t = (allCardsInBoardFor1.size() >= allCardsInBoardFor2.size() ? t1 : t2);
-        t.setOnFinished(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                refresh();
-            }
-        });
         if (!allCardsInBoardFor1.isEmpty()) t1.play();
         if (!allCardsInBoardFor2.isEmpty()) t2.play();
     }
@@ -805,8 +798,16 @@ public class InGameMenu extends Application {
         if (isOnline) {
             if (isPlayerTurn) {
                 for (CardView c : hand[0]) c.setInHand(true);
+                passLabel.setVisible(true);
+                passLabel.setDisable(false);
+                passRectangle.setVisible(true);
+                passRectangle.setDisable(false);
             } else {
                 for (CardView c : hand[0]) c.setInHand(false);
+                passLabel.setVisible(false);
+                passLabel.setDisable(true);
+                passRectangle.setVisible(false);
+                passRectangle.setDisable(true);
             }
         }
     }
@@ -1342,26 +1343,60 @@ public class InGameMenu extends Application {
     }
 
     /////////////////////passTurn
-    public void passTurn(MouseEvent mouseEvent) {
-        Result result = (Result) Client.getClient().getSender().sendCommand("pass turn");
-        if(result == null)
-            return;
-        if (!result.isSuccessful()) {
-            String winnerUser = result.getMessage().getFirst();
-            endRound(winnerUser);
-        } else {
-            swapAllThings();
-            refresh();
-        }
+    private void endRound(String endRoundText) {
+        if (endRoundText.equals("draw")) endTurnAnnounce.setText("Game Draw");
+        else endTurnAnnounce.setText("Round ends, the winner is \"" + endRoundText + "\"");
+        pain.getChildren().remove(turnPain);
+        pain.getChildren().add(turnPain);
+        turnPain.setVisible(true);
+        turnPain.setDisable(false);
+        mainPain.setDisable(true);
+        Timeline t = new Timeline(new KeyFrame(Duration.seconds(5)));
+        t.setCycleCount(1);
+        t.setOnFinished(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                turnPain.setVisible(false);
+                turnPain.setDisable(true);
+                mainPain.setDisable(false);
+                swapAllThings();
+                refresh();
+            }
+        });
+        t.play();
     }
 
-    public void passTurn(String winner) {
+    public void endGame(String winner) {
         if (winner.isEmpty()) {
-            swapAllThings();
-            refresh();
-        } else {
-            endRound(winner);
-        }
+            endGameAnnounce.setText("Game ends, Draw");
+        } else endGameAnnounce.setText("Game ends, the winner is \"" + winner + "\"");
+        pain.getChildren().remove(endPain);
+        pain.getChildren().add(endPain);
+        endPain.setVisible(true);
+        endPain.setDisable(false);
+        mainPain.setDisable(true);
+        Timeline t = new Timeline(new KeyFrame(Duration.seconds(5)));
+        t.setCycleCount(1);
+        t.setOnFinished(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                try {
+                    (new MainMenu()).start(ApplicationRunningTimeData.getStage());
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
+        t.play();
+    }
+
+    public void passTurn(MouseEvent mouseEvent) {
+        Client.getClient().getSender().sendCommand("pass turn");
+    }
+
+    public void passTurn() {
+        swapAllThings();
+        refresh();
     }
 
     private void swapAllThings() {
@@ -1439,53 +1474,6 @@ public class InGameMenu extends Application {
                 }
             }
         }
-    }
-
-    private void endRound(String endRoundText) {
-        if (endRoundText.equals("draw")) endTurnAnnounce.setText("Game Draw");
-        else endTurnAnnounce.setText("Round ends, the winner is \"" + endRoundText + "\"");
-        pain.getChildren().remove(turnPain);
-        pain.getChildren().add(turnPain);
-        turnPain.setVisible(true);
-        turnPain.setDisable(false);
-        mainPain.setDisable(true);
-        Timeline t = new Timeline(new KeyFrame(Duration.seconds(5)));
-        t.setCycleCount(1);
-        t.setOnFinished(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                turnPain.setVisible(false);
-                turnPain.setDisable(true);
-                mainPain.setDisable(false);
-                swapAllThings();
-                refresh();
-            }
-        });
-        t.play();
-    }
-
-    public void endGame(String winner) {
-        if (winner.isEmpty()) {
-            endGameAnnounce.setText("Game ends, Draw");
-        } else endGameAnnounce.setText("Game ends, the winner is \"" + winner + "\"");
-        pain.getChildren().remove(endPain);
-        pain.getChildren().add(endPain);
-        endPain.setVisible(true);
-        endPain.setDisable(false);
-        mainPain.setDisable(true);
-        Timeline t = new Timeline(new KeyFrame(Duration.seconds(5)));
-        t.setCycleCount(1);
-        t.setOnFinished(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                try {
-                    (new MainMenu()).start(ApplicationRunningTimeData.getStage());
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        });
-        t.play();
     }
 
     public void buttonEntered(MouseEvent mouseEvent) {
