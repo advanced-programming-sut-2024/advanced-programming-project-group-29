@@ -22,13 +22,13 @@ public class InGameMenuController extends Thread {
             Sender sender = applicationController.getSender();
             Sender opponentSender = user.getOpponent().getSender();
             if ((matcher = InGameMenuRegex.PLACE_SOLDIER.getMatcher(inputCommand)).matches()) {
-                placeSoldier(user, matcher);
+                placeSoldier(applicationController, matcher);
             } else if ((matcher = InGameMenuRegex.PLACE_DECOY.getMatcher(inputCommand)).matches()) {
-                placeDecoy(user, matcher);
+                placeDecoy(applicationController, matcher);
             } else if ((matcher = InGameMenuRegex.PLACE_WEATHER.getMatcher(inputCommand)).matches()) {
-                placeWeather(user, matcher);
+                placeWeather(applicationController, matcher);
             } else if ((matcher = InGameMenuRegex.PLACE_SPECIAL.getMatcher(inputCommand)).matches()) {
-                placeSpecial(user, matcher);
+                    placeSpecial(applicationController, matcher);
             } else if ((matcher = InGameMenuRegex.COMMANDER_POWER_PLAY.getMatcher(inputCommand)).matches()) {
                 commanderPowerPlay(user);
             } else if ((matcher = InGameMenuRegex.APPLY_CHEAT_CODE.getMatcher(inputCommand)).matches()) {
@@ -60,19 +60,20 @@ public class InGameMenuController extends Thread {
     private static void passTurnCalled(ApplicationController applicationController) {
         GameBoard gameBoard = applicationController.getCurrentUser().getCurrentGameBoard();
         gameBoard.passTurnCalled();
-        gameBoard.changeTurn();
+        gameBoard.changeTurn(applicationController);
         Result result = gameBoard.passTurn();
         if(result == null || result.isSuccessful())
             return;
         applicationController.getCurrentUser().getSender().sendCommand("end round " + result.getMessage().get(0));
     }
 
-    private static void changeTurn(User user){
+    private static void changeTurn(ApplicationController applicationController){
+        User user = applicationController.getCurrentUser();
         GameBoard gameBoard = user.getCurrentGameBoard();
         if(gameBoard.isPassTurnCalled())
             return;
-        gameBoard.changeTurn();
-        user.getSender().sendCommand("change turn");
+        gameBoard.changeTurn(applicationController);
+        user.getSender().sendCommandWithOutResponse("change turn");
         if(gameBoard.isGameOnline())
             user.getOpponent().getSender().sendCommand("change turn");
     }
@@ -112,7 +113,8 @@ public class InGameMenuController extends Thread {
         commander.executeAction();
     }
 
-    private static void placeSpecial(User user, Matcher matcher) {
+    private static void placeSpecial(ApplicationController applicationController, Matcher matcher) {
+        User user = applicationController.getCurrentUser();
         int cardNumber = Integer.parseInt(matcher.group("cardNumber"));
         String rowNumberString = matcher.group("rowNumber");
         int rowNumber = -1;
@@ -128,11 +130,12 @@ public class InGameMenuController extends Thread {
         gameBoard.addLog("place special " + cardNumber + " in row " + rowNumber + " 0", gameBoard.getPlayerNumber(user));
         gameBoard.addLog("place special " + cardNumber + " in row " + rowNumber + " 1", 1 - gameBoard.getPlayerNumber(user));
         spell.executeAction();
-        changeTurn(user);
+        changeTurn(applicationController);
     }
 
-    private static void placeWeather(User user, Matcher matcher) {
+    private static void placeWeather(ApplicationController applicationController, Matcher matcher) {
         try {
+            User user = applicationController.getCurrentUser();
             int cardNumber = Integer.parseInt(matcher.group("cardNumber"));
             int playerIndex = user.getCurrentGameBoard().getPlayerNumber(user);
             GameBoard gameBoard = user.getCurrentGameBoard();
@@ -147,14 +150,15 @@ public class InGameMenuController extends Thread {
             gameBoard.addLog("place weather " + cardNumber + " 0", gameBoard.getPlayerNumber(user));
             gameBoard.addLog("place weather " + cardNumber + " 1", 1 - gameBoard.getPlayerNumber(user));
             spell.executeAction();
-            changeTurn(user);
+            changeTurn(applicationController);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private static void placeSoldier(User user, Matcher matcher) {
+    private static void placeSoldier(ApplicationController applicationController, Matcher matcher) {
         try {
+            User user = applicationController.getCurrentUser();
             int cardNumber = Integer.parseInt(matcher.group("cardNumber"));
             String rowNumberString = matcher.group("rowNumber");
             int rowNumber = -1;
@@ -182,13 +186,14 @@ public class InGameMenuController extends Thread {
                 }
             }
             soldier.executeAction();
-            changeTurn(user);
+            changeTurn(applicationController);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public static void placeDecoy(User user, Matcher matcher){
+    public static void placeDecoy(ApplicationController applicationController, Matcher matcher){
+        User user = applicationController.getCurrentUser();
         int thisCardNumber = Integer.parseInt(matcher.group("thisCardNumber"));
         int cardNumber = Integer.parseInt(matcher.group("cardNumber"));
         int rowNumber = Integer.parseInt(matcher.group("rowNumber"));
@@ -203,7 +208,7 @@ public class InGameMenuController extends Thread {
             user.getOpponent().getSender().sendCommand("place decoy " + thisCardNumber + " to card in " + rowNumber + " " + cardNumber + " 1");
         gameBoard.addLog("place decoy " + thisCardNumber + " to card in " + rowNumber + " " + cardNumber + " 0", playerIndex);
         gameBoard.addLog("place decoy " + thisCardNumber + " to card in " + rowNumber + " " + cardNumber + " 1", 1 - playerIndex);
-        changeTurn(user);
+        changeTurn(applicationController);
     }
 
 

@@ -1,5 +1,6 @@
 package Server.Model;
 
+import Server.Controller.ApplicationController;
 import Server.Controller.InGameMenuController;
 import Server.Enum.Attribute;
 
@@ -132,8 +133,10 @@ public class GameBoard {
         return false;
     }
 
-    public void changeTurn() {
+    public void changeTurn(ApplicationController applicationController) {
         currentPlayer = 1 - currentPlayer;
+        if(!isGameOnline)
+            applicationController.setCurrentUser(players[currentPlayer]);
     }
 
     public void resetBoard() {

@@ -684,7 +684,6 @@ public class InGameMenu extends Application {
     }
 
     public void placeSoldier(int rowNumber, int cardNumber, int playerIndex) {
-        System.err.println("got that command place soldier for " + rowNumber + " " + cardNumber + " " + playerIndex);
         Platform.runLater(() -> {
             try {
                 CardView c = hand[playerIndex].get(cardNumber);
@@ -973,11 +972,9 @@ public class InGameMenu extends Application {
                 }
                 for (int k = 0; k < 3; k++) {
                     for (int j = 0; j < 2; j++) {
-                        System.err.println("here is the " + k + " " + j);
                         ArrayList<Cardin> b = (k == 0 ? (j == 0 ? gameBoardin.getPlayer1Hand() : gameBoardin.getPlayer2Hand()) : (k == 1 ? (j == 0 ? gameBoardin.getPlayer1Deck() : gameBoardin.getPlayer2Deck()) : (j == 0 ? gameBoardin.getPlayer1Discard() : gameBoardin.getPlayer2Discard())));
                         for (int i = 0; i < b.size(); i++) {
                             ArrayList<CardView>[] z = (k == 0 ? hand : (k == 1 ? deck : discard));
-                            System.out.println("here we had " + k + " " + j);
                             if (z[j].get(i).getCard().isSoldier) {
                                 z[j].get(i).getCard().setHp(b.get(i).hp);
                                 z[j].get(i).setHP();
