@@ -45,7 +45,8 @@ public class EmailUtil {
       //  int code = new Random().nextInt(900000) + 100000;
         int code = 111111;
         //TODO randomize the code
-        sendEmail(email, "Verification Code", "Your verification code is: " + code);
+        sendEmail(email, "Verification Code", "Your verification code is: " + code + "\n or go to following link\n" +
+                "www.chert.com");
         emailVerificationCodes.put(email, code);
     }
 

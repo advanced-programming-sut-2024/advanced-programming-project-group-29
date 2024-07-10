@@ -79,7 +79,7 @@ public class DatabaseManager {
     }
 
     public static void updateUser(User user, String oldUsername) {
-        String sql = "UPDATE User SET username = ?, password = ?, nickname = ?, email = ?, questionNumber = ?, answer = ?, faction = ?, commander = ?, deck = ? gameHistory = ? WHERE username = ?";
+        String sql = "UPDATE User SET username = ?, password = ?, nickname = ?, email = ?, questionNumber = ?, answer = ?, faction = ?, commander = ?, deck = ?, gameHistory = ? WHERE username = ?";
 
         try (Connection conn = DriverManager.getConnection(URL);
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -113,8 +113,6 @@ public class DatabaseManager {
 
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
-                System.err.println(rs.getString("username"));
-                System.err.println(URL);
                 String username = rs.getString("username");
                 String password = rs.getString("password");
                 String nickname = rs.getString("nickname");
