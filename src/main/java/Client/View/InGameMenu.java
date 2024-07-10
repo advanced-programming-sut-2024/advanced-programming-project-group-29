@@ -38,8 +38,11 @@ import javafx.util.Duration;
 
 import javax.xml.bind.SchemaOutputResolver;
 import java.lang.reflect.Field;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.Objects;
 import java.util.regex.Matcher;
 
@@ -191,7 +194,7 @@ public class InGameMenu extends Application {
                 row[i][j] = new ArrayList<>();
             }
         }
-        if(!isOnline)
+        if (!isOnline)
             Client.getClient().sendCommand("start game");
         mainPain.requestFocus();
         mainPain.setOnKeyPressed(new EventHandler<KeyEvent>() {
@@ -470,8 +473,10 @@ public class InGameMenu extends Application {
             CardView c = new CardView(cardin, -200, -200, this, false);
             c.setInHand(true);
             hand[playerIndex].add(c);
-            pain.getChildren().add();
-            (new FlipCardAnimation()).play();
+            pain.getChildren().remove(cheatPane);
+            pain.getChildren().add(c);
+            pain.getChildren().add(cheatPane);
+            (new FlipCardAnimation(c, (hand[playerIndex].size() == 1 ? (X_POSITION_HAND_LEFT + X_POSITION_HAND_RIGHT - CARD_WIDTH) / 2 : (hand[playerIndex].get(hand[playerIndex].size() - 2)).getLayoutX() + SPACING + CARD_WIDTH), (playerIndex == 0 ? Y_POSITION_HAND_1 : Y_POSITION_HAND_2), true, true, true)).play();
         });
     }
 
@@ -487,7 +492,7 @@ public class InGameMenu extends Application {
         });
     }
 
-    public void addCardFromDeckToRow(int cardNumber, int rowNumber, int playerIndex) { // TODO: player index added
+    public void addCardFromDeckToRow(int cardNumber, int rowNumber, int playerIndex) {
         Platform.runLater(() -> {
             CardView c = deck[playerIndex].get(cardNumber);
             deck[playerIndex].remove(cardNumber);
@@ -621,11 +626,12 @@ public class InGameMenu extends Application {
 
     public void placeSpecial(int rowNumber, int cardNumber, int playerIndex) {  // TODO: player index added, it used to be for opponent
         Platform.runLater(() -> {
-            CardView c = hand[1].get(cardNumber);
-            hand[1].remove(cardNumber);
+            CardView c = hand[playerIndex].get(cardNumber);
+            hand[playerIndex].remove(cardNumber);
             c.setInHand(false);
-            horn[1][convertRowNumber(rowNumber)] = c;
-            (new FlipCardAnimation(c, X_POSITION_SPELL, (convertRowNumber(rowNumber) == 0 ? Y_POSITION_ROW_21 : (convertRowNumber(rowNumber) == 1 ? Y_POSITION_ROW_22 : Y_POSITION_ROW_23)), true, true, true)).play();
+            horn[playerIndex][convertRowNumber(rowNumber)] = c;
+            double Y = (playerIndex == 0 ? (convertRowNumber(rowNumber) == 0 ? Y_POSITION_ROW_11 : (convertRowNumber(rowNumber) == 1 ? Y_POSITION_ROW_12 : Y_POSITION_ROW_13)) : (convertRowNumber(rowNumber) == 0 ? Y_POSITION_ROW_21 : (convertRowNumber(rowNumber) == 1 ? Y_POSITION_ROW_22 : Y_POSITION_ROW_23)));
+            (new FlipCardAnimation(c, X_POSITION_SPELL, Y, true, true, true)).play();
         });
     }
 
@@ -636,10 +642,10 @@ public class InGameMenu extends Application {
         placeSpecial(rowNumber, cardNumber, playerIndex);
     }
 
-    public void placeWeather(int cardNumber, int playerIndex) {  // TODO: player index added, it used to be for opponent
+    public void placeWeather(int cardNumber, int playerIndex) {
         Platform.runLater(() -> {
-            CardView c = hand[1].get(cardNumber);
-            hand[1].remove(cardNumber);
+            CardView c = hand[playerIndex].get(cardNumber);
+            hand[playerIndex].remove(cardNumber);
             c.setInHand(false);
             weather.add(c);
             refreshWeather();
@@ -655,13 +661,13 @@ public class InGameMenu extends Application {
 
     public void placeSoldier(int rowNumber, int cardNumber, int playerIndex) {  // TODO: player index added, it used to be for opponent
         Platform.runLater(() -> {
-            CardView c = hand[1].get(cardNumber);
-            hand[1].remove(cardNumber);
+            CardView c = hand[playerIndex].get(cardNumber);
+            hand[playerIndex].remove(cardNumber);
             c.setInHand(false);
-            row[1][convertRowNumber(rowNumber)].add(c);
+            row[playerIndex][convertRowNumber(rowNumber)].add(c);
             int j = convertRowNumber(rowNumber);
-            double Y = (j == 0 ? Y_POSITION_ROW_21 : (j == 1 ? Y_POSITION_ROW_22 : Y_POSITION_ROW_23));
-            (new FlipCardAnimation(c, (row[1][convertRowNumber(rowNumber)].size() == 1 ? (X_POSITION_ROW_LEFT + X_POSITION_ROW_RIGHT - CARD_WIDTH) / 2 : (row[1][convertRowNumber(rowNumber)].get(row[1][convertRowNumber(rowNumber)].size() - 2)).getLayoutX() + SPACING + CARD_WIDTH), Y, true, true, true)).play();
+            double Y = (playerIndex == 0 ? (j == 0 ? Y_POSITION_ROW_11 : (j == 1 ? Y_POSITION_ROW_12 : Y_POSITION_ROW_13)) : (j == 0 ? Y_POSITION_ROW_21 : (j == 1 ? Y_POSITION_ROW_22 : Y_POSITION_ROW_23)));
+            (new FlipCardAnimation(c, (row[playerIndex][convertRowNumber(rowNumber)].size() == 1 ? (X_POSITION_ROW_LEFT + X_POSITION_ROW_RIGHT - CARD_WIDTH) / 2 : (row[playerIndex][convertRowNumber(rowNumber)].get(row[playerIndex][convertRowNumber(rowNumber)].size() - 2)).getLayoutX() + SPACING + CARD_WIDTH), Y, true, true, true)).play();
         });
     }
 
@@ -688,14 +694,14 @@ public class InGameMenu extends Application {
         moveWeatherFromDeckAndPlay(cardNumber, playerIndex);
     }
 
-    public void moveSoldierFromOpponentHandToPlayerRow(int cardNumber, int rowNumber, int playerIndex) { // TODO: player index added
+    public void moveSoldierFromOpponentHandToPlayerRow(int cardNumber, int rowNumber, int playerIndex) {
         Platform.runLater(() -> {
-            CardView c = hand[1].get(cardNumber);
-            hand[1].remove(cardNumber);
+            CardView c = hand[playerIndex].get(cardNumber);
+            hand[playerIndex].remove(cardNumber);
             c.setInHand(false);
-            row[0][convertRowNumber(rowNumber)].add(c);
+            row[1 - playerIndex][convertRowNumber(rowNumber)].add(c);
             int j = convertRowNumber(rowNumber);
-            double Y = (j == 0 ? Y_POSITION_ROW_11 : (j == 1 ? Y_POSITION_ROW_12 : Y_POSITION_ROW_13));
+            double Y = (playerIndex == 0 ? (j == 0 ? Y_POSITION_ROW_11 : (j == 1 ? Y_POSITION_ROW_12 : Y_POSITION_ROW_13)) : (j == 0 ? Y_POSITION_ROW_21 : (j == 1 ? Y_POSITION_ROW_22 : Y_POSITION_ROW_23)));
             (new FlipCardAnimation(c, (row[0][convertRowNumber(rowNumber)].size() == 1 ? (X_POSITION_ROW_LEFT + X_POSITION_ROW_RIGHT - CARD_WIDTH) / 2 : (row[0][convertRowNumber(rowNumber)].get(row[0][convertRowNumber(rowNumber)].size() - 2)).getLayoutX() + SPACING + CARD_WIDTH), Y, true, true, true)).play();
         });
     }
@@ -1352,7 +1358,10 @@ public class InGameMenu extends Application {
     }
 
     private void endRound(String endRoundText) {
-        endTurnAnnounce.setText(endRoundText);
+        if (endRoundText.equals("draw")) endTurnAnnounce.setText("Game Draw");
+        else endTurnAnnounce.setText("Round ends, the winner is \"" + endRoundText + "\"");
+        pain.getChildren().remove(turnPain);
+        pain.getChildren().add(turnPain);
         turnPain.setVisible(true);
         turnPain.setDisable(false);
         mainPain.setDisable(true);
@@ -1361,6 +1370,7 @@ public class InGameMenu extends Application {
         t.setOnFinished(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
+                //TODO add scores
                 turnPain.setVisible(false);
                 turnPain.setDisable(true);
                 mainPain.setDisable(false);
@@ -1373,7 +1383,11 @@ public class InGameMenu extends Application {
 
     public void endGame(String winner) { //TODO if game ends call this func for both and give the winner username
         //TODO save game history
-        endGameAnnounce.setText("Game ends, the winner is \"" + winner + "\"");
+        if (winner.isEmpty()) {
+            endGameAnnounce.setText("Game ends, Draw");
+        } else endGameAnnounce.setText("Game ends, the winner is \"" + winner + "\"");
+        pain.getChildren().remove(endPain);
+        pain.getChildren().add(endPain);
         endPain.setVisible(true);
         endPain.setDisable(false);
         mainPain.setDisable(true);
@@ -1434,7 +1448,7 @@ public class InGameMenu extends Application {
 
     public void send(MouseEvent mouseEvent) {
         if (!message.getText().isEmpty()) {
-            Client.getClient().getSender().sendCommand("send message " + message.getText());
+            Client.getClient().getSender().sendCommand("send message " + "time : " + LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")) + " " + message.getText());
             message.setText("");
         }
         refreshMessageBox();

@@ -2,10 +2,7 @@ package Client.View;
 
 import Client.Client;
 import Client.Enum.Menu;
-import Client.Model.ApplicationRunningTimeData;
-import Client.Model.CardView;
-import Client.Model.Cardin;
-import Client.Model.GameBoardin;
+import Client.Model.*;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
@@ -93,7 +90,6 @@ public class BroadCastMenu extends Application {
     private final CardView[][] horn = new CardView[2][3];
     private final ArrayList<CardView> weather = new ArrayList<>();
 
-
     public BroadCastMenu() {
         super();
         Client client = Client.getClient();
@@ -102,7 +98,7 @@ public class BroadCastMenu extends Application {
 
     public void initialize() {
         if (!isOnline) {
-            ArrayList<GameBoardin> allGameBoardins = (ArrayList<GameBoardin>) Client.getClient().getSender().sendCommand("getGameBoardins");
+            GameLog gameLog = (GameLog) Client.getClient().getSender().sendCommand(""); //TODO
             AtomicInteger i = new AtomicInteger();
             Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
                 refresh(allGameBoardins.get(i.getAndIncrement()));
