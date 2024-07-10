@@ -1395,8 +1395,15 @@ public class InGameMenu extends Application {
     }
 
     public void passTurn() {
-        swapAllThings();
-        refresh();
+        Timeline t = new Timeline(new KeyFrame(Duration.seconds(3)));
+        t.setOnFinished(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                swapAllThings();
+                refresh();
+            }
+        });
+        t.play();
     }
 
     private void swapAllThings() {
