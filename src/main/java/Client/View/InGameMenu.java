@@ -687,7 +687,7 @@ public class InGameMenu extends Application {
         moveWeatherFromDeckAndPlay(cardNumber, playerIndex);
     }
 
-    public void moveSoldierFromOpponentHandToPlayerRow(int cardNumber, int rowNumber) {
+    public void moveSoldierFromOpponentHandToPlayerRow(int cardNumber, int rowNumber, int playerIndex) { // TODO: player index added
         Platform.runLater(() -> {
             CardView c = hand[1].get(cardNumber);
             hand[1].remove(cardNumber);
@@ -702,7 +702,8 @@ public class InGameMenu extends Application {
     public void moveSoldierFromOpponentHandToPlayerRow(Matcher matcher) {
         int rowNumber = Integer.parseInt(matcher.group("rowNumber"));
         int cardNumber = Integer.parseInt(matcher.group("cardNumber"));
-        moveSoldierFromOpponentHandToPlayerRow(cardNumber, rowNumber);
+        int playerIndex = Integer.parseInt(matcher.group("playerIndex"));
+        moveSoldierFromOpponentHandToPlayerRow(cardNumber, rowNumber, playerIndex);
     }
 
     private int convertRowNumber(int fatemeRowNumber) {
