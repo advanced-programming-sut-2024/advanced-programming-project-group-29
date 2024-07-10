@@ -14,6 +14,7 @@ public class Client {
     private static Sender sender;
     private static InGameMenu inGameMenu;
     private static boolean isReadyForOnline = false;
+    private static String seeThisUserLastGame;
 
     public static void main(String[] args) throws Exception {
         client = new Client();
@@ -32,6 +33,14 @@ public class Client {
 
     public static void setReadyForOnline(boolean isReadyForOnline) {
         Client.isReadyForOnline = isReadyForOnline;
+    }
+
+    public static String getSeeThisUserLastGame() {
+        return seeThisUserLastGame;
+    }
+
+    public static void setSeeThisUserLastGame(String seeThisUserLastGame) {
+        Client.seeThisUserLastGame = seeThisUserLastGame;
     }
 
     public static InGameMenu getInGameMenu() {

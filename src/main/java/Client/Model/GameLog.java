@@ -7,12 +7,9 @@ public class GameLog {
     private ArrayList<String> commands = new ArrayList<>();
     private String[] playersUsername = new String[2];
 
-    public void addGameBoardin(GameBoardin gameBoardin) {
-        gameBoardins.add(gameBoardin);
-    }
-
-    public void addCommand(String command) {
-        commands.add(command);
+    public GameLog(String player1, String player2) { // player 1 will be the main player
+        playersUsername[0] = player1;
+        playersUsername[1] = player2;
     }
 
     public ArrayList<GameBoardin> getGameBoardins() {

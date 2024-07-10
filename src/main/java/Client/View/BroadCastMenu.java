@@ -3,23 +3,36 @@ package Client.View;
 import Client.Client;
 import Client.Enum.Menu;
 import Client.Model.*;
+import Client.Model.GameHistory;
+import Client.Regex.GameMenuRegex;
+import Client.Regex.InGameMenuOutputCommand;
+import Client.Regex.InGameMenuRegex;
+import Client.Regex.LoginMenuRegex;
+import Client.View.Animations.BurningCardAnimation;
+import Client.View.Animations.FlipCardAnimation;
+import com.google.gson.GsonBuilder;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.regex.Matcher;
 
 public class BroadCastMenu extends Application {
     private final double X_POSITION_HAND_LEFT = 481;
@@ -44,7 +57,6 @@ public class BroadCastMenu extends Application {
     private final double Y_POSITION_ROW_23 = 236;
     private final double CARD_WIDTH = 70;
     private final double SPACING = 5;
-
 
     public AnchorPane pain;
     public Pane mainPain;
@@ -82,6 +94,9 @@ public class BroadCastMenu extends Application {
     public ImageView winner1;
 
     private boolean isOnline = false;
+    private String seeThisUserGame;
+    private ArrayList<GameBoardin> gameBoardins;
+    private ArrayList<String> logs;
 
     private final ArrayList<CardView>[] hand = new ArrayList[2];
     private final ArrayList<CardView>[] deck = new ArrayList[2];
@@ -93,21 +108,26 @@ public class BroadCastMenu extends Application {
     public BroadCastMenu() {
         super();
         Client client = Client.getClient();
-        client.sendCommand("menu enter " + Menu.GAME_MENU.toString()); //TODO add regex;
+        seeThisUserGame = client.getSeeThisUserLastGame();
+        client.sendCommand("menu enter " + Menu.GAME_MENU.toString()); //TODO add regex BROADCAST_MENU
     }
 
     public void initialize() {
         if (!isOnline) {
-            GameLog gameLog = (GameLog) Client.getClient().getSender().sendCommand(""); //TODO
+            GameLog gameLog = ((GameHistory) Client.getClient().getSender().sendCommand("get game history -u " + seeThisUserGame)).getGameLog(); //TODO add this command
+            gameBoardins = gameLog.getGameBoardins();
+            logs = gameLog.getCommands();
             AtomicInteger i = new AtomicInteger();
-            Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
-                refresh(allGameBoardins.get(i.getAndIncrement()));
+            Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(2), event -> {
+                refresh(gameBoardins.get(i.get()));
+                executeCommand(logs.get(i.get() + 1));
             }));
-            timeline.setCycleCount(allGameBoardins.size());
+            timeline.setCycleCount(logs.size() - 1);
             timeline.setOnFinished(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent actionEvent) {
                     try {
+                        //TODO show end
                         (new RankingMenu()).start(ApplicationRunningTimeData.getStage());
                     } catch (Exception e) {
                         throw new RuntimeException(e);
@@ -127,6 +147,48 @@ public class BroadCastMenu extends Application {
         stage.setScene(scene);
         stage.show();
         ApplicationRunningTimeData.setPane(pane);
+    }
+
+    public void onlineRefresh(String command, GameBoardin gameBoardin) {
+        refresh(gameBoardin);
+        executeCommand(command);
+    }
+
+    private void executeCommand(String input) {
+        Matcher matcher;
+        if ((matcher = InGameMenuOutputCommand.ADD_CARD_TO_HAND.getMatcher(input)).matches())
+            addCardToHand((Cardin) Listener.deSerialize(matcher.group("cardinSerial")), Integer.parseInt(matcher.group("playerIndex")));
+        else if ((matcher = InGameMenuOutputCommand.DESTROY_SOLDIER.getMatcher(input)).matches())
+            destroySoldier(matcher);
+        else if ((matcher = InGameMenuOutputCommand.REMOVE_CARD_FROM_HAND.getMatcher(input)).matches())
+            removeCardFromHandAndKillIt(Integer.parseInt(matcher.group("cardNumber")), Integer.parseInt(matcher.group("playerIndex")));
+        else if ((matcher = InGameMenuOutputCommand.CHANGE_CARD.getMatcher(input)).matches())
+            changeThisCard(matcher);
+        else if (InGameMenuOutputCommand.CLEAR_WEATHER.getMatcher(input).matches())
+            clearWeather();
+        else if (InGameMenuOutputCommand.MOVE_DISCARD_TO_DECK.getMatcher(input).matches())
+            moveDiscardPileToDeckForBoth();
+        else if ((matcher = InGameMenuOutputCommand.MOVE_SOLDIER_TO_ROW.getMatcher(input)).matches())
+            moveSoldier(matcher);
+        else if ((matcher = InGameMenuOutputCommand.MOVE_HAND_TO_ROW.getMatcher(input)).matches())
+            addCardFromHandToRow(matcher);
+        else if ((matcher = InGameMenuOutputCommand.MOVE_DECK_TO_ROW.getMatcher(input)).matches())
+            addCardFromDeckToRow(matcher);
+        else if ((matcher = InGameMenuOutputCommand.MOVE_DECK_TO_HAND.getMatcher(input)).matches())
+            addCardFromDeckToHand(Integer.parseInt(matcher.group("cardNumber")));
+        else if ((matcher = InGameMenuOutputCommand.MOVE_DISCARD_TO_HAND.getMatcher(input)).matches())
+            addCardFromDiscardToHand(Integer.parseInt(matcher.group("cardNumber")), Integer.parseInt(matcher.group("playerIndex")));
+        else if ((matcher = InGameMenuOutputCommand.PLACE_SPECIAL.getMatcher(input)).matches()) {
+            placeSpecial(matcher);
+        } else if ((matcher = InGameMenuOutputCommand.PLACE_WEATHER.getMatcher(input)).matches()) {
+            placeWeather(matcher);
+        } else if ((matcher = InGameMenuOutputCommand.PLACE_SOLDIER.getMatcher(input)).matches()) {
+            placeSoldier(matcher);
+        } else if ((matcher = InGameMenuOutputCommand.MOVE_WEATHER_FORM_DECK_AND_PLAY.getMatcher(input)).matches()) {
+            moveWeatherFromDeckAndPlay(matcher);
+        } else if((matcher = InGameMenuOutputCommand.MOVE_OPPONENT_HAND_TO_MY_ROW.getMatcher(input)).matches()){
+            moveSoldierFromOpponentHandToPlayerRow(matcher);
+        }
     }
 
     private double getXPosition(int i, int n, boolean row, boolean weather) {
@@ -264,5 +326,294 @@ public class BroadCastMenu extends Application {
             winner2.setVisible(false);
             winner1.setVisible(true);
         }
+    }
+
+    /////////////////////////////////////////////////////////////
+    public void changeDecoy(int rowNumber, int cardNumber, int cardNumberDecoy) { //TODO
+        Platform.runLater(() -> {
+            CardView decoy = hand[0].get(cardNumberDecoy);
+            CardView soldier = row[0][rowNumber].get(cardNumber);
+            double x = decoy.getLayoutX();
+            double y = decoy.getLayoutY();
+            discard[0].add(decoy);
+            row[0][rowNumber].remove(soldier);
+            hand[0].set(cardNumberDecoy, soldier);
+            (new FlipCardAnimation(decoy, X_POSITION_DISCARD, Y_POSITION_DISCARD_1, true, true, false)).play();
+            (new FlipCardAnimation(soldier, x, y, true, true, false)).play();
+        });
+    }
+
+    public void removeCardFromHandAndKillIt(int cardNumber, int playerIndex) {
+        Platform.runLater(() -> {
+            CardView card = hand[playerIndex].get(cardNumber);
+            (new FlipCardAnimation(card, X_POSITION_DISCARD, (playerIndex == 0 ? Y_POSITION_DISCARD_1 : Y_POSITION_DISCARD_2), true, true, false)).play();
+        });
+    }
+
+    public void moveSoldier(int rowNumber, int cardNumber, int newRowNumber, int playerIndex) {
+        Platform.runLater(() -> {
+            CardView c = row[playerIndex][convertRowNumber(rowNumber)].get(cardNumber);
+            Field field = null;
+            try {
+                field = this.getClass().getDeclaredField("Y_POSITION_ROW_" + (playerIndex + 1) + convertRowNumber(newRowNumber));
+            } catch (NoSuchFieldException e) {
+                throw new RuntimeException(e);
+            }
+            field.setAccessible(true);
+            double Y = 0;
+            try {
+                Y = (double) field.get(this);
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException(e);
+            }
+            (new FlipCardAnimation(c, (row[playerIndex][convertRowNumber(newRowNumber)].size() == 1 ? (X_POSITION_ROW_LEFT + X_POSITION_ROW_RIGHT - CARD_WIDTH) / 2 :
+                    row[playerIndex][convertRowNumber(newRowNumber)].get(row[0][convertRowNumber(newRowNumber)].size() - 2).getLayoutX() + CARD_WIDTH + SPACING), Y, true, true, false)).play();
+        });
+    }
+
+    public void moveSoldier(Matcher matcher) {
+        int rowNumber = Integer.parseInt(matcher.group("rowNumber"));
+        int cardNumber = Integer.parseInt(matcher.group("cardNumber"));
+        int newRowNumber = Integer.parseInt(matcher.group("newRowNumber"));
+        int playerIndex = Integer.parseInt(matcher.group("playerIndex"));
+        moveSoldier(rowNumber, cardNumber, newRowNumber, playerIndex);
+    }
+
+    public void moveDiscardPileToDeckForBoth() {
+        Platform.runLater(() -> {
+            ArrayList<CardView> discard1Copy = new ArrayList<>(discard[0]);
+            ArrayList<CardView> discard2Copy = new ArrayList<>(discard[1]);
+            final int[] flag1 = {0};
+            Timeline timeline1 = new Timeline(new KeyFrame(Duration.seconds(0.3), new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent actionEvent) {
+                    (new FlipCardAnimation(discard1Copy.get(flag1[0]++), X_POSITION_Deck, Y_POSITION_DISCARD_1, false, true, false)).play();
+                }
+            }));
+            final int[] flag2 = {0};
+            Timeline timeline2 = new Timeline(new KeyFrame(Duration.seconds(0.3), new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent actionEvent) {
+                    (new FlipCardAnimation(discard2Copy.get(flag2[0]++), X_POSITION_Deck, Y_POSITION_DISCARD_2, false, true, false)).play();
+                }
+            }));
+            timeline1.setCycleCount(discard1Copy.size());
+            timeline2.setCycleCount(discard2Copy.size());
+            if (!discard1Copy.isEmpty()) timeline1.play();
+            if (!discard2Copy.isEmpty()) timeline2.play();
+        });
+    }
+
+    public void addCardToHand(Cardin cardin, int playerIndex) {
+        Platform.runLater(() -> {
+            CardView c = new CardView(cardin, -200, -200, null, false);
+            pain.getChildren().add(c);
+            (new FlipCardAnimation(c, (hand[playerIndex].size() == 1 ? (X_POSITION_HAND_LEFT + X_POSITION_HAND_RIGHT - CARD_WIDTH) / 2 : (hand[playerIndex].get(hand[playerIndex].size() - 2)).getLayoutX() + SPACING + CARD_WIDTH), (playerIndex == 0 ? Y_POSITION_HAND_1 : Y_POSITION_HAND_2), true, true, false)).play();
+        });
+    }
+
+    public void addCardFromDeckToHand(int cardNumber) {
+        Platform.runLater(() -> {
+            CardView c = deck[0].get(cardNumber);
+            pain.getChildren().remove(c);
+            pain.getChildren().add(c);
+            (new FlipCardAnimation(c, (hand[0].size() == 1 ? (X_POSITION_HAND_LEFT + X_POSITION_HAND_RIGHT - CARD_WIDTH) / 2 : (hand[0].get(hand[0].size() - 2)).getLayoutX() + SPACING + CARD_WIDTH), Y_POSITION_HAND_1, true, true, false)).play();
+        });
+    }
+
+    public void addCardFromDeckToRow(int cardNumber, int rowNumber, int playerIndex) {
+        Platform.runLater(() -> {
+            CardView c = deck[playerIndex].get(cardNumber);
+            pain.getChildren().remove(c);
+            pain.getChildren().add(c);
+            int j = convertRowNumber(rowNumber);
+            double Y = (playerIndex == 0 ? (j == 0 ? Y_POSITION_ROW_11 : (j == 1 ? Y_POSITION_ROW_12 : Y_POSITION_ROW_13)) : (j == 0 ? Y_POSITION_ROW_21 : (j == 1 ? Y_POSITION_ROW_22 : Y_POSITION_ROW_23)));
+            (new FlipCardAnimation(c, (row[playerIndex][convertRowNumber(rowNumber)].size() == 1 ? (X_POSITION_ROW_LEFT + X_POSITION_ROW_RIGHT - CARD_WIDTH) / 2 : (row[playerIndex][convertRowNumber(rowNumber)].get(row[playerIndex][convertRowNumber(rowNumber)].size() - 2)).getLayoutX() + SPACING + CARD_WIDTH), Y, true, true, false)).play();
+        });
+    }
+
+    public void addCardFromHandToRow(int cardNumber, int rowNumber, int playerIndex) {
+        Platform.runLater(() -> {
+            CardView c = hand[playerIndex].get(cardNumber);
+            int j = convertRowNumber(rowNumber);
+            double Y = (playerIndex == 0 ? (j == 0 ? Y_POSITION_ROW_11 : (j == 1 ? Y_POSITION_ROW_12 : Y_POSITION_ROW_13)) : (j == 0 ? Y_POSITION_ROW_21 : (j == 1 ? Y_POSITION_ROW_22 : Y_POSITION_ROW_23)));
+            (new FlipCardAnimation(c, (row[playerIndex][convertRowNumber(rowNumber)].size() == 1 ? (X_POSITION_ROW_LEFT + X_POSITION_ROW_RIGHT - CARD_WIDTH) / 2 : (row[playerIndex][convertRowNumber(rowNumber)].get(row[playerIndex][convertRowNumber(rowNumber)].size() - 2)).getLayoutX() + SPACING + CARD_WIDTH), Y, true, true, false)).play();
+        });
+    }
+
+    public void addCardFromDeckToRow(Matcher matcher) {
+        int cardNumber = Integer.parseInt(matcher.group("cardNumber"));
+        int rowNumber = Integer.parseInt(matcher.group("rowNumber"));
+        int playerIndex = Integer.parseInt(matcher.group("playerIndex"));
+        addCardFromDeckToRow(cardNumber, rowNumber, playerIndex);
+    }
+
+    public void addCardFromHandToRow(Matcher matcher) {
+        int cardNumber = Integer.parseInt(matcher.group("cardNumber"));
+        int rowNumber = Integer.parseInt(matcher.group("rowNumber"));
+        int playerIndex = Integer.parseInt(matcher.group("playerIndex"));
+        addCardFromHandToRow(cardNumber, rowNumber, playerIndex);
+    }
+
+    public void addCardFromDiscardToHand(int cardNumber, int playerIndex) {
+        Platform.runLater(() -> {
+            CardView c = discard[playerIndex].get(cardNumber);
+            pain.getChildren().remove(c);
+            pain.getChildren().add(c);
+            (new FlipCardAnimation(c, (hand[playerIndex].size() == 1 ? (X_POSITION_HAND_LEFT + X_POSITION_HAND_RIGHT - CARD_WIDTH) / 2 : (hand[playerIndex].get(hand[playerIndex].size() - 2)).getLayoutX() + SPACING + CARD_WIDTH), (playerIndex == 0 ? Y_POSITION_HAND_1 : Y_POSITION_HAND_2), true, true, false)).play();
+        });
+    }
+
+    public void changeThisCard(int rowNumber, int cardNumber, Cardin cardin, int playerIndex) {
+        Platform.runLater(() -> {
+            CardView oldC = row[playerIndex][convertRowNumber(rowNumber)].get(cardNumber);
+            CardView c = new CardView(cardin, oldC.getLayoutX(), oldC.getLayoutY(), null, false);
+            pain.getChildren().remove(oldC);
+            pain.getChildren().add(c);
+        });
+    }
+
+    public void changeThisCard(Matcher matcher) {
+        int rowNumber = Integer.parseInt(matcher.group("rowNumber"));
+        int cardNumber = Integer.parseInt(matcher.group("cardNumber"));
+        Cardin cardin = (Cardin) Listener.deSerialize(matcher.group("cardinSerial"));
+        int playerIndex = Integer.parseInt(matcher.group("playerIndex"));
+        changeThisCard(rowNumber, cardNumber, cardin, playerIndex);
+    }
+
+    public void destroySoldier(int rowNumber, int cardNumber, int playerIndex) {
+        Platform.runLater(() -> {
+            CardView c = row[playerIndex][convertRowNumber(rowNumber)].get(cardNumber);
+            (new BurningCardAnimation(c, X_POSITION_DISCARD, (playerIndex == 0 ? Y_POSITION_DISCARD_1 : Y_POSITION_DISCARD_2))).play();
+        });
+    }
+
+    public void destroySoldier(Matcher matcher) {
+        int playerIndex = Integer.parseInt(matcher.group("playerIndex"));
+        int row = Integer.parseInt(matcher.group("row"));
+        int cardNumber = Integer.parseInt(matcher.group("cardNumber"));
+        destroySoldier(row, cardNumber, playerIndex);
+    }
+
+    public void placeSpecial(int rowNumber, int cardNumber, int playerIndex) {
+        Platform.runLater(() -> {
+            CardView c = hand[playerIndex].get(cardNumber);
+            double Y = (playerIndex == 0 ? (convertRowNumber(rowNumber) == 0 ? Y_POSITION_ROW_11 : (convertRowNumber(rowNumber) == 1 ? Y_POSITION_ROW_12 : Y_POSITION_ROW_13)) : (convertRowNumber(rowNumber) == 0 ? Y_POSITION_ROW_21 : (convertRowNumber(rowNumber) == 1 ? Y_POSITION_ROW_22 : Y_POSITION_ROW_23)));
+            (new FlipCardAnimation(c, X_POSITION_SPELL, Y, true, true, false)).play();
+        });
+    }
+
+    public void placeSpecial(Matcher matcher) {
+        int rowNumber = Integer.parseInt(matcher.group("rowNumber"));
+        int cardNumber = Integer.parseInt(matcher.group("cardNumber"));
+        int playerIndex = Integer.parseInt(matcher.group("playerIndex"));
+        placeSpecial(rowNumber, cardNumber, playerIndex);
+    }
+
+    public void placeWeather(int cardNumber, int playerIndex) {
+        Platform.runLater(() -> {
+            CardView c = hand[playerIndex].get(cardNumber);
+            hand[playerIndex].remove(cardNumber);
+            weather.add(c);
+            refreshWeather();
+            (new FlipCardAnimation(c, (weather.size() == 1 ? (X_POSITION_WEATHER_LEFT + X_POSITION_WEATHER_RIGHT - CARD_WIDTH) / 2 : (weather.get(weather.size() - 2)).getLayoutX() + SPACING + CARD_WIDTH), Y_POSITION_WEATHER, true, true, false)).play();
+        });
+    }
+
+    public void placeWeather(Matcher matcher) {
+        int cardNumber = Integer.parseInt(matcher.group("cardNumber"));
+        int playerIndex = Integer.parseInt(matcher.group("playerIndex"));
+        placeWeather(cardNumber, playerIndex);
+    }
+
+    public void placeSoldier(int rowNumber, int cardNumber, int playerIndex) {  // TODO: player index added, it used to be for opponent
+        Platform.runLater(() -> {
+            CardView c = hand[playerIndex].get(cardNumber);
+            int j = convertRowNumber(rowNumber);
+            double Y = (playerIndex == 0 ? (j == 0 ? Y_POSITION_ROW_11 : (j == 1 ? Y_POSITION_ROW_12 : Y_POSITION_ROW_13)) : (j == 0 ? Y_POSITION_ROW_21 : (j == 1 ? Y_POSITION_ROW_22 : Y_POSITION_ROW_23)));
+            (new FlipCardAnimation(c, (row[playerIndex][convertRowNumber(rowNumber)].size() == 1 ? (X_POSITION_ROW_LEFT + X_POSITION_ROW_RIGHT - CARD_WIDTH) / 2 : (row[playerIndex][convertRowNumber(rowNumber)].get(row[playerIndex][convertRowNumber(rowNumber)].size() - 2)).getLayoutX() + SPACING + CARD_WIDTH), Y, true, true, false)).play();
+        });
+    }
+
+    public void placeSoldier(Matcher matcher) {
+        int rowNumber = Integer.parseInt(matcher.group("rowNumber"));
+        int cardNumber = Integer.parseInt(matcher.group("cardNumber"));
+        int playerIndex = Integer.parseInt(matcher.group("playerIndex"));
+        placeSoldier(rowNumber, cardNumber, playerIndex);
+    }
+
+    public void moveWeatherFromDeckAndPlay(int cardNumber, int indexPlayer) {
+        Platform.runLater(() -> {
+            CardView c = deck[indexPlayer].get(cardNumber);
+            deck[indexPlayer].remove(cardNumber);
+            weather.add(c);
+            refreshWeather();
+            (new FlipCardAnimation(c, (weather.size() == 1 ? (X_POSITION_WEATHER_LEFT + X_POSITION_WEATHER_RIGHT - CARD_WIDTH) / 2 : (weather.get(weather.size() - 2)).getLayoutX() + SPACING + CARD_WIDTH), Y_POSITION_WEATHER, true, true, false)).play();
+        });
+    }
+
+    public void moveWeatherFromDeckAndPlay(Matcher matcher) {
+        int cardNumber = Integer.parseInt(matcher.group("cardNumber"));
+        int playerIndex = Integer.parseInt(matcher.group("playerIndex"));
+        moveWeatherFromDeckAndPlay(cardNumber, playerIndex);
+    }
+
+    public void moveSoldierFromOpponentHandToPlayerRow(int cardNumber, int rowNumber, int playerIndex) {
+        Platform.runLater(() -> {
+            CardView c = hand[playerIndex].get(cardNumber);
+            int j = convertRowNumber(rowNumber);
+            double Y = (playerIndex == 0 ? (j == 0 ? Y_POSITION_ROW_11 : (j == 1 ? Y_POSITION_ROW_12 : Y_POSITION_ROW_13)) : (j == 0 ? Y_POSITION_ROW_21 : (j == 1 ? Y_POSITION_ROW_22 : Y_POSITION_ROW_23)));
+            (new FlipCardAnimation(c, (row[playerIndex][convertRowNumber(rowNumber)].size() == 1 ? (X_POSITION_ROW_LEFT + X_POSITION_ROW_RIGHT - CARD_WIDTH) / 2 : (row[playerIndex][convertRowNumber(rowNumber)].get(row[playerIndex][convertRowNumber(rowNumber)].size() - 2)).getLayoutX() + SPACING + CARD_WIDTH), Y, true, true, false)).play();
+        });
+    }
+
+    public void moveSoldierFromOpponentHandToPlayerRow(Matcher matcher) {
+        int rowNumber = Integer.parseInt(matcher.group("rowNumber"));
+        int cardNumber = Integer.parseInt(matcher.group("cardNumber"));
+        int playerIndex = Integer.parseInt(matcher.group("playerIndex"));
+        moveSoldierFromOpponentHandToPlayerRow(cardNumber, rowNumber, playerIndex);
+    }
+
+    private int convertRowNumber(int fatemeRowNumber) {
+        int ostadRowNumber = 2 - fatemeRowNumber; // :))
+        return ostadRowNumber;
+    }
+
+    public void clearWeather() {
+        Platform.runLater(() -> {
+            setWeather(false, false, false);
+            weather.forEach(c -> pain.getChildren().remove(c));
+            weather.clear();
+        });
+    }
+
+    private void refreshWeather() {
+        boolean rain = false;
+        boolean fog = false;
+        boolean frost = false;
+        boolean isClear = false;
+        for (CardView c : weather) {
+            if (c.getCard().name.matches(".*(R|r)ain.*")) rain = true;
+            else if (c.getCard().name.matches(".*(F|f)og.*")) fog = true;
+            else if (c.getCard().name.matches(".*(F|f)rost.*")) frost = true;
+            else if (c.getCard().name.matches(".*(S|s)torm.*")) {
+                fog = true;
+                rain = true;
+            } else if (c.getCard().name.matches(".*(C|c)lear.*")) isClear = true;
+        }
+        if (isClear) {
+            setWeather(false, false, false);
+            weather.forEach(c -> pain.getChildren().remove(c));
+            weather.clear();
+        } else setWeather(rain, fog, frost);
+    }
+
+    private void setWeather(boolean rain, boolean fog, boolean frost) {
+        rowWeather11.setVisible(rain);
+        rowWeather21.setVisible(rain);
+        rowWeather12.setVisible(fog);
+        rowWeather22.setVisible(fog);
+        rowWeather13.setVisible(frost);
+        rowWeather23.setVisible(frost);
     }
 }

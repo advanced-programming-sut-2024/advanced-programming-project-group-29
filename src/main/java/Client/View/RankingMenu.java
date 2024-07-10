@@ -7,6 +7,7 @@ import Client.Model.ApplicationRunningTimeData;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -34,6 +35,7 @@ public class RankingMenu extends Application {
     public Label nUsers;
     public TableView tableView;
     private Client client;
+    private Timeline timeline;
 
     public RankingMenu() {
         super();
@@ -77,7 +79,17 @@ public class RankingMenu extends Application {
                             setText(item);
                             setOnMouseClicked(event -> {
                                 if (item.equals("See Last Game") && event.getClickCount() == 2) {
-                                    System.out.println("sdlnlansd");
+                                    Platform.runLater(() -> {
+                                        int row = getTableRow().getIndex();
+                                        String name = ((ArrayList<String>) tableView.getItems().get(row)).get(2);
+                                        Client.setSeeThisUserLastGame(name);
+                                        try {
+                                            timeline.stop();
+                                            (new BroadCastMenu()).start(ApplicationRunningTimeData.getStage());
+                                        } catch (Exception e) {
+                                            throw new RuntimeException(e);
+                                        }
+                                    });
                                 }
                             });
                         }
@@ -125,7 +137,7 @@ public class RankingMenu extends Application {
     public void initialize() {
         final ObservableList<ArrayList<String>>[] data = new ObservableList[]{getData()};
         refreshPain(data[0], data[0].size());
-        Timeline t = new Timeline(new KeyFrame(Duration.seconds(5), new EventHandler<ActionEvent>() {
+        timeline = new Timeline(new KeyFrame(Duration.seconds(5), new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
                 ObservableList<ArrayList<String>> newData = getData();
@@ -135,8 +147,8 @@ public class RankingMenu extends Application {
                 }
             }
         }));
-        t.setCycleCount(-1);
-        t.play();
+        timeline.setCycleCount(-1);
+        timeline.play();
     }
 
     @Override
@@ -155,6 +167,7 @@ public class RankingMenu extends Application {
     }
 
     public void back(MouseEvent mouseEvent) throws Exception {
+        timeline.stop();
         new MainMenu().start(ApplicationRunningTimeData.getStage());
     }
 

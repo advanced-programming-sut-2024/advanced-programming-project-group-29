@@ -1,4 +1,6 @@
-package Server.Model;
+package Client.Model;
+
+import Server.Model.User;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -10,18 +12,6 @@ public class GameHistory {
     private int winner; // 0 for player1, 1 for player2 and -1 for draw
     private GameLog[] gameLog = new GameLog[2];
 
-    public GameHistory(User player1, User player2, Date gameDate, GameLog player1GameLog, GameLog player2GameLog) {
-        players[0] = player1.getUsername();
-        players[1] = player2.getUsername();
-        this.gameDate = gameDate;
-        gameLog[0] = player1GameLog;
-        gameLog[1] = player2GameLog;
-    }
-
-    public void setPlayer(int playerNumber, User player) {
-        players[playerNumber] = player.getUsername();
-    }
-
     public String getPlayer(int playerNumber) {
         return players[playerNumber];
     }
@@ -32,17 +22,6 @@ public class GameHistory {
 
     public GameLog getGameLog() {
         return gameLog[0];
-    }
-
-    public void setScorePerRound(int score, int roundNumber, int playerNumber) {
-        if (scorePerRound[playerNumber] == null) {
-            scorePerRound[playerNumber] = new ArrayList<>();
-        }
-        if (scorePerRound[playerNumber].size() < roundNumber) {
-            scorePerRound[playerNumber].add(score);
-        } else {
-            scorePerRound[playerNumber].set(roundNumber, score);
-        }
     }
 
     public int getPlayerNumber(User player) {
