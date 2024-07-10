@@ -18,20 +18,19 @@ public class Sender {
     }
 
     public boolean establishConnection(String address, int port) {
-        while(true) {
-            try {
-                socket = new Socket(address, port);
-                sendBuffer = new DataOutputStream(
-                        socket.getOutputStream()
-                );
-                receiveBuffer = new DataInputStream(
-                        socket.getInputStream()
-                );
-                return true;
-            } catch (Exception e) {
-                System.err.println("Unable to initialize socket!");
-                e.printStackTrace();
-            }
+        try {
+            socket = new Socket(address, port);
+            sendBuffer = new DataOutputStream(
+                    socket.getOutputStream()
+            );
+            receiveBuffer = new DataInputStream(
+                    socket.getInputStream()
+            );
+            System.out.println("Connection established");
+            return true;
+        } catch (Exception e) {
+            System.err.println("Unable to initialize socket!");
+            return false;
         }
     }
 
@@ -49,7 +48,7 @@ public class Sender {
 
     private String sendMessage(String command) {
         try {
-            sendBuffer.writeUTF((token == null ? "" : token + ":" )+ command);
+            sendBuffer.writeUTF((token == null ? "" : token + ":") + command);
             return receiveBuffer.readUTF();
         } catch (Exception e) {
             return null;
@@ -66,7 +65,7 @@ public class Sender {
     }
 
     private Object deSerialize(String serializedObject) {
-        if(serializedObject == null || serializedObject.equals("null"))
+        if (serializedObject == null || serializedObject.equals("null"))
             return null;
         try {
             int endOfClassName = serializedObject.indexOf(":");
@@ -87,7 +86,7 @@ public class Sender {
     public static String getSendableObject(Object object) {
         com.google.gson.Gson gson = new GsonBuilder().setPrettyPrinting().create();
         String clazz = object.getClass().getName();
-        if(clazz.matches("Client.+"))
+        if (clazz.matches("Client.+"))
             clazz = "Server" + clazz.substring(6);
         return clazz + ":" + gson.toJson(object);
     }
