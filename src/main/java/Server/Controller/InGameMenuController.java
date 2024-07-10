@@ -42,7 +42,7 @@ public class InGameMenuController extends Thread {
             } else if ((matcher = InGameMenuRegex.SEND_EMOJI_REACTION.getMatcher(inputCommand)).matches()) {
                 opponentSender.sendCommand(inputCommand);
             } else if ((matcher = InGameMenuRegex.PASS_TURN.getMatcher(inputCommand)).matches()) {
-                result = passTurn(applicationController);
+                passTurnCalled(applicationController);
             } else if ((matcher = InGameMenuRegex.SEND_MESSAGE.getMatcher(inputCommand)).matches()) {
                 saveMessage(applicationController, matcher.group("message"));
             } else if ((matcher = InGameMenuRegex.GET_CHAT_BOX.getMatcher(inputCommand)).matches()){
@@ -55,6 +55,26 @@ public class InGameMenuController extends Thread {
             e.printStackTrace();
             return null;
         }
+    }
+
+    private static void passTurnCalled(ApplicationController applicationController) {
+        GameBoard gameBoard = applicationController.getCurrentUser().getCurrentGameBoard();
+        gameBoard.passTurnCalled();
+        gameBoard.changeTurn();
+        Result result = gameBoard.passTurn();
+        if(result == null || result.isSuccessful())
+            return;
+        applicationController.getCurrentUser().getSender().sendCommand("end round " + result.getMessage().get(0));
+    }
+
+    private static void changeTurn(User user){
+        GameBoard gameBoard = user.getCurrentGameBoard();
+        if(gameBoard.isPassTurnCalled())
+            return;
+        gameBoard.changeTurn();
+        user.getSender().sendCommand("change turn");
+        if(gameBoard.isGameOnline())
+            user.getOpponent().getSender().sendCommand("change turn");
     }
 
     private static Object getChatBox(ApplicationController applicationController) {
@@ -70,9 +90,11 @@ public class InGameMenuController extends Thread {
             applicationController.getCurrentUser().getOpponent().getSender().sendCommandWithOutResponse("refresh chat box");
     }
 
+    /* // TODO: it shall be removed
     private static Result passTurn(ApplicationController applicationController) {
         User user = applicationController.getCurrentUser();
         boolean isOnline = user.getCurrentGameBoard().isGameOnline();
+        user.getCurrentGameBoard().changeTurn();
         Result result = user.getCurrentGameBoard().passTurn();
         if(user.getCurrentGameBoard() == null)
             return null;
@@ -82,6 +104,8 @@ public class InGameMenuController extends Thread {
             applicationController.setCurrentUser(user.getOpponent());
         return result;
     }
+
+     */
 
     private static void commanderPowerPlay(User user) {
         Commander commander = user.getCommander();
@@ -104,6 +128,7 @@ public class InGameMenuController extends Thread {
         gameBoard.addLog("place special " + cardNumber + " in row " + rowNumber + " 0", gameBoard.getPlayerNumber(user));
         gameBoard.addLog("place special " + cardNumber + " in row " + rowNumber + " 1", 1 - gameBoard.getPlayerNumber(user));
         spell.executeAction();
+        changeTurn(user);
     }
 
     private static void placeWeather(User user, Matcher matcher) {
@@ -122,6 +147,7 @@ public class InGameMenuController extends Thread {
             gameBoard.addLog("place weather " + cardNumber + " 0", gameBoard.getPlayerNumber(user));
             gameBoard.addLog("place weather " + cardNumber + " 1", 1 - gameBoard.getPlayerNumber(user));
             spell.executeAction();
+            changeTurn(user);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -156,10 +182,30 @@ public class InGameMenuController extends Thread {
                 }
             }
             soldier.executeAction();
+            changeTurn(user);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
+    public static void placeDecoy(User user, Matcher matcher){
+        int thisCardNumber = Integer.parseInt(matcher.group("thisCardNumber"));
+        int cardNumber = Integer.parseInt(matcher.group("cardNumber"));
+        int rowNumber = Integer.parseInt(matcher.group("rowNumber"));
+        int playerIndex = user.getCurrentGameBoard().getPlayerNumber(user);
+        GameBoard gameBoard = user.getCurrentGameBoard();
+        Soldier soldier = gameBoard.getRows()[playerIndex][rowNumber].get(cardNumber);
+        gameBoard.getRows()[playerIndex][rowNumber].remove(cardNumber);
+        Spell decoy = (Spell) user.getHand().get(thisCardNumber);
+        user.getHand().set(thisCardNumber, soldier);
+        user.getDiscardPile().add(decoy);
+        if(gameBoard.isGameOnline())
+            user.getOpponent().getSender().sendCommand("place decoy " + thisCardNumber + " to card in " + rowNumber + " " + cardNumber + " 1");
+        gameBoard.addLog("place decoy " + thisCardNumber + " to card in " + rowNumber + " " + cardNumber + " 0", playerIndex);
+        gameBoard.addLog("place decoy " + thisCardNumber + " to card in " + rowNumber + " " + cardNumber + " 1", 1 - playerIndex);
+        changeTurn(user);
+    }
+
 
     public static void startGame(User user){ // it is only for offline games
         User opponent = user.getOpponent();
@@ -381,25 +427,6 @@ public class InGameMenuController extends Thread {
         }
         card.executeAction();
     }
-
-    public static void placeDecoy(User user, Matcher matcher){
-        int thisCardNumber = Integer.parseInt(matcher.group("thisCardNumber"));
-        int cardNumber = Integer.parseInt(matcher.group("cardNumber"));
-        int rowNumber = Integer.parseInt(matcher.group("rowNumber"));
-        int playerIndex = user.getCurrentGameBoard().getPlayerNumber(user);
-        GameBoard gameBoard = user.getCurrentGameBoard();
-        Soldier soldier = gameBoard.getRows()[playerIndex][rowNumber].get(cardNumber);
-        gameBoard.getRows()[playerIndex][rowNumber].remove(cardNumber);
-        Spell decoy = (Spell) user.getHand().get(thisCardNumber);
-        user.getHand().set(thisCardNumber, soldier);
-        user.getDiscardPile().add(decoy);
-        if(gameBoard.isGameOnline())
-            user.getOpponent().getSender().sendCommand("place decoy " + thisCardNumber + " to card in " + rowNumber + " " + cardNumber + " 1");
-        gameBoard.addLog("place decoy " + thisCardNumber + " to card in " + rowNumber + " " + cardNumber + " 0", playerIndex);
-        gameBoard.addLog("place decoy " + thisCardNumber + " to card in " + rowNumber + " " + cardNumber + " 1", 1 - playerIndex);
-        return;
-    }
-
 
     public static void addWeatherAndRemoveFromDeck (Spell spell){
         if(spell == null)

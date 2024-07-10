@@ -1343,7 +1343,7 @@ public class InGameMenu extends Application {
     }
 
     /////////////////////passTurn
-    private void endRound(String endRoundText) {
+    public void endRound(String endRoundText) {
         if (endRoundText.equals("draw")) endTurnAnnounce.setText("Game Draw");
         else endTurnAnnounce.setText("Round ends, the winner is \"" + endRoundText + "\"");
         pain.getChildren().remove(turnPain);

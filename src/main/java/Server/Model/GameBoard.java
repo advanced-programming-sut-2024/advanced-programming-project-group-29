@@ -19,8 +19,7 @@ public class GameBoard {
     private final ArrayList<Spell> weather = new ArrayList<>();
     private final Commander[] playersLeaders = new Commander[2];
     private final GameHistory gameHistory;
-    private boolean isThereAnythingPlayed = false;
-    private int notPlayingTurns = 0;
+    private int passTurnCalled = 0;
     private boolean isGameOnline = false;
     private final ChatBox chatBox = new ChatBox();
     private final GameLog[] gameLog = new GameLog[2];
@@ -73,7 +72,6 @@ public class GameBoard {
 
     public void addSoldierToRow(int playerNumber, int rowNumber, Soldier soldier) {
         rows[playerNumber][rowNumber].add(soldier);
-        isThereAnythingPlayed = true;
     }
 
     public void removeSoldierFromRow(int playerNumber, int rowNumber, Soldier soldier) {
@@ -111,7 +109,6 @@ public class GameBoard {
 
     public void addSpecialCard(int playerNumber, int rowNumber, Spell spell) {
         specialCards[playerNumber][rowNumber] = spell;
-        isThereAnythingPlayed = true;
     }
 
     public Commander getPlayerLeader(int playerNumber) {
@@ -194,7 +191,6 @@ public class GameBoard {
     }
 
     public void addWeather(Spell spell) {
-        isThereAnythingPlayed = true;
         weather.add(spell);
         String name = spell.getName().toLowerCase();
         if (name.matches(".*biting.+frost.*"))
@@ -256,10 +252,17 @@ public class GameBoard {
         return currentPlayer;
     }
 
+    public void passTurnCalled(){
+        passTurnCalled++;
+    }
+
+    public boolean isPassTurnCalled(){
+        return passTurnCalled > 0;
+    }
+
     public Result passTurn() {
-        currentPlayer = 1 - currentPlayer;
-        if (notPlayingTurns == 1) {
-            notPlayingTurns = 0;
+        if (passTurnCalled == 2) {
+            passTurnCalled = 0;
             if (playersScore[0] <= playersScore[1]) {
                 playersCrystals[0]--;
             }
@@ -284,12 +287,6 @@ public class GameBoard {
                 return new Result(false, "draw");
             return new Result(false, winner);
         }
-        if (!isThereAnythingPlayed) {
-            notPlayingTurns++;
-        } else {
-            notPlayingTurns = 0;
-        }
-        isThereAnythingPlayed = false;
         return new Result(true);
     }
 
@@ -315,10 +312,6 @@ public class GameBoard {
 
     public ChatBox getChatBox() {
         return chatBox;
-    }
-
-    public void setsAnyThingPlayed(boolean b) {
-        isThereAnythingPlayed = b;
     }
 
     public void addLog(String command, int playerIndex) {

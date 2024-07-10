@@ -116,11 +116,10 @@ public class Listener extends Thread {
                                 e.printStackTrace();
                             }
                         });
-                    } else if((matcher = InGameMenuOutputCommand.PASS_TURN_FOR_OPPONENT.getMatcher(input)).matches()){
-                        Matcher finalMatcher = matcher;
+                    } else if(InGameMenuOutputCommand.PASS_TURN_FOR_OPPONENT.getMatcher(input).matches()){
                         Platform.runLater(() -> {
                             try {
-                                inGameMenu.passTurn(finalMatcher.group("winner")); //TODO: check this
+                                inGameMenu.passTurn();
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
@@ -155,6 +154,23 @@ public class Listener extends Thread {
                         Platform.runLater(() -> {
                             try {
                                 inGameMenu.refreshMessageBox();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        });
+                    } else if(InGameMenuOutputCommand.CHANGE_TURN.getMatcher(input).matches()){
+                        Platform.runLater(() -> {
+                            try {
+                                inGameMenu.passTurn();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        });
+                    } else if((matcher = InGameMenuOutputCommand.END_ROUND.getMatcher(input)).matches()){
+                        Matcher finalMatcher3 = matcher;
+                        Platform.runLater(() -> {
+                            try {
+                                inGameMenu.endRound(finalMatcher3.group("winner"));
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
