@@ -3,12 +3,13 @@ package Server.Regex;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public enum TournamentMenuRegex {
-    ADD_TO_TOURNAMENT("add to tournament -u (?<username>//S+)");
+public enum WaitingMenuRegex {
+    ADD_TO_TOURNAMENT("add to tournament -u (?<username>\\S+)"),
+    TOURNAMENT_PLAYERS_COUNT("tournament players count");
 
     private final String regex;
 
-    TournamentMenuRegex(String regex) {
+    WaitingMenuRegex(String regex) {
         this.regex = regex;
     }
 

@@ -34,7 +34,7 @@ public class DatabaseManager {
         }
     }
 
-    public static void insertUser(User user) {
+    public synchronized static void insertUser(User user) {
         if (userExists(user.getUsername()))
             return;
 
@@ -62,7 +62,7 @@ public class DatabaseManager {
         }
     }
 
-    public static boolean userExists(String username) {
+    public synchronized static boolean userExists(String username) {
         String sql = "SELECT COUNT(*) FROM User WHERE username = ?";
         try (Connection conn = DriverManager.getConnection(URL);
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -78,7 +78,7 @@ public class DatabaseManager {
         return false;
     }
 
-    public static void updateUser(User user, String oldUsername) {
+    public synchronized static void updateUser(User user, String oldUsername) {
         String sql = "UPDATE User SET username = ?, password = ?, nickname = ?, email = ?, questionNumber = ?, answer = ?, faction = ?, commander = ?, deck = ?, gameHistory = ? WHERE username = ?";
 
         try (Connection conn = DriverManager.getConnection(URL);
@@ -104,7 +104,7 @@ public class DatabaseManager {
         }
     }
 
-    public static ArrayList<User> loadUsers() {
+    public synchronized static ArrayList<User> loadUsers() {
         String sql = "SELECT * FROM User";
         ArrayList<User> users = new ArrayList<>();
 

@@ -5,9 +5,9 @@ import java.util.Collections;
 import java.util.HashMap;
 
 public class Tournament {
-    private static ArrayList<Tournament> tournaments;
+    private static ArrayList<Tournament> tournaments = new ArrayList<>();
     private final ArrayList<User>[] tableWinners = new ArrayList[3];
-    private final ArrayList<User>[] tableLosers  = new ArrayList[3];
+    private final ArrayList<User>[] tableLosers = new ArrayList[3];
     private boolean isStarted;
     private final ArrayList<User> players = new ArrayList<>();
     private final ArrayList<User> Winners = new ArrayList<>();
@@ -25,25 +25,34 @@ public class Tournament {
             games.add(new ArrayList<>());
         }
         isStarted = false;
+        tournaments.add(this);
     }
 
     public synchronized static void addPlayer(User player) {
         for (Tournament tournament : tournaments) {
             if (tournament.hasSpace()) {
                 tournament.addPlayerToTournament(player);
+                player.setTournament(tournament);
                 return;
             }
         }
         Tournament tournament = new Tournament();
+        player.setTournament(tournament);
+        System.err.println("bruh");
         tournament.addPlayerToTournament(player);
     }
 
     public synchronized void addPlayerToTournament(User player) {
+        System.err.println("secound");
         this.players.add(player);
     }
 
     public boolean hasSpace() {
         return players.size() < 8;
+    }
+
+    public int getPlayersCount() {
+        return players.size();
     }
 
     public boolean hasStarted() {

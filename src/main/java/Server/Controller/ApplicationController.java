@@ -1,20 +1,15 @@
 package Server.Controller;
 
-import Client.View.LoginMenu;
-import Server.Model.*;
 import Server.Enum.Menu;
+import Server.Model.Sender;
+import Server.Model.User;
 import Server.Regex.ChangeMenuRegex;
 import Server.Regex.GameMenuRegex;
 import Server.Regex.LoginMenuRegex;
 import com.google.gson.GsonBuilder;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
 import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -28,7 +23,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 public class ApplicationController extends Thread {
     private static final ArrayList<ApplicationController> allApplicationControllers = new ArrayList<>();
     private static String IP = "127.0.0.1";
-    private static int PORT = 4000;
+    private static int PORT = 8080;
 
     public static final int THREAD_COUNT = 15;
     private final static ArrayList<User> allUsers = new ArrayList<>();
@@ -41,7 +36,7 @@ public class ApplicationController extends Thread {
     private Socket listenerSocket;
     private boolean waitForAuthentication = false;
 
-    public static void main(String[] args){
+    public static void main(String[] args) {
         QueueChecker queueChecker = new QueueChecker();
         queueChecker.start();
         ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(THREAD_COUNT);
@@ -51,7 +46,9 @@ public class ApplicationController extends Thread {
             ServerSocket server = new ServerSocket(PORT);
             Socket socket;
             while (true) {
+                System.out.println("waiting for a new connection");
                 socket = server.accept();
+                System.out.println("connection accepted");
                 executor.submit(new ApplicationController(socket));
             }
 
@@ -62,13 +59,14 @@ public class ApplicationController extends Thread {
 
     public ApplicationController(Socket socket) {
         currentUser = null;
+        System.err.println("new application controller created");
         this.listenerSocket = socket;
         allApplicationControllers.add(this);
     }
 
-    public static boolean checkIfUserIsOnline(String username){
-        for(ApplicationController applicationController : allApplicationControllers){
-            if(applicationController.getCurrentUser() != null && applicationController.getCurrentUser().getUsername().equals(username))
+    public static boolean checkIfUserIsOnline(String username) {
+        for (ApplicationController applicationController : allApplicationControllers) {
+            if (applicationController.getCurrentUser() != null && applicationController.getCurrentUser().getUsername().equals(username))
                 return true;
         }
         return false;
@@ -77,14 +75,14 @@ public class ApplicationController extends Thread {
     public static String getSendableObject(Object object) {
         com.google.gson.Gson gson = new GsonBuilder().setPrettyPrinting().create();
         String clazz = object.getClass().getName();
-        if(clazz.matches("Server.+"))
+        if (clazz.matches("Server.+"))
             clazz = "Client" + clazz.substring(6);
         return clazz + ":" + gson.toJson(object);
     }
 
     @Override
     public void run() {
-        try{
+        try {
             currentMenu = Menu.LOGIN_MENU;
             DataInputStream dataInputStream = new DataInputStream(listenerSocket.getInputStream());
             DataOutputStream dataOutputStream = new DataOutputStream(listenerSocket.getOutputStream());
@@ -93,12 +91,12 @@ public class ApplicationController extends Thread {
             sender = new Sender(inputCommand.substring(0, ipEndIndex),
                     Integer.parseInt(inputCommand.substring(ipEndIndex + 1)));
             dataOutputStream.writeUTF("null");
-            while(true) {
+            while (true) {
                 System.out.println("waiting for a new command");
                 inputCommand = dataInputStream.readUTF();
-                if(currentUser != null){
+                if (currentUser != null) {
                     int endOfToken = inputCommand.indexOf(":");
-                    if(!currentUser.checkJWT(inputCommand.substring(0, endOfToken)) && currentMenu.isOkToAuthenticate()) {
+                    if (!currentUser.checkJWT(inputCommand.substring(0, endOfToken)) && currentMenu.isOkToAuthenticate()) {
                         waitForAuthentication = true;
                         currentMenu = Menu.LOGIN_MENU;
                         currentUser = null;
@@ -115,20 +113,21 @@ public class ApplicationController extends Thread {
                 }
                 if (inputCommand.matches(ChangeMenuRegex.CHANGE_MENU.getRegex())) {
                     Menu requestedMenu = Menu.valueOf(ChangeMenuRegex.CHANGE_MENU.getMatcher(inputCommand).group("menuName"));
-                    if(requestedMenu != Menu.LOGIN_MENU && requestedMenu != Menu.REGISTER_MENU && currentUser == null){
+                    if (requestedMenu != Menu.LOGIN_MENU && requestedMenu != Menu.REGISTER_MENU && currentUser == null) {
                         dataOutputStream.writeUTF("null");
                         continue;
                     }
                     currentMenu = requestedMenu;
+                    System.err.println(requestedMenu);
                     sender.setUser(currentUser);
-                    if(currentUser != null) {
-                        if(currentMenu == Menu.IN_GAME_MENU || currentMenu == Menu.GAME_MENU)
+                    if (currentUser != null) {
+                        if (currentMenu == Menu.IN_GAME_MENU || currentMenu == Menu.GAME_MENU)
                             currentUser.setSender(sender);
                     }
                     dataOutputStream.writeUTF("null");
                     continue;
                 }
-                if(inputCommand.matches(LoginMenuRegex.GET_NEW_JWT.getRegex())){
+                if (inputCommand.matches(LoginMenuRegex.GET_NEW_JWT.getRegex())) {
                     dataOutputStream.writeUTF(this.getCurrentUser().getJWT());
                     waitForAuthentication = false;
                     continue;
@@ -138,13 +137,13 @@ public class ApplicationController extends Thread {
                     dataOutputStream.writeUTF("null");
                     continue;
                 }
-                if(inputCommand.matches(GameMenuRegex.ACCEPT_PLAY.getRegex())){
+                if (inputCommand.matches(GameMenuRegex.ACCEPT_PLAY.getRegex())) {
                     GameMenuController.acceptPlay(this.getCurrentUser(), GameMenuRegex.ACCEPT_PLAY.getMatcher(inputCommand));
-                } else if(inputCommand.matches(GameMenuRegex.REJECT_PLAY.getRegex())){
+                } else if (inputCommand.matches(GameMenuRegex.REJECT_PLAY.getRegex())) {
                     GameMenuController.rejectPlay(this.getCurrentUser(), GameMenuRegex.REJECT_PLAY.getMatcher(inputCommand));
                 }
                 Object object = null;
-                switch(currentMenu){
+                switch (currentMenu) {
                     case CHEAT_MENU:
                         object = Server.Controller.CheatMenuController.processRequest(this, inputCommand);
                         break;
@@ -175,13 +174,16 @@ public class ApplicationController extends Thread {
                     case TOURNAMENT_MENU:
                         object = Server.Controller.TournamentMenuController.processRequest(this, inputCommand);
                         break;
+                    case WAITING_MENU:
+                        object = Server.Controller.WaitingMenuController.processRequest(this, inputCommand);
+                        break;
                 }
                 sender.setUser(currentUser);
-                if(currentUser != null) {
+                if (currentUser != null) {
                     currentUser.setSender(sender);
 
                 }
-                if(object == null)
+                if (object == null)
                     dataOutputStream.writeUTF("null");
                 else {
                     dataOutputStream.writeUTF(getSendableObject(object));
@@ -195,7 +197,7 @@ public class ApplicationController extends Thread {
         }
     }
 
-    public Sender getSender(){
+    public Sender getSender() {
         return sender;
     }
 
@@ -203,7 +205,7 @@ public class ApplicationController extends Thread {
         return sender.sendCommand(command);
     }
 
-    public void  setCurrentMenu(Menu menu){
+    public void setCurrentMenu(Menu menu) {
         this.currentMenu = menu;
     }
 
@@ -261,10 +263,10 @@ public class ApplicationController extends Thread {
 
 }
 
-class QueueChecker extends Thread{
+class QueueChecker extends Thread {
     @Override
     public void run() {
-        while(true){
+        while (true) {
             User.checkForPendingOpponentsFound();
             try {
                 Thread.sleep(1000);

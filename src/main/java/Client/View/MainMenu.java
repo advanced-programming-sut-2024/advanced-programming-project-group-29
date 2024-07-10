@@ -84,8 +84,6 @@ public class MainMenu extends Application {
     }
 
     public void addToTournament() throws Exception {
-        client.sendCommand("menu enter " + Menu.TOURNAMENT_MENU);
-        client.sendCommand("add to tournament -u " + ApplicationRunningTimeData.getLoggedInUserUsername());
-        new TournamentMenu().start(ApplicationRunningTimeData.getStage());
+        new WaitingMenu().start(ApplicationRunningTimeData.getStage());
     }
 }
