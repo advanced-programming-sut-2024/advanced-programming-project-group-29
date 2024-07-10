@@ -126,9 +126,23 @@ public class Listener extends Thread {
                             }
                         });
                     } else if((matcher = InGameMenuOutputCommand.END_GAME.getMatcher(input)).matches()){
-                        inGameMenu.endGame(matcher.group("winner"));
+                        Matcher finalMatcher2 = matcher;
+                        Platform.runLater(() -> {
+                            try {
+                                inGameMenu.endGame(finalMatcher2.group("winner"));
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        });
                     } else if((matcher = InGameMenuOutputCommand.PLACE_DECOY.getMatcher(input)).matches()){
-                        inGameMenu.placeDecoy(matcher);
+                        Matcher finalMatcher1 = matcher;
+                        Platform.runLater(() -> {
+                            try {
+                                inGameMenu.placeDecoy(finalMatcher1);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        });
                     }
 
                 } catch (Exception e) {

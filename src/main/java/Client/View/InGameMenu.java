@@ -1404,6 +1404,7 @@ public class InGameMenu extends Application {
     }
 
     public void endGame(String winner) { //TODO if game ends call this func for both and give the winner username
+        System.out.println("this function called........");
         //TODO save game history
         if (winner.isEmpty()) {
             endGameAnnounce.setText("Game ends, Draw");

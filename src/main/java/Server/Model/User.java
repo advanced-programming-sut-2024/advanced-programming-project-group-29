@@ -494,7 +494,7 @@ public class User {
             String jwt = Jwts.builder()
                     .setSubject(subject)
                     .setIssuedAt(now)
-                    .setExpiration(exp) // TODO: set this line when pop up menu completed
+                    //.setExpiration(exp) // TODO: set this line when pop up menu completed
                     .signWith(SignatureAlgorithm.HS256, SECRET_KEY.getBytes(StandardCharsets.UTF_8))
                     .compact();
             System.out.println(jwt);
