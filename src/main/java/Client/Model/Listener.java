@@ -125,6 +125,8 @@ public class Listener extends Thread {
                                 e.printStackTrace();
                             }
                         });
+                    } else if((matcher = InGameMenuOutputCommand.END_GAME.getMatcher(input)).matches()){
+                        inGameMenu.endGame(matcher.group("winner"));
                     }
 
                 } catch (Exception e) {

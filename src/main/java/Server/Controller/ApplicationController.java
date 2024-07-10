@@ -46,6 +46,7 @@ public class ApplicationController extends Thread {
         queueChecker.start();
         ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(THREAD_COUNT);
         Server.Controller.LoginMenuController.processRequest(null, LoginMenuRegex.LOAD_USER.getRegex());
+        System.out.println("done with loading users");
         try {
             ServerSocket server = new ServerSocket(PORT);
             Socket socket;

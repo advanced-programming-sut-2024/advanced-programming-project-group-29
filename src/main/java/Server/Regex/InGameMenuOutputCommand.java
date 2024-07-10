@@ -26,7 +26,8 @@ public enum InGameMenuOutputCommand {
     MOVE_WEATHER_FORM_DECK_AND_PLAY("move weather from deck to it's place and play it (?<cardNumber>\\d+) (?<playerIndex>\\d)"),
     MOVE_OPPONENT_HAND_TO_MY_ROW("move soldier (?<cardNumber>\\d+) from opponent's hand to my row (?<rowNumber>\\d+) (?<playerIndex>\\d)"),
     REFRESH("refresh"),
-    PASS_TURN_FOR_OPPONENT("pass turn (?<winner>.*)")
+    PASS_TURN_FOR_OPPONENT("pass turn (?<winner>.*)"),
+    END_GAME("end game (?<winner>.+)")
     ;
     private String command;
 

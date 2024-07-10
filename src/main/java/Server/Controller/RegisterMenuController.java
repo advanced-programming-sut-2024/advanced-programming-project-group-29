@@ -1,5 +1,6 @@
 package Server.Controller;
 
+import Server.Model.DatabaseManager;
 import Server.Model.EmailUtil;
 import Server.Model.Result;
 import Server.Model.User;
@@ -107,6 +108,11 @@ public class RegisterMenuController {
         }
         User user = User.getUserByUsername(username);
         user.setQuestion(question, answer);
+        if (DatabaseManager.userExists(username)) {
+            DatabaseManager.updateUser(user, username);
+            return new Result(true, "Question set successfully.");
+        }
+        DatabaseManager.insertUser(user);
         return new Result(true, "Question set successfully.");
     }
 

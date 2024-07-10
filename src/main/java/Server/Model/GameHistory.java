@@ -4,25 +4,25 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class GameHistory {
-    private User[] players = new User[2];
+    private String[] players = new String[2];
     private ArrayList<Integer>[] scorePerRound = new ArrayList[2];
     private Date gameDate;
     private int winner; // 0 for player1, 1 for player2 and -1 for draw
     private GameLog[] gameLog = new GameLog[2];
 
     public GameHistory(User player1, User player2, Date gameDate, GameLog player1GameLog, GameLog player2GameLog) {
-        players[0] = player1;
-        players[1] = player2;
+        players[0] = player1.getUsername();
+        players[1] = player2.getUsername();
         this.gameDate = gameDate;
         gameLog[0] = player1GameLog;
         gameLog[1] = player2GameLog;
     }
 
     public void setPlayer(int playerNumber, User player) {
-        players[playerNumber] = player;
+        players[playerNumber] = player.getUsername();
     }
 
-    public User getPlayer(int playerNumber) {
+    public String getPlayer(int playerNumber) {
         return players[playerNumber];
     }
 
@@ -64,8 +64,8 @@ public class GameHistory {
 
     public String toJson() {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(players[0].getUsername()).append(",");
-        stringBuilder.append(players[1].getUsername()).append(",");
+        stringBuilder.append(players[0]).append(",");
+        stringBuilder.append(players[1]).append(",");
         stringBuilder.append(gameDate.getTime()).append(",");
         stringBuilder.append(winner).append(",");
         for (int i = 0; i < 2; i++) {

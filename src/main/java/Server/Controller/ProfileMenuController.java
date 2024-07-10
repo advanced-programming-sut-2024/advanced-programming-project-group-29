@@ -116,7 +116,7 @@ public class ProfileMenuController {
             int opponentNumber = 1 - playerNumber;
 
             ArrayList<String> gameInfo = new ArrayList<>();
-            gameInfo.add("Opponent: " + game.getPlayer(opponentNumber).getUsername());
+            gameInfo.add("Opponent: " + game.getPlayer(opponentNumber));
 
             Date gameDate = game.getGameDate();
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -134,7 +134,7 @@ public class ProfileMenuController {
             gameInfo.add("My total score: " + playerScore);
             gameInfo.add("Opponent total score: " + opponentScore);
 
-            gameInfo.add("Winner: " + game.getPlayer(0).getUsername());
+            gameInfo.add("Winner: " + game.getPlayer(0));
             games.add(String.join("\n", gameInfo));
         }
         return new Result(true, games);

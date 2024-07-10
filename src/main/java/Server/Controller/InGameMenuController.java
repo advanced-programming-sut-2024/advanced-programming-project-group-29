@@ -72,7 +72,7 @@ public class InGameMenuController extends Thread {
         User user = applicationController.getCurrentUser();
         Result result = user.getCurrentGameBoard().passTurn();
         if(user.getCurrentGameBoard().isGameOnline())
-            user.getOpponent().getSender().sendCommand("pass turn " + (result.isSuccessful() ? "" : result.getMessage().get(1)));
+            user.getOpponent().getSender().sendCommand("pass turn " + (result.isSuccessful() ? "" : result.getMessage().get(0)));
         else
             applicationController.setCurrentUser(user.getOpponent());
         return result;
@@ -189,7 +189,7 @@ public class InGameMenuController extends Thread {
         gameBoard.getPlayers()[playerIndex].getHand().add(card);
         sender.sendCommandWithOutResponse("add card to hand " + card.getSendableCardin() + " " + 0);
         if(gameBoard.isGameOnline())
-            sender.sendCommandWithOutResponse("add card to hand " + card.getSendableCardin() + " " + 1);
+            sender.getUser().getOpponent().getSender().sendCommandWithOutResponse("add card to hand " + card.getSendableCardin() + " " + 1);
         gameBoard.addLog("add card to hand " + card.getSendableCardin() + " 0", playerIndex);
         gameBoard.addLog("add card to hand " + card.getSendableCardin() + " 1", 1 - playerIndex);
     }
@@ -199,7 +199,7 @@ public class InGameMenuController extends Thread {
         gameBoard.getPlayers()[playerIndex].getHand().remove(card);
         sender.sendCommandWithOutResponse("remove card from hand " + cardNumber + " " + 0);
         if(gameBoard.isGameOnline())
-            sender.sendCommandWithOutResponse("remove card from hand " + cardNumber + " " + 1);
+            sender.getUser().getOpponent().getSender().sendCommandWithOutResponse("remove card from hand " + cardNumber + " " + 1);
         gameBoard.addLog("remove card from hand " + cardNumber + " 0", playerIndex);
         gameBoard.addLog("remove card from hand " + cardNumber + " 1", 1 - playerIndex);
     }
@@ -207,7 +207,7 @@ public class InGameMenuController extends Thread {
     public static void changeCardInGraphic(Sender sender, int rowNumber, int cardNumber, Soldier soldier) {
         sender.sendCommandWithOutResponse("change card in " + rowNumber + " " + cardNumber + " to " + soldier.getSendableCardin() + " " + 0);
         if(sender.getUser().getCurrentGameBoard().isGameOnline())
-            sender.sendCommandWithOutResponse("change card in " + rowNumber + " " + cardNumber + " to " + soldier.getSendableCardin() + " " + 1);
+            sender.getUser().getOpponent().getSender().sendCommandWithOutResponse("change card in " + rowNumber + " " + cardNumber + " to " + soldier.getSendableCardin() + " " + 1);
         soldier.getGameBoard().addLog("change card in " + rowNumber + " " + cardNumber + " to " + soldier.getSendableCardin() + " 0",
                 soldier.getGameBoard().getPlayerNumber(soldier.getUser()));
         soldier.getGameBoard().addLog("change card in " + rowNumber + " " + cardNumber + " to " + soldier.getSendableCardin() + " 1",
@@ -486,5 +486,14 @@ public class InGameMenuController extends Thread {
             sender.getUser().getOpponent().getSender().sendCommandWithOutResponse("move soldier " + placedNumber + " from hand to row " + rowNumber + " " + 1);
         gameBoard.addLog("move soldier " + placedNumber + " from hand to row " + rowNumber + " 0", gameBoard.getPlayerNumber(user));
         gameBoard.addLog("move soldier " + placedNumber + " from hand to row " + rowNumber + " 1", 1 - gameBoard.getPlayerNumber(user));
+    }
+
+    public static void endGame(String winner, User user1, User user2) {
+        user1.getSender().sendCommandWithOutResponse("end game " + winner);
+        if(user1.getCurrentGameBoard().isGameOnline())
+            user2.getSender().sendCommandWithOutResponse("end game " + winner);
+        GameBoard gameBoard = user1.getCurrentGameBoard();
+        gameBoard.addLog("end game " + winner, 0);
+        gameBoard.addLog("end game " + winner, 1);
     }
 }

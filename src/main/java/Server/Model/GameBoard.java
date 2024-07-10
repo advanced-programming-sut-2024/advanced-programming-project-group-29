@@ -264,10 +264,17 @@ public class GameBoard {
                 playersCrystals[1]--;
             }
             executeActionForTransformers();
+            String winner = playersScore[0] > playersScore[1] ? players[0].getUsername() : (playersScore[0] == playersScore[1] ? "" : players[1].getUsername());
+            if(playersCrystals[0] == 0 || playersCrystals[1] == 0){
+                InGameMenuController.endGame(winner, players[0], players[1]);
+                // TODO: update game history and probably game log
+                players[0].setCurrentGameBoard(null);
+                players[1].setCurrentGameBoard(null);
+                return null;
+            }
             if (playersScore[0] == playersScore[1])
-                return new Result(false, "It's a draw!", "draw");
-            String winner = playersScore[0] > playersScore[1] ? players[0].getUsername() : players[1].getUsername();
-            return new Result(false, winner + " won the round!", winner);
+                return new Result(false, "draw");
+            return new Result(false,  winner);
         }
         if (!isThereAnythingPlayed) {
             notPlayingTurns++;

@@ -42,7 +42,9 @@ public class EmailUtil {
     }
 
     public static void generateAndSendVerificationCode(String email) {
-        int code = new Random().nextInt(900000) + 100000;
+      //  int code = new Random().nextInt(900000) + 100000;
+        int code = 111111;
+        //TODO randomize the code
         sendEmail(email, "Verification Code", "Your verification code is: " + code);
         emailVerificationCodes.put(email, code);
     }
