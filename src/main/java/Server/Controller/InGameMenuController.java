@@ -140,7 +140,7 @@ public class InGameMenuController extends Thread {
             gameBoard.setPlayerScore(playerIndex, gameBoard.getPlayerScore(playerIndex) + soldier.getShownHp());
             if(user.getCurrentGameBoard().isGameOnline()){
                 if(soldier.hasAttribute(Attribute.SPY)) {
-                    user.getOpponent().getSender().sendCommandWithOutResponse("move soldier " + cardNumber + " from opponent's hand to my row " + rowNumber);
+                    user.getOpponent().getSender().sendCommandWithOutResponse("move soldier " + cardNumber + " from opponent's hand to my row " + rowNumber + " 0");
                     gameBoard.addLog("move soldier " + cardNumber + " from opponent's hand to my row 0" + rowNumber, playerIndex);
                     gameBoard.addLog("move soldier " + cardNumber + " from opponent's hand to my row 1" + rowNumber, 1 - playerIndex);
                 }
@@ -388,6 +388,10 @@ public class InGameMenuController extends Thread {
         Spell decoy = (Spell) user.getHand().get(thisCardNumber);
         user.getHand().set(thisCardNumber, soldier);
         user.getDiscardPile().add(decoy);
+        if(gameBoard.isGameOnline())
+            user.getOpponent().getSender().sendCommand("place decoy " + thisCardNumber + " to card in " + rowNumber + " " + cardNumber + " 1");
+        gameBoard.addLog("place decoy " + thisCardNumber + " to card in " + rowNumber + " " + cardNumber + " 0", playerIndex);
+        gameBoard.addLog("place decoy " + thisCardNumber + " to card in " + rowNumber + " " + cardNumber + " 1", 1 - playerIndex);
         return;
     }
 

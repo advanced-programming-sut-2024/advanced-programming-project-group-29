@@ -505,7 +505,7 @@ public class InGameMenu extends Application {
         });
     }
 
-    public void addCardFromHandToRow(int cardNumber, int rowNumber, int playerIndex) { // TODO: player index added
+    public void addCardFromHandToRow(int cardNumber, int rowNumber, int playerIndex) {
         Platform.runLater(() -> {
             CardView c = hand[playerIndex].get(cardNumber);
             hand[playerIndex].remove(cardNumber);
@@ -701,14 +701,15 @@ public class InGameMenu extends Application {
     }
 
     public void moveSoldierFromOpponentHandToPlayerRow(int cardNumber, int rowNumber, int playerIndex) {
+        System.out.println("we are in this function ");
         Platform.runLater(() -> {
-            CardView c = hand[playerIndex].get(cardNumber);
-            hand[playerIndex].remove(cardNumber);
+            CardView c = hand[1-playerIndex].get(cardNumber);
+            hand[1-playerIndex].remove(cardNumber);
             c.setInHand(false);
-            row[1 - playerIndex][convertRowNumber(rowNumber)].add(c);
+            row[playerIndex][convertRowNumber(rowNumber)].add(c);
             int j = convertRowNumber(rowNumber);
             double Y = (playerIndex == 0 ? (j == 0 ? Y_POSITION_ROW_11 : (j == 1 ? Y_POSITION_ROW_12 : Y_POSITION_ROW_13)) : (j == 0 ? Y_POSITION_ROW_21 : (j == 1 ? Y_POSITION_ROW_22 : Y_POSITION_ROW_23)));
-            (new FlipCardAnimation(c, (row[0][convertRowNumber(rowNumber)].size() == 1 ? (X_POSITION_ROW_LEFT + X_POSITION_ROW_RIGHT - CARD_WIDTH) / 2 : (row[0][convertRowNumber(rowNumber)].get(row[0][convertRowNumber(rowNumber)].size() - 2)).getLayoutX() + SPACING + CARD_WIDTH), Y, true, true, true)).play();
+            (new FlipCardAnimation(c, (row[playerIndex][convertRowNumber(rowNumber)].size() == 1 ? (X_POSITION_ROW_LEFT + X_POSITION_ROW_RIGHT - CARD_WIDTH) / 2 : (row[playerIndex][convertRowNumber(rowNumber)].get(row[playerIndex][convertRowNumber(rowNumber)].size() - 2)).getLayoutX() + SPACING + CARD_WIDTH), Y, true, true, true)).play();
         });
     }
 
@@ -732,12 +733,21 @@ public class InGameMenu extends Application {
         });
     }
 
+    public void placeDecoy(Matcher matcher){ // TODO: implement this function
+        int cardNumber = Integer.parseInt(matcher.group("cardNumber")); // decoy index in hand
+        int rowNumber = Integer.parseInt(matcher.group("rowNumber"));
+        int targetNumber = Integer.parseInt(matcher.group("targetNumber")); // index of card to be replaced with decoy
+        int playerIndex = Integer.parseInt(matcher.group("playerIndex"));
+    }
+
     ///////////////////////// isPlayerTurn
     private void isPlayerTurn(boolean isPlayerTurn) {
-        if (isPlayerTurn) {
-            for (CardView c : hand[0]) c.setInHand(true);
-        } else {
-            for (CardView c : hand[0]) c.setInHand(false);
+        if(isOnline) {
+            if (isPlayerTurn) {
+                for (CardView c : hand[0]) c.setInHand(true);
+            } else {
+                for (CardView c : hand[0]) c.setInHand(false);
+            }
         }
     }
 
