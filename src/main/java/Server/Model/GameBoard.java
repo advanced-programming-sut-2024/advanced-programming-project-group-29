@@ -22,8 +22,8 @@ public class GameBoard {
     private boolean isThereAnythingPlayed = false;
     private int notPlayingTurns = 0;
     private boolean isGameOnline = false;
-    private ChatBox chatBox = new ChatBox();
-    private GameLog[] gameLog = new GameLog[2];
+    private final ChatBox chatBox = new ChatBox();
+    private final GameLog[] gameLog = new GameLog[2];
 
     public GameBoard(User player1, User player2, boolean isGameOnline) {
         player1.setCurrentGameBoard(this);
@@ -221,7 +221,7 @@ public class GameBoard {
         return rowHasWeather[rowNumber];
     }
 
-    public boolean isThereAnyCommendersHornInRow(int playerNumber, int rowNumber) {
+    public boolean isThereAnyCommandersHornInRow(int playerNumber, int rowNumber) {
         if (specialCards[playerNumber][rowNumber] != null &&
                 specialCards[playerNumber][rowNumber].getName().matches("Commander.+Horn"))
             return true;
@@ -268,9 +268,11 @@ public class GameBoard {
             }
             gameHistory.addScoreForRound(playersScore[0], 0);
             gameHistory.addScoreForRound(playersScore[1], 1);
+            for (int i = 0; i < 2; i++)
+                DatabaseManager.updateUser(players[i], players[i].getUsername());
             executeActionForTransformers();
             String winner = playersScore[0] > playersScore[1] ? players[0].getUsername() : (playersScore[0] == playersScore[1] ? "" : players[1].getUsername());
-            if(playersCrystals[0] == 0 || playersCrystals[1] == 0){
+            if (playersCrystals[0] == 0 || playersCrystals[1] == 0) {
                 InGameMenuController.endGame(winner, players[0], players[1]);
                 gameHistory.setWinner(playersScore[0] > playersScore[1] ? 0 : (playersScore[0] == playersScore[1] ? -1 : 1));
                 players[0].setCurrentGameBoard(null);
@@ -280,7 +282,7 @@ public class GameBoard {
             InGameMenuController.clearGame(players[0], players[1]);
             if (playersScore[0] == playersScore[1])
                 return new Result(false, "draw");
-            return new Result(false,  winner);
+            return new Result(false, winner);
         }
         if (!isThereAnythingPlayed) {
             notPlayingTurns++;
@@ -326,11 +328,11 @@ public class GameBoard {
 
 
     public void clearGameBoard() {
-        for(int i = 0; i < 2; i++){
+        for (int i = 0; i < 2; i++) {
             playersScore[i] = 0;
-            for(int j = 0; j < 3; j++){
+            for (int j = 0; j < 3; j++) {
                 players[i].getDiscardPile().addAll(rows[i][j]);
-                if(specialCards[i][j] != null)
+                if (specialCards[i][j] != null)
                     players[i].getDiscardPile().add(specialCards[i][j]);
                 rows[i][j].clear();
                 specialCards[i][j] = null;

@@ -80,7 +80,7 @@ public class Commander extends Card {
 
     private void kingOfTemeria() {
         int playerNumber = this.gameBoard.getPlayerNumber(this.user);
-        if (!gameBoard.isThereAnyCommendersHornInRow(playerNumber, 2))
+        if (!gameBoard.isThereAnyCommandersHornInRow(playerNumber, 2))
             Card.executeCommanderHornForRowNumber(this.gameBoard, playerNumber, 2);
     }
 
@@ -114,7 +114,7 @@ public class Commander extends Card {
         }
         else {
             for (int playerNumber = 0; playerNumber < 2; playerNumber++) {
-                if (this.gameBoard.isThereAnyCommendersHornInRow(playerNumber, 0))
+                if (this.gameBoard.isThereAnyCommandersHornInRow(playerNumber, 0))
                     betterRowNumber[playerNumber] = 0;
                 else
                     betterRowNumber[playerNumber] = 1;
@@ -145,7 +145,7 @@ public class Commander extends Card {
 
     private void theBeautiful() {
         int playerNumber = this.gameBoard.getPlayerNumber(this.user);
-        if (!gameBoard.isThereAnyCommendersHornInRow(playerNumber, 1))
+        if (!gameBoard.isThereAnyCommandersHornInRow(playerNumber, 1))
             Card.executeCommanderHornForRowNumber(this.gameBoard, playerNumber, 1);
     }
 
@@ -209,7 +209,7 @@ public class Commander extends Card {
 
     private void bringerOfDeath() {
         int playerNumber = this.gameBoard.getPlayerNumber(this.user);
-        if (!gameBoard.isThereAnyCommendersHornInRow(playerNumber, 0))
+        if (!gameBoard.isThereAnyCommandersHornInRow(playerNumber, 0))
             Card.executeCommanderHornForRowNumber(this.gameBoard, playerNumber, 0);
     }
 

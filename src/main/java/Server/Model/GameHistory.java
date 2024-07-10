@@ -16,6 +16,9 @@ public class GameHistory {
         this.gameDate = gameDate;
         gameLog[0] = player1GameLog;
         gameLog[1] = player2GameLog;
+        for (int i = 0; i < 2; i++) {
+            scorePerRound[i] = new ArrayList<>();
+        }
     }
 
     public void setPlayer(int playerNumber, User player) {
@@ -35,9 +38,6 @@ public class GameHistory {
     }
 
     public void addScoreForRound(int score, int playerNumber) {
-        if (scorePerRound[playerNumber] == null) {
-            scorePerRound[playerNumber] = new ArrayList<>();
-        }
         scorePerRound[playerNumber].add(score);
     }
 

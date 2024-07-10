@@ -176,6 +176,7 @@ public class User {
 
     public void addCardToDeck(Card card) {
         this.deck.add(card);
+        DatabaseManager.updateUser(this, this.username);
     }
 
     public void removeCardFromDeck(Card card) {
@@ -224,11 +225,13 @@ public class User {
 
     public void addGameHistory(GameHistory gameHistory) {
         this.gameHistory.add(gameHistory);
+        DatabaseManager.updateUser(this, this.username);
     }
 
     public void setGameHistory(ArrayList<GameHistory> gameHistories) {
         this.gameHistory.clear();
         this.gameHistory.addAll(gameHistories);
+        DatabaseManager.updateUser(this, this.username);
     }
 
     public ArrayList<GameHistory> getGameHistory() {
@@ -404,6 +407,7 @@ public class User {
             else if (Spell.isSpell(cardName))
                 this.deck.add(new Spell(cardName, this));
         }
+        DatabaseManager.updateUser(this, this.username);
     }
 
     public boolean extractDataFromSavedDeck(SavedDeck savedDeck) {
@@ -418,6 +422,7 @@ public class User {
         }
         this.commander = new Commander(savedDeck.getCommander(), this);
         this.faction = Faction.getFactionFromString(savedDeck.getFaction());
+        DatabaseManager.updateUser(this, this.username);
         return true;
     }
 
