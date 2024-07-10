@@ -8,8 +8,6 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.*;
 
 public class User {
@@ -36,7 +34,6 @@ public class User {
     private String answer;
     private transient ArrayList<Card> hand = new ArrayList<>();
     private transient ArrayList<Card> deck = new ArrayList<>();
-    private ArrayList<Card> preDeck = new ArrayList<>();
     private transient ArrayList<Card> discardPile = new ArrayList<>();
     private Faction faction;
     private Commander commander;
@@ -109,7 +106,9 @@ public class User {
     }
 
     public void setUsername(String username) {
+        String oldUsername = this.username;
         this.username = username;
+        DatabaseManager.updateUser(this, oldUsername);
     }
 
     public String getPassword() {
@@ -118,6 +117,7 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+        DatabaseManager.updateUser(this, this.username);
     }
 
     public String getNickname() {
@@ -126,6 +126,7 @@ public class User {
 
     public void setNickname(String nickname) {
         this.nickname = nickname;
+        DatabaseManager.updateUser(this, this.username);
     }
 
     public String getEmail() {
@@ -134,6 +135,7 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
+        DatabaseManager.updateUser(this, this.username);
     }
 
     public Faction getFaction() {
@@ -142,7 +144,8 @@ public class User {
 
     public void setFaction(Faction faction) {
         this.faction = faction;
-        this.commander = new Commander(faction.getCommanders().get(0), this);
+        this.commander = new Commander(faction.getCommanders().getFirst(), this);
+        DatabaseManager.updateUser(this, this.username);
     }
 
     public Commander getCommander() {
@@ -151,6 +154,7 @@ public class User {
 
     public void setCommander(Commander commander) {
         this.commander = commander;
+        DatabaseManager.updateUser(this, this.username);
     }
 
     public ArrayList<String> getFriendRequests() {
@@ -227,6 +231,10 @@ public class User {
 
     public String getQuestion() {
         return securityQuestions[questionNumber];
+    }
+
+    public int getQuestionNumber() {
+        return questionNumber;
     }
 
     public String getAnswer() {
@@ -335,15 +343,7 @@ public class User {
 
 
     public static void loadUser(){
-        try {
-            String text = new String(Files.readAllBytes(Paths.get("src/main/resources/JSON/allUsers.json")));
-            String[] lines = text.split("\n");
-            for (String line : lines)
-                makeUserFromJson(line);
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println(e.getMessage());
-        }
+        DatabaseManager.loadUsers();
     }
 
     public static void setAllUsers(ArrayList<User> allUsers) {
@@ -388,6 +388,16 @@ public class User {
 
     public void loadDeck(SavedDeck savedDeck) {
         extractDataFromSavedDeck(savedDeck);
+    }
+
+    public void extractDeckFromDeckNames(ArrayList<String> deckNames) {
+        this.deck = new ArrayList<>();
+        for (String cardName : deckNames) {
+            if (Soldier.isSoldier(cardName))
+                this.deck.add(new Soldier(cardName, this));
+            else if (Spell.isSpell(cardName))
+                this.deck.add(new Spell(cardName, this));
+        }
     }
 
     public boolean extractDataFromSavedDeck(SavedDeck savedDeck) {

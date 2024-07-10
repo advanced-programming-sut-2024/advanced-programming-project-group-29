@@ -342,6 +342,7 @@ public class GameMenuController {
         }
         GameBoard gameBoard = user.getCurrentGameBoard();
         user.getCommander().setGameBoard(gameBoard);
+        DatabaseManager.updateUser(user, user.getUsername());
         gameBoard.changeTurn();
         if(!gameBoard.isGameOnline())
             applicationController.setCurrentUser(user.getOpponent());
