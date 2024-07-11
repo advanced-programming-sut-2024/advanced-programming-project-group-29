@@ -457,8 +457,9 @@ public class InGameMenuController extends Thread {
 
     public static GameBoardin getGameBoardin(User user, Sender sender, int wantsNew){
         try {
-            if(wantsNew == 0 && user.getOpponent().getSavedGameBoardin() != null)
-                return user.getOpponent().getSavedGameBoardin();
+            User lastUser = user.getCurrentGameBoard().isGameOnline() ? user : user.getOpponent();
+            if(wantsNew == 0 && lastUser.getSavedGameBoardin() != null)
+                return lastUser.getSavedGameBoardin();
             GameBoardin gameBoardin = new GameBoardin(user);
             return gameBoardin;
         }
