@@ -766,24 +766,6 @@ public class InGameMenu extends Application {
         discard[0].addAll(allCardsInBoardFor1);
         discard[1].addAll(allCardsInBoardFor2);
         clearWeather();
-        final int[] i = {0};
-        Timeline t1 = new Timeline(new KeyFrame(Duration.seconds(0.1), new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                (new FlipCardAnimation(allCardsInBoardFor1.get(i[0]++), X_POSITION_DISCARD, Y_POSITION_DISCARD_1, true, true, false)).play();
-            }
-        }));
-        final int[] j = {0};
-        Timeline t2 = new Timeline(new KeyFrame(Duration.seconds(0.1), new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                (new FlipCardAnimation(allCardsInBoardFor2.get(j[0]++), X_POSITION_DISCARD, Y_POSITION_DISCARD_2, true, true, false)).play();
-            }
-        }));
-        t1.setCycleCount(allCardsInBoardFor1.size());
-        t2.setCycleCount(allCardsInBoardFor2.size());
-        if (!allCardsInBoardFor1.isEmpty()) t1.play();
-        if (!allCardsInBoardFor2.isEmpty()) t2.play();
     }
 
     public void clearWeather() {
@@ -977,6 +959,7 @@ public class InGameMenu extends Application {
                         ArrayList<Cardin> b = (k == 0 ? (j == 0 ? gameBoardin.getPlayer1Hand() : gameBoardin.getPlayer2Hand()) : (k == 1 ? (j == 0 ? gameBoardin.getPlayer1Deck() : gameBoardin.getPlayer2Deck()) : (j == 0 ? gameBoardin.getPlayer1Discard() : gameBoardin.getPlayer2Discard())));
                         for (int i = 0; i < b.size(); i++) {
                             ArrayList<CardView>[] z = (k == 0 ? hand : (k == 1 ? deck : discard));
+                            System.out.println("we are in the loop" + i + j + k);
                             if (z[j].get(i).getCard().isSoldier) {
                                 z[j].get(i).getCard().setHp(b.get(i).hp);
                                 z[j].get(i).setHP();
@@ -1345,7 +1328,6 @@ public class InGameMenu extends Application {
     public void endRound(String endRoundText) {
         if (endRoundText.isEmpty()) endTurnAnnounce.setText("Game Draw");
         else endTurnAnnounce.setText("Round ends, the winner is \"" + endRoundText + "\"");
-        moveAllCardFromBoardToDiscard();
         pain.getChildren().remove(turnPain);
         pain.getChildren().add(turnPain);
         turnPain.setVisible(true);
@@ -1359,6 +1341,7 @@ public class InGameMenu extends Application {
                 turnPain.setVisible(false);
                 turnPain.setDisable(true);
                 mainPain.setDisable(false);
+                moveAllCardFromBoardToDiscard();
                 swapAllThings();
                 refresh();
             }

@@ -16,7 +16,6 @@ public class BroadCastMenuController {
             if((matcher = BroadCastMenuRegex.GET_GAME_HISTORY.getMatcher(inputCommand)).matches()){
                 result = getGameHistory(matcher.group("username"));
             }
-            System.out.println(result == null);
             return result;
         } catch (Exception e) {
             e.printStackTrace();
@@ -26,6 +25,8 @@ public class BroadCastMenuController {
 
     public static GameHistory getGameHistory(String username) {
         User user = User.getUserByUsername(username);
+        System.err.println("username : "+user.getUsername());
+        System.err.println(user.getGameHistory().getLast());
         return user.getGameHistory().getLast();
     }
 }
