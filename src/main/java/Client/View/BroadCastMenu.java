@@ -109,14 +109,14 @@ public class BroadCastMenu extends Application {
         super();
         Client client = Client.getClient();
         seeThisUserGame = client.getSeeThisUserLastGame();
-        client.sendCommand("menu enter " + Menu.GAME_MENU.toString()); //TODO add regex BROADCAST_MENU
+        client.sendCommand("menu enter " + Menu.BROADCAST_MENU.toString());
     }
 
 
 
     public void initialize() {
         if (!isOnline) {
-            GameLog gameLog = ((GameHistory) Client.getClient().getSender().sendCommand("get game history -u " + seeThisUserGame)).getGameLog(); //TODO add this command
+            GameLog gameLog = ((GameHistory) Client.getClient().getSender().sendCommand("get game history -u " + seeThisUserGame)).getGameLog();
             gameBoardins = gameLog.getGameBoardins();
             logs = gameLog.getCommands();
             AtomicInteger i = new AtomicInteger();
