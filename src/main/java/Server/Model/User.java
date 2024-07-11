@@ -588,9 +588,20 @@ public class User {
     }
 
     public boolean checkIfFriend (String username) {
-        if (friends.contains(username)) {
-            return true;
-        }
-        return false;
+        return friends.contains(username);
+    }
+
+    public ArrayList<String> getFriends() {
+        return friends;
+    }
+
+    public void setFriends(ArrayList<String> friends) {
+        this.friends.clear();
+        this.friends.addAll(friends);
+    }
+
+    public void setFriendRequests(ArrayList<String> friendRequests) {
+        this.friendRequests.clear();
+        this.friendRequests.addAll(friendRequests);
     }
 }

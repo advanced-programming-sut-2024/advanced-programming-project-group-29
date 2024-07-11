@@ -11,31 +11,11 @@ import java.util.ArrayList;
 public class DatabaseManager {
     private static final String URL = "jdbc:sqlite:" + "src/main/resources/sqlite/Users.db";
 
-    public static void connect() {
-        Connection conn = null;
-        try {
-            conn = DriverManager.getConnection(URL);
-            if (conn != null) {
-                System.out.println("Connected to the database.");
-            }
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-        } finally {
-            try {
-                if (conn != null) {
-                    conn.close();
-                }
-            } catch (SQLException ex) {
-                System.out.println(ex.getMessage());
-            }
-        }
-    }
-
     public synchronized static void insertUser(User user) {
         if (userExists(user.getUsername()))
             return;
 
-        String sql = "INSERT INTO User(username, password, nickname, email, questionNumber, answer, faction, commander, deck, gameHistory) VALUES(?,?,?,?,?,?,?,?,?,?)";
+        String sql = "INSERT INTO User(username, password, nickname, email, questionNumber, answer, faction, commander, deck, gameHistory, friends, friendRequests) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)";
 
         try (Connection conn = DriverManager.getConnection(URL);
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -53,6 +33,8 @@ public class DatabaseManager {
             ArrayList<GameHistory> gameHistories = user.getGameHistory();
             String jsonGameHistory = new Gson().toJson(gameHistories);
             pstmt.setString(10, jsonGameHistory);
+            pstmt.setString(11, new Gson().toJson(user.getFriends()));
+            pstmt.setString(12, new Gson().toJson(user.getFriendRequests()));
             pstmt.executeUpdate();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -76,7 +58,7 @@ public class DatabaseManager {
     }
 
     public synchronized static void updateUser(User user, String oldUsername) {
-        String sql = "UPDATE User SET username = ?, password = ?, nickname = ?, email = ?, questionNumber = ?, answer = ?, faction = ?, commander = ?, deck = ?, gameHistory = ? WHERE username = ?";
+        String sql = "UPDATE User SET username = ?, password = ?, nickname = ?, email = ?, questionNumber = ?, answer = ?, faction = ?, commander = ?, deck = ?, gameHistory = ?, friends = ?, friendRequests = ? WHERE username = ?";
 
         try (Connection conn = DriverManager.getConnection(URL);
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -94,7 +76,9 @@ public class DatabaseManager {
             ArrayList<GameHistory> gameHistories = user.getGameHistory();
             String jsonGameHistory = new Gson().toJson(gameHistories);
             pstmt.setString(10, jsonGameHistory);
-            pstmt.setString(11, oldUsername);
+            pstmt.setString(11, new Gson().toJson(user.getFriends()));
+            pstmt.setString(12, new Gson().toJson(user.getFriendRequests()));
+            pstmt.setString(13, oldUsername);
             pstmt.executeUpdate();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -124,6 +108,8 @@ public class DatabaseManager {
                 Type gameHistoryListType = new TypeToken<ArrayList<GameHistory>>() {
                 }.getType();
                 ArrayList<GameHistory> gameHistories = new Gson().fromJson(jsonGameHistory, gameHistoryListType);
+                ArrayList<String> friends = new Gson().fromJson(rs.getString("friends"), ArrayList.class);
+                ArrayList<String> friendRequests = new Gson().fromJson(rs.getString("friendRequests"), ArrayList.class);
 
                 User user = new User(username, password, nickname, email);
                 user.setQuestion(questionNumber, answer);
@@ -131,6 +117,8 @@ public class DatabaseManager {
                 user.setCommander(new Commander(commander, user));
                 user.extractDeckFromDeckNames(deckNames);
                 user.setGameHistory(gameHistories);
+                user.setFriends(friends);
+                user.setFriendRequests(friendRequests);
                 users.add(user);
             }
         } catch (SQLException e) {
