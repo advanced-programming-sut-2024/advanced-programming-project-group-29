@@ -67,8 +67,7 @@ public class GameMenuController {
 
     private static Result addUserToWaitQueue(User user) {
         if (user.getNumberOfSoldiersInDeck() < 22) {
-            //TODO : uncomment following line
-            //return new Result(false, "You should have at least 22 soldiers in your deck.");
+            return new Result(false, "You should have at least 22 soldiers in your deck.");
         }
         user.setWaitForGame(true);
         if (user.getOpponent().getWaitForGame()) {
@@ -337,8 +336,7 @@ public class GameMenuController {
     public static Result changeTurn(ApplicationController applicationController) {
         User user = applicationController.getCurrentUser();
         if (user.getNumberOfSoldiersInDeck() < 22) {
-            //TODO : uncomment following line
-            //return new Result(false, "You should have at least 22 soldiers in your deck.");
+            return new Result(false, "You should have at least 22 soldiers in your deck.");
         }
         GameBoard gameBoard = user.getCurrentGameBoard();
         user.getCommander().setGameBoard(gameBoard);

@@ -62,9 +62,9 @@ public class InGameMenuController extends Thread {
         Result result = gameBoard.passTurn(applicationController);
         if (result == null || result.isSuccessful())
             return;
-        applicationController.getCurrentUser().getSender().sendCommand("end round " + result.getMessage().get(0));
+        applicationController.getCurrentUser().getSender().sendCommand("end round " + result.getMessage().getFirst());
         if (gameBoard.isGameOnline())
-            applicationController.getCurrentUser().getOpponent().getSender().sendCommand("end round " + result.getMessage().get(0));
+            applicationController.getCurrentUser().getOpponent().getSender().sendCommand("end round " + result.getMessage().getFirst());
         gameBoard.addLog("end round", 0);
         gameBoard.addLog("end round", 1);
     }
@@ -94,23 +94,6 @@ public class InGameMenuController extends Thread {
         if (gameBoard.isGameOnline())
             applicationController.getCurrentUser().getOpponent().getSender().sendCommandWithOutResponse("refresh chat box");
     }
-
-    /* // TODO: it shall be removed
-    private static Result passTurn(ApplicationController applicationController) {
-        User user = applicationController.getCurrentUser();
-        boolean isOnline = user.getCurrentGameBoard().isGameOnline();
-        user.getCurrentGameBoard().changeTurn();
-        Result result = user.getCurrentGameBoard().passTurn();
-        if(user.getCurrentGameBoard() == null)
-            return null;
-        if(isOnline)
-            user.getOpponent().getSender().sendCommand("pass turn " + (result.isSuccessful() ? "" : result.getMessage().get(0)));
-        else
-            applicationController.setCurrentUser(user.getOpponent());
-        return result;
-    }
-
-     */
 
     private static void commanderPowerPlay(User user) {
         Commander commander = user.getCommander();
@@ -147,7 +130,6 @@ public class InGameMenuController extends Thread {
             user.getHand().remove(cardNumber);
             if (spell.getName().matches("(S|s)corch")) {
                 spell.getUser().getDiscardPile().add(spell);
-                // TODO: if you want you can call a function to add this spell from opponent's hand to discard
             } else if (user.getCurrentGameBoard().isGameOnline())
                 user.getOpponent().getSender().sendCommandWithOutResponse("place weather " + cardNumber + " 1");
             gameBoard.addLog("place weather " + cardNumber + " 0", gameBoard.getPlayerNumber(user));

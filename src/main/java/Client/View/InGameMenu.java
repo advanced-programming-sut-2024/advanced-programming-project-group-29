@@ -857,7 +857,6 @@ public class InGameMenu extends Application {
 
     private void firstRefresh() {
         GameBoardin gameBoardin = getGameBoardin();
-        System.out.println("in our gameboardin: " + gameBoardin.getPlayer1Hand().size());
         for (int k = 0; k < 2; k++) {
             ArrayList<Cardin> playerHand = (k == 0 ? gameBoardin.getPlayer1Hand() : gameBoardin.getPlayer2Hand());
             for (int i = 0; i < playerHand.size(); i++) {

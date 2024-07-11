@@ -70,7 +70,6 @@ public class Client {
     }
 
     public Sender getSender() {
-        System.out.println("is sender null? " + sender == null);
         return sender;
     }
 

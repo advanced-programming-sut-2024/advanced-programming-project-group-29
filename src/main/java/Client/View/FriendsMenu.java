@@ -4,7 +4,6 @@ import Client.Client;
 import Client.Enum.Menu;
 import Client.Model.ApplicationRunningTimeData;
 import Client.Model.Result;
-import Server.Regex.FriendMenuRegex;
 import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -12,7 +11,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
@@ -40,7 +38,7 @@ public class FriendsMenu extends Application {
     public FriendsMenu() {
         super();
         client = Client.getClient();
-        client.sendCommand("menu enter " + Menu.FRIENDS_MENU.toString());
+        client.sendCommand("menu enter " + Menu.FRIENDS_MENU);
     }
 
 
@@ -103,7 +101,6 @@ public class FriendsMenu extends Application {
         draw.setText(splitResult.get(6).getLast());
         lose.setText(splitResult.get(7).getLast());
         String statusText = (String) client.sendCommand("get status -u " + searchedUsername);
-        System.err.println(statusText);
         if (statusText.equals("You")) {
             status.setVisible(false);
             rectangle.setVisible(false);
@@ -120,11 +117,11 @@ public class FriendsMenu extends Application {
         }
     }
 
-    public void back(MouseEvent mouseEvent) throws Exception {
+    public void back() throws Exception {
         new ProfileMenu().start(ApplicationRunningTimeData.getStage());
     }
 
-    public void seeFriendRequests(MouseEvent mouseEvent) throws Exception {
+    public void seeFriendRequests() throws Exception {
         new FriendRequestsMenu().start(ApplicationRunningTimeData.getStage());
     }
 }
