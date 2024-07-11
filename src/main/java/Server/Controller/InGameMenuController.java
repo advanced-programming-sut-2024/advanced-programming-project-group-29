@@ -180,14 +180,17 @@ public class InGameMenuController extends Thread {
             if(user.getCurrentGameBoard().isGameOnline()){
                 if(soldier.hasAttribute(Attribute.SPY)) {
                     user.getOpponent().getSender().sendCommandWithOutResponse("move soldier " + cardNumber + " from opponent's hand to my row " + rowNumber + " 0");
-                    gameBoard.addLog("move soldier " + cardNumber + " from opponent's hand to my row 0" + rowNumber, playerIndex);
-                    gameBoard.addLog("move soldier " + cardNumber + " from opponent's hand to my row 1" + rowNumber, 1 - playerIndex);
                 }
                 else {
                     user.getOpponent().getSender().sendCommandWithOutResponse("place soldier " + cardNumber + " in row " + rowNumber + " 1");
-                    gameBoard.addLog("place soldier " + cardNumber + " in row " + rowNumber + " 0", playerIndex);
-                    gameBoard.addLog("place soldier " + cardNumber + " in row " + rowNumber + " 1", 1 - playerIndex);
                 }
+            }
+            if(soldier.hasAttribute(Attribute.SPY)){
+                gameBoard.addLog("move soldier " + cardNumber + " from opponent's hand to my row 0" + rowNumber, playerIndex);
+                gameBoard.addLog("move soldier " + cardNumber + " from opponent's hand to my row 1" + rowNumber, 1 - playerIndex);
+            } else{
+                gameBoard.addLog("place soldier " + cardNumber + " in row " + rowNumber + " 0", playerIndex);
+                gameBoard.addLog("place soldier " + cardNumber + " in row " + rowNumber + " 1", 1 - playerIndex);
             }
             soldier.executeAction();
             changeTurn(applicationController);

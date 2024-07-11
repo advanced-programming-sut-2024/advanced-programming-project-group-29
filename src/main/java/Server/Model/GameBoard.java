@@ -265,38 +265,44 @@ public class GameBoard {
     }
 
     public Result passTurn(ApplicationController applicationController) {
-        if (passTurnCalled == 2) {
-            this.changeTurn(applicationController);
-            passTurnCalled = 0;
-            if (playersScore[0] <= playersScore[1]) {
-                playersCrystals[0]--;
-            }
-            if (playersScore[1] <= playersScore[0]) {
-                playersCrystals[1]--;
-            }
-            gameHistory.addScoreForRound(playersScore[0], 0);
-            gameHistory.addScoreForRound(playersScore[1], 1);
-            for (int i = 0; i < 2; i++)
-                DatabaseManager.updateUser(players[i], players[i].getUsername());
-            executeActionForTransformers();
-            String winner = playersScore[0] > playersScore[1] ? players[0].getUsername() : (playersScore[0] == playersScore[1] ? "" : players[1].getUsername());
-            if (playersCrystals[0] == 0 || playersCrystals[1] == 0) {
-                InGameMenuController.endGame(winner, players[0], players[1]);
-                gameHistory.setWinner(playersScore[0] > playersScore[1] ? 0 : (playersScore[0] == playersScore[1] ? -1 : 1));
-                players[0].endGame();
-                players[1].endGame();
-                if(tournament != null) {
-                    User winnerUser = players[0].getUsername().equals(winner) ? players[0] : players[1];
-                    tournament.endGame(winnerUser, winnerUser == players[0] ? players[1] : players[0]);
+        try {
+            if (passTurnCalled == 2) {
+                this.changeTurn(applicationController);
+                passTurnCalled = 0;
+                if (playersScore[0] <= playersScore[1]) {
+                    playersCrystals[0]--;
                 }
-                applicationController.setCurrentUser(applicationController.getLoggedInUser());
-                return null;
+                if (playersScore[1] <= playersScore[0]) {
+                    playersCrystals[1]--;
+                }
+                gameHistory.addScoreForRound(playersScore[0], 0);
+                gameHistory.addScoreForRound(playersScore[1], 1);
+                for (int i = 0; i < 2; i++)
+                    DatabaseManager.updateUser(players[i], players[i].getUsername());
+                executeActionForTransformers();
+                if (playersCrystals[0] == 0 || playersCrystals[1] == 0) {
+                    String winner = playersCrystals[0] > playersCrystals[1] ? players[0].getUsername() : (playersCrystals[0] == playersCrystals[1] ? "" : players[1].getUsername());
+                    InGameMenuController.endGame(winner, players[0], players[1]);
+                    gameHistory.setWinner(playersScore[0] > playersScore[1] ? 0 : (playersScore[0] == playersScore[1] ? -1 : 1));
+                    players[0].endGame();
+                    players[1].endGame();
+                    if (tournament != null) {
+                        User winnerUser = players[0].getUsername().equals(winner) ? players[0] : players[1];
+                        tournament.endGame(winnerUser, winnerUser == players[0] ? players[1] : players[0]);
+                    }
+                    applicationController.setCurrentUser(applicationController.getLoggedInUser());
+                    return null;
+                }
+                String winner = playersScore[0] > playersScore[1] ? players[0].getUsername() : (playersScore[0] == playersScore[1] ? "" : players[1].getUsername());
+                Result result = new Result(false, winner);
+                InGameMenuController.clearGame(players[0], players[1]);
+                return result;
             }
-            Result result = new Result(false, winner);
-            InGameMenuController.clearGame(players[0], players[1]);
-            return result;
+            return new Result(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
         }
-        return new Result(true);
     }
 
     private void executeActionForTransformers() {
@@ -324,6 +330,7 @@ public class GameBoard {
     }
 
     public void addLog(String command, int playerIndex) {
+        System.out.println("adding a log " + command + " " + playerIndex);
         gameLog[playerIndex].addGameBoardin(new GameBoardin(players[playerIndex]));
         gameLog[playerIndex].addCommand(command);
     }
