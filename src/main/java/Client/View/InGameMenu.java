@@ -506,6 +506,25 @@ public class InGameMenu extends Application {
         });
     }
 
+
+    public void addCardToDeck(Cardin cardin, int playerIndex) {
+        Platform.runLater(() -> {
+            CardView c = new CardView(cardin, -200, -200, this, true);
+            deck[playerIndex].add(c);
+            pain.getChildren().remove(cheatPane);
+            pain.getChildren().add(c);
+            pain.getChildren().add(cheatPane);
+            (new FlipCardAnimation(c,X_POSITION_DISCARD, (playerIndex == 0 ? Y_POSITION_DISCARD_1 : Y_POSITION_DISCARD_2), false, false, true)).play();
+        });
+    }
+
+    public void addCardToDeck(Matcher matcher) {
+        Cardin cardin = ((Cardin) Listener.deSerialize(matcher.group("cardinSerial"));
+        int playerIndex = Integer.parseInt(matcher.group("playerIndex"));
+        addCardToDeck(cardin, playerIndex);
+    }
+
+
     public void addCardFromDeckToHand(int cardNumber) {
         Platform.runLater(() -> {
             CardView c = deck[0].get(cardNumber);

@@ -72,7 +72,9 @@ public class Listener extends Thread {
                         inGameMenu.showThreeCardOfOpponent();
                     else if ((matcher = LoginMenuRegex.SET_TOKEN.getMatcher(input)).matches())
                         Client.getClient().getSender().setToken(matcher.group("token"));
-                    else if ((matcher = LoginMenuRegex.AUTHENTICATE.getMatcher(input)).matches()) {
+                    else if ((matcher = InGameMenuOutputCommand.ADD_CARD_TO_DECK.getMatcher(input)).matches()) {
+                        inGameMenu.addCardToDeck(matcher);
+                    } else if ((matcher = LoginMenuRegex.AUTHENTICATE.getMatcher(input)).matches()) {
                         Client.getClient().getSender().setToken(null);
                         Platform.runLater(() -> {
                             try {
