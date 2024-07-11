@@ -99,6 +99,7 @@ public class BroadCastMenu extends Application {
 
     private boolean isOnline = false;
     private String seeThisUserGame;
+    private int indexOfSeeGame;
 
     private final ArrayList<CardView>[] hand = new ArrayList[2];
     private final ArrayList<CardView>[] deck = new ArrayList[2];
@@ -128,10 +129,10 @@ public class BroadCastMenu extends Application {
         if (!isOnline) {
             AtomicInteger i = new AtomicInteger();
             Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(1.2), event -> {
-                refresh((GameBoardin) Client.getClient().sendCommand("get game log game boardin -u " + seeThisUserGame + " -n " + 0 + " -i " + i.get()));
-                executeCommand((String) Client.getClient().sendCommand("get game log command -u " + seeThisUserGame + " -n " + 0 + " -i " + (i.getAndIncrement() + 1)));
+                refresh((GameBoardin) Client.getClient().sendCommand("get game log game boardin -u " + seeThisUserGame + " -n " + indexOfSeeGame + " -i " + i.get()));
+                executeCommand((String) Client.getClient().sendCommand("get game log command -u " + seeThisUserGame + " -n " + indexOfSeeGame + " -i " + (i.getAndIncrement() + 1)));
             }));
-            timeline.setCycleCount(((int) Client.getClient().sendCommand("get number of commands in game log -u " + seeThisUserGame + " -n " + 0)) - 1);
+            timeline.setCycleCount(((int) Client.getClient().sendCommand("get number of commands in game log -u " + seeThisUserGame + " -n " + indexOfSeeGame)) - 1);
             timeline.setOnFinished(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent actionEvent) {

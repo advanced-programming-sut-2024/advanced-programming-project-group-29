@@ -2,6 +2,7 @@
 
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.effect.Blend?>
 <?import javafx.scene.effect.Glow?>
 <?import javafx.scene.effect.Shadow?>
@@ -28,7 +29,7 @@
             </Shadow>
          </effect>
       </Rectangle>
-      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#bfbfbf" height="43.0" layoutX="364.0" layoutY="203.0" onMouseClicked="#back" onMouseEntered="#buttonEntered" onMouseExited="#buttonExited" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="214.0">
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#bfbfbf" height="43.0" layoutX="323.0" layoutY="203.0" onMouseClicked="#back" onMouseEntered="#buttonEntered" onMouseExited="#buttonExited" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="214.0">
          <effect>
             <Shadow height="6.17" radius="1.1025" width="0.24">
                <color>
@@ -37,12 +38,12 @@
             </Shadow>
          </effect>
       </Rectangle>
-      <Label layoutX="394.0" layoutY="214.0" onMouseClicked="#back" onMouseEntered="#buttonEntered" onMouseExited="#buttonExited" text="Back to main menu">
+      <Label layoutX="353.0" layoutY="214.0" onMouseClicked="#back" onMouseEntered="#buttonEntered" onMouseExited="#buttonExited" text="Back to main menu">
          <font>
             <Font name="System Bold" size="16.0" />
          </font>
       </Label>
-      <Label fx:id="nUsers" layoutX="616.0" layoutY="203.0" prefHeight="43.0" prefWidth="264.0" text="Ranking between n users" textFill="#e47429">
+      <Label fx:id="nUsers" layoutX="560.0" layoutY="203.0" prefHeight="43.0" prefWidth="264.0" text="Ranking between n users" textFill="#e47429">
          <font>
             <Font name="System Bold" size="18.0" />
          </font>
@@ -55,5 +56,6 @@
          </effect>
       </Label>
       <TableView fx:id="tableView" layoutX="303.0" layoutY="279.0" prefHeight="284.0" prefWidth="597.0" />
+      <TextField fx:id="indexOfGame" layoutX="814.0" layoutY="208.0" prefHeight="34.0" prefWidth="71.0" />
    </children>
 </AnchorPane>

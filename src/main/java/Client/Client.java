@@ -17,12 +17,21 @@ public class Client {
     private static InGameMenu inGameMenu;
     private static boolean isReadyForOnline = false;
     private static String seeThisUserLastGame;
+    private static int getIndexOFSeeGame;
 
     public static void main(String[] args) throws Exception {
         client = new Client();
         client.start();
         client.sendCommand(LoginMenuRegex.SAVE_USER.getRegex());
         sender.endConnection();
+    }
+
+    public static void setGetIndexOFSeeGame(int getIndexOFSeeGame) {
+        Client.getIndexOFSeeGame = getIndexOFSeeGame;
+    }
+
+    public static int getGetIndexOFSeeGame() {
+        return getIndexOFSeeGame;
     }
 
     public static Client getClient() {
@@ -70,7 +79,6 @@ public class Client {
     }
 
     public Sender getSender() {
-        System.out.println("is sender null? " + sender == null);
         return sender;
     }
 
