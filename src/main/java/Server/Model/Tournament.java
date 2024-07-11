@@ -15,7 +15,7 @@ public class Tournament {
     private final ArrayList<User> Winners = new ArrayList<>();
     private final ArrayList<User> Losers = new ArrayList<>();
     private final ArrayList<ArrayList<GameBoard>> games;
-    private HashMap<User, Integer> round;
+    private HashMap<User, Integer> round = new HashMap<>();
 
     public Tournament() {
         for (int i = 0; i < 3; i++) {
