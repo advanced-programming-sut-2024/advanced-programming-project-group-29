@@ -6,6 +6,7 @@ import java.util.regex.Pattern;
 public enum LoginMenuRegex {
     LOGIN("login -u (?<username>\\S+) -p (?<password>\\S+) (?<stayLoggedIn>-stay-logged-in)?"),
     LOGOUT("logout"),
+    GET_USER_EMAIL("get user email -u (?<username>\\S+)"),
     SEND_EMAIL("send email -e (?<email>\\S+)"),
     VERIFY_EMAIL("verify email -c (?<code>\\d+) -e (?<email>\\S+)"),
     FORGET_PASSWORD("forget password -u (?<username>\\S+)"),

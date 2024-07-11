@@ -8,7 +8,7 @@ import Server.Regex.LoginMenuRegex;
 import java.util.regex.Matcher;
 
 public class LoginMenuController {
-    public static Result processRequest(ApplicationController applicationController, String inputCommand) {
+    public static Object processRequest(ApplicationController applicationController, String inputCommand) {
         if (inputCommand.matches(LoginMenuRegex.LOGIN.getRegex())) {
             return login(applicationController, LoginMenuRegex.LOGIN.getMatcher(inputCommand));
         }
@@ -29,6 +29,9 @@ public class LoginMenuController {
         }
         if (inputCommand.matches(LoginMenuRegex.VERIFY_EMAIL.getRegex())) {
             return verifyEmail(LoginMenuRegex.VERIFY_EMAIL.getMatcher(inputCommand));
+        }
+        if (inputCommand.matches(LoginMenuRegex.GET_USER_EMAIL.getRegex())) {
+            return getEmailUser(LoginMenuRegex.GET_USER_EMAIL.getMatcher(inputCommand));
         }
         return null;
     }
@@ -107,5 +110,12 @@ public class LoginMenuController {
         if (EmailUtil.verifyCode(email, code))
             return new Result(true, "Email verified successfully.");
         return new Result(false, "Code is incorrect.");
+    }
+
+    private static String getEmailUser(Matcher matcher) {
+        User user = User.getUserByUsername(matcher.group("username"));
+        if (user == null)
+            return null;
+        return user.getEmail();
     }
 }
