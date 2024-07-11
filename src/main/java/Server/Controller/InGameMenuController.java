@@ -36,7 +36,7 @@ public class InGameMenuController extends Thread {
             } else if ((matcher = InGameMenuRegex.START_GAME.getMatcher(inputCommand)).matches()) {
                 startGame(user);
             } else if ((matcher = InGameMenuRegex.GET_GAME_BOARDIN.getMatcher(inputCommand)).matches()) {
-                result = getGameBoardin(user);
+                result = getGameBoardin(user, sender, Integer.parseInt(matcher.group("new")));
             } else if ((matcher = InGameMenuRegex.SEND_REACTION.getMatcher(inputCommand)).matches()) {
                 opponentSender.sendCommand(inputCommand);
             } else if ((matcher = InGameMenuRegex.SEND_EMOJI_REACTION.getMatcher(inputCommand)).matches()) {
@@ -69,13 +69,15 @@ public class InGameMenuController extends Thread {
 
     private static void changeTurn(ApplicationController applicationController){
         User user = applicationController.getCurrentUser();
+        user.getSender().saveGameBoardin();
+        user.getOpponent().getSender().saveGameBoardin();
         GameBoard gameBoard = user.getCurrentGameBoard();
         if(gameBoard.isPassTurnCalled())
             return;
         gameBoard.changeTurn(applicationController);
         user.getSender().sendCommandWithOutResponse("change turn");
         if(gameBoard.isGameOnline())
-            user.getOpponent().getSender().sendCommand("change turn");
+            user.getOpponent().getSender().sendCommandWithOutResponse("change turn");
     }
 
     private static Object getChatBox(ApplicationController applicationController) {
@@ -451,8 +453,10 @@ public class InGameMenuController extends Thread {
         sender.sendCommand("see three random cards from opponent's hand");
     }
 
-    public static GameBoardin getGameBoardin(User user){
+    public static GameBoardin getGameBoardin(User user, Sender sender, int wantsNew){
         try {
+            if(wantsNew == 0 && sender.getSavedGameBoardin() != null)
+                return sender.getSavedGameBoardin();
             GameBoardin gameBoardin = new GameBoardin(user);
             return gameBoardin;
         }

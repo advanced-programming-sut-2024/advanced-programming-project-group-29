@@ -52,7 +52,8 @@ public class GameMenuController {
         } else if (inputCommand.matches(GameMenuRegex.GET_USER_FACTION_NAME.getRegex())) {
             return applicationController.getCurrentUser().getFaction().getName();
         } else if (inputCommand.matches(InGameMenuRegex.GET_GAME_BOARDIN.getRegex())) {
-            return InGameMenuController.getGameBoardin(applicationController.getCurrentUser());
+            return InGameMenuController.getGameBoardin(applicationController.getCurrentUser(), applicationController.getSender(),
+                    Integer.parseInt(InGameMenuRegex.GET_GAME_BOARDIN.getMatcher(inputCommand).group("new")));
         } else if (inputCommand.matches(GameMenuRegex.GET_USER_SAVED_DECK.getRegex())) {
             return getUserSavedDeck(applicationController);
         } else if (inputCommand.matches(InGameMenuRegex.START_GAME.getRegex())) {

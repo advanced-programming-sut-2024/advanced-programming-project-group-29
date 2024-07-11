@@ -848,9 +848,9 @@ public class InGameMenu extends Application {
     }
 
     private GameBoardin getGameBoardin() {
-        GameBoardin gameBoardin = (GameBoardin) Client.getClient().sendCommand("get game board");
+        GameBoardin gameBoardin = (GameBoardin) Client.getClient().sendCommand("get game board " + (Client.isPassingTurn ? 1 : 0));
         while (gameBoardin.isInProcess())
-            gameBoardin = (GameBoardin) Client.getClient().sendCommand("get game board");
+            gameBoardin = (GameBoardin) Client.getClient().sendCommand("get game board " + (Client.isPassingTurn ? 1 : 0));
         return gameBoardin;
     }
 
@@ -1392,10 +1392,12 @@ public class InGameMenu extends Application {
     }
 
     public void passTurn() {
+        Client.isPassingTurn = false;
         Timeline t = new Timeline(new KeyFrame(Duration.seconds(3)));
         t.setOnFinished(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
+                Client.isPassingTurn = true;
                 swapAllThings();
                 refresh();
             }

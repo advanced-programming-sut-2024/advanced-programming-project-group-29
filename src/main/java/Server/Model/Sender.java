@@ -12,6 +12,7 @@ public class Sender {
     private DataInputStream receiveBuffer;
     private DataOutputStream sendBuffer;
     private User user;
+    private GameBoardin savedGameBoardin;
 
     public Sender(String address, int port) {
         establishConnection(address, port);
@@ -98,5 +99,13 @@ public class Sender {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public void saveGameBoardin() {
+        savedGameBoardin = new GameBoardin(user);
+    }
+
+    public GameBoardin getSavedGameBoardin() {
+        return savedGameBoardin;
     }
 }
