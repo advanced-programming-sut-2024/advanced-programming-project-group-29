@@ -221,6 +221,8 @@ public class InGameMenuController extends Thread {
         user.createHand();
         user.setInProcess(false);
         opponent.createHand();
+        user.getCurrentGameBoard().addLog("start game", 0);
+        user.getCurrentGameBoard().addLog("start game", 1);
     }
 
     public static boolean getOneCardFromDiscardPile(Sender sender, User user){

@@ -89,6 +89,8 @@ public class GameMenuController {
         System.out.println("user2: " + user2.getUsername() + " " + user2.getHand().size());
         user1.getSender().sendCommandWithOutResponse("start in game menu");
         user2.getSender().sendCommandWithOutResponse("start in game menu");
+        user1.getCurrentGameBoard().addLog("start game", 0);
+        user2.getCurrentGameBoard().addLog("start game", 1);
     }
 
     private static Result searchForRandomOpponent(Sender sender, User user) {
@@ -376,6 +378,8 @@ public class GameMenuController {
         user1.setCurrentGameBoard(gameBoard);
         user2.setCurrentGameBoard(gameBoard);
         try {
+            user1.getCurrentGameBoard().addLog("start game", 0);
+            user2.getCurrentGameBoard().addLog("start game", 1);
             user2.getSender().sendCommandWithOutResponse("start new game");
             user1.getSender().sendCommandWithOutResponse("start new game");
         } catch (Exception e) {
