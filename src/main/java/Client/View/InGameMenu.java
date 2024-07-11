@@ -1388,12 +1388,12 @@ public class InGameMenu extends Application {
     }
 
     public void passTurn(MouseEvent mouseEvent) {
-        Client.getClient().getSender().sendCommand("pass turn");
+        Client.getClient().sendCommand("pass turn");
     }
 
     public void passTurn() {
         Client.isPassingTurn = false;
-        Timeline t = new Timeline(new KeyFrame(Duration.seconds(3)));
+        Timeline t = new Timeline(new KeyFrame(Duration.seconds(1.01)));
         t.setOnFinished(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {

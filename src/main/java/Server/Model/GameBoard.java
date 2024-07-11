@@ -263,8 +263,9 @@ public class GameBoard {
         return passTurnCalled > 0;
     }
 
-    public Result passTurn() {
+    public Result passTurn(ApplicationController applicationController) {
         if (passTurnCalled == 2) {
+            this.changeTurn(applicationController);
             passTurnCalled = 0;
             if (playersScore[0] <= playersScore[1]) {
                 playersCrystals[0]--;
@@ -285,10 +286,9 @@ public class GameBoard {
                 players[1].setCurrentGameBoard(null);
                 return null;
             }
+            Result result = new Result(false, winner);
             InGameMenuController.clearGame(players[0], players[1]);
-            if (playersScore[0] == playersScore[1])
-                return new Result(false, "draw");
-            return new Result(false, winner);
+            return result;
         }
         return new Result(true);
     }

@@ -59,12 +59,14 @@ public class InGameMenuController extends Thread {
 
     private static void passTurnCalled(ApplicationController applicationController) {
         GameBoard gameBoard = applicationController.getCurrentUser().getCurrentGameBoard();
+        changeTurn(applicationController);
         gameBoard.passTurnCalled();
-        gameBoard.changeTurn(applicationController);
-        Result result = gameBoard.passTurn();
+        Result result = gameBoard.passTurn(applicationController);
         if(result == null || result.isSuccessful())
             return;
         applicationController.getCurrentUser().getSender().sendCommand("end round " + result.getMessage().get(0));
+        if(gameBoard.isGameOnline())
+            applicationController.getCurrentUser().getOpponent().getSender().sendCommand("end round " + result.getMessage().get(0));
     }
 
     private static void changeTurn(ApplicationController applicationController){
@@ -545,9 +547,12 @@ public class InGameMenuController extends Thread {
     public static void clearGame(User player1, User player2) {
         GameBoard gameBoard = player1.getCurrentGameBoard();
         gameBoard.clearGameBoard();
+        /* // will be called in graphic
         player1.getSender().sendCommandWithOutResponse("clear game");
         if(gameBoard.isGameOnline())
             player2.getSender().sendCommandWithOutResponse("clear game");
+
+         */
         gameBoard.addLog("clear game", 0);
         gameBoard.addLog("clear game", 1);
     }
