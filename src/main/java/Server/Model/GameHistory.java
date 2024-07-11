@@ -33,10 +33,6 @@ public class GameHistory {
         return gameDate;
     }
 
-    public GameLog getGameLog() {
-        return gameLog[0];
-    }
-
     public void addScoreForRound(int score, int playerNumber) {
         scorePerRound[playerNumber].add(score);
     }
@@ -60,5 +56,10 @@ public class GameHistory {
 
     public void setWinner(int winner) {
         this.winner = winner;
+    }
+
+    public GameLog getPlayerGameLog(User player) {
+        int playerNumber = getPlayerNumber(player);
+        return gameLog[playerNumber];
     }
 }

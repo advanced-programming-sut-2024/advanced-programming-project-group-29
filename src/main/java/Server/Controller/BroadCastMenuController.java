@@ -28,20 +28,23 @@ public class BroadCastMenuController {
     }
 
     private static GameBoardin getGameLogGameBoardin(String username, int gameNumber, int index) {
-        int gameHistorySize = User.getUserByUsername(username).getGameHistory().size();
-        GameLog gameLog = User.getUserByUsername(username).getGameHistory().get(gameHistorySize - gameNumber - 1).getGameLog();
+        User user = User.getUserByUsername(username);
+        int gameHistorySize = user.getGameHistory().size();
+        GameLog gameLog = user.getGameHistory().get(gameHistorySize - gameNumber - 1).getPlayerGameLog(user);
         return gameLog.getGameBoardins().get(index);
     }
 
     private static String getGameLogCommand(String username, int gameNumber, int index) {
-        int gameHistorySize = User.getUserByUsername(username).getGameHistory().size();
-        GameLog gameLog = User.getUserByUsername(username).getGameHistory().get(gameHistorySize - gameNumber - 1).getGameLog();
+        User user = User.getUserByUsername(username);
+        int gameHistorySize = user.getGameHistory().size();
+        GameLog gameLog = user.getGameHistory().get(gameHistorySize - gameNumber - 1).getPlayerGameLog(user);
         return gameLog.getCommands().get(index);
     }
 
     private static Integer getGameLogSize(String username, int gameNumber) {
-        int gameHistorySize = User.getUserByUsername(username).getGameHistory().size();
-        GameLog gameLog = User.getUserByUsername(username).getGameHistory().get(gameHistorySize - gameNumber - 1).getGameLog();
+        User user = User.getUserByUsername(username);
+        int gameHistorySize = user.getGameHistory().size();
+        GameLog gameLog = user.getGameHistory().get(gameHistorySize - gameNumber - 1).getPlayerGameLog(user);
         return gameLog.getCommands().size();
     }
 
