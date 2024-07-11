@@ -69,11 +69,11 @@ public class InGameMenuController extends Thread {
 
     private static void changeTurn(ApplicationController applicationController){
         User user = applicationController.getCurrentUser();
-        user.getSender().saveGameBoardin();
-        user.getOpponent().getSender().saveGameBoardin();
         GameBoard gameBoard = user.getCurrentGameBoard();
         if(gameBoard.isPassTurnCalled())
             return;
+        user.saveGameBoardin();
+        user.getOpponent().saveGameBoardin();
         gameBoard.changeTurn(applicationController);
         user.getSender().sendCommandWithOutResponse("change turn");
         if(gameBoard.isGameOnline())
@@ -455,8 +455,8 @@ public class InGameMenuController extends Thread {
 
     public static GameBoardin getGameBoardin(User user, Sender sender, int wantsNew){
         try {
-            if(wantsNew == 0 && sender.getSavedGameBoardin() != null)
-                return sender.getSavedGameBoardin();
+            if(wantsNew == 0 && user.getOpponent().getSavedGameBoardin() != null)
+                return user.getOpponent().getSavedGameBoardin();
             GameBoardin gameBoardin = new GameBoardin(user);
             return gameBoardin;
         }

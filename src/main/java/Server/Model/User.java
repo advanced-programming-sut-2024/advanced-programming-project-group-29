@@ -47,6 +47,7 @@ public class User {
     private transient int optionsType;
     private transient boolean waitForGame = false;
     private Tournament tournament;
+    private GameBoardin savedGameBoardin;
 
     public User(String username, String password, String nickname, String email) {
         this.username = username;
@@ -658,5 +659,13 @@ public class User {
 
     public void setTournament(Tournament tournament) {
         this.tournament = tournament;
+    }
+
+    public void saveGameBoardin() {
+        this.savedGameBoardin = new GameBoardin(this);
+    }
+
+    public GameBoardin getSavedGameBoardin() {
+        return savedGameBoardin;
     }
 }
