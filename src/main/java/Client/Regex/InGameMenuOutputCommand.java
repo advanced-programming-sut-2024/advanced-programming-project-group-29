@@ -27,7 +27,7 @@ public enum InGameMenuOutputCommand {
     MOVE_OPPONENT_HAND_TO_MY_ROW("move soldier (?<cardNumber>\\d+) from opponent's hand to my row (?<rowNumber>\\d+) (?<playerIndex>\\d)"),
     REFRESH("refresh"),
     PASS_TURN_FOR_OPPONENT("pass turn (?<winner>.*)"),
-    END_GAME("end game (?<winner>.+)"),
+    END_GAME("end game (?<winner>.*)"),
     PLACE_DECOY("place decoy (?<cardNumber>\\d+) to card in (?<rowNumber>\\d) (?<targetNumber>\\d+) (?<playerIndex>\\d)"),
     CLEAR_GAME("clear game"),
     REFRESH_CHAT_BOX("refresh chat box"),
