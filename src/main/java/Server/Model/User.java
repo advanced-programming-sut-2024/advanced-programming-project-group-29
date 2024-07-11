@@ -592,6 +592,8 @@ public class User {
 
     public void addOnlineStreamAudience(ApplicationController applicationController) {
         onlineStreamAudiences.add(applicationController);
+        GameBoardin gameBoardin = new GameBoardin(this);
+        applicationController.getSender().sendCommandWithOutResponse("first refresh " + ApplicationController.getSendableObject(gameBoardin));
     }
 
 

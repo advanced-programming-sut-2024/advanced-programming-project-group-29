@@ -1,11 +1,10 @@
 package Server.Controller;
 
 import Server.Model.*;
-import Server.Model.Sender;
 import Server.Model.User;
 import Server.Regex.BroadCastMenuRegex;
-import Server.Regex.InGameMenuRegex;
 
+import java.util.ArrayList;
 import java.util.regex.Matcher;
 
 public class BroadCastMenuController {
@@ -19,6 +18,10 @@ public class BroadCastMenuController {
                 result = getGameLogCommand(matcher.group("username"), Integer.parseInt(matcher.group("gameNumber")), Integer.parseInt(matcher.group("index")));
             } else if((matcher = BroadCastMenuRegex.GET_GAME_LOG_GAME_BOARDIN.getMatcher(inputCommand)).matches()){
                 result = getGameLogGameBoardin(matcher.group("username"), Integer.parseInt(matcher.group("gameNumber")), Integer.parseInt(matcher.group("index")));
+            } else if((matcher = BroadCastMenuRegex.GET_ALL_ONLINE_STREAMS.getMatcher(inputCommand)).matches()){
+                result = getAllOnlineStreams();
+            } else if((matcher = BroadCastMenuRegex.JOIN_T0_STREAM.getMatcher(inputCommand)).matches()){
+                joinToStream(applicationController, matcher.group("username"));
             }
             return result;
         } catch (Exception e) {
@@ -46,6 +49,20 @@ public class BroadCastMenuController {
         int gameHistorySize = user.getGameHistory().size();
         GameLog gameLog = user.getGameHistory().get(gameHistorySize - gameNumber - 1).getPlayerGameLog(user);
         return gameLog.getCommands().size();
+    }
+
+
+    private static void joinToStream(ApplicationController applicationController, String username) {
+        User user = User.getUserByUsername(username);
+        user.addOnlineStreamAudience(applicationController);
+    }
+
+    private static ArrayList<String> getAllOnlineStreams() {
+        ArrayList<String> onlineStreams = new ArrayList<>();
+        for(GameBoard gameBoard : GameBoard.getAllGameBoards()){
+            onlineStreams.add(gameBoard.getPlayer(0).getUsername() + " vs " + gameBoard.getPlayer(1).getUsername());
+        }
+        return onlineStreams;
     }
 
 }

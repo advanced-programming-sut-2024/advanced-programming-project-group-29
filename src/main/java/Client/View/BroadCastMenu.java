@@ -4,10 +4,7 @@ import Client.Client;
 import Client.Enum.Menu;
 import Client.Model.*;
 import Client.Model.GameHistory;
-import Client.Regex.GameMenuRegex;
-import Client.Regex.InGameMenuOutputCommand;
-import Client.Regex.InGameMenuRegex;
-import Client.Regex.LoginMenuRegex;
+import Client.Regex.*;
 import Client.View.Animations.BurningCardAnimation;
 import Client.View.Animations.FlipCardAnimation;
 import com.google.gson.GsonBuilder;
@@ -164,6 +161,7 @@ public class BroadCastMenu extends Application {
 
 
     public void setFirstGameBoardIn(GameBoardin gameBoardin) {
+        System.out.println("yes we are here now");
         refresh(gameBoardin);
     }
 
@@ -225,6 +223,8 @@ public class BroadCastMenu extends Application {
             placeDecoy(matcher);
         } else if ((matcher = InGameMenuOutputCommand.END_ROUND.getMatcher(input)).matches()) {
             endRound(matcher.group("winner"));
+        } else if((matcher = InGameMenuOutputCommand.END_GAME.getMatcher(input)).matches()){
+            endForOnline();
         }
     }
 

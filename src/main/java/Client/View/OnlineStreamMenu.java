@@ -1,6 +1,7 @@
 package Client.View;
 
 import Client.Client;
+import Client.Enum.Menu;
 import Client.Model.ApplicationRunningTimeData;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -30,7 +31,7 @@ public class OnlineStreamMenu extends Application {
 
     public OnlineStreamMenu() {
         super();
-        //Client.getClient().sendCommand("menu enter online stream menu"); //TODO
+        Client.getClient().sendCommand("menu enter " + Menu.BROADCAST_MENU.toString());
     }
 
     private void refresh(){
@@ -65,7 +66,8 @@ public class OnlineStreamMenu extends Application {
 
     @FXML
     public void initialize() {
-        t = new Timeline(new KeyFrame(Duration.seconds(10), new EventHandler<javafx.event.ActionEvent>() {
+        refresh();
+        t = new Timeline(new KeyFrame(Duration.seconds(5), new EventHandler<javafx.event.ActionEvent>() {
             @Override
             public void handle(javafx.event.ActionEvent actionEvent) {
                 refresh();

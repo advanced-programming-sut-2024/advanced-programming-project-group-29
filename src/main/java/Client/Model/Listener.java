@@ -13,6 +13,7 @@ import java.net.Socket;
 import java.util.regex.Matcher;
 
 import Client.View.InGameMenu;
+import Server.Controller.ApplicationController;
 import com.google.gson.GsonBuilder;
 import javafx.application.Platform;
 
@@ -43,6 +44,7 @@ public class Listener extends Thread {
                     InGameMenu inGameMenu = Client.getInGameMenu();
                     ChooseGameModelMenu chooseGameModelMenu = ApplicationRunningTimeData.getChooseGameModelMenu();
                     GameMenu gameMenu = ApplicationRunningTimeData.getGameMenu();
+                    BroadCastMenu broadCastMenu = ApplicationRunningTimeData.getBroadCastMenu();
                     if ((matcher = InGameMenuOutputCommand.ADD_CARD_TO_HAND.getMatcher(input)).matches())
                         inGameMenu.addCardToHand((Cardin) deSerialize(matcher.group("cardinSerial")), Integer.parseInt(matcher.group("playerIndex")));
                     else if ((matcher = InGameMenuOutputCommand.DESTROY_SOLDIER.getMatcher(input)).matches())
@@ -173,6 +175,25 @@ public class Listener extends Thread {
                         Platform.runLater(() -> {
                             try {
                                 inGameMenu.endRound(finalMatcher3.group("winner"));
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        });
+                    } else if((matcher = BroadCastMenuRegex.SHOW_NEW_LOG.getMatcher(input)).matches()){
+                        Matcher finalMatcher = matcher;
+                        Platform.runLater(() -> {
+                            try {
+                                broadCastMenu.onlineRefresh(finalMatcher.group("command"), (GameBoardin) Listener.deSerialize(finalMatcher.group("gameBoardin")));
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        });
+                    } else if((matcher = BroadCastMenuRegex.FIRST_REFRESH.getMatcher(input)).matches()){
+                        System.out.println("aslan nemidoonm chera");
+                        Matcher finalMatcher4 = matcher;
+                        Platform.runLater(() -> {
+                            try {
+                                broadCastMenu.setFirstGameBoardIn((GameBoardin) Listener.deSerialize(finalMatcher4.group("gameBoardin")));
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
