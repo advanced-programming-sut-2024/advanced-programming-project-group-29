@@ -586,4 +586,11 @@ public class User {
         inProcess = false;
         savedGameBoardin = null;
     }
+
+    public boolean checkIfFriend (String username) {
+        if (friends.contains(username)) {
+            return true;
+        }
+        return false;
+    }
 }

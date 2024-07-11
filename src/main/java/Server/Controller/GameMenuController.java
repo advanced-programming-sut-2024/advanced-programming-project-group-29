@@ -155,6 +155,8 @@ public class GameMenuController {
             return new Result(false, "This player is already in a game.");
         }
         if(isOnline){
+            if (!user2.checkIfFriend(user1.getUsername()))
+                return new Result(false, "This player is not your friend.");
             if(!ApplicationController.checkIfUserIsOnline(user2.getUsername()))
                 return new Result(false, "This player is not online.");
             user2.getSender().sendCommand("show pop-up for game request -p " + user1.getUsername());
