@@ -97,10 +97,11 @@ public class BroadCastMenu extends Application {
     public ImageView winner2;
     public ImageView winner1;
 
+    public Pane turnPain;
+    public Label endTurnAnnounce;
+
     private boolean isOnline = false;
     private String seeThisUserGame;
-    private ArrayList<GameBoardin> gameBoardins;
-    private ArrayList<String> logs;
 
     private final ArrayList<CardView>[] hand = new ArrayList[2];
     private final ArrayList<CardView>[] deck = new ArrayList[2];
@@ -112,7 +113,8 @@ public class BroadCastMenu extends Application {
     public BroadCastMenu() {
         super();
         Client client = Client.getClient();
-        seeThisUserGame = client.getSeeThisUserLastGame();
+        seeThisUserGame = Client.getSeeThisUserLastGame();
+        isOnline = Client.isIsReadyForOnline();
         client.sendCommand("menu enter " + Menu.BROADCAST_MENU.toString());
     }
 
@@ -199,6 +201,10 @@ public class BroadCastMenu extends Application {
             moveWeatherFromDeckAndPlay(matcher);
         } else if ((matcher = InGameMenuOutputCommand.MOVE_OPPONENT_HAND_TO_MY_ROW.getMatcher(input)).matches()) {
             moveSoldierFromOpponentHandToPlayerRow(matcher);
+        } else if((matcher = InGameMenuOutputCommand.PLACE_DECOY.getMatcher(input)).matches()){
+            placeDecoy(matcher);
+        }   else if((matcher = InGameMenuOutputCommand.END_ROUND.getMatcher(input)).matches()){
+            endRound(matcher.group("winner"));
         }
     }
 
@@ -350,7 +356,6 @@ public class BroadCastMenu extends Application {
         discard[playerIndex].add(decoy);
         row[playerIndex][convertRowNumber(rowNumber)].remove(soldier);
         hand[playerIndex].set(cardNumber, soldier);
-        soldier.setInHand(true);
         (new FlipCardAnimation(decoy, X_POSITION_DISCARD, (playerIndex == 0 ? Y_POSITION_DISCARD_1 : Y_POSITION_DISCARD_2), true, true, false)).play();
         (new FlipCardAnimation(soldier, x, y, true, true, false)).play();
     }
@@ -436,7 +441,6 @@ public class BroadCastMenu extends Application {
     public void addCardToHand(Cardin cardin, int playerIndex) {
         Platform.runLater(() -> {
             CardView c = new CardView(cardin, -200, -200, null, false);
-            c.setInHand(true);
             hand[playerIndex].add(c);
             pain.getChildren().add(c);
             (new FlipCardAnimation(c, (hand[playerIndex].size() == 1 ? (X_POSITION_HAND_LEFT + X_POSITION_HAND_RIGHT - CARD_WIDTH) / 2 : (hand[playerIndex].get(hand[playerIndex].size() - 2)).getLayoutX() + SPACING + CARD_WIDTH), (playerIndex == 0 ? Y_POSITION_HAND_1 : Y_POSITION_HAND_2), true, true, false)).play();
@@ -450,7 +454,6 @@ public class BroadCastMenu extends Application {
             hand[0].add(c);
             pain.getChildren().remove(c);
             pain.getChildren().add(c);
-            c.setInHand(true);
             (new FlipCardAnimation(c, (hand[0].size() == 1 ? (X_POSITION_HAND_LEFT + X_POSITION_HAND_RIGHT - CARD_WIDTH) / 2 : (hand[0].get(hand[0].size() - 2)).getLayoutX() + SPACING + CARD_WIDTH), Y_POSITION_HAND_1, true, true, false)).play();
         });
     }
@@ -474,7 +477,6 @@ public class BroadCastMenu extends Application {
             hand[playerIndex].remove(cardNumber);
             row[playerIndex][convertRowNumber(rowNumber)].add(c);
             int j = convertRowNumber(rowNumber);
-            c.setInHand(false);
             double Y = (playerIndex == 0 ? (j == 0 ? Y_POSITION_ROW_11 : (j == 1 ? Y_POSITION_ROW_12 : Y_POSITION_ROW_13)) : (j == 0 ? Y_POSITION_ROW_21 : (j == 1 ? Y_POSITION_ROW_22 : Y_POSITION_ROW_23)));
             (new FlipCardAnimation(c, (row[playerIndex][convertRowNumber(rowNumber)].size() == 1 ? (X_POSITION_ROW_LEFT + X_POSITION_ROW_RIGHT - CARD_WIDTH) / 2 : (row[playerIndex][convertRowNumber(rowNumber)].get(row[playerIndex][convertRowNumber(rowNumber)].size() - 2)).getLayoutX() + SPACING + CARD_WIDTH), Y, true, true, false)).play();
         });
@@ -500,7 +502,6 @@ public class BroadCastMenu extends Application {
             discard[playerIndex].remove(cardNumber);
             hand[playerIndex].add(c);
             pain.getChildren().remove(c);
-            c.setInHand(true);
             pain.getChildren().add(c);
             (new FlipCardAnimation(c, (hand[playerIndex].size() == 1 ? (X_POSITION_HAND_LEFT + X_POSITION_HAND_RIGHT - CARD_WIDTH) / 2 : (hand[playerIndex].get(hand[playerIndex].size() - 2)).getLayoutX() + SPACING + CARD_WIDTH), (playerIndex == 0 ? Y_POSITION_HAND_1 : Y_POSITION_HAND_2), true, true, false)).play();
         });
@@ -544,7 +545,6 @@ public class BroadCastMenu extends Application {
         Platform.runLater(() -> {
             CardView c = hand[playerIndex].get(cardNumber);
             hand[playerIndex].remove(cardNumber);
-            c.setInHand(false);
             horn[playerIndex][convertRowNumber(rowNumber)] = c;
             double Y = (playerIndex == 0 ? (convertRowNumber(rowNumber) == 0 ? Y_POSITION_ROW_11 : (convertRowNumber(rowNumber) == 1 ? Y_POSITION_ROW_12 : Y_POSITION_ROW_13)) : (convertRowNumber(rowNumber) == 0 ? Y_POSITION_ROW_21 : (convertRowNumber(rowNumber) == 1 ? Y_POSITION_ROW_22 : Y_POSITION_ROW_23)));
             (new FlipCardAnimation(c, X_POSITION_SPELL, Y, true, true, false)).play();
@@ -562,7 +562,6 @@ public class BroadCastMenu extends Application {
         Platform.runLater(() -> {
             CardView c = hand[playerIndex].get(cardNumber);
             hand[playerIndex].remove(cardNumber);
-            c.setInHand(false);
             weather.add(c);
             refreshWeather();
             (new FlipCardAnimation(c, (weather.size() == 1 ? (X_POSITION_WEATHER_LEFT + X_POSITION_WEATHER_RIGHT - CARD_WIDTH) / 2 : (weather.get(weather.size() - 2)).getLayoutX() + SPACING + CARD_WIDTH), Y_POSITION_WEATHER, true, true, false)).play();
@@ -580,7 +579,6 @@ public class BroadCastMenu extends Application {
             try {
                 CardView c = hand[playerIndex].get(cardNumber);
                 hand[playerIndex].remove(cardNumber);
-                c.setInHand(false);
                 row[playerIndex][convertRowNumber(rowNumber)].add(c);
                 int j = convertRowNumber(rowNumber);
                 double Y = (playerIndex == 0 ? (j == 0 ? Y_POSITION_ROW_11 : (j == 1 ? Y_POSITION_ROW_12 : Y_POSITION_ROW_13)) : (j == 0 ? Y_POSITION_ROW_21 : (j == 1 ? Y_POSITION_ROW_22 : Y_POSITION_ROW_23)));
@@ -615,11 +613,9 @@ public class BroadCastMenu extends Application {
     }
 
     public void moveSoldierFromOpponentHandToPlayerRow(int cardNumber, int rowNumber, int playerIndex) {
-        System.out.println("we are in this function ");
         Platform.runLater(() -> {
             CardView c = hand[1 - playerIndex].get(cardNumber);
             hand[1 - playerIndex].remove(cardNumber);
-            c.setInHand(false);
             row[playerIndex][convertRowNumber(rowNumber)].add(c);
             int j = convertRowNumber(rowNumber);
             double Y = (playerIndex == 0 ? (j == 0 ? Y_POSITION_ROW_11 : (j == 1 ? Y_POSITION_ROW_12 : Y_POSITION_ROW_13)) : (j == 0 ? Y_POSITION_ROW_21 : (j == 1 ? Y_POSITION_ROW_22 : Y_POSITION_ROW_23)));
@@ -697,5 +693,25 @@ public class BroadCastMenu extends Application {
         rowWeather23.setVisible(frost);
     }
 
-
+    public void endRound(String endRoundText) {
+        if (endRoundText.isEmpty()) endTurnAnnounce.setText("Game Draw");
+        else endTurnAnnounce.setText("Round ends, the winner is \"" + endRoundText + "\"");
+        pain.getChildren().remove(turnPain);
+        pain.getChildren().add(turnPain);
+        turnPain.setVisible(true);
+        turnPain.setDisable(false);
+        mainPain.setDisable(true);
+        Timeline t = new Timeline(new KeyFrame(Duration.seconds(1)));
+        t.setCycleCount(1);
+        t.setOnFinished(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                turnPain.setVisible(false);
+                turnPain.setDisable(true);
+                mainPain.setDisable(false);
+                moveAllCardFromBoardToDiscard();
+            }
+        });
+        t.play();
+    }
 }
