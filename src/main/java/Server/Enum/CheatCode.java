@@ -8,7 +8,7 @@ public enum CheatCode {
     ADD_SOLDIER("fight for me, like a soldier"),
     REFILL_COMMANDER("I wanna be your slave"),
     KILL_RANDOM_SOLDIER("I wanna be your master"),
-    END_GAME("This is going to be my last breath");
+    ADD_TO_DECK("This is going to be my last breath");
 
     String string;
 

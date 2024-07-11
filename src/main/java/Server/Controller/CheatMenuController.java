@@ -31,7 +31,7 @@ public class CheatMenuController {
             case ADD_SPECIAL -> result = addRandomSpecialCardToHand(user, sender);
             case REFILL_COMMANDER -> result = refillCommanderAbility(user);
             case KILL_RANDOM_SOLDIER ->  result = killRandomSoldier(user, sender);
-            case END_GAME -> result = endGame();
+            case ADD_TO_DECK -> result = addSoldierToDeck(user, sender);
         }
         System.out.println("check out " + result == null);
         return result;
@@ -82,9 +82,12 @@ public class CheatMenuController {
         return new Result(false);
     }
 
-    public static Result endGame() {
-        //TODO
-        return new Result(false);
+    public static Result addSoldierToDeck(User user, Sender sender) {
+        GameBoard gameBoard = user.getCurrentGameBoard();
+        int playerIndex = gameBoard.getPlayerNumber(user);
+        Soldier card = Soldier.getRandomCard(user);
+        InGameMenuController.addCardToDeck(sender, gameBoard, card, playerIndex);
+        return new Result(true);
     }
 
 }

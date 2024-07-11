@@ -6,6 +6,7 @@ import java.util.regex.Pattern;
 public enum InGameMenuOutputCommand {
 
     ADD_CARD_TO_HAND("add card to hand (?<cardinSerial>(\\n|.)+) (?<playerIndex>\\d)"), // add cardinSerial to hand of current player
+    ADD_CARD_TO_DECK("add card to deck (?<cardinSerial>(\\n|.)+) (?<playerIndex>\\d)"), // add cardinSerial to deck of current player
     DESTROY_SOLDIER("destroy soldier (?<playerIndex>\\d) (?<row>\\d) (?<cardNumber>\\d+)"), // destroy soldier in row and column of the player in playerIndex,
     // close combat index is 0
     LET_PLAYER_SELECT_CARD("show pile type (?<type>\\d) and let user choose (?<choice>\\d+)"), // let player select card from type pile (0: discard pile, 1: hand, 2: deck, 3: weathers in deck)
