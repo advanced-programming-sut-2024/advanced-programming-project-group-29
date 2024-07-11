@@ -246,14 +246,15 @@ public class Soldier extends Card {
         int rowNumber = getPlacedRowNumber(soldier, gameBoard);
         int playerIndex = gameBoard.getPlayerNumber(soldier.getUser());
         ArrayList<Soldier> sameSoldiers = new ArrayList<>();
+        int defaultHp = soldier.getDefaultHp();
         for (Soldier otherSoldier : gameBoard.getRows()[playerIndex][rowNumber]) {
-            if (otherSoldier.getAttribute() == Attribute.TIGHT_BOND && otherSoldier.getHp() == soldier.getHp()) {
+            if (otherSoldier.getAttribute() == Attribute.TIGHT_BOND && otherSoldier.getDefaultHp() == defaultHp) {
                 sameSoldiers.add(otherSoldier);
             }
         }
         final int count = sameSoldiers.size();
         for (Soldier sameSoldier : sameSoldiers) {
-            InGameMenuController.changeHpForSoldier(gameBoard, sameSoldier, sameSoldier.getHp() * count);
+            InGameMenuController.changeHpForSoldier(gameBoard, sameSoldier, defaultHp * count);
         }
     }
 
