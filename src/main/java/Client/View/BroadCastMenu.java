@@ -130,9 +130,9 @@ public class BroadCastMenu extends Application {
         }
         if (!isOnline) {
             AtomicInteger i = new AtomicInteger();
-            Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(2), event -> {
+            Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(1.2), event -> {
                 refresh((GameBoardin) Client.getClient().sendCommand("get game log game boardin -u " + seeThisUserGame + " -n " + 0 + " -i " + i.get()));
-                executeCommand((String) Client.getClient().sendCommand("get game log command -u " + seeThisUserGame + " -n " + 0 + " -i " + i.getAndIncrement()));
+                executeCommand((String) Client.getClient().sendCommand("get game log command -u " + seeThisUserGame + " -n " + 0 + " -i " + (i.getAndIncrement() + 1)));
             }));
             timeline.setCycleCount(((int) Client.getClient().sendCommand("get number of commands in game log -u " + seeThisUserGame + " -n " + 0)) - 1);
             timeline.setOnFinished(new EventHandler<ActionEvent>() {
@@ -162,9 +162,29 @@ public class BroadCastMenu extends Application {
         ApplicationRunningTimeData.setPane(pane);
     }
 
-    public void onlineRefresh(String command, GameBoardin gameBoardin) {
+
+    public void setFirstGameBoardIn(GameBoardin gameBoardin) {
         refresh(gameBoardin);
+    }
+
+    public void onlineRefresh(String command, GameBoardin gameBoardin) {
         executeCommand(command);
+        Timeline t = new Timeline(new KeyFrame(Duration.seconds(1.2), new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                refresh(gameBoardin);
+            }
+        }));
+    }
+
+    public void endForOnline(){
+        Platform.runLater(() -> {
+            try {
+                (new RankingMenu()).start(ApplicationRunningTimeData.getStage());
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 
     private void executeCommand(String input) {
@@ -201,9 +221,9 @@ public class BroadCastMenu extends Application {
             moveWeatherFromDeckAndPlay(matcher);
         } else if ((matcher = InGameMenuOutputCommand.MOVE_OPPONENT_HAND_TO_MY_ROW.getMatcher(input)).matches()) {
             moveSoldierFromOpponentHandToPlayerRow(matcher);
-        } else if((matcher = InGameMenuOutputCommand.PLACE_DECOY.getMatcher(input)).matches()){
+        } else if ((matcher = InGameMenuOutputCommand.PLACE_DECOY.getMatcher(input)).matches()) {
             placeDecoy(matcher);
-        }   else if((matcher = InGameMenuOutputCommand.END_ROUND.getMatcher(input)).matches()){
+        } else if ((matcher = InGameMenuOutputCommand.END_ROUND.getMatcher(input)).matches()) {
             endRound(matcher.group("winner"));
         }
     }

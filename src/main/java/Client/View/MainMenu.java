@@ -53,6 +53,12 @@ public class MainMenu extends Application {
         new ProfileMenu().start(ApplicationRunningTimeData.getStage());
     }
 
+    public void onlineStream() throws Exception {
+        (new OnlineStreamMenu()).start(ApplicationRunningTimeData.getStage());
+    }
+
+
+
     public void logout() throws Exception {
         client.sendCommand(LoginMenuRegex.LOGOUT.getRegex());
         client.getSender().setToken(null);

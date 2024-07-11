@@ -1,5 +1,6 @@
 package Client.Model;
 
+import Client.View.BroadCastMenu;
 import Client.View.ChooseGameModelMenu;
 import Client.View.GameMenu;
 import Client.View.PopUp;
@@ -12,6 +13,7 @@ public class ApplicationRunningTimeData {
     private static Stage stage;
     private static Pane pane;
     private static String loggedInUserUsername;
+    private static BroadCastMenu broadCastMenu;
     private static ChooseGameModelMenu chooseGameModelMenu;
     private static GameMenu gameMenu;
 
@@ -23,6 +25,14 @@ public class ApplicationRunningTimeData {
             p.setLayoutX(50);
             pane.getChildren().add(p);
         });
+    }
+
+    public static void setBroadCastMenu(BroadCastMenu broadCastMenu) {
+        ApplicationRunningTimeData.broadCastMenu = broadCastMenu;
+    }
+
+    public static BroadCastMenu getBroadCastMenu() {
+        return broadCastMenu;
     }
 
     public static void setChooseGameModelMenu(ChooseGameModelMenu chooseGameModelMenu) {
