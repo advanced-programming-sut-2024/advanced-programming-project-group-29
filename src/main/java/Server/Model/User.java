@@ -1,5 +1,6 @@
 package Server.Model;
 
+import Server.Controller.ApplicationController;
 import Server.Controller.GameMenuController;
 import Server.Enum.Faction;
 import io.jsonwebtoken.Jwts;
@@ -46,6 +47,7 @@ public class User {
     private transient boolean waitForGame = false;
     private Tournament tournament;
     private GameBoardin savedGameBoardin;
+    private ArrayList<ApplicationController> onlineStreamAudiences = new ArrayList<>();
 
     public User(String username, String password, String nickname, String email) {
         this.username = username;
@@ -563,6 +565,7 @@ public class User {
         discardPile.clear();
         inProcess = false;
         savedGameBoardin = null;
+        onlineStreamAudiences.clear();
     }
 
     public boolean checkIfFriend (String username) {
@@ -582,4 +585,14 @@ public class User {
         this.friendRequests.clear();
         this.friendRequests.addAll(friendRequests);
     }
+
+    public ArrayList<ApplicationController> getOnlineStreamAudiences() {
+        return onlineStreamAudiences;
+    }
+
+    public void addOnlineStreamAudience(ApplicationController applicationController) {
+        onlineStreamAudiences.add(applicationController);
+    }
+
+
 }

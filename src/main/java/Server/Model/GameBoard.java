@@ -9,6 +9,7 @@ import java.util.Date;
 
 
 public class GameBoard {
+    private static ArrayList<GameBoard> allGameBoards = new ArrayList<>();
     private final User[] players = new User[2];
     private int currentPlayer;
     private final ArrayList<Soldier>[][] rows = new ArrayList[2][3];
@@ -58,6 +59,7 @@ public class GameBoard {
             for (Card card : players[i].getDeck())
                 card.setGameBoard(this);
         }
+        allGameBoards.add(this);
     }
 
     public User getPlayer(int playerNumber) {
@@ -136,7 +138,7 @@ public class GameBoard {
 
     public void changeTurn(ApplicationController applicationController) {
         currentPlayer = 1 - currentPlayer;
-        if(!isGameOnline)
+        if (!isGameOnline)
             applicationController.setCurrentUser(players[currentPlayer]);
     }
 
@@ -256,11 +258,11 @@ public class GameBoard {
         return currentPlayer;
     }
 
-    public void passTurnCalled(){
+    public void passTurnCalled() {
         passTurnCalled++;
     }
 
-    public boolean isPassTurnCalled(){
+    public boolean isPassTurnCalled() {
         return passTurnCalled > 0;
     }
 
@@ -284,6 +286,8 @@ public class GameBoard {
                     String winner = playersCrystals[0] > playersCrystals[1] ? players[0].getUsername() : (playersCrystals[0] == playersCrystals[1] ? "" : players[1].getUsername());
                     InGameMenuController.endGame(winner, players[0], players[1]);
                     gameHistory.setWinner(playersScore[0] > playersScore[1] ? 0 : (playersScore[0] == playersScore[1] ? -1 : 1));
+                    sendAllOnlineStreamAudiences("end game " + winner, 0);
+                    sendAllOnlineStreamAudiences("end game " + winner, 1);
                     players[0].endGame();
                     players[1].endGame();
                     if (tournament != null) {
@@ -291,6 +295,7 @@ public class GameBoard {
                         tournament.endGame(winnerUser, winnerUser == players[0] ? players[1] : players[0]);
                     }
                     applicationController.setCurrentUser(applicationController.getLoggedInUser());
+                    allGameBoards.remove(this);
                     return null;
                 }
                 String winner = playersScore[0] > playersScore[1] ? players[0].getUsername() : (playersScore[0] == playersScore[1] ? "" : players[1].getUsername());
@@ -302,6 +307,14 @@ public class GameBoard {
         } catch (Exception e) {
             e.printStackTrace();
             return null;
+        }
+    }
+
+    private void sendAllOnlineStreamAudiences(String command, int playerIndex) {
+        GameBoardin gameBoardin = new GameBoardin(players[playerIndex]);
+        for (ApplicationController applicationController : players[playerIndex].getOnlineStreamAudiences()) {
+            applicationController.getSender().sendCommandWithOutResponse
+                    ("show new log " + command + " ^^^ " + ApplicationController.getSendableObject(gameBoardin));
         }
     }
 
@@ -333,6 +346,7 @@ public class GameBoard {
         System.out.println("adding a log " + command + " " + playerIndex);
         gameLog[playerIndex].addGameBoardin(new GameBoardin(players[playerIndex]));
         gameLog[playerIndex].addCommand(command);
+        sendAllOnlineStreamAudiences(command, playerIndex);
     }
 
 
@@ -357,5 +371,9 @@ public class GameBoard {
 
     public Tournament getTournament() {
         return tournament;
+    }
+
+    public static ArrayList<GameBoard> getAllGameBoards() {
+        return allGameBoards;
     }
 }
