@@ -1,15 +1,12 @@
 package Server.Model;
 
-import com.google.gson.Gson;
-
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-
 import Server.Enum.Faction;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
+import java.sql.*;
+import java.util.ArrayList;
 
 public class DatabaseManager {
     private static final String URL = "jdbc:sqlite:" + "src/main/resources/sqlite/Users.db";
@@ -124,7 +121,9 @@ public class DatabaseManager {
                 String jsonDeck = rs.getString("deck");
                 ArrayList<String> deckNames = new Gson().fromJson(jsonDeck, ArrayList.class);
                 String jsonGameHistory = rs.getString("gameHistory");
-                ArrayList<GameHistory> gameHistories = new Gson().fromJson(jsonGameHistory, ArrayList.class);
+                Type gameHistoryListType = new TypeToken<ArrayList<GameHistory>>() {
+                }.getType();
+                ArrayList<GameHistory> gameHistories = new Gson().fromJson(jsonGameHistory, gameHistoryListType);
 
                 User user = new User(username, password, nickname, email);
                 user.setQuestion(questionNumber, answer);

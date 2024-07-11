@@ -39,7 +39,7 @@ public class User {
     private Commander commander;
     private transient Sender sender;
     private transient GameBoard currentGameBoard;
-    private ArrayList<GameHistory> gameHistory = new ArrayList<>();
+    private final ArrayList<GameHistory> gameHistories = new ArrayList<>();
     private final ArrayList<String> friends = new ArrayList<>();
     private final ArrayList<String> friendRequests = new ArrayList<>();
     private final HashMap<String, SavedDeck> savedDecks = new HashMap<>();
@@ -224,18 +224,18 @@ public class User {
     }
 
     public void addGameHistory(GameHistory gameHistory) {
-        this.gameHistory.add(gameHistory);
+        this.gameHistories.add(gameHistory);
         DatabaseManager.updateUser(this, this.username);
     }
 
     public void setGameHistory(ArrayList<GameHistory> gameHistories) {
-        this.gameHistory.clear();
-        this.gameHistory.addAll(gameHistories);
+        this.gameHistories.clear();
+        this.gameHistories.addAll(gameHistories);
         DatabaseManager.updateUser(this, this.username);
     }
 
     public ArrayList<GameHistory> getGameHistory() {
-        return gameHistory;
+        return this.gameHistories;
     }
 
     public String getQuestion() {
@@ -255,9 +255,23 @@ public class User {
     }
 
     public int getHighestScore() {
+        if (this.gameHistories.isEmpty())
+            return 0;
         int highestScore = 0;
-        for (GameHistory gameHistory : this.gameHistory) {
+        System.err.println("Before for loop");
+        System.err.println("gameHistories: " + this.gameHistories.size());
+        System.err.println("gameHistories: " + this.gameHistories.get(0));
+        try {
+            GameHistory gameHistoryy = this.gameHistories.get(0);
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
+        System.err.println("BTUUUUUUUU");
+       // System.err.println("gameHistory: " + gameHistoryy);
+        for (GameHistory gameHistory : this.gameHistories) {
+            System.err.println("For loop");
             int playerNumber = gameHistory.getPlayerNumber(this);
+            System.err.println("gameHistory: " + playerNumber);
             for (int score : gameHistory.getScorePerRound(playerNumber)) {
                 if (score > highestScore)
                     highestScore = score;
@@ -268,7 +282,7 @@ public class User {
 
     public int getNumberOfWins() {
         int numberOfWins = 0;
-        for (GameHistory gameHistory : this.gameHistory) {
+        for (GameHistory gameHistory : this.gameHistories) {
             int playerNumber = gameHistory.getPlayerNumber(this);
             if (gameHistory.getWinner() == playerNumber)
                 numberOfWins++;
@@ -278,7 +292,7 @@ public class User {
 
     public int getNumberOfDraws() {
         int numberOfDraws = 0;
-        for (GameHistory gameHistory : this.gameHistory) {
+        for (GameHistory gameHistory : this.gameHistories) {
             if (gameHistory.getWinner() == -1)
                 numberOfDraws++;
         }
@@ -286,7 +300,7 @@ public class User {
     }
 
     public int getNumberOfLosses() {
-        return this.gameHistory.size() - this.getNumberOfWins() - this.getNumberOfDraws();
+        return this.gameHistories.size() - this.getNumberOfWins() - this.getNumberOfDraws();
     }
 
     public int getRank() {
@@ -345,11 +359,6 @@ public class User {
             }
         }
     }
-
-    public static void saveUser() throws IOException {
-        extractAllUsersToFileManually();
-    }
-
 
     public static void loadUser() {
         DatabaseManager.loadUsers();
@@ -534,106 +543,6 @@ public class User {
 
     public boolean getInProcess() {
         return inProcess;
-    }
-
-    public static void extractAllUsersToFileManually() {
-        try {
-            FileWriter fileWriter = new FileWriter("src/main/resources/JSON/allUsers.json");
-            for (User user : allUsers) {
-                fileWriter.write(user.toJson() + "\n");
-            }
-            fileWriter.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private String toJson() {
-        StringBuilder jsonBuilder = new StringBuilder();
-        jsonBuilder.append(username).append("|");
-        jsonBuilder.append(password).append("|");
-        jsonBuilder.append(nickname).append("|");
-        jsonBuilder.append(email).append("|");
-        jsonBuilder.append(questionNumber).append("|");
-        jsonBuilder.append(answer).append("|");
-        SavedDeck savedDeck = new SavedDeck(this.getDeckNames(), commander.getName(), faction.getName());
-        jsonBuilder.append(SavedDeck.savedDeckToString(savedDeck)).append("|");
-        for (GameHistory gameHistory : this.gameHistory) {
-            jsonBuilder.append(gameHistory.toJson()).append("-");
-        }
-        if (!gameHistory.isEmpty())
-            jsonBuilder.deleteCharAt(jsonBuilder.length() - 1);
-        jsonBuilder.append("|");
-        for (String friend : friends)
-            jsonBuilder.append(friend).append(",");
-        if (!friends.isEmpty())
-            jsonBuilder.deleteCharAt(jsonBuilder.length() - 1);
-        jsonBuilder.append("|");
-        for (String friendRequest : friendRequests)
-            jsonBuilder.append(friendRequest).append(",");
-        if (!friendRequests.isEmpty())
-            jsonBuilder.deleteCharAt(jsonBuilder.length() - 1);
-        jsonBuilder.append("|");
-        jsonBuilder.append("[");
-        for (String deckName : savedDecks.keySet()) {
-            jsonBuilder.append(deckName).append("|");
-            jsonBuilder.append(SavedDeck.savedDeckToString(savedDecks.get(deckName))).append("|");
-        }
-        if (!savedDecks.isEmpty())
-            jsonBuilder.deleteCharAt(jsonBuilder.length() - 1);
-        jsonBuilder.append("]");
-        return jsonBuilder.toString();
-    }
-
-    /*
-    public static void makeUserFromJson(String jsonLine) {
-        if (jsonLine.isEmpty()) return;
-        int beginIndexOfHashMaps = jsonLine.indexOf("[");
-        String hashMapString = jsonLine.substring(beginIndexOfHashMaps + 1, jsonLine.length() - 1);
-        String[] hashMaps = splitStringWithEmptyStrings(hashMapString , '|');
-        HashMap<String, SavedDeck> savedDecks = new HashMap<>();
-        for (int i = 0; i < hashMaps.length; i += 2) {
-            if (hashMaps.length == 1) break;
-            String deckName = hashMaps[i];
-            String deckString = hashMaps[i + 1];
-            savedDecks.put(deckName, SavedDeck.stringToSavedDeck(deckString));
-        }
-        String[] parts = splitStringWithEmptyStrings(jsonLine.substring(0, beginIndexOfHashMaps), '|');
-        User user = new User(parts[0], parts[1], parts[2], parts[3]);
-        user.setQuestion(Integer.parseInt(parts[4]), parts[5]);
-        user.extractDataFromSavedDeck(SavedDeck.stringToSavedDeck(parts[6]));
-        String[] gameHistories = parts[7].split("-");
-        for (String gameHistory : gameHistories) {
-            if (gameHistory.length() > 1)
-                user.addGameHistory(GameHistory.fromJson(gameHistory));
-        }
-        String[] friends = parts[8].split(",");
-        for (String friend : friends)
-            if (!friend.isEmpty())
-                user.friends.add(friend);
-        String[] friendRequests = parts[9].split(",");
-        for (String friendRequest : friendRequests) {
-            if (!friendRequest.isEmpty())
-                user.friendRequests.add(friendRequest);
-        }
-        user.savedDecks.putAll(savedDecks);
-    }
-
-     */
-
-    private static String[] splitStringWithEmptyStrings(String string, char c) {
-        ArrayList<String> strings = new ArrayList<>();
-        StringBuilder stringBuilder = new StringBuilder();
-        for (int i = 0; i < string.length(); i++) {
-            if (string.charAt(i) == c) {
-                strings.add(stringBuilder.toString());
-                stringBuilder = new StringBuilder();
-            } else {
-                stringBuilder.append(string.charAt(i));
-            }
-        }
-        strings.add(stringBuilder.toString());
-        return strings.toArray(new String[0]);
     }
 
     public void setOptionsType(int optionsType) {

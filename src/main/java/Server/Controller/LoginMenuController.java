@@ -1,6 +1,8 @@
 package Server.Controller;
 
-import Server.Model.*;
+import Server.Model.EmailUtil;
+import Server.Model.Result;
+import Server.Model.User;
 import Server.Regex.LoginMenuRegex;
 
 import java.util.regex.Matcher;
@@ -18,9 +20,6 @@ public class LoginMenuController {
         }
         if (inputCommand.matches(LoginMenuRegex.CHANGE_PASSWORD.getRegex())) {
             return changePassword(LoginMenuRegex.CHANGE_PASSWORD.getMatcher(inputCommand));
-        }
-        if (inputCommand.matches(LoginMenuRegex.SAVE_USER.getRegex())) {
-            return saveUsers();
         }
         if (inputCommand.matches(LoginMenuRegex.LOAD_USER.getRegex())) {
             return loadUsers();
@@ -84,15 +83,6 @@ public class LoginMenuController {
             return new Result(false, "Passwords do not match.");
         user.setPassword(password);
         return new Result(true, "Password changed successfully.");
-    }
-
-    public static Result saveUsers () {
-        try {
-            User.saveUser();
-            return new Result(true, "Users saved successfully.");
-        } catch (Exception e) {
-            return new Result(false, "Error saving users.");
-        }
     }
 
     private static Result loadUsers() {

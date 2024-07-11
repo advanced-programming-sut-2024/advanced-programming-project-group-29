@@ -132,11 +132,6 @@ public class ApplicationController extends Thread {
                     waitForAuthentication = false;
                     continue;
                 }
-                if (inputCommand.matches(LoginMenuRegex.SAVE_USER.getRegex())) {
-                    LoginMenuController.saveUsers();
-                    dataOutputStream.writeUTF("null");
-                    continue;
-                }
                 if (inputCommand.matches(GameMenuRegex.ACCEPT_PLAY.getRegex())) {
                     GameMenuController.acceptPlay(this.getCurrentUser(), GameMenuRegex.ACCEPT_PLAY.getMatcher(inputCommand));
                 } else if (inputCommand.matches(GameMenuRegex.REJECT_PLAY.getRegex())) {

@@ -88,10 +88,13 @@ public class ProfileMenuController {
 
     public static ArrayList<String> showInfo(User currentUser) {
         ArrayList<String> info = new ArrayList<>();
+        System.err.println("hmmmmm");
         info.add("Username: " + currentUser.getUsername());
         info.add("Nickname: " + currentUser.getNickname());
         info.add("Highest Score: " + currentUser.getHighestScore());
+        System.err.println(currentUser.getHighestScore());
         info.add("Rank: " + currentUser.getRank());
+        System.err.println("rank : " + currentUser.getRank());
         info.add("Number of Games Played: " + currentUser.getGameHistory().size());
         info.add("Number of Games Drawn: " + currentUser.getNumberOfDraws());
         info.add("Number of Games Won: " + currentUser.getNumberOfWins());
