@@ -34,8 +34,16 @@ public class WaitingMenu extends Application {
     public void initialize() {
         if (timeline == null) {
             timeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
-                int result = (int) client.sendCommand(WaitingMenuRegex.TOURNAMENT_PLAYERS_COUNT.getRegex());
-                playerNumber.setText("Player Number: " + result + "/8");
+                Object result = client.sendCommand(WaitingMenuRegex.TOURNAMENT_PLAYERS_COUNT.getRegex());
+                if (result == null) {
+                    timeline.stop();
+                    return;
+                }
+                int resultInt = (int) result;
+                playerNumber.setText("Player Number: " + resultInt + "/8");
+                if (resultInt == 8) {
+                    timeline.stop();
+                }
             }));
             timeline.setCycleCount(Timeline.INDEFINITE);
             timeline.play();

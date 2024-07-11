@@ -100,7 +100,10 @@ public class Listener extends Thread {
                         String username = matcher.group("username");
                         ApplicationRunningTimeData.createPopUp(0, "User " + username + " sent a friend request!", username);
                     } else if ((matcher = GameMenuRegex.START_GAME.getMatcher(input)).matches()) {
-                        chooseGameModelMenu.startNewGameMenu();
+                        if (chooseGameModelMenu != null)
+                            chooseGameModelMenu.startNewGameMenu();
+                        else
+                            ChooseGameModelMenu.startNewGameMenuStatic();
                     } else if (InGameMenuOutputCommand.REFRESH.getMatcher(input).matches()) {
                         inGameMenu.refresh();
                     } else if((matcher = InGameMenuOutputCommand.MOVE_OPPONENT_HAND_TO_MY_ROW.getMatcher(input)).matches()){
