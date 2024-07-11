@@ -367,18 +367,18 @@ public class GameMenuController {
         return new SavedDeck(user.getDeckNames(), user.getCommander().getName(), user.getFaction().getName());
     }
 
-    public static void startNewRandomGame(User user1, User user2) {
+    public static GameBoard startNewRandomGame(User user1, User user2) {
         GameBoard gameBoard = new GameBoard(user1, user2, true);
         user1.setInProcess(true);
         user2.setInProcess(true);
         user1.setCurrentGameBoard(gameBoard);
         user2.setCurrentGameBoard(gameBoard);
         try {
-            System.out.println("user1 " + user1.getUsername() + " user2: " + user2.getUsername());
-            user2.getSender().sendCommand("start new game");
-            user1.getSender().sendCommand("start new game");
+            user2.getSender().sendCommandWithOutResponse("start new game");
+            user1.getSender().sendCommandWithOutResponse("start new game");
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return gameBoard;
     }
 }

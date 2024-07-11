@@ -2,6 +2,7 @@ package Server.Controller;
 
 import Server.Enum.Menu;
 import Server.Model.Sender;
+import Server.Model.Tournament;
 import Server.Model.User;
 import Server.Regex.ChangeMenuRegex;
 import Server.Regex.FriendMenuRegex;
@@ -282,6 +283,20 @@ class QueueChecker extends Thread {
     public void run() {
         while (true) {
             User.checkForPendingOpponentsFound();
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+}
+
+class TournamentChecker extends Thread {
+    @Override
+    public void run() {
+        while (true) {
+            Tournament.checkForPendingTournaments();
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {

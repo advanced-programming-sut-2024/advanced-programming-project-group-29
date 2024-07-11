@@ -1,5 +1,7 @@
 package Server.Model;
 
+import Server.Controller.GameMenuController;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -41,6 +43,14 @@ public class Tournament {
         tournament.addPlayerToTournament(player);
     }
 
+    public static void checkForPendingTournaments() {
+        for (Tournament tournament : tournaments) {
+            if (tournament.getPlayersCount() == 8 && !tournament.hasStarted()) {
+                tournament.startTournament();
+            }
+        }
+    }
+
     public synchronized void addPlayerToTournament(User player) {
         this.players.add(player);
     }
@@ -57,7 +67,7 @@ public class Tournament {
         return isStarted;
     }
 
-    public void start() {
+    public void startTournament() {
         isStarted = true;
         Collections.shuffle(players);
         for (int i = 0; i < players.size(); i += 2) {
@@ -70,12 +80,11 @@ public class Tournament {
     }
 
     private void startGame(User player1, User player2) {
-        GameBoard game = new GameBoard(player1, player2, true);
+        GameBoard game = GameMenuController.startNewRandomGame(player1, player2);
+        game.setTournament(this);
         games.get(round.get(player1) - 1).add(game);
         round.put(player1, round.get(player1) + 1);
         round.put(player2, round.get(player2) + 1);
-        player1.getSender().sendCommand("start new game");
-        player2.getSender().sendCommand("start new game");
     }
 
     public void endGame(User winner, User loser) {

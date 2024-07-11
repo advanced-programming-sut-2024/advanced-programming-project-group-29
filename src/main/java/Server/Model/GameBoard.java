@@ -24,6 +24,7 @@ public class GameBoard {
     private boolean isGameOnline = false;
     private final ChatBox chatBox = new ChatBox();
     private final GameLog[] gameLog = new GameLog[2];
+    private Tournament tournament;
 
     public GameBoard(User player1, User player2, boolean isGameOnline) {
         player1.setCurrentGameBoard(this);
@@ -284,6 +285,10 @@ public class GameBoard {
                 gameHistory.setWinner(playersScore[0] > playersScore[1] ? 0 : (playersScore[0] == playersScore[1] ? -1 : 1));
                 players[0].endGame();
                 players[1].endGame();
+                if(tournament != null) {
+                    User winnerUser = players[0].getUsername().equals(winner) ? players[0] : players[1];
+                    tournament.endGame(winnerUser, winnerUser == players[0] ? players[1] : players[0]);
+                }
                 applicationController.setCurrentUser(applicationController.getLoggedInUser());
                 return null;
             }
@@ -337,5 +342,13 @@ public class GameBoard {
             }
         }
         weather.clear();
+    }
+
+    public void setTournament(Tournament tournament) {
+        this.tournament = tournament;
+    }
+
+    public Tournament getTournament() {
+        return tournament;
     }
 }
