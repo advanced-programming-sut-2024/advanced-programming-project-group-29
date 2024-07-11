@@ -99,6 +99,7 @@ public class PopUp {
                     @Override
                     public void handle(MouseEvent mouseEvent) {
                         Client.getClient().sendCommand("reject -u " + UsernameOfApplicant);
+                        ((Pane) pain.getParent()).getChildren().remove(pain);
                     }
                 });
                 break;
@@ -123,6 +124,7 @@ public class PopUp {
                     @Override
                     public void handle(MouseEvent mouseEvent) {
                         Client.getClient().sendCommand("reject play -u " + UsernameOfApplicant);
+                        ((Pane) pain.getParent()).getChildren().remove(pain);
                     }
                 });
         }
