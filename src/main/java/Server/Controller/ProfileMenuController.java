@@ -88,10 +88,13 @@ public class ProfileMenuController {
 
     public static ArrayList<String> showInfo(User currentUser) {
         ArrayList<String> info = new ArrayList<>();
+        System.err.println("hmmmmm");
         info.add("Username: " + currentUser.getUsername());
         info.add("Nickname: " + currentUser.getNickname());
         info.add("Highest Score: " + currentUser.getHighestScore());
+        System.err.println(currentUser.getHighestScore());
         info.add("Rank: " + currentUser.getRank());
+        System.err.println("rank : " + currentUser.getRank());
         info.add("Number of Games Played: " + currentUser.getGameHistory().size());
         info.add("Number of Games Drawn: " + currentUser.getNumberOfDraws());
         info.add("Number of Games Won: " + currentUser.getNumberOfWins());
@@ -105,9 +108,8 @@ public class ProfileMenuController {
             return new Result(false, "Number of games should be at least 1.");
         }
         ArrayList<GameHistory> gameHistory = user.getGameHistory();
-        numberOfGames = Math.min(numberOfGames, gameHistory.size());
-        if (numberOfGames == 0) {
-            return new Result(false, "You have not played any games yet.");
+        if (numberOfGames > gameHistory.size()) {
+            return new Result(false, "You have not played that many games yet.");
         }
         ArrayList<String> games = new ArrayList<>();
         for (int i = gameHistory.size() - 1; i >= gameHistory.size() - numberOfGames; i--) {

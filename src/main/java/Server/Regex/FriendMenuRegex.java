@@ -5,6 +5,7 @@ import java.util.regex.Pattern;
 
 public enum FriendMenuRegex {
     SHOW_INFO("show info -u (?<username>\\S+)"),
+    SEND_FRIEND_REQUEST_POPUP("send pop-up for friend request -u (?<username>.+)"),
     SEND_FRIEND_REQUEST("send friend request -u (?<username>\\S+)"),
     GET_STATUS("get status -u (?<username>\\S+)"),
     RESPOND_TO_REQUEST("(?<answer>accept|reject) -u (?<username>\\S+)"),
