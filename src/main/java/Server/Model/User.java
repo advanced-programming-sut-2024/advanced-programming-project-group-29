@@ -23,7 +23,7 @@ public class User {
 
     private static ArrayList<User> allUsers = new ArrayList<>();
     private static User[] pendingUserForRandomPlay = new User[2];
-    private static final int EXPIATION_TIME = 30;
+    private static final int EXPIATION_TIME = 60;
     private static final String SECRET_KEY = "For the rest of your days, you will be known as Robin Hood.";
     private String username;
     private String password;
@@ -490,7 +490,7 @@ public class User {
             String jwt = Jwts.builder()
                     .setSubject(subject)
                     .setIssuedAt(now)
-                    //.setExpiration(exp) // TODO: set this line when pop up menu completed
+                    .setExpiration(exp)
                     .signWith(SignatureAlgorithm.HS256, SECRET_KEY.getBytes(StandardCharsets.UTF_8))
                     .compact();
             System.out.println(jwt);
