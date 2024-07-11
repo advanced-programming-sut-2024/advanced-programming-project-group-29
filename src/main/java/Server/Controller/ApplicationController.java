@@ -42,6 +42,8 @@ public class ApplicationController extends Thread {
     public static void main(String[] args) {
         QueueChecker queueChecker = new QueueChecker();
         queueChecker.start();
+        TournamentChecker tournamentChecker = new TournamentChecker();
+        tournamentChecker.start();
         ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(THREAD_COUNT);
         Server.Controller.LoginMenuController.processRequest(null, LoginMenuRegex.LOAD_USER.getRegex());
         System.out.println("done with loading users");
