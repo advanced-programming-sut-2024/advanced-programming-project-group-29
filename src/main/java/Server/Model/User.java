@@ -668,4 +668,13 @@ public class User {
     public GameBoardin getSavedGameBoardin() {
         return savedGameBoardin;
     }
+
+    public void endGame() {
+        currentGameBoard = null;
+        hand.clear();
+        deck.clear();
+        discardPile.clear();
+        inProcess = false;
+        savedGameBoardin = null;
+    }
 }

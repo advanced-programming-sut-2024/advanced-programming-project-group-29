@@ -282,8 +282,9 @@ public class GameBoard {
             if (playersCrystals[0] == 0 || playersCrystals[1] == 0) {
                 InGameMenuController.endGame(winner, players[0], players[1]);
                 gameHistory.setWinner(playersScore[0] > playersScore[1] ? 0 : (playersScore[0] == playersScore[1] ? -1 : 1));
-                players[0].setCurrentGameBoard(null);
-                players[1].setCurrentGameBoard(null);
+                players[0].endGame();
+                players[1].endGame();
+                applicationController.setCurrentUser(applicationController.getLoggedInUser());
                 return null;
             }
             Result result = new Result(false, winner);

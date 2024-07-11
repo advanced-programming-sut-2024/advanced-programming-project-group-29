@@ -45,6 +45,7 @@ public class LoginMenuController {
             return new Result(false, "Password is incorrect.");
         }
         applicationController.setCurrentUser(user);
+        applicationController.setLoggedInUser(user);
         Result result = new Result(true, "User logged in successfully.");
         result.setToken(user.getJWT());
         return result;

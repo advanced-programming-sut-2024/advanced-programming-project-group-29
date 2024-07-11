@@ -28,6 +28,7 @@ public class ApplicationController extends Thread {
     public static final int THREAD_COUNT = 15;
     private final static ArrayList<User> allUsers = new ArrayList<>();
     private User currentUser;
+    private User loggedInUser;
     private Stage stage;
     private Pane pane;
     private Application menu;
@@ -107,6 +108,7 @@ public class ApplicationController extends Thread {
                 System.out.println("got that command " + inputCommand + " " + currentMenu + " from " + (currentUser != null ? currentUser.getUsername() : "null"));
                 if (inputCommand.equals(LoginMenuRegex.LOGOUT.getRegex())) {
                     currentUser = null;
+                    loggedInUser = null;
                     currentMenu = Menu.LOGIN_MENU;
                     dataOutputStream.writeUTF("null");
                     continue;
@@ -243,6 +245,7 @@ public class ApplicationController extends Thread {
 
     public void logOut() {
         currentUser = null;
+        loggedInUser = null;
     }
 
     public Stage getStage() {
@@ -261,6 +264,13 @@ public class ApplicationController extends Thread {
         this.pane = pane;
     }
 
+    public void setLoggedInUser(User user) {
+        loggedInUser = user;
+    }
+
+    public User getLoggedInUser() {
+        return loggedInUser;
+    }
 }
 
 class QueueChecker extends Thread {
