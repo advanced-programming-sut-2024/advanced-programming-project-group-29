@@ -506,7 +506,6 @@ public class InGameMenu extends Application {
         });
     }
 
-
     public void addCardToDeck(Cardin cardin, int playerIndex) {
         Platform.runLater(() -> {
             CardView c = new CardView(cardin, -200, -200, this, true);
@@ -519,11 +518,10 @@ public class InGameMenu extends Application {
     }
 
     public void addCardToDeck(Matcher matcher) {
-        Cardin cardin = ((Cardin) Listener.deSerialize(matcher.group("cardinSerial"));
+        Cardin cardin = ((Cardin) Listener.deSerialize(matcher.group("cardinSerial")));
         int playerIndex = Integer.parseInt(matcher.group("playerIndex"));
         addCardToDeck(cardin, playerIndex);
     }
-
 
     public void addCardFromDeckToHand(int cardNumber) {
         Platform.runLater(() -> {
@@ -1093,8 +1091,8 @@ public class InGameMenu extends Application {
 
     ///////////////// cheat code
     private void showCheatMenu() {
-        pain.getChildren().remove(changePain);
-        pain.getChildren().add(changePain);
+        pain.getChildren().remove(cheatPane);
+        pain.getChildren().add(cheatPane);
         cheatPane.setVisible(true);
         cheatPane.setDisable(false);
         cheatPane.requestFocus();
