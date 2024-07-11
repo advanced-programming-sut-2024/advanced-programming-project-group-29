@@ -1,19 +1,11 @@
 package Server.Controller;
 
-import Server.Enum.Faction;
-import Server.Enum.Type;
 import Server.Enum.CheatCode;
-import Server.Regex.GameMenuRegex;
 import Server.Model.Result;
 import Server.Model.User;
 import Server.Model.GameBoard;
 import Server.Model.*;
 import Server.Model.Commander;
-import Server.Controller.ApplicationController;
-import Server.Controller.ApplicationController;
-import Server.Controller.ApplicationController;
-
-import java.util.regex.Matcher;
 
 public class CheatMenuController {
 
@@ -33,7 +25,6 @@ public class CheatMenuController {
             case KILL_RANDOM_SOLDIER ->  result = killRandomSoldier(user, sender);
             case ADD_TO_DECK -> result = addSoldierToDeck(user, sender);
         }
-        System.out.println("check out " + result == null);
         return result;
     }
     public static Result resetCrystal(User user) {

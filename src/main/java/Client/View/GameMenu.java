@@ -277,7 +277,7 @@ public class GameMenu extends Application {
     }
 
 
-    public void startNewInGameMenu() throws Exception { //TODO call this for start the game
+    public void startNewInGameMenu() throws Exception {
         (new InGameMenu()).start(ApplicationRunningTimeData.getStage());
     }
 
@@ -293,7 +293,6 @@ public class GameMenu extends Application {
                 mainPain.getChildren().get(indexOfLabel - 1).setOnMouseClicked(null);
                 mainPain.getChildren().get(indexOfLabel).setOnMouseClicked(null);
                 ((Label) mainPain.getChildren().get(indexOfLabel)).setText("Wait");
-                //inGameMenu.start(ApplicationRunningTimeData.getStage()); //TODO online game doesn't start from here call startNewInGameMenu
             }
         } else {
             if (!isChangeTurn) {

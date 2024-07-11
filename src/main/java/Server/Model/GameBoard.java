@@ -343,7 +343,6 @@ public class GameBoard {
     }
 
     public void addLog(String command, int playerIndex) {
-        System.out.println("adding a log " + command + " " + playerIndex);
         gameLog[playerIndex].addGameBoardin(new GameBoardin(players[playerIndex]));
         gameLog[playerIndex].addCommand(command);
         sendAllOnlineStreamAudiences(command, playerIndex);
