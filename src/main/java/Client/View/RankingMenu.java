@@ -34,6 +34,7 @@ public class RankingMenu extends Application {
 
     public Label nUsers;
     public TableView tableView;
+    public TextField indexOfGame;
     private Client client;
     private Timeline timeline;
 
@@ -81,6 +82,13 @@ public class RankingMenu extends Application {
                                 if (item.equals("See Last Game") && event.getClickCount() == 2) {
                                     Platform.runLater(() -> {
                                         int row = getTableRow().getIndex();
+                                        if (!indexOfGame.getText().isEmpty()) {
+                                            try {
+                                                Client.setGetIndexOFSeeGame(Integer.parseInt(indexOfGame.getText()));
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                            }
+                                        } else Client.setGetIndexOFSeeGame(0);
                                         String name = ((ArrayList<String>) tableView.getItems().get(row)).get(2);
                                         Client.setSeeThisUserLastGame(name);
                                         Client.setReadyForOnline(false);
