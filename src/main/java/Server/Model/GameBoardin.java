@@ -1,8 +1,5 @@
 package Server.Model;
 
-import Server.Controller.ApplicationController;
-import Server.Model.*;
-
 import java.util.ArrayList;
 
 public class GameBoardin {
@@ -70,7 +67,6 @@ public class GameBoardin {
             row23 = new ArrayList<>();
             player1Crystal = gameBoard.getPlayerCrystals(playerIndex);
             player2Crystal = gameBoard.getPlayerCrystals(opponentIndex);
-            System.out.println("crating a new gameboardin " + user1.getHand().size() + " " + user2.getHand().size());
             for (Card card : user1.getHand())
                 player1Hand.add(new Cardin(card));
             for (Card card : user2.getHand())
@@ -103,17 +99,17 @@ public class GameBoardin {
             specialCard21 = null;
             specialCard22 = null;
             specialCard23 = null;
-            if(gameBoard.getSpecialCard(playerIndex, 2) != null)
+            if (gameBoard.getSpecialCard(playerIndex, 2) != null)
                 specialCard11 = new Server.Model.Cardin(gameBoard.getSpecialCard(playerIndex, 2));
-            if(gameBoard.getSpecialCard(playerIndex, 1) != null)
+            if (gameBoard.getSpecialCard(playerIndex, 1) != null)
                 specialCard12 = new Server.Model.Cardin(gameBoard.getSpecialCard(playerIndex, 1));
-            if(gameBoard.getSpecialCard(playerIndex, 0) != null)
+            if (gameBoard.getSpecialCard(playerIndex, 0) != null)
                 specialCard13 = new Server.Model.Cardin(gameBoard.getSpecialCard(playerIndex, 0));
-            if(gameBoard.getSpecialCard(opponentIndex, 2) != null)
+            if (gameBoard.getSpecialCard(opponentIndex, 2) != null)
                 specialCard21 = new Server.Model.Cardin(gameBoard.getSpecialCard(opponentIndex, 2));
-            if(gameBoard.getSpecialCard(opponentIndex, 1) != null)
+            if (gameBoard.getSpecialCard(opponentIndex, 1) != null)
                 specialCard22 = new Server.Model.Cardin(gameBoard.getSpecialCard(opponentIndex, 1));
-            if(gameBoard.getSpecialCard(opponentIndex, 0) != null)
+            if (gameBoard.getSpecialCard(opponentIndex, 0) != null)
                 specialCard23 = new Server.Model.Cardin(gameBoard.getSpecialCard(opponentIndex, 0));
             player1Username = user1.getUsername();
             player2Username = user2.getUsername();

@@ -7,6 +7,7 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class DatabaseManager {
     private static final String URL = "jdbc:sqlite:" + "src/main/resources/sqlite/Users.db";
@@ -19,22 +20,7 @@ public class DatabaseManager {
 
         try (Connection conn = DriverManager.getConnection(URL);
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, user.getUsername());
-            pstmt.setString(2, user.getPassword());
-            pstmt.setString(3, user.getNickname());
-            pstmt.setString(4, user.getEmail());
-            pstmt.setInt(5, user.getQuestionNumber());
-            pstmt.setString(6, user.getAnswer());
-            pstmt.setString(7, user.getFaction().getName());
-            pstmt.setString(8, user.getCommander().getName());
-            ArrayList<String> deckNames = user.getDeckNames();
-            String jsonDeck = new Gson().toJson(deckNames);
-            pstmt.setString(9, jsonDeck);
-            ArrayList<GameHistory> gameHistories = user.getGameHistory();
-            String jsonGameHistory = new Gson().toJson(gameHistories);
-            pstmt.setString(10, jsonGameHistory);
-            pstmt.setString(11, new Gson().toJson(user.getFriends()));
-            pstmt.setString(12, new Gson().toJson(user.getFriendRequests()));
+            writeUser(user, pstmt);
             pstmt.executeUpdate();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -62,27 +48,31 @@ public class DatabaseManager {
 
         try (Connection conn = DriverManager.getConnection(URL);
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, user.getUsername());
-            pstmt.setString(2, user.getPassword());
-            pstmt.setString(3, user.getNickname());
-            pstmt.setString(4, user.getEmail());
-            pstmt.setInt(5, user.getQuestionNumber());
-            pstmt.setString(6, user.getAnswer());
-            pstmt.setString(7, user.getFaction().getName());
-            pstmt.setString(8, user.getCommander().getName());
-            ArrayList<String> deckNames = user.getDeckNames();
-            String jsonDeck = new Gson().toJson(deckNames);
-            pstmt.setString(9, jsonDeck);
-            ArrayList<GameHistory> gameHistories = user.getGameHistory();
-            String jsonGameHistory = new Gson().toJson(gameHistories);
-            pstmt.setString(10, jsonGameHistory);
-            pstmt.setString(11, new Gson().toJson(user.getFriends()));
-            pstmt.setString(12, new Gson().toJson(user.getFriendRequests()));
+            writeUser(user, pstmt);
             pstmt.setString(13, oldUsername);
             pstmt.executeUpdate();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
+    }
+
+    private static void writeUser(User user, PreparedStatement pstmt) throws SQLException {
+        pstmt.setString(1, user.getUsername());
+        pstmt.setString(2, user.getPassword());
+        pstmt.setString(3, user.getNickname());
+        pstmt.setString(4, user.getEmail());
+        pstmt.setInt(5, user.getQuestionNumber());
+        pstmt.setString(6, user.getAnswer());
+        pstmt.setString(7, user.getFaction().getName());
+        pstmt.setString(8, user.getCommander().getName());
+        ArrayList<String> deckNames = user.getDeckNames();
+        String jsonDeck = new Gson().toJson(deckNames);
+        pstmt.setString(9, jsonDeck);
+        ArrayList<GameHistory> gameHistories = user.getGameHistory();
+        String jsonGameHistory = new Gson().toJson(gameHistories);
+        pstmt.setString(10, jsonGameHistory);
+        pstmt.setString(11, new Gson().toJson(user.getFriends()));
+        pstmt.setString(12, new Gson().toJson(user.getFriendRequests()));
     }
 
     public synchronized static ArrayList<User> loadUsers() {
@@ -113,7 +103,7 @@ public class DatabaseManager {
 
                 User user = new User(username, password, nickname, email);
                 user.setQuestion(questionNumber, answer);
-                user.setFaction(Faction.getFactionFromString(faction));
+                user.setFaction(Objects.requireNonNull(Faction.getFactionFromString(faction)));
                 user.setCommander(new Commander(commander, user));
                 user.extractDeckFromDeckNames(deckNames);
                 user.setGameHistory(gameHistories);

@@ -94,7 +94,7 @@
             <Font name="System Bold" size="16.0" />
          </font>
       </Label>
-      <Pane fx:id="changePain" disable="true" layoutX="553.0" layoutY="118.0" prefHeight="523.0" prefWidth="515.0" visible="false">
+      <Pane fx:id="changePane" disable="true" layoutX="553.0" layoutY="118.0" prefHeight="523.0" prefWidth="515.0" visible="false">
          <children>
             <Rectangle fx:id="darkBack" arcHeight="5.0" arcWidth="5.0" fill="#eed092" height="302.0" layoutX="89.0" layoutY="75.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="0.0" width="337.0">
                <effect>

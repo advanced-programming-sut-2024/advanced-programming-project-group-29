@@ -11,14 +11,14 @@ public class EmailUtil {
     private static HashMap<String, Integer> emailVerificationCodes = new HashMap<>();
 
     public static void sendEmail(String toEmail, String subject, String body) {
-        final String fromEmail = "gwent29.2024@gmail.com"; // requires valid email id
-        final String password = "jfsw dthp xfke fuzc\n"; // correct password for your email id
+        final String fromEmail = "gwent29.2024@gmail.com";
+        final String password = "jfsw dthp xfke fuzc\n";
 
         Properties props = new Properties();
-        props.put("mail.smtp.host", "smtp.gmail.com"); // SMTP Host
-        props.put("mail.smtp.port", "587"); // TLS Port
-        props.put("mail.smtp.auth", "true"); // enable authentication
-        props.put("mail.smtp.starttls.enable", "true"); // enable STARTTLS
+        props.put("mail.smtp.host", "smtp.gmail.com");
+        props.put("mail.smtp.port", "587");
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable", "true");
 
         Authenticator auth = new Authenticator() {
             protected PasswordAuthentication getPasswordAuthentication() {
@@ -42,9 +42,7 @@ public class EmailUtil {
     }
 
     public static void generateAndSendVerificationCode(String email) {
-      //  int code = new Random().nextInt(900000) + 100000;
-        int code = 111111;
-        //TODO randomize the code
+        int code = new Random().nextInt(900000) + 100000;
         sendEmail(email, "Verification Code", "Your verification code is: " + code + "\n or go to following link\n" +
                 "www.chert.com");
         emailVerificationCodes.put(email, code);

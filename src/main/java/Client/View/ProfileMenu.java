@@ -28,7 +28,7 @@ public class ProfileMenu extends Application {
     private final double LENGTH_OF_FULL_LINE = 27;
 
     public TextField countHistory;
-    public Pane changePain;
+    public Pane changePane;
     public ChoiceBox Fields;
     public TextField textField1;
     public TextField textField2;
@@ -145,8 +145,8 @@ public class ProfileMenu extends Application {
         showInfo();
         InfoPain.setDisable(false);
         InfoPain.setVisible(true);
-        changePain.setDisable(true);
-        changePain.setVisible(false);
+        changePane.setDisable(true);
+        changePane.setVisible(false);
         historyPain.setDisable(true);
         historyPain.setVisible(false);
     }
@@ -167,8 +167,8 @@ public class ProfileMenu extends Application {
     public void changeInfo(MouseEvent mouseEvent) {
         deleteWarning();
         removeTextFields();
-        changePain.setDisable(false);
-        changePain.setVisible(true);
+        changePane.setDisable(false);
+        changePane.setVisible(true);
         InfoPain.setDisable(true);
         InfoPain.setVisible(false);
         historyPain.setDisable(true);
@@ -183,8 +183,8 @@ public class ProfileMenu extends Application {
         historyPain.setVisible(true);
         InfoPain.setDisable(true);
         InfoPain.setVisible(false);
-        changePain.setDisable(true);
-        changePain.setVisible(false);
+        changePane.setDisable(true);
+        changePane.setVisible(false);
     }
 
     private void removeTextFields() {

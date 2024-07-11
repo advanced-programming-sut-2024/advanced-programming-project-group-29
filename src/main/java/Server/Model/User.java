@@ -5,8 +5,6 @@ import Server.Enum.Faction;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
-import java.io.FileWriter;
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
@@ -212,14 +210,6 @@ public class User {
         this.deck.add(card);
     }
 
-    public void addCardToDiscardPile(Card card) {
-        this.discardPile.add(card);
-    }
-
-    public void removeCardFromDiscardPile(Card card) {
-        this.discardPile.remove(card);
-    }
-
     public ArrayList<Card> getDiscardPile() {
         return discardPile;
     }
@@ -259,20 +249,8 @@ public class User {
         if (this.gameHistories.isEmpty())
             return 0;
         int highestScore = 0;
-        System.err.println("Before for loop");
-        System.err.println("gameHistories: " + this.gameHistories.size());
-        System.err.println("gameHistories: " + this.gameHistories.get(0));
-        try {
-            GameHistory gameHistoryy = this.gameHistories.get(0);
-        } catch (Exception e) {
-            System.err.println(e.getMessage());
-        }
-        System.err.println("BTUUUUUUUU");
-       // System.err.println("gameHistory: " + gameHistoryy);
         for (GameHistory gameHistory : this.gameHistories) {
-            System.err.println("For loop");
             int playerNumber = gameHistory.getPlayerNumber(this);
-            System.err.println("gameHistory: " + playerNumber);
             for (int score : gameHistory.getScorePerRound(playerNumber)) {
                 if (score > highestScore)
                     highestScore = score;

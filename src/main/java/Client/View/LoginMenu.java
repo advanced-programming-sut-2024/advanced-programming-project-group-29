@@ -6,16 +6,12 @@ import Client.Model.ApplicationRunningTimeData;
 import Client.Model.Result;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.effect.DropShadow;
-import javafx.scene.effect.Shadow;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
@@ -25,7 +21,6 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.Objects;
-import java.util.regex.Matcher;
 
 public class LoginMenu extends Application {
     private final double HEIGHT_OF_TEXT_WARNING = 25;
@@ -35,14 +30,14 @@ public class LoginMenu extends Application {
     public TextField password;
     public Label createNewAccount;
     public Label forget;
-    public Pane mainPain;
-    public Pane questionPain;
-    public Pane PasswordPain;
+    public Pane mainPane;
+    public Pane questionPane;
+    public Pane PasswordPane;
     public Label question;
     public TextField answer;
     public TextField newPassword;
     public TextField confirmPassword;
-    public Pane usernamePain;
+    public Pane usernamePane;
     public TextField usernameChange;
     public Rectangle dark1;
     public Rectangle dark2;
@@ -100,10 +95,10 @@ public class LoginMenu extends Application {
 
     public void forgetPassword(MouseEvent mouseEvent) {
         deleteWarning();
-        mainPain.setVisible(false);
-        mainPain.setDisable(true);
-        usernamePain.setDisable(false);
-        usernamePain.setVisible(true);
+        mainPane.setVisible(false);
+        mainPane.setDisable(true);
+        usernamePane.setDisable(false);
+        usernamePane.setVisible(true);
         username.setText("");
         password.setText("");
     }
@@ -118,10 +113,10 @@ public class LoginMenu extends Application {
             deleteWarning();
             question.setText(result.getMessage().get(0));
             this.usernameLoggedIn = this.usernameChange.getText();
-            usernamePain.setDisable(true);
-            usernamePain.setVisible(false);
-            questionPain.setDisable(false);
-            questionPain.setVisible(true);
+            usernamePane.setDisable(true);
+            usernamePane.setVisible(false);
+            questionPane.setDisable(false);
+            questionPane.setVisible(true);
         }
     }
 
@@ -133,10 +128,10 @@ public class LoginMenu extends Application {
             sayAlert(result.getMessage().get(0), 458, true, dark3, 212);
         } else {
             deleteWarning();
-            PasswordPain.setDisable(false);
-            PasswordPain.setVisible(true);
-            questionPain.setDisable(true);
-            questionPain.setVisible(false);
+            PasswordPane.setDisable(false);
+            PasswordPane.setVisible(true);
+            questionPane.setDisable(true);
+            questionPane.setVisible(false);
         }
     }
 
@@ -163,14 +158,14 @@ public class LoginMenu extends Application {
     private void cancel() {
         answer.setText("");
         newPassword.setText("");
-        mainPain.setVisible(true);
-        mainPain.setDisable(false);
-        questionPain.setVisible(false);
-        questionPain.setDisable(true);
-        PasswordPain.setVisible(false);
-        PasswordPain.setDisable(true);
-        usernamePain.setVisible(false);
-        usernamePain.setDisable(true);
+        mainPane.setVisible(true);
+        mainPane.setDisable(false);
+        questionPane.setVisible(false);
+        questionPane.setDisable(true);
+        PasswordPane.setVisible(false);
+        PasswordPane.setDisable(true);
+        usernamePane.setVisible(false);
+        usernamePane.setDisable(true);
     }
 
     private void deleteWarning() {

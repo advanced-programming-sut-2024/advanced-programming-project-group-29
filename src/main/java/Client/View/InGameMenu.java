@@ -2,8 +2,10 @@ package Client.View;
 
 
 import Client.Client;
+import Client.Enum.CheatCode;
+import Client.Enum.Menu;
+import Client.Enum.Space;
 import Client.Model.*;
-import Client.Enum.*;
 import Client.View.Animations.BurningCardAnimation;
 import Client.View.Animations.FlipCardAnimation;
 import javafx.animation.KeyFrame;
@@ -30,17 +32,17 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
-import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-import javax.xml.bind.SchemaOutputResolver;
 import java.lang.reflect.Field;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Objects;
 import java.util.regex.Matcher;
 
 public class InGameMenu extends Application {
@@ -693,7 +695,6 @@ public class InGameMenu extends Application {
                 int j = convertRowNumber(rowNumber);
                 double Y = (playerIndex == 0 ? (j == 0 ? Y_POSITION_ROW_11 : (j == 1 ? Y_POSITION_ROW_12 : Y_POSITION_ROW_13)) : (j == 0 ? Y_POSITION_ROW_21 : (j == 1 ? Y_POSITION_ROW_22 : Y_POSITION_ROW_23)));
                 (new FlipCardAnimation(c, (row[playerIndex][convertRowNumber(rowNumber)].size() == 1 ? (X_POSITION_ROW_LEFT + X_POSITION_ROW_RIGHT - CARD_WIDTH) / 2 : (row[playerIndex][convertRowNumber(rowNumber)].get(row[playerIndex][convertRowNumber(rowNumber)].size() - 2)).getLayoutX() + SPACING + CARD_WIDTH), Y, true, true, true)).play();
-                System.out.println("done with creating flip animation");
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -724,7 +725,6 @@ public class InGameMenu extends Application {
     }
 
     public void moveSoldierFromOpponentHandToPlayerRow(int cardNumber, int rowNumber, int playerIndex) {
-        System.out.println("we are in this function ");
         Platform.runLater(() -> {
             CardView c = hand[1 - playerIndex].get(cardNumber);
             hand[1 - playerIndex].remove(cardNumber);
@@ -918,7 +918,6 @@ public class InGameMenu extends Application {
                 }
                 setPositionVar(weather, true, true, Y_POSITION_WEATHER);
                 GameBoardin gameBoardin = getGameBoardin();
-                System.out.println("got taht gameboard");
                 leader1.setImage(new javafx.scene.image.Image("/Images/Raw/" + gameBoardin.getPlayer1Faction() + "/" + gameBoardin.getPlayer1Commander() + ".jpg"));
                 leader2.setImage(new javafx.scene.image.Image("/Images/Raw/" + gameBoardin.getPlayer2Faction() + "/" + gameBoardin.getPlayer2Commander() + ".jpg"));
                 leaderActive1.setImage(gameBoardin.isPlayer1CommanderHasAction() ? new javafx.scene.image.Image("/Images/icons/icon_leader_active.png") : null);
@@ -959,7 +958,6 @@ public class InGameMenu extends Application {
                         ArrayList<Cardin> b = (k == 0 ? (j == 0 ? gameBoardin.getPlayer1Hand() : gameBoardin.getPlayer2Hand()) : (k == 1 ? (j == 0 ? gameBoardin.getPlayer1Deck() : gameBoardin.getPlayer2Deck()) : (j == 0 ? gameBoardin.getPlayer1Discard() : gameBoardin.getPlayer2Discard())));
                         for (int i = 0; i < b.size(); i++) {
                             ArrayList<CardView>[] z = (k == 0 ? hand : (k == 1 ? deck : discard));
-                            System.out.println("we are in the loop" + i + j + k);
                             if (z[j].get(i).getCard().isSoldier) {
                                 z[j].get(i).getCard().setHp(b.get(i).hp);
                                 z[j].get(i).setHP();

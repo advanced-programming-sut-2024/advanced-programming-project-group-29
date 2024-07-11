@@ -1,8 +1,5 @@
 package Server.Controller;
 
-import Client.Model.ApplicationRunningTimeData;
-import Client.Model.Listener;
-import Client.Model.LocalDeckSaver;
 import Server.Enum.Faction;
 import Server.Enum.Type;
 import Server.Model.*;
@@ -60,9 +57,9 @@ public class GameMenuController {
             InGameMenuController.startGame(applicationController.getCurrentUser());
         } else if (inputCommand.matches(GameMenuRegex.INITIATE_DECK.getRegex())) {
             return initiateDeck(applicationController.getCurrentUser());
-        } else if(inputCommand.matches(GameMenuRegex.SEARCH_FOR_RANDOM_OPPONENT.getRegex())){
+        } else if (inputCommand.matches(GameMenuRegex.SEARCH_FOR_RANDOM_OPPONENT.getRegex())) {
             return searchForRandomOpponent(applicationController.getSender(), applicationController.getCurrentUser());
-        } else if(inputCommand.matches(GameMenuRegex.DECK_CHOSEN.getRegex())){
+        } else if (inputCommand.matches(GameMenuRegex.DECK_CHOSEN.getRegex())) {
             return addUserToWaitQueue(applicationController.getCurrentUser());
         }
         return null;
@@ -74,7 +71,7 @@ public class GameMenuController {
             //return new Result(false, "You should have at least 22 soldiers in your deck.");
         }
         user.setWaitForGame(true);
-        if(user.getOpponent().getWaitForGame()){
+        if (user.getOpponent().getWaitForGame()) {
             startOnlineGame(user, user.getOpponent());
         }
         return new Result(true);
@@ -85,8 +82,6 @@ public class GameMenuController {
         user2.createHand();
         user1.setInProcess(false);
         user2.setInProcess(false);
-        System.out.println("user1: " + user1.getUsername() + " " + user1.getHand().size());
-        System.out.println("user2: " + user2.getUsername() + " " + user2.getHand().size());
         user1.getSender().sendCommandWithOutResponse("start in game menu");
         user2.getSender().sendCommandWithOutResponse("start in game menu");
         user1.getCurrentGameBoard().addLog("start game", 0);
@@ -156,10 +151,10 @@ public class GameMenuController {
         if (user2.getCurrentGameBoard() != null) {
             return new Result(false, "This player is already in a game.");
         }
-        if(isOnline){
+        if (isOnline) {
             if (!user2.checkIfFriend(user1.getUsername()))
                 return new Result(false, "This player is not your friend.");
-            if(!ApplicationController.checkIfUserIsOnline(user2.getUsername()))
+            if (!ApplicationController.checkIfUserIsOnline(user2.getUsername()))
                 return new Result(false, "This player is not online.");
             user2.getSender().sendCommand("show pop-up for game request -p " + user1.getUsername());
             return new Result(true, "Game request sent successfully.");

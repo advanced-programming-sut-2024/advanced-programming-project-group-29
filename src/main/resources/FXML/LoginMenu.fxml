@@ -18,7 +18,7 @@
          <image>
             <Image url="@../Images/Background/LoginMenuBackground.png" />
          </image></ImageView>
-      <Pane fx:id="mainPain" layoutX="354.0" layoutY="210.0" prefHeight="391.0" prefWidth="517.0">
+      <Pane fx:id="mainPane" layoutX="354.0" layoutY="210.0" prefHeight="391.0" prefWidth="517.0">
          <children>
             <Rectangle fx:id="dark1" arcHeight="5.0" arcWidth="5.0" fill="#eed092" height="297.0" layoutX="50.0" layoutY="47.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="0.0" width="418.0">
                <effect>
@@ -70,7 +70,7 @@
             </CheckBox>
          </children>
       </Pane>
-      <Pane fx:id="usernamePain" disable="true" layoutX="369.0" layoutY="235.0" prefHeight="361.0" prefWidth="486.0" visible="false">
+      <Pane fx:id="usernamePane" disable="true" layoutX="369.0" layoutY="235.0" prefHeight="361.0" prefWidth="486.0" visible="false">
          <children>
             <Rectangle fx:id="dark2" arcHeight="5.0" arcWidth="5.0" fill="#eed092" height="212.0" layoutX="34.0" layoutY="45.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="0.0" width="418.0">
                <effect>
@@ -121,7 +121,7 @@
             </Label>
          </children>
       </Pane>
-      <Pane fx:id="questionPain" disable="true" layoutX="369.0" layoutY="235.0" prefHeight="361.0" prefWidth="486.0" visible="false">
+      <Pane fx:id="questionPane" disable="true" layoutX="369.0" layoutY="235.0" prefHeight="361.0" prefWidth="486.0" visible="false">
          <children>
             <Rectangle fx:id="dark3" arcHeight="5.0" arcWidth="5.0" fill="#eed092" height="212.0" layoutX="34.0" layoutY="45.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="0.0" width="418.0">
                <effect>
@@ -172,7 +172,7 @@
             </Label>
          </children>
       </Pane>
-      <Pane fx:id="PasswordPain" disable="true" layoutX="368.0" layoutY="228.0" prefHeight="361.0" prefWidth="486.0" visible="false">
+      <Pane fx:id="PasswordPane" disable="true" layoutX="368.0" layoutY="228.0" prefHeight="361.0" prefWidth="486.0" visible="false">
          <children>
             <Rectangle fx:id="dark4" arcHeight="5.0" arcWidth="5.0" fill="#eed092" height="265.0" layoutX="34.0" layoutY="48.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="0.0" width="418.0">
                <effect>
