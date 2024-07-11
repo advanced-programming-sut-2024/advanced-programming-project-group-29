@@ -326,7 +326,7 @@ public class GameBoard {
     public void clearGameBoard() {
         for (int i = 0; i < 2; i++) {
             playersScore[i] = 0;
-            for (int j = 0; j < 3; j++) {
+            for (int j = 2; j >= 0; j--) {
                 players[i].getDiscardPile().addAll(rows[i][j]);
                 if (specialCards[i][j] != null)
                     players[i].getDiscardPile().add(specialCards[i][j]);
