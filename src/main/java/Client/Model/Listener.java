@@ -1,10 +1,7 @@
 package Client.Model;
 
 import Client.Client;
-import Client.Regex.GameMenuRegex;
-import Client.Regex.InGameMenuOutputCommand;
-import Client.Regex.InGameMenuRegex;
-import Client.Regex.LoginMenuRegex;
+import Client.Regex.*;
 import Client.View.ChooseGameModelMenu;
 import Client.View.*;
 
@@ -18,9 +15,6 @@ import java.util.regex.Matcher;
 import Client.View.InGameMenu;
 import com.google.gson.GsonBuilder;
 import javafx.application.Platform;
-import javafx.scene.Scene;
-import javafx.scene.layout.Pane;
-import javafx.stage.Stage;
 
 public class Listener extends Thread {
     private Socket socket;
@@ -102,6 +96,9 @@ public class Listener extends Thread {
                     } else if ((matcher = GameMenuRegex.SEND_GAME_REQUEST.getMatcher(input)).matches()) {
                         String username = matcher.group("username");
                         ApplicationRunningTimeData.createPopUp(1, "User " + username + " sent a new game request!", username);
+                    } else if ((matcher = FriendMenuRegex.SEND_FRIEND_REQUEST_POPUP.getMatcher(input)).matches()) {
+                        String username = matcher.group("username");
+                        ApplicationRunningTimeData.createPopUp(0, "User " + username + " sent a friend request!", username);
                     } else if ((matcher = GameMenuRegex.START_GAME.getMatcher(input)).matches()) {
                         chooseGameModelMenu.startNewGameMenu();
                     } else if (InGameMenuOutputCommand.REFRESH.getMatcher(input).matches()) {

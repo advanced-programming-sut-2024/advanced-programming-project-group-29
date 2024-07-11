@@ -108,9 +108,8 @@ public class ProfileMenuController {
             return new Result(false, "Number of games should be at least 1.");
         }
         ArrayList<GameHistory> gameHistory = user.getGameHistory();
-        numberOfGames = Math.min(numberOfGames, gameHistory.size());
-        if (numberOfGames == 0) {
-            return new Result(false, "You have not played any games yet.");
+        if (numberOfGames > gameHistory.size()) {
+            return new Result(false, "You have not played that many games yet.");
         }
         ArrayList<String> games = new ArrayList<>();
         for (int i = gameHistory.size() - 1; i >= gameHistory.size() - numberOfGames; i--) {

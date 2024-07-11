@@ -37,6 +37,7 @@ public class FriendMenuController {
             return new Result(false, getStatus(applicationController, user));
         }
         applicationController.getCurrentUser().sendFriendRequest(user);
+        user.getSender().sendCommand("send pop-up for friend request -u " + applicationController.getCurrentUser().getUsername());
         return new Result(true, "Friend Request Sent");
     }
 
