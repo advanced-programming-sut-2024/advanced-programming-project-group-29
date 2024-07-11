@@ -5,7 +5,9 @@ import java.util.regex.Pattern;
 
 public enum BroadCastMenuRegex {
 
-    GET_GAME_HISTORY("get game history -u (?<username>.+)")
+    GET_GAME_LOG_COMMAND("get game log command -u (?<username>.+) -n (?<gameNumber>\\d+) -i (?<index>\\d+)"),
+    GET_GAME_LOG_GAME_BOARDIN("get game log game boardin -u (?<username>.+) -n (?<gameNumber>\\d+) -i (?<index>\\d+)"),
+    GET_GAME_LOG_SIZE("get number of commands in game log -u (?<username>.+) -n (?<gameNumber>\\d+)"),
     ;
 
     private String command;
