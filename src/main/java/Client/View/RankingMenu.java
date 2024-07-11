@@ -83,6 +83,7 @@ public class RankingMenu extends Application {
                                         int row = getTableRow().getIndex();
                                         String name = ((ArrayList<String>) tableView.getItems().get(row)).get(2);
                                         Client.setSeeThisUserLastGame(name);
+                                        Client.setReadyForOnline(false);
                                         try {
                                             timeline.stop();
                                             (new BroadCastMenu()).start(ApplicationRunningTimeData.getStage());
