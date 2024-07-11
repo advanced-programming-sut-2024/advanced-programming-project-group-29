@@ -127,19 +127,12 @@ public class BroadCastMenu extends Application {
             }
         }
         if (!isOnline) {
-            GameLog gameLog = ((GameHistory) Client.getClient().getSender().sendCommand("get game history -u " + seeThisUserGame)).getGameLog();
-            gameBoardins = gameLog.getGameBoardins();
-            logs = gameLog.getCommands();
-            for (String s : logs){
-                System.out.println(s);
-            }
             AtomicInteger i = new AtomicInteger();
             Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(2), event -> {
-                refresh(gameBoardins.get(i.get()));
-                executeCommand(logs.get(i.getAndIncrement() + 1));
+                refresh((GameBoardin) Client.getClient().sendCommand("get game log game boardin -u " + seeThisUserGame + " -n " + 0 + " -i " + i.get()));
+                executeCommand((String) Client.getClient().sendCommand("get game log command -u " + seeThisUserGame + " -n " + 0 + " -i " + i.getAndIncrement()));
             }));
-            System.out.println(logs.size());
-            timeline.setCycleCount(logs.size() - 1);
+            timeline.setCycleCount(((int) Client.getClient().sendCommand("get number of commands in game log -u " + seeThisUserGame + " -n " + 0)) - 1);
             timeline.setOnFinished(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent actionEvent) {
@@ -359,7 +352,7 @@ public class BroadCastMenu extends Application {
         hand[playerIndex].set(cardNumber, soldier);
         soldier.setInHand(true);
         (new FlipCardAnimation(decoy, X_POSITION_DISCARD, (playerIndex == 0 ? Y_POSITION_DISCARD_1 : Y_POSITION_DISCARD_2), true, true, false)).play();
-        (new FlipCardAnimation(soldier, x, y, true, true,false)).play();
+        (new FlipCardAnimation(soldier, x, y, true, true, false)).play();
     }
 
     public void placeDecoy(Matcher matcher) {
@@ -442,12 +435,10 @@ public class BroadCastMenu extends Application {
 
     public void addCardToHand(Cardin cardin, int playerIndex) {
         Platform.runLater(() -> {
-            CardView c = new CardView(cardin, -200, -200, this, false);
+            CardView c = new CardView(cardin, -200, -200, null, false);
             c.setInHand(true);
             hand[playerIndex].add(c);
-            pain.getChildren().remove(cheatPane);
             pain.getChildren().add(c);
-            pain.getChildren().add(cheatPane);
             (new FlipCardAnimation(c, (hand[playerIndex].size() == 1 ? (X_POSITION_HAND_LEFT + X_POSITION_HAND_RIGHT - CARD_WIDTH) / 2 : (hand[playerIndex].get(hand[playerIndex].size() - 2)).getLayoutX() + SPACING + CARD_WIDTH), (playerIndex == 0 ? Y_POSITION_HAND_1 : Y_POSITION_HAND_2), true, true, false)).play();
         });
     }
@@ -705,7 +696,6 @@ public class BroadCastMenu extends Application {
         rowWeather13.setVisible(frost);
         rowWeather23.setVisible(frost);
     }
-
 
 
 }
