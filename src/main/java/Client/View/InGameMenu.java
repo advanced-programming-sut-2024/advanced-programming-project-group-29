@@ -763,6 +763,8 @@ public class InGameMenu extends Application {
                 }
             }
         }
+        discard[0].addAll(allCardsInBoardFor1);
+        discard[1].addAll(allCardsInBoardFor2);
         clearWeather();
         final int[] i = {0};
         Timeline t1 = new Timeline(new KeyFrame(Duration.seconds(0.1), new EventHandler<ActionEvent>() {
