@@ -118,6 +118,11 @@ public class ChooseGameModelMenu extends Application {
         (new GameMenu()).start(ApplicationRunningTimeData.getStage());
     }
 
+    public static void startNewGameMenuStatic() throws Exception {
+        Client.setReadyForOnline(true);
+        (new GameMenu()).start(ApplicationRunningTimeData.getStage());
+    }
+
 
     public void buttonEntered(MouseEvent mouseEvent) {
         if (mouseEvent.getSource() instanceof Rectangle) {

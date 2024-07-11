@@ -21,13 +21,17 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
+import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Field;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Objects;
@@ -113,17 +117,28 @@ public class BroadCastMenu extends Application {
     }
 
 
-
     public void initialize() {
+        for (int i = 0; i < 2; i++) {
+            hand[i] = new ArrayList<>();
+            deck[i] = new ArrayList<>();
+            discard[i] = new ArrayList<>();
+            for (int j = 0; j < 3; j++) {
+                row[i][j] = new ArrayList<>();
+            }
+        }
         if (!isOnline) {
             GameLog gameLog = ((GameHistory) Client.getClient().getSender().sendCommand("get game history -u " + seeThisUserGame)).getGameLog();
             gameBoardins = gameLog.getGameBoardins();
             logs = gameLog.getCommands();
+            for (String s : logs){
+                System.out.println(s);
+            }
             AtomicInteger i = new AtomicInteger();
             Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(2), event -> {
                 refresh(gameBoardins.get(i.get()));
-                executeCommand(logs.get(i.get() + 1));
+                executeCommand(logs.get(i.getAndIncrement() + 1));
             }));
+            System.out.println(logs.size());
             timeline.setCycleCount(logs.size() - 1);
             timeline.setOnFinished(new EventHandler<ActionEvent>() {
                 @Override
@@ -139,7 +154,6 @@ public class BroadCastMenu extends Application {
             timeline.play();
         }
     }
-
 
 
     @Override
@@ -190,7 +204,7 @@ public class BroadCastMenu extends Application {
             placeSoldier(matcher);
         } else if ((matcher = InGameMenuOutputCommand.MOVE_WEATHER_FORM_DECK_AND_PLAY.getMatcher(input)).matches()) {
             moveWeatherFromDeckAndPlay(matcher);
-        } else if((matcher = InGameMenuOutputCommand.MOVE_OPPONENT_HAND_TO_MY_ROW.getMatcher(input)).matches()){
+        } else if ((matcher = InGameMenuOutputCommand.MOVE_OPPONENT_HAND_TO_MY_ROW.getMatcher(input)).matches()) {
             moveSoldierFromOpponentHandToPlayerRow(matcher);
         }
     }
@@ -272,7 +286,7 @@ public class BroadCastMenu extends Application {
             }
             for (int i = 0; i < 3; i++) {
                 Cardin cardin = (k == 0 ? (i == 0 ? gameBoardin.getSpecialCard11() : (i == 1 ? gameBoardin.getSpecialCard12() : gameBoardin.getSpecialCard13())) : (i == 0 ? gameBoardin.getSpecialCard21() : (i == 1 ? gameBoardin.getSpecialCard22() : gameBoardin.getSpecialCard23())));
-                horn[k][i] = new CardView(cardin, 0, 0, null, false);
+                if (cardin != null) horn[k][i] = new CardView(cardin, 0, 0, null, false);
             }
         }
         for (int i = 0; i < 2; i++) {
@@ -293,7 +307,8 @@ public class BroadCastMenu extends Application {
             for (CardView c : discard[k]) pain.getChildren().add(c);
             for (int i = 0; i < 3; i++) {
                 for (CardView c : row[k][i]) pain.getChildren().add(c);
-                pain.getChildren().add(horn[k][i]);
+                if (horn[k][i] != null) pain.getChildren().add(horn[k][i]);
+
             }
         }
         leader1.setImage(new javafx.scene.image.Image("/Images/Raw/" + gameBoardin.getPlayer1Faction() + "/" + gameBoardin.getPlayer1Commander() + ".jpg"));
@@ -334,7 +349,7 @@ public class BroadCastMenu extends Application {
 
     /////////////////////////////////////////////////////////////
 
-    private void placeDecoy(int cardNumber,int rowNumber,int targetNumber,int playerIndex){
+    private void placeDecoy(int cardNumber, int rowNumber, int targetNumber, int playerIndex) {
         CardView decoy = hand[playerIndex].get(cardNumber);
         CardView soldier = row[playerIndex][convertRowNumber(rowNumber)].get(targetNumber);
         double x = decoy.getLayoutX();
