@@ -359,12 +359,22 @@ public class BroadCastMenu extends Application {
         hand[playerIndex].set(cardNumber, soldier);
         soldier.setInHand(true);
         (new FlipCardAnimation(decoy, X_POSITION_DISCARD, (playerIndex == 0 ? Y_POSITION_DISCARD_1 : Y_POSITION_DISCARD_2), true, true, false)).play();
-        (new FlipCardAnimation(soldier, x, y, true, true, true)).play();
+        (new FlipCardAnimation(soldier, x, y, true, true,false)).play();
+    }
+
+    public void placeDecoy(Matcher matcher) {
+        int cardNumber = Integer.parseInt(matcher.group("cardNumber")); // decoy index in hand
+        int rowNumber = Integer.parseInt(matcher.group("rowNumber"));
+        int targetNumber = Integer.parseInt(matcher.group("targetNumber")); // index of card to be replaced with decoy
+        int playerIndex = Integer.parseInt(matcher.group("playerIndex"));
+        placeDecoy(cardNumber, rowNumber, targetNumber, playerIndex);
     }
 
     public void removeCardFromHandAndKillIt(int cardNumber, int playerIndex) {
         Platform.runLater(() -> {
             CardView card = hand[playerIndex].get(cardNumber);
+            hand[playerIndex].remove(card);
+            discard[playerIndex].add(card);
             (new FlipCardAnimation(card, X_POSITION_DISCARD, (playerIndex == 0 ? Y_POSITION_DISCARD_1 : Y_POSITION_DISCARD_2), true, true, false)).play();
         });
     }
@@ -372,6 +382,8 @@ public class BroadCastMenu extends Application {
     public void moveSoldier(int rowNumber, int cardNumber, int newRowNumber, int playerIndex) {
         Platform.runLater(() -> {
             CardView c = row[playerIndex][convertRowNumber(rowNumber)].get(cardNumber);
+            row[playerIndex][convertRowNumber(rowNumber)].remove(cardNumber);
+            row[playerIndex][convertRowNumber(newRowNumber)].add(c);
             Field field = null;
             try {
                 field = this.getClass().getDeclaredField("Y_POSITION_ROW_" + (playerIndex + 1) + convertRowNumber(newRowNumber));
@@ -402,15 +414,19 @@ public class BroadCastMenu extends Application {
         Platform.runLater(() -> {
             ArrayList<CardView> discard1Copy = new ArrayList<>(discard[0]);
             ArrayList<CardView> discard2Copy = new ArrayList<>(discard[1]);
+            deck[0].addAll(discard[0]);
+            deck[1].addAll(discard[1]);
+            discard[0].clear();
+            discard[1].clear();
             final int[] flag1 = {0};
-            Timeline timeline1 = new Timeline(new KeyFrame(Duration.seconds(0.3), new EventHandler<ActionEvent>() {
+            Timeline timeline1 = new Timeline(new KeyFrame(Duration.seconds(0.2), new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent actionEvent) {
                     (new FlipCardAnimation(discard1Copy.get(flag1[0]++), X_POSITION_Deck, Y_POSITION_DISCARD_1, false, true, false)).play();
                 }
             }));
             final int[] flag2 = {0};
-            Timeline timeline2 = new Timeline(new KeyFrame(Duration.seconds(0.3), new EventHandler<ActionEvent>() {
+            Timeline timeline2 = new Timeline(new KeyFrame(Duration.seconds(0.2), new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent actionEvent) {
                     (new FlipCardAnimation(discard2Copy.get(flag2[0]++), X_POSITION_Deck, Y_POSITION_DISCARD_2, false, true, false)).play();
@@ -418,6 +434,7 @@ public class BroadCastMenu extends Application {
             }));
             timeline1.setCycleCount(discard1Copy.size());
             timeline2.setCycleCount(discard2Copy.size());
+            Timeline t = (discard1Copy.size() >= discard2Copy.size() ? timeline1 : timeline2);
             if (!discard1Copy.isEmpty()) timeline1.play();
             if (!discard2Copy.isEmpty()) timeline2.play();
         });
@@ -425,8 +442,12 @@ public class BroadCastMenu extends Application {
 
     public void addCardToHand(Cardin cardin, int playerIndex) {
         Platform.runLater(() -> {
-            CardView c = new CardView(cardin, -200, -200, null, false);
+            CardView c = new CardView(cardin, -200, -200, this, false);
+            c.setInHand(true);
+            hand[playerIndex].add(c);
+            pain.getChildren().remove(cheatPane);
             pain.getChildren().add(c);
+            pain.getChildren().add(cheatPane);
             (new FlipCardAnimation(c, (hand[playerIndex].size() == 1 ? (X_POSITION_HAND_LEFT + X_POSITION_HAND_RIGHT - CARD_WIDTH) / 2 : (hand[playerIndex].get(hand[playerIndex].size() - 2)).getLayoutX() + SPACING + CARD_WIDTH), (playerIndex == 0 ? Y_POSITION_HAND_1 : Y_POSITION_HAND_2), true, true, false)).play();
         });
     }
@@ -434,8 +455,11 @@ public class BroadCastMenu extends Application {
     public void addCardFromDeckToHand(int cardNumber) {
         Platform.runLater(() -> {
             CardView c = deck[0].get(cardNumber);
+            deck[0].remove(cardNumber);
+            hand[0].add(c);
             pain.getChildren().remove(c);
             pain.getChildren().add(c);
+            c.setInHand(true);
             (new FlipCardAnimation(c, (hand[0].size() == 1 ? (X_POSITION_HAND_LEFT + X_POSITION_HAND_RIGHT - CARD_WIDTH) / 2 : (hand[0].get(hand[0].size() - 2)).getLayoutX() + SPACING + CARD_WIDTH), Y_POSITION_HAND_1, true, true, false)).play();
         });
     }
@@ -443,6 +467,8 @@ public class BroadCastMenu extends Application {
     public void addCardFromDeckToRow(int cardNumber, int rowNumber, int playerIndex) {
         Platform.runLater(() -> {
             CardView c = deck[playerIndex].get(cardNumber);
+            deck[playerIndex].remove(cardNumber);
+            row[playerIndex][convertRowNumber(rowNumber)].add(c);
             pain.getChildren().remove(c);
             pain.getChildren().add(c);
             int j = convertRowNumber(rowNumber);
@@ -454,7 +480,10 @@ public class BroadCastMenu extends Application {
     public void addCardFromHandToRow(int cardNumber, int rowNumber, int playerIndex) {
         Platform.runLater(() -> {
             CardView c = hand[playerIndex].get(cardNumber);
+            hand[playerIndex].remove(cardNumber);
+            row[playerIndex][convertRowNumber(rowNumber)].add(c);
             int j = convertRowNumber(rowNumber);
+            c.setInHand(false);
             double Y = (playerIndex == 0 ? (j == 0 ? Y_POSITION_ROW_11 : (j == 1 ? Y_POSITION_ROW_12 : Y_POSITION_ROW_13)) : (j == 0 ? Y_POSITION_ROW_21 : (j == 1 ? Y_POSITION_ROW_22 : Y_POSITION_ROW_23)));
             (new FlipCardAnimation(c, (row[playerIndex][convertRowNumber(rowNumber)].size() == 1 ? (X_POSITION_ROW_LEFT + X_POSITION_ROW_RIGHT - CARD_WIDTH) / 2 : (row[playerIndex][convertRowNumber(rowNumber)].get(row[playerIndex][convertRowNumber(rowNumber)].size() - 2)).getLayoutX() + SPACING + CARD_WIDTH), Y, true, true, false)).play();
         });
@@ -477,7 +506,10 @@ public class BroadCastMenu extends Application {
     public void addCardFromDiscardToHand(int cardNumber, int playerIndex) {
         Platform.runLater(() -> {
             CardView c = discard[playerIndex].get(cardNumber);
+            discard[playerIndex].remove(cardNumber);
+            hand[playerIndex].add(c);
             pain.getChildren().remove(c);
+            c.setInHand(true);
             pain.getChildren().add(c);
             (new FlipCardAnimation(c, (hand[playerIndex].size() == 1 ? (X_POSITION_HAND_LEFT + X_POSITION_HAND_RIGHT - CARD_WIDTH) / 2 : (hand[playerIndex].get(hand[playerIndex].size() - 2)).getLayoutX() + SPACING + CARD_WIDTH), (playerIndex == 0 ? Y_POSITION_HAND_1 : Y_POSITION_HAND_2), true, true, false)).play();
         });
@@ -487,6 +519,7 @@ public class BroadCastMenu extends Application {
         Platform.runLater(() -> {
             CardView oldC = row[playerIndex][convertRowNumber(rowNumber)].get(cardNumber);
             CardView c = new CardView(cardin, oldC.getLayoutX(), oldC.getLayoutY(), null, false);
+            row[playerIndex][convertRowNumber(rowNumber)].set(cardNumber, c);
             pain.getChildren().remove(oldC);
             pain.getChildren().add(c);
         });
@@ -503,6 +536,8 @@ public class BroadCastMenu extends Application {
     public void destroySoldier(int rowNumber, int cardNumber, int playerIndex) {
         Platform.runLater(() -> {
             CardView c = row[playerIndex][convertRowNumber(rowNumber)].get(cardNumber);
+            row[playerIndex][convertRowNumber(rowNumber)].remove(cardNumber);
+            discard[playerIndex].add(c);
             (new BurningCardAnimation(c, X_POSITION_DISCARD, (playerIndex == 0 ? Y_POSITION_DISCARD_1 : Y_POSITION_DISCARD_2))).play();
         });
     }
@@ -517,6 +552,9 @@ public class BroadCastMenu extends Application {
     public void placeSpecial(int rowNumber, int cardNumber, int playerIndex) {
         Platform.runLater(() -> {
             CardView c = hand[playerIndex].get(cardNumber);
+            hand[playerIndex].remove(cardNumber);
+            c.setInHand(false);
+            horn[playerIndex][convertRowNumber(rowNumber)] = c;
             double Y = (playerIndex == 0 ? (convertRowNumber(rowNumber) == 0 ? Y_POSITION_ROW_11 : (convertRowNumber(rowNumber) == 1 ? Y_POSITION_ROW_12 : Y_POSITION_ROW_13)) : (convertRowNumber(rowNumber) == 0 ? Y_POSITION_ROW_21 : (convertRowNumber(rowNumber) == 1 ? Y_POSITION_ROW_22 : Y_POSITION_ROW_23)));
             (new FlipCardAnimation(c, X_POSITION_SPELL, Y, true, true, false)).play();
         });
@@ -533,6 +571,7 @@ public class BroadCastMenu extends Application {
         Platform.runLater(() -> {
             CardView c = hand[playerIndex].get(cardNumber);
             hand[playerIndex].remove(cardNumber);
+            c.setInHand(false);
             weather.add(c);
             refreshWeather();
             (new FlipCardAnimation(c, (weather.size() == 1 ? (X_POSITION_WEATHER_LEFT + X_POSITION_WEATHER_RIGHT - CARD_WIDTH) / 2 : (weather.get(weather.size() - 2)).getLayoutX() + SPACING + CARD_WIDTH), Y_POSITION_WEATHER, true, true, false)).play();
@@ -545,12 +584,19 @@ public class BroadCastMenu extends Application {
         placeWeather(cardNumber, playerIndex);
     }
 
-    public void placeSoldier(int rowNumber, int cardNumber, int playerIndex) {  // TODO: player index added, it used to be for opponent
+    public void placeSoldier(int rowNumber, int cardNumber, int playerIndex) {
         Platform.runLater(() -> {
-            CardView c = hand[playerIndex].get(cardNumber);
-            int j = convertRowNumber(rowNumber);
-            double Y = (playerIndex == 0 ? (j == 0 ? Y_POSITION_ROW_11 : (j == 1 ? Y_POSITION_ROW_12 : Y_POSITION_ROW_13)) : (j == 0 ? Y_POSITION_ROW_21 : (j == 1 ? Y_POSITION_ROW_22 : Y_POSITION_ROW_23)));
-            (new FlipCardAnimation(c, (row[playerIndex][convertRowNumber(rowNumber)].size() == 1 ? (X_POSITION_ROW_LEFT + X_POSITION_ROW_RIGHT - CARD_WIDTH) / 2 : (row[playerIndex][convertRowNumber(rowNumber)].get(row[playerIndex][convertRowNumber(rowNumber)].size() - 2)).getLayoutX() + SPACING + CARD_WIDTH), Y, true, true, false)).play();
+            try {
+                CardView c = hand[playerIndex].get(cardNumber);
+                hand[playerIndex].remove(cardNumber);
+                c.setInHand(false);
+                row[playerIndex][convertRowNumber(rowNumber)].add(c);
+                int j = convertRowNumber(rowNumber);
+                double Y = (playerIndex == 0 ? (j == 0 ? Y_POSITION_ROW_11 : (j == 1 ? Y_POSITION_ROW_12 : Y_POSITION_ROW_13)) : (j == 0 ? Y_POSITION_ROW_21 : (j == 1 ? Y_POSITION_ROW_22 : Y_POSITION_ROW_23)));
+                (new FlipCardAnimation(c, (row[playerIndex][convertRowNumber(rowNumber)].size() == 1 ? (X_POSITION_ROW_LEFT + X_POSITION_ROW_RIGHT - CARD_WIDTH) / 2 : (row[playerIndex][convertRowNumber(rowNumber)].get(row[playerIndex][convertRowNumber(rowNumber)].size() - 2)).getLayoutX() + SPACING + CARD_WIDTH), Y, true, true, false)).play();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         });
     }
 
@@ -578,8 +624,12 @@ public class BroadCastMenu extends Application {
     }
 
     public void moveSoldierFromOpponentHandToPlayerRow(int cardNumber, int rowNumber, int playerIndex) {
+        System.out.println("we are in this function ");
         Platform.runLater(() -> {
-            CardView c = hand[playerIndex].get(cardNumber);
+            CardView c = hand[1 - playerIndex].get(cardNumber);
+            hand[1 - playerIndex].remove(cardNumber);
+            c.setInHand(false);
+            row[playerIndex][convertRowNumber(rowNumber)].add(c);
             int j = convertRowNumber(rowNumber);
             double Y = (playerIndex == 0 ? (j == 0 ? Y_POSITION_ROW_11 : (j == 1 ? Y_POSITION_ROW_12 : Y_POSITION_ROW_13)) : (j == 0 ? Y_POSITION_ROW_21 : (j == 1 ? Y_POSITION_ROW_22 : Y_POSITION_ROW_23)));
             (new FlipCardAnimation(c, (row[playerIndex][convertRowNumber(rowNumber)].size() == 1 ? (X_POSITION_ROW_LEFT + X_POSITION_ROW_RIGHT - CARD_WIDTH) / 2 : (row[playerIndex][convertRowNumber(rowNumber)].get(row[playerIndex][convertRowNumber(rowNumber)].size() - 2)).getLayoutX() + SPACING + CARD_WIDTH), Y, true, true, false)).play();
@@ -596,6 +646,26 @@ public class BroadCastMenu extends Application {
     private int convertRowNumber(int fatemeRowNumber) {
         int ostadRowNumber = 2 - fatemeRowNumber; // :))
         return ostadRowNumber;
+    }
+
+    public void moveAllCardFromBoardToDiscard() {
+        ArrayList<CardView> allCardsInBoardFor1 = new ArrayList<>();
+        ArrayList<CardView> allCardsInBoardFor2 = new ArrayList<>();
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 3; j++) {
+                if (i == 0) allCardsInBoardFor1.addAll(row[i][j]);
+                else allCardsInBoardFor2.addAll(row[i][j]);
+                row[i][j].clear();
+                if (horn[i][j] != null) {
+                    if (i == 0) allCardsInBoardFor1.add(horn[i][j]);
+                    else allCardsInBoardFor2.add(horn[i][j]);
+                    horn[i][j] = null;
+                }
+            }
+        }
+        discard[0].addAll(allCardsInBoardFor1);
+        discard[1].addAll(allCardsInBoardFor2);
+        clearWeather();
     }
 
     public void clearWeather() {
@@ -635,4 +705,7 @@ public class BroadCastMenu extends Application {
         rowWeather13.setVisible(frost);
         rowWeather23.setVisible(frost);
     }
+
+
+
 }
