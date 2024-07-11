@@ -1,42 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.effect.Shadow?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.paint.Color?>
-<?import javafx.scene.shape.Rectangle?>
-<?import javafx.scene.text.Font?>
-<AnchorPane prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/17.0.2-ea"
-            xmlns:fx="http://javafx.com/fxml/1" fx:controller="Client.View.WaitingMenu">
+<?import javafx.scene.control.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Client.View.WaitingMenu">
     <children>
         <ImageView fitHeight="1005.0" fitWidth="1500.0" pickOnBounds="true" preserveRatio="true">
             <image>
-                <Image url="@../Images/Background/LoginMenuBackground.png"/>
+                <Image url="@../Images/Background/LoginMenuBackground.png" />
             </image>
         </ImageView>
-        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#eed092" height="420.0" layoutX="541.0" layoutY="261.0"
-                   stroke="WHITE" strokeType="INSIDE" strokeWidth="0.0" width="418.0">
+        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#eed092" height="420.0" layoutX="541.0" layoutY="261.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="0.0" width="418.0">
             <effect>
                 <Shadow height="60.0" radius="29.5" width="60.0">
                     <color>
-                        <Color red="0.0784313753247261" green="0.054901961237192154" blue="0.0313725508749485"
-                               opacity="0.7799999713897705"/>
+                        <Color red="0.0784313753247261" green="0.054901961237192154" blue="0.0313725508749485" opacity="0.7799999713897705" />
                     </color>
                 </Shadow>
             </effect>
         </Rectangle>
-        <Label alignment="CENTER" contentDisplay="CENTER" layoutX="680.0" layoutY="361.0" prefHeight="73.0"
-               prefWidth="141.0" text="Waiting..." textAlignment="CENTER" textFill="WHITE">
+        <Label alignment="CENTER" contentDisplay="CENTER" layoutX="541.0" layoutY="361.0" prefHeight="73.0" prefWidth="418.0" text="Waiting..." textAlignment="CENTER" textFill="WHITE">
             <font>
-                <Font name="FreeSerif Bold" size="33.0"/>
+                <Font name="FreeSerif Bold" size="33.0" />
             </font>
         </Label>
-        <Label fx:id="playerNumber" alignment="CENTER" contentDisplay="CENTER" layoutX="680.0" layoutY="427.0"
-               prefHeight="73.0" prefWidth="161.0" text="Player Number: " textAlignment="CENTER" textFill="#f80000de">
+        <Label fx:id="playerNumber" alignment="CENTER" contentDisplay="CENTER" layoutX="541.0" layoutY="428.0" prefHeight="73.0" prefWidth="418.0" text="Player Number: " textAlignment="CENTER" textFill="#f80000de">
             <font>
-                <Font name="Caladea Bold" size="16.0"/>
+                <Font name="Caladea Bold" size="16.0" />
             </font>
         </Label>
 

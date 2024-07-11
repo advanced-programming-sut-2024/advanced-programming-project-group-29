@@ -4,6 +4,7 @@ import Server.Enum.Menu;
 import Server.Model.Sender;
 import Server.Model.User;
 import Server.Regex.ChangeMenuRegex;
+import Server.Regex.FriendMenuRegex;
 import Server.Regex.GameMenuRegex;
 import Server.Regex.LoginMenuRegex;
 import com.google.gson.GsonBuilder;
@@ -139,8 +140,16 @@ public class ApplicationController extends Thread {
                 } else if (inputCommand.matches(GameMenuRegex.REJECT_PLAY.getRegex())) {
                     GameMenuController.rejectPlay(this.getCurrentUser(), GameMenuRegex.REJECT_PLAY.getMatcher(inputCommand));
                 }
+                if (inputCommand.matches(FriendMenuRegex.RESPOND_TO_REQUEST.getRegex())) {
+                    FriendRequestController.respondRequest(this, FriendMenuRegex.RESPOND_TO_REQUEST.getMatcher(inputCommand));
+                    dataOutputStream.writeUTF("null");
+                    continue;
+                }
                 Object object = null;
                 switch (currentMenu) {
+                    case BROADCAST_MENU:
+                        object = Server.Controller.BroadCastMenuController.processRequest(this, inputCommand);
+                        break;
                     case CHEAT_MENU:
                         object = Server.Controller.CheatMenuController.processRequest(this, inputCommand);
                         break;

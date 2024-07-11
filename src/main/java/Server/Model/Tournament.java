@@ -38,12 +38,10 @@ public class Tournament {
         }
         Tournament tournament = new Tournament();
         player.setTournament(tournament);
-        System.err.println("bruh");
         tournament.addPlayerToTournament(player);
     }
 
     public synchronized void addPlayerToTournament(User player) {
-        System.err.println("secound");
         this.players.add(player);
     }
 

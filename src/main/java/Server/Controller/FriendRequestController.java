@@ -22,7 +22,7 @@ public class FriendRequestController {
         return applicationController.getCurrentUser().getFriendRequests();
     }
 
-    private static Result respondRequest(ApplicationController applicationController, Matcher matcher) {
+    public static Result respondRequest(ApplicationController applicationController, Matcher matcher) {
         String answer = matcher.group("answer");
         String username = matcher.group("username");
         User user = User.getUserByUsername(username);

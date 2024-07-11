@@ -19,9 +19,9 @@ import java.util.regex.Matcher;
 
 public class PopUp {
     public static Pane createPopUp(int model, String textPopUp, String UsernameOfApplicant) {
-        Pane pain = new Pane();
-        pain.setPrefWidth(425);
-        pain.setPrefHeight(189);
+        Pane pane = new Pane();
+        pane.setPrefWidth(425);
+        pane.setPrefHeight(189);
         Rectangle backGround = new Rectangle();
         backGround.setArcHeight(5);
         backGround.setArcWidth(5);
@@ -35,7 +35,7 @@ public class PopUp {
         shadowEffect.setWidth(0.24);
         shadowEffect.setColor(new Color(0.8799999952316284, 0.8447999954223633, 0.8447999954223633, 0.7241379022598267));
         backGround.setEffect(shadowEffect);
-        pain.getChildren().add(backGround);
+        pane.getChildren().add(backGround);
         Rectangle ignoreBack = new Rectangle();
         ignoreBack.setArcHeight(5);
         ignoreBack.setArcWidth(5);
@@ -61,8 +61,8 @@ public class PopUp {
         acceptBack.setLayoutY(102);
         acceptBack.setStrokeWidth(0);
         acceptBack.setEffect(shadow);
-        pain.getChildren().add(acceptBack);
-        pain.getChildren().add(ignoreBack);
+        pane.getChildren().add(acceptBack);
+        pane.getChildren().add(ignoreBack);
         Label ignore = new Label("reject");
         ignore.setFont(Font.font("System", FontWeight.BOLD, 16));
         ignore.setLayoutX(101);
@@ -75,8 +75,8 @@ public class PopUp {
         accept.setAlignment(Pos.CENTER);
         accept.setPrefWidth(136);
         accept.setPrefHeight(22);
-        pain.getChildren().add(accept);
-        pain.getChildren().add(ignore);
+        pane.getChildren().add(accept);
+        pane.getChildren().add(ignore);
         Label textLabel = new Label(textPopUp);
         textLabel.setLayoutX(20);
         textLabel.setLayoutY(29);
@@ -86,7 +86,7 @@ public class PopUp {
         textLabel.setWrapText(true);
         textLabel.setFont(Font.font("System", FontWeight.BOLD, 15));
         textLabel.setTextFill(Paint.valueOf("#dea543"));
-        pain.getChildren().add(textLabel);
+        pane.getChildren().add(textLabel);
         switch (model) {
             case 0:
                 accept.setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -99,7 +99,7 @@ public class PopUp {
                     @Override
                     public void handle(MouseEvent mouseEvent) {
                         Client.getClient().sendCommand("reject -u " + UsernameOfApplicant);
-                        ((Pane) pain.getParent()).getChildren().remove(pain);
+                        ((Pane) pane.getParent()).getChildren().remove(pane);
                     }
                 });
                 break;
@@ -124,10 +124,10 @@ public class PopUp {
                     @Override
                     public void handle(MouseEvent mouseEvent) {
                         Client.getClient().sendCommand("reject play -u " + UsernameOfApplicant);
-                        ((Pane) pain.getParent()).getChildren().remove(pain);
+                        ((Pane) pane.getParent()).getChildren().remove(pane);
                     }
                 });
         }
-        return pain;
+        return pane;
     }
 }

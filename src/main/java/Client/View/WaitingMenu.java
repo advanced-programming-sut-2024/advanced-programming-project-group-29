@@ -35,7 +35,6 @@ public class WaitingMenu extends Application {
         if (timeline == null) {
             timeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
                 int result = (int) client.sendCommand(WaitingMenuRegex.TOURNAMENT_PLAYERS_COUNT.getRegex());
-                System.err.println(("result = " + result));
                 playerNumber.setText("Player Number: " + result + "/8");
             }));
             timeline.setCycleCount(Timeline.INDEFINITE);
