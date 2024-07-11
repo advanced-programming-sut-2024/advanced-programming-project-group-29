@@ -67,6 +67,8 @@ public class InGameMenuController extends Thread {
         applicationController.getCurrentUser().getSender().sendCommand("end round " + result.getMessage().get(0));
         if(gameBoard.isGameOnline())
             applicationController.getCurrentUser().getOpponent().getSender().sendCommand("end round " + result.getMessage().get(0));
+        gameBoard.addLog("end round", 0);
+        gameBoard.addLog("end round", 1);
     }
 
     private static void changeTurn(ApplicationController applicationController){
@@ -80,6 +82,8 @@ public class InGameMenuController extends Thread {
         user.getSender().sendCommandWithOutResponse("change turn");
         if(gameBoard.isGameOnline())
             user.getOpponent().getSender().sendCommandWithOutResponse("change turn");
+        gameBoard.addLog("change turn", 0);
+        gameBoard.addLog("change turn", 1);
     }
 
     private static Object getChatBox(ApplicationController applicationController) {

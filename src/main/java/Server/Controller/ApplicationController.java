@@ -186,6 +186,9 @@ public class ApplicationController extends Thread {
                     case WAITING_MENU:
                         object = Server.Controller.WaitingMenuController.processRequest(this, inputCommand);
                         break;
+                    case ONLINE_STREAM_MENU:
+                        object = Server.Controller.OnlineStreamMenuController.processRequest(this, inputCommand);
+                        break;
                 }
                 sender.setUser(currentUser);
                 if (currentUser != null) {
