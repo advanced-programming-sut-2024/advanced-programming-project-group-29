@@ -44,6 +44,9 @@ public class LoginMenu extends Application {
     public Rectangle dark3;
     public Rectangle dark4;
     public CheckBox stayIn;
+    public Pane emailPain;
+    public Rectangle darkBackEmail;
+    public TextField emailConfirm;
 
     private Label warning;
     private Client client;
@@ -56,11 +59,6 @@ public class LoginMenu extends Application {
     }
 
     public void run(String[] args) throws IOException {
-        Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
-            public void run() {
-            }
-        }, "Program existing..."));
-        //client.sendCommand(LoginMenuRegex.LOAD_USER.getRegex());
         launch(args);
     }
 
@@ -83,14 +81,21 @@ public class LoginMenu extends Application {
     public void signIn(MouseEvent mouseEvent) throws Exception {
         String toRegex = "login -u " + this.username.getText() + " -p " + this.password.getText() + (stayIn.isSelected() ? " -stay-logged-in" : " ");
         Result result = (Result) client.sendCommand(toRegex);
+        System.out.println(result.getMessage().get(0));
         if (!result.isSuccessful()) {
             sayAlert(result.getMessage().get(0), 516, true, dark1, 297);
         } else {
+            mainPane.setVisible(false);
+            mainPane.setDisable(true);
+            emailPain.setVisible(true);
+            emailPain.setDisable(false);
             ApplicationRunningTimeData.setLoggedInUserUsername(this.username.getText());
             Client.getClient().getSender().setToken(result.getToken());
-            new MainMenu().start(ApplicationRunningTimeData.getStage());
+            Client.getClient().getSender().sendCommand("send email -e " + (String) Client.getClient().sendCommand("get user email -u " + username.getText()));
+            sayAlert(result.getMessage().get(0), 490, false, darkBackEmail, 255);
         }
     }
+
 
 
     public void forgetPassword(MouseEvent mouseEvent) {
@@ -219,6 +224,15 @@ public class LoginMenu extends Application {
             ((Label) paneS.getChildren().get(n)).setTextFill(Paint.valueOf("black"));
         } else {
             ((Label) mouseEvent.getSource()).setTextFill(Paint.valueOf("black"));
+        }
+    }
+
+    public void next(MouseEvent mouseEvent) throws Exception {
+        Result result = (Result) client.getSender().sendCommand("verify email -c " + this.emailConfirm.getText() + " -e " + (String) client.sendCommand("get user email -u " + username.getText()));
+        if (result.isSuccessful()) {
+            new MainMenu().start(ApplicationRunningTimeData.getStage());
+        } else {
+            sayAlert(result.getMessage().get(0), 490, true, darkBackEmail, 255);
         }
     }
 }
